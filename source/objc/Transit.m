@@ -220,4 +220,8 @@
     return [TransitProxy jsExpressionFromCode:@"@.nativeFunction(@)" arguments:@[self.transitGlobalVarProxy, _nativeId]];
 }
 
+-(void)dispose {
+    [super dispose];
+}
+
 @end

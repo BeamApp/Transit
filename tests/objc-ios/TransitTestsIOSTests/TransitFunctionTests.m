@@ -52,4 +52,9 @@
     STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func]], @"transit.nativeFunction(\"someId\")('foo')", @"native func");
 }
 
+-(void)testDisposeDoesNotThrowException {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithRootContext:nil nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    [func dispose];
+}
+
 @end

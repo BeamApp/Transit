@@ -56,6 +56,8 @@ typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
 
 -(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block;
 
+-(void)dispose;
+
 @property(readonly) NSString* nativeId;
 @property(readonly) TransitFunctionBlock block;
 
