@@ -66,14 +66,25 @@
 
 @end
 
-@implementation TransitProxy
+@implementation TransitProxy {
+    NSString* _proxyId;
+}
 
--(id)initWithRootContext:(TransitContext*)rootContext {
+-(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId {
     self = [self init];
     if(self) {
         _rootContext = rootContext;
+        _proxyId = proxyId;
     }
     return self;
+}
+
+-(id)initWithRootContext:(TransitContext*)rootContext {
+    return [self initWithRootContext:rootContext proxyId:nil];
+}
+
+-(void)dealloc {
+    [self dispose];
 }
 
 -(BOOL)disposed {
@@ -87,8 +98,8 @@
     }
 }
 
--(void)dealloc {
-    [self dispose];
+-(NSString*)proxyId {
+    return _proxyId;
 }
 
 -(id)eval:(NSString*)jsCode {
@@ -104,6 +115,9 @@
 }
 
 -(NSString*)jsRepresentation {
+    if(_proxyId && _rootContext)
+       return [_rootContext jsRepresentationForProxyWithId:_proxyId];
+    
     return [self.class jsRepresentation:self];
 }
 
@@ -151,6 +165,10 @@
 
 @implementation TransitContext
 
+-(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
+    @throw @"not implemented, yet";
+}
+
 -(void)releaseProxy:(TransitProxy*)proxy {
     @throw @"not implemented, yet";
 }
@@ -193,7 +211,7 @@
     return [self callWithThisArg:nil arguments:arguments];
 }
 
--(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray*)arguments {
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments {
     @throw @"must be implemented by subclass";
 }
 
@@ -212,7 +230,7 @@
     return self;
 }
 
--(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray*)arguments {
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments {
     return _block(thisArg, arguments);
 }
 
@@ -221,7 +239,25 @@
 }
 
 -(void)dispose {
+    // explicit implementation needed to prevent compiler warning... weird
     [super dispose];
+}
+
+@end
+
+
+@implementation TransitJSFunction
+
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments {
+    if(self.disposed)
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"function already disposed" userInfo:nil];
+    
+    NSMutableArray *argumentsPlaceholder = [NSMutableArray array];
+    while(argumentsPlaceholder.count<arguments.count)
+          [argumentsPlaceholder addObject:@"@"];
+    
+    NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [argumentsPlaceholder componentsJoinedByString:@","]];
+    return [self.rootContext eval:js thisArg:thisArg arguments:arguments];
 }
 
 @end

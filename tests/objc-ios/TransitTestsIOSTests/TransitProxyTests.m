@@ -75,4 +75,16 @@
     [context verify];
 }
 
+-(void)testJsRepresentationWithProxyId {
+    id context = [OCMockObject niceMockForClass:TransitContext.class];
+    
+    NSString* proxyId = @"someProxyId";
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:proxyId];
+    
+    [[[context stub] andReturn:@"fancyJsRepresentation"] jsRepresentationForProxyWithId:proxyId];
+    NSString* actual = proxy.jsRepresentation;
+    STAssertEqualObjects(@"fancyJsRepresentation", actual, @"proxy representation from context");
+    [context verify];
+}
+
 @end

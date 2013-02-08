@@ -25,8 +25,9 @@
 		CB18EEF316C549050051CC7C /* TransitTestsIOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */; };
 		CB18EEFF16C549E50051CC7C /* Transit.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EEFE16C549E50051CC7C /* Transit.m */; };
 		CB18EF0216C54B830051CC7C /* TransitUIWebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */; };
-		CB18EF2E16C57BD90051CC7C /* TransitFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF2D16C57BD90051CC7C /* TransitFunctionTests.m */; };
+		CB18EF2E16C57BD90051CC7C /* TransitNativeFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */; };
 		CB18EF5316C58FC70051CC7C /* TransitProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */; };
+		CB18EF5716C595B50051CC7C /* TransitJSFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,9 +65,10 @@
 		CB18EEFD16C549E50051CC7C /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
 		CB18EEFE16C549E50051CC7C /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
 		CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitUIWebViewTests.m; sourceTree = "<group>"; };
-		CB18EF2D16C57BD90051CC7C /* TransitFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitFunctionTests.m; sourceTree = "<group>"; };
+		CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitNativeFunctionTests.m; sourceTree = "<group>"; };
 		CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitProxyTests.m; sourceTree = "<group>"; };
 		CB18EF5516C590F80051CC7C /* Transit+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Transit+Private.h"; sourceTree = "<group>"; };
+		CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitJSFunctionTests.m; sourceTree = "<group>"; };
 		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -161,7 +163,8 @@
 				CB18EEEC16C549050051CC7C /* Supporting Files */,
 				CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */,
 				CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */,
-				CB18EF2D16C57BD90051CC7C /* TransitFunctionTests.m */,
+				CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */,
+				CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */,
 				CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */,
 			);
 			path = TransitTestsIOSTests;
@@ -338,8 +341,9 @@
 			files = (
 				CB18EEF316C549050051CC7C /* TransitTestsIOSTests.m in Sources */,
 				CB18EF0216C54B830051CC7C /* TransitUIWebViewTests.m in Sources */,
-				CB18EF2E16C57BD90051CC7C /* TransitFunctionTests.m in Sources */,
+				CB18EF2E16C57BD90051CC7C /* TransitNativeFunctionTests.m in Sources */,
 				CB18EF5316C58FC70051CC7C /* TransitProxyTests.m in Sources */,
+				CB18EF5716C595B50051CC7C /* TransitJSFunctionTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

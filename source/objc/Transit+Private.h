@@ -15,11 +15,14 @@
 -(void)dispose;
 -(BOOL)disposed;
 
+@property(readonly) NSString* proxyId;
+
 @end
 
 @interface TransitContext(Private)
 
 -(void)releaseProxy:(TransitProxy*)proxy;
+-(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId;
 
 @end
 

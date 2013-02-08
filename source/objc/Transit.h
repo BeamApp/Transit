@@ -13,6 +13,7 @@
 @interface TransitProxy : NSObject
 
 -(id)initWithRootContext:(TransitContext*)rootContext;
+-(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId;
 
 @property(readonly) TransitContext* rootContext;
 
@@ -46,7 +47,7 @@
 
 -(id)call;
 -(id)callWithArguments:(NSArray*)arguments;
--(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray*)arguments;
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments;
 
 @end
 
@@ -60,5 +61,10 @@ typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
 
 @property(readonly) NSString* nativeId;
 @property(readonly) TransitFunctionBlock block;
+
+@end
+
+
+@interface TransitJSFunction : TransitFunction
 
 @end

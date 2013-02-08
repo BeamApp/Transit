@@ -10,7 +10,7 @@
 #import "Transit.h"
 #import "OCMock.h"
 
-@interface TransitFunctionTests : SenTestCase
+@interface TransitNativeFunctionTests : SenTestCase
 
 @end
 
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation TransitFunctionTests
+@implementation TransitNativeFunctionTests
 
 -(void)testWillCallBlock {
     id mock = [OCMockObject mockForProtocol:@protocol(TransitBlockTestProtocol)];
