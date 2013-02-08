@@ -14,6 +14,8 @@
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments;
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments;
 
++(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments;
+
 @end
 
 @interface TransitContext : TransitProxy
