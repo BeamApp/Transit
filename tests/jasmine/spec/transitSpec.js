@@ -18,7 +18,7 @@ describe("Transit", function() {
         it("attaches native attribute", function(){
             var f = transit.nativeFunction("someId");
             expect(typeof f).toEqual("function");
-            expect(f.transitNativeId).toEqual("someId");
+            expect(f.transitNativeId).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
         });
 
         it("calls transit.invokeNative", function(){
@@ -107,7 +107,7 @@ describe("Transit", function() {
 
         it("returns magic marker and retains complex object", function(){
             var o = {};
-            o.cicle = o;
+            o.cycle = o;
 
             var marker = transit.proxify(o);
 
@@ -146,6 +146,20 @@ describe("Transit", function() {
             expect(transit.retained[actual[2]]).toBe(f2);
         });
 
+        it("keeps order of function in array of nested object", function(){
+            var f0 = function(){};
+            var f1 = function(){};
+            var f2 = function(){};
+            var obj = {funcs: [f0 , f1, f2]};
+
+            var actual = transit.proxify(obj);
+            expect(actual.funcs.length).toEqual(3);
+            expect(Object.getOwnPropertyNames(actual)).toEqual(["funcs"]);
+            expect(transit.retained[actual.funcs[0]]).toBe(f0);
+            expect(transit.retained[actual.funcs[1]]).toBe(f1);
+            expect(transit.retained[actual.funcs[2]]).toBe(f2);
+        });
+
         it("recognizes native functions", function(){
             var nativeFunc = transit.nativeFunction("someId");
             var obj = {jsFunc:_function, nativeFunc: nativeFunc};
@@ -154,6 +168,15 @@ describe("Transit", function() {
             expect(transit.retained[actual.jsFunc]).toBe(_function);
             expect(actual.nativeFunc).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
         });
+
+        it("recognizes document as complex element", function(){
+            expect(transit.proxify(document)).toEqual(jasmine.any(String));
+        });
+
+        it("recognizes document.body as complex element", function(){
+            expect(transit.proxify(document.body)).toEqual(jasmine.any(String));
+        });
+
 
     });
 

@@ -1,4 +1,6 @@
-(function(){
+/*global Document Element */
+
+(function(globalName){
     var transit = {
         retained:{},
         lastRetainId: 0
@@ -18,45 +20,50 @@
         var f = function(){
             transit.invokeNative(nativeId, this, arguments);
         };
-        f.transitNativeId = nativeId;
+        f.transitNativeId = PREFIX_MAGIC_NATIVE_FUNCTION + nativeId;
         return f;
     };
 
-    transit.proxifyMissingFunctionProperties = function(missing, existing) {
+    transit.recursivelyProxifyMissingFunctionProperties = function(missing, existing) {
         for(var key in existing) {
-            if(existing.hasOwnProperty(key)){
+            if(existing.hasOwnProperty(key)) {
                 var existingValue = existing[key];
 
                 if(typeof existingValue === "function") {
                     missing[key] = transit.proxify(existingValue);
                 }
-                if(typeof existingValue === "object") {
-                    transit.proxifyMissingFunctionProperties(missing[key], existingValue);
+                if(typeof existingValue === "object" && typeof missing[key] === "object" && missing[key] !== null) {
+                    transit.recursivelyProxifyMissingFunctionProperties(missing[key], existingValue);
                 }
             }
         }
     };
 
-    transit.proxify = function(obj) {
-        if(typeof obj === "function") {
-            if(typeof obj.transitNativeId !== "undefined") {
-                return PREFIX_MAGIC_NATIVE_FUNCTION + obj.transitNativeId;
+    transit.proxify = function(elem) {
+        if(typeof elem === "function") {
+            if(typeof elem.transitNativeId !== "undefined") {
+                return elem.transitNativeId;
             } else {
-                return transit.retainElement(obj);
+                return transit.retainElement(elem);
             }
         }
 
-        if(typeof obj === "object") {
+        if(typeof elem === "object") {
+            if(elem instanceof Document || elem instanceof Element) {
+                return transit.retainElement(elem);
+            }
+
+            var copy;
             try {
-                var copy = JSON.parse(JSON.stringify(obj));
-                transit.proxifyMissingFunctionProperties(copy, obj);
-                return copy;
+                copy = JSON.parse(JSON.stringify(elem));
             } catch (e) {
-                return transit.retainElement(obj);
+                return transit.retainElement(elem);
             }
+            transit.recursivelyProxifyMissingFunctionProperties(copy, elem);
+            return copy;
         }
 
-        return obj;
+        return elem;
     };
 
     transit.invokeNative = function(nativeId, thisArg, args) {
@@ -95,6 +102,10 @@
         delete transit.retained[retainId];
     };
 
-    window.transit = transit;
+    window[globalName] = transit;
 
-})();
+})(
+  // TRANSIT_GLOBAL_NAME
+    "transit"
+  // TRANSIT_GLOBAL_NAME
+);
