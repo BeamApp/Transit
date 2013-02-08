@@ -146,6 +146,15 @@ describe("Transit", function() {
             expect(transit.retained[actual[2]]).toBe(f2);
         });
 
+        it("recognizes native functions", function(){
+            var nativeFunc = transit.nativeFunction("someId");
+            var obj = {jsFunc:_function, nativeFunc: nativeFunc};
+            var actual = transit.proxify(obj);
+            expect(Object.getOwnPropertyNames(actual)).toEqual(["jsFunc", "nativeFunc"]);
+            expect(transit.retained[actual.jsFunc]).toBe(_function);
+            expect(actual.nativeFunc).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
+        });
+
     });
 
     describe("invokeNative", function(){

@@ -5,6 +5,7 @@
     };
 
     var PREFIX_MAGIC_FUNCTION = "__TRANSIT_JS_FUNCTION_";
+    var PREFIX_MAGIC_NATIVE_FUNCTION = "__TRANSIT_NATIVE_FUNCTION_";
     var PREFIX_MAGIC_OBJECT = "__TRANSIT_OBJECT_PROXY_";
 
     transit.doInvokeNative = function(invocationDescription){
@@ -36,7 +37,11 @@
 
     transit.proxify = function(obj) {
         if(typeof obj === "function") {
-            return transit.retainElement(obj);
+            if(typeof obj.transitNativeId !== "undefined") {
+                return PREFIX_MAGIC_NATIVE_FUNCTION + obj.transitNativeId;
+            } else {
+                return transit.retainElement(obj);
+            }
         }
 
         if(typeof obj === "object") {
