@@ -10,11 +10,11 @@
             transit.performCall(nativeId, this, arguments);
         };
         f.transitNativeId = nativeId;
-        return f
+        return f;
     };
 
     transit.performCall = function(nativeId, thisArg, otherArgs) {
-        throw "to be implemented"
+        throw "to be implemented";
     };
 
     transit.retainProxy = function(element){

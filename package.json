@@ -1,0 +1,16 @@
+{
+  "name": "Transit",
+  "version": "0.0.1",
+  "description": "Library to Bridge between JavaScript and iOS, OSX, Android",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "statify -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/BeamApp/Transit.git"
+  },
+  "dependencies": {
+    "grunt-jasmine-task": "0.2.3"
+  }
+}
