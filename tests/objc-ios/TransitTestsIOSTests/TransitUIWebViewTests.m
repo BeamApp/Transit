@@ -6,8 +6,12 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import "TransitUIWebViewTests.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import "Transit.h"
+
+@interface TransitUIWebViewTests : SenTestCase
+
+@end
 
 @implementation TransitUIWebViewTests
 

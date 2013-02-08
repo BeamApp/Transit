@@ -6,10 +6,14 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import "TransitProxyTests.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+
+@interface TransitProxyTests : SenTestCase
+
+@end
 
 @implementation TransitProxyTests
 

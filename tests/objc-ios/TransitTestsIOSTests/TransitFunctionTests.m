@@ -6,9 +6,14 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import "TransitFunctionTests.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import "Transit.h"
 #import "OCMock.h"
+
+@interface TransitFunctionTests : SenTestCase
+
+@end
+
 
 @protocol TransitBlockTestProtocol <NSObject>
 

@@ -60,15 +60,11 @@
 		CB18EEE516C549050051CC7C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		CB18EEED16C549050051CC7C /* TransitTestsIOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TransitTestsIOSTests-Info.plist"; sourceTree = "<group>"; };
 		CB18EEEF16C549050051CC7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		CB18EEF116C549050051CC7C /* TransitTestsIOSTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransitTestsIOSTests.h; sourceTree = "<group>"; };
 		CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransitTestsIOSTests.m; sourceTree = "<group>"; };
 		CB18EEFD16C549E50051CC7C /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
 		CB18EEFE16C549E50051CC7C /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
-		CB18EF0016C54B830051CC7C /* TransitUIWebViewTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitUIWebViewTests.h; sourceTree = "<group>"; };
 		CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitUIWebViewTests.m; sourceTree = "<group>"; };
-		CB18EF2C16C57BD90051CC7C /* TransitFunctionTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitFunctionTests.h; sourceTree = "<group>"; };
 		CB18EF2D16C57BD90051CC7C /* TransitFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitFunctionTests.m; sourceTree = "<group>"; };
-		CB18EF5116C58FC70051CC7C /* TransitProxyTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitProxyTests.h; sourceTree = "<group>"; };
 		CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitProxyTests.m; sourceTree = "<group>"; };
 		CB18EF5516C590F80051CC7C /* Transit+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Transit+Private.h"; sourceTree = "<group>"; };
 		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,13 +159,9 @@
 			isa = PBXGroup;
 			children = (
 				CB18EEEC16C549050051CC7C /* Supporting Files */,
-				CB18EEF116C549050051CC7C /* TransitTestsIOSTests.h */,
 				CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */,
-				CB18EF0016C54B830051CC7C /* TransitUIWebViewTests.h */,
 				CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */,
-				CB18EF2C16C57BD90051CC7C /* TransitFunctionTests.h */,
 				CB18EF2D16C57BD90051CC7C /* TransitFunctionTests.m */,
-				CB18EF5116C58FC70051CC7C /* TransitProxyTests.h */,
 				CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */,
 			);
 			path = TransitTestsIOSTests;
