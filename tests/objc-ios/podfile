@@ -1,0 +1,7 @@
+platform :ios, '5.0'
+
+pod "SBJson"
+
+#target :beamAppTests, :exclusive => true do
+#  pod 'OCMock'
+#end

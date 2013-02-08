@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBJsonStreamParser.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBJsonStreamParser</TokenIdentifier>
+			<Abstract type="html">Parse a stream of JSON data.</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>
+			
+			<NodeRef refid="2"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParser/setState:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, unsafe_unretained) SBJsonStreamParserState *state</Declaration>
+			
+			
+			<Anchor>//api/name/state</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamParser/state</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, unsafe_unretained) SBJsonStreamParserState *state</Declaration>
+			
+			
+			<Anchor>//api/name/state</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParser/setStateStack:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSMutableArray *stateStack</Declaration>
+			
+			
+			<Anchor>//api/name/stateStack</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamParser/stateStack</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSMutableArray *stateStack</Declaration>
+			
+			
+			<Anchor>//api/name/stateStack</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParser/setSupportMultipleDocuments:</TokenIdentifier>
+			<Abstract type="html">Expect multiple documents separated by whitespace</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL supportMultipleDocuments</Declaration>
+			
+			
+			<Anchor>//api/name/supportMultipleDocuments</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamParser/supportMultipleDocuments</TokenIdentifier>
+			<Abstract type="html">Expect multiple documents separated by whitespace</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL supportMultipleDocuments</Declaration>
+			
+			
+			<Anchor>//api/name/supportMultipleDocuments</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParser/setDelegate:</TokenIdentifier>
+			<Abstract type="html">Delegate to receive messages</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property (unsafe_unretained) id&lt;&gt; delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamParser/delegate</TokenIdentifier>
+			<Abstract type="html">Delegate to receive messages</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property (unsafe_unretained) id&lt;&gt; delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParser/setMaxDepth:</TokenIdentifier>
+			<Abstract type="html">The max parse depth</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger maxDepth</Declaration>
+			
+			
+			<Anchor>//api/name/maxDepth</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamParser/maxDepth</TokenIdentifier>
+			<Abstract type="html">The max parse depth</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger maxDepth</Declaration>
+			
+			
+			<Anchor>//api/name/maxDepth</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParser/setError:</TokenIdentifier>
+			<Abstract type="html">Holds the error after SBJsonStreamParserError was returned</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSString *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamParser/error</TokenIdentifier>
+			<Abstract type="html">Holds the error after SBJsonStreamParserError was returned</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSString *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParser/parse:</TokenIdentifier>
+			<Abstract type="html">Parse some JSON</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (SBJsonStreamParserStatus)parse:(NSData *)data</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>data</Name>
+					<Abstract type="html">An NSData object containing the next chunk of JSON
+
+@return
+- SBJsonStreamParserComplete if a full document was found
+- SBJsonStreamParserWaitingForData if a partial document was found and more data is required to complete it
+- SBJsonStreamParserError if an error occured. (See the error property for details in this case.)</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/parse:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

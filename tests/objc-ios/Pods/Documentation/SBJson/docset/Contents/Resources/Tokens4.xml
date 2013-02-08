@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBJsonStreamParserAdapter.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBJsonStreamParserAdapter</TokenIdentifier>
+			<Abstract type="html">SBJsonStreamParserDelegate protocol adapter</Abstract>
+			<DeclaredIn>SBJsonStreamParserAdapter.h</DeclaredIn>
+			
+			<NodeRef refid="4"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParserAdapter/setLevelsToSkip:</TokenIdentifier>
+			<Abstract type="html">How many levels to skip</Abstract>
+			<DeclaredIn>SBJsonStreamParserAdapter.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger levelsToSkip</Declaration>
+			
+			
+			<Anchor>//api/name/levelsToSkip</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamParserAdapter/levelsToSkip</TokenIdentifier>
+			<Abstract type="html">How many levels to skip</Abstract>
+			<DeclaredIn>SBJsonStreamParserAdapter.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger levelsToSkip</Declaration>
+			
+			
+			<Anchor>//api/name/levelsToSkip</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamParserAdapter/setDelegate:</TokenIdentifier>
+			<Abstract type="html">Your delegate object
+Set this to the object you want to receive the SBJsonStreamParserAdapterDelegate messages.</Abstract>
+			<DeclaredIn>SBJsonStreamParserAdapter.h</DeclaredIn>			
+			
+			<Declaration>@property (unsafe_unretained) id&lt;&gt; delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamParserAdapter/delegate</TokenIdentifier>
+			<Abstract type="html">Your delegate object
+Set this to the object you want to receive the SBJsonStreamParserAdapterDelegate messages.</Abstract>
+			<DeclaredIn>SBJsonStreamParserAdapter.h</DeclaredIn>			
+			
+			<Declaration>@property (unsafe_unretained) id&lt;&gt; delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>
