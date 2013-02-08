@@ -1,28 +1,62 @@
 (function(){
-    var transit = {};
+    var transit = {
+        retained:{},
+        lastRetainId: 0
+    };
 
-    transit.requestCall = function(callRequest){
+    var PREFIX_MAGIC_FUNCTION = "__TRANSIT_JS_FUNCTION_";
+    var PREFIX_MAGIC_OBJECT = "__TRANSIT_PROXY_OBJECT_";
+
+    transit.doInvokeNative = function(invocationDescription){
         throw "must be replaced by native runtime";
     };
 
     transit.nativeFunction = function(nativeId){
         var f = function(){
-            transit.performCall(nativeId, this, arguments);
+            transit.invokeNative(nativeId, this, arguments);
         };
         f.transitNativeId = nativeId;
         return f;
     };
 
-    transit.performCall = function(nativeId, thisArg, otherArgs) {
-        throw "to be implemented";
+    transit.proxify = function(obj) {
+        if(typeof obj === "function") {
+            return PREFIX_MAGIC_FUNCTION + transit.retainElement(obj);
+        }
+
+        if(typeof obj === "object") {
+            try {
+                var json = JSON.stringify(obj);
+                return obj;
+            } catch (e) {
+                return PREFIX_MAGIC_OBJECT + transit.retainElement(obj);
+            }
+        }
+
+
+        return obj;
     };
 
-    transit.retainProxy = function(element){
-        throw "to be implemented";
+    transit.invokeNative = function(nativeId, thisArg, args) {
+        var invocationDescription = {
+            nativeId:nativeId,
+            thisArg:transit.proxify(thisArg),
+            args:[]};
+
+        return transit.doInvokeNative(invocationDescription);
     };
 
-    transit.releaseProxy = function(proxyId) {
-        throw "to be implemented";
+    transit.retainElement = function(element){
+        transit.retained[++transit.lastRetainId] = element;
+        return ""+transit.lastRetainId;
+    };
+
+    transit.releaseElementWithId = function(retainId) {
+        if(typeof transit.retained[retainId] === "undefined") {
+            throw "no retained element with Id " + retainId;
+        }
+
+        delete transit.retained[retainId];
     };
 
     window.transit = transit;
