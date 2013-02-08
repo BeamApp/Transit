@@ -30,3 +30,26 @@
 @property(readonly) UIWebView* webView;
 
 @end
+
+@interface TransitFunction : TransitProxy
+
+-(id)initWithRootContext:(TransitContext*)rootContext;
+
+@property(readonly) TransitContext* rootContext;
+
+-(id)call;
+-(id)callWithArguments:(NSArray*)arguments;
+-(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray*)arguments;
+
+@end
+
+typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
+
+@interface TransitNativeFunction : TransitFunction
+
+-(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block;
+
+@property(readonly) NSString* nativeId;
+@property(readonly) TransitFunctionBlock block;
+
+@end

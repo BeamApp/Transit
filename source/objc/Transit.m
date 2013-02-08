@@ -116,3 +116,47 @@
 }
 
 @end
+
+@implementation TransitFunction
+
+-(id)initWithRootContext:(TransitContext*)rootContext {
+    self = [self init];
+    if(self) {
+        _rootContext = rootContext;
+    }
+    return self;
+}
+
+-(id)call {
+    return [self callWithThisArg:nil arguments:@[]];
+}
+
+-(id)callWithArguments:(NSArray*)arguments {
+    return [self callWithThisArg:nil arguments:arguments];
+}
+
+-(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray*)arguments {
+    @throw @"must be implemented by subclass";
+}
+
+@end
+
+@implementation TransitNativeFunction
+
+-(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block {
+    self = [self initWithRootContext:rootContext];
+    if(self) {
+        _nativeId = nativeId;
+        _block = block;
+    }
+    return self;
+}
+
+-(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray*)arguments {
+    if(!_block)
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"block is nil" userInfo:nil];
+    
+    return _block(thisArg, arguments);
+}
+
+@end

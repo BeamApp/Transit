@@ -33,7 +33,7 @@ In cases where Transit cannot give you access to a JavaScript value directly (e.
 TBD: more in-depth explanation.
 
 ![Class Diagram: Transit Proxies](http://yuml.me/diagram/dir:LR;scale:80;/class/[TransitProxy|valueType;boolValue;intValue;floatValue;stringValue;listValue;dictValue;rootContext|objectForKey:;objectAtIndex:;objectForKeyPath:|eval:;eval:arguments:;eval:context:arguments:;functionWithBlock:;]^-[TransitFunction],
-[TransitFunction|call;callWithArguments:;callWithContext:arguments:]^-[TransitJSFunction],
+[TransitFunction|call;callWithArguments:;callWithThisArg:arguments:]^-[TransitJSFunction],
 [TransitFunction]^-[TransitNativeFunction|dispose],
 [TransitProxy]^-[TransitUndefined],
 [TransitProxy]^-[TransitString],
