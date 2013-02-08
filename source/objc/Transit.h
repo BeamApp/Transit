@@ -16,6 +16,8 @@
 
 +(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments;
 
+-(NSString*)jsRepresentation;
+
 @end
 
 @interface TransitContext : TransitProxy

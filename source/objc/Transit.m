@@ -9,6 +9,32 @@
 #import "Transit.h"
 #import "SBJson.h"
 
+@interface TransitJSDirectExpression : NSObject
+
+@property(readonly) NSString* expression;
+
+@end
+
+@implementation TransitJSDirectExpression
+
+-(id)initWithExpression:(NSString*)expression {
+    self = [self init];
+    if(self) {
+        _expression = expression;
+    }
+    return self;
+}
+
+-(NSString*)jsRepresentation{
+    return _expression;
+}
+
++(id)expression:(NSString*)expression {
+    return [[self alloc] initWithExpression:expression];
+}
+
+@end
+
 @implementation NSString(TransRegExp)
 
 -(NSString*)stringByReplacingMatchesOf:(NSRegularExpression*)regex withTransformation:(NSString*(^)(NSString*element)) block {
@@ -53,6 +79,15 @@
     @throw @"must be implemented by subclass";
 }
 
+-(NSString*)jsRepresentation {
+    return [self.class jsRepresentation:self];
+}
+
+-(id)transitGlobalVarProxy {
+    // TODO use root context if available
+    return [TransitJSDirectExpression expression:@"transit"];
+}
+
 +(NSString*)jsRepresentation:(id)object {
     SBJsonWriter* writer = [SBJsonWriter new];
     NSString* json = [writer stringWithObject: @[object]];
@@ -74,7 +109,9 @@
         if(mutableArguments.count <=0)
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too few arguments" userInfo:nil];
         
-        NSString* result =  [NSString stringWithFormat:@"%@", [self jsRepresentation:mutableArguments[0]]];
+        id elem = mutableArguments[0];
+        NSString* jsRepresentation = [elem respondsToSelector:@selector(jsRepresentation)] ? [elem performSelector:@selector(jsRepresentation)] : [self jsRepresentation:elem];
+        NSString* result =  [NSString stringWithFormat:@"%@", jsRepresentation];
         
         [mutableArguments removeObjectAtIndex:0];
         return result;
@@ -146,6 +183,8 @@
 -(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block {
     self = [self initWithRootContext:rootContext];
     if(self) {
+        NSParameterAssert(nativeId);
+        NSParameterAssert(block);
         _nativeId = nativeId;
         _block = block;
     }
@@ -153,10 +192,11 @@
 }
 
 -(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray*)arguments {
-    if(!_block)
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"block is nil" userInfo:nil];
-    
     return _block(thisArg, arguments);
+}
+
+-(NSString*)jsRepresentation {
+    return [TransitProxy jsExpressionFromCode:@"@.nativeFunction(@)" arguments:@[self.transitGlobalVarProxy, _nativeId]];
 }
 
 @end

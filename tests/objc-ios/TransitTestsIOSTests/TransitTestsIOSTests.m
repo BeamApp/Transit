@@ -8,6 +8,7 @@
 
 #import "TransitTestsIOSTests.h"
 #import "Transit.h"
+#import "OCMock.h"
 
 @implementation TransitTestsIOSTests
 
@@ -37,6 +38,13 @@
     
     STAssertEqualObjects(@"\"foo\" + \"bar\"", [TransitProxy jsExpressionFromCode:@"@ + @" arguments:(@[@"foo", @"bar"])], @"two strings");
     STAssertEqualObjects(@"'baz' + \"bam\" + 23", [TransitProxy jsExpressionFromCode:@"'baz' + @ + @" arguments:(@[@"bam", @23])], @"two strings");
+}
+
+- (void)testJSExpressionFromObjectWithJsRepresentation {
+    TransitProxy* proxy = [OCMockObject mockForClass:TransitProxy.class];
+    [[[(id)proxy stub] andReturn:@"myRepresentation"] jsRepresentation];
+    STAssertEqualObjects(proxy.jsRepresentation, @"myRepresentation", @"works");
+    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"return @" arguments:@[proxy]], @"return myRepresentation", @"static method uses instance jsRepresentation");
 }
 
 - (void)testJSExpressionWithInvalidArgumentCount {

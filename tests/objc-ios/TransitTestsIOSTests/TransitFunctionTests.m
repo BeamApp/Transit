@@ -36,4 +36,15 @@
     [mock verify];
 }
 
+-(void)testJSRepresentation {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:nil nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    STAssertEqualObjects(func.jsRepresentation, @"transit.nativeFunction(\"someId\")", @"native jsCall");
+}
+
+-(void)testInExpression {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:nil nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    
+    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func]], @"transit.nativeFunction(\"someId\")('foo')", @"native func");
+}
+
 @end
