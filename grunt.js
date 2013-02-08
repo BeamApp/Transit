@@ -7,17 +7,17 @@ module.exports = function(grunt) {
     grunt.initConfig({
         lint: {
             // js/js.* only contains coffee files
-            files: ['source/js/*.js', 'source/tests/*.js']
+            files: ['source/js/*.js', 'tests/jasmine/spec/*.js']
         },
         jasmine: {
             all: {
-                src: 'source/tests/SpecRunner.html',
+                src: 'tests/jasmine/SpecRunner.html',
                 errorReporting: true
             }
         },
 
         watch: {
-            files: ['source/**/*.js', 'source/**/*.html'],
+            files: ['source/**/*.js', 'tests/**/*.js', 'tests/**/*.html'],
             tasks: ['continuous']
         },
         jshint: {
