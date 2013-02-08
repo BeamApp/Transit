@@ -8,7 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+@class TransitContext;
+
 @interface TransitProxy : NSObject
+
+-(id)initWithRootContext:(TransitContext*)rootContext;
+
+@property(readonly) TransitContext* rootContext;
 
 -(id)eval:(NSString*)jsCode;
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments;
@@ -21,6 +27,7 @@
 @end
 
 @interface TransitContext : TransitProxy
+
 @end
 
 @interface TransitUIWebViewContext : TransitContext
@@ -34,8 +41,6 @@
 @end
 
 @interface TransitFunction : TransitProxy
-
--(id)initWithRootContext:(TransitContext*)rootContext;
 
 @property(readonly) TransitContext* rootContext;
 

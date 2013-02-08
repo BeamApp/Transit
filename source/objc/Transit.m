@@ -7,6 +7,7 @@
 //
 
 #import "Transit.h"
+#import "Transit+Private.h"
 #import "SBJson.h"
 
 @interface TransitJSDirectExpression : NSObject
@@ -67,6 +68,29 @@
 
 @implementation TransitProxy
 
+-(id)initWithRootContext:(TransitContext*)rootContext {
+    self = [self init];
+    if(self) {
+        _rootContext = rootContext;
+    }
+    return self;
+}
+
+-(BOOL)disposed {
+    return _rootContext == nil;
+}
+
+-(void)dispose {
+    if(_rootContext) {
+        [_rootContext releaseProxy: self];
+        _rootContext = nil;
+    }
+}
+
+-(void)dealloc {
+    [self dispose];
+}
+
 -(id)eval:(NSString*)jsCode {
     return [self eval:jsCode thisArg:nil arguments:@[]];
 }
@@ -126,6 +150,11 @@
 @end
 
 @implementation TransitContext
+
+-(void)releaseProxy:(TransitProxy*)proxy {
+    @throw @"not implemented, yet";
+}
+
 @end
 
 @implementation TransitUIWebViewContext
@@ -155,14 +184,6 @@
 @end
 
 @implementation TransitFunction
-
--(id)initWithRootContext:(TransitContext*)rootContext {
-    self = [self init];
-    if(self) {
-        _rootContext = rootContext;
-    }
-    return self;
-}
 
 -(id)call {
     return [self callWithThisArg:nil arguments:@[]];
