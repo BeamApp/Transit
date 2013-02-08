@@ -8,6 +8,8 @@
     var PREFIX_MAGIC_NATIVE_FUNCTION = "__TRANSIT_NATIVE_FUNCTION_";
     var PREFIX_MAGIC_OBJECT = "__TRANSIT_OBJECT_PROXY_";
 
+    var GLOBAL_OBJECT = window;
+
     transit.doInvokeNative = function(invocationDescription){
         throw "must be replaced by native runtime " + invocationDescription;
     };
@@ -59,9 +61,14 @@
 
     transit.invokeNative = function(nativeId, thisArg, args) {
         var invocationDescription = {
-            nativeId:nativeId,
-            thisArg:transit.proxify(thisArg),
-            args:[]};
+            nativeId: nativeId,
+            thisArg: (thisArg === GLOBAL_OBJECT) ? null : transit.proxify(thisArg),
+            args: []
+        };
+
+        for(var i = 0;i<args.length; i++) {
+            invocationDescription.args.push(transit.proxify(args[i]));
+        }
 
         return transit.doInvokeNative(invocationDescription);
     };

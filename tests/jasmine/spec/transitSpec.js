@@ -9,7 +9,7 @@ describe("Transit", function() {
     describe("nativeFunction", function(){
         var _invokeNative = transit.invokeNative;
         beforeEach(function(){
-            transit.invokeNative = jasmine.createSpy();
+            transit.invokeNative = jasmine.createSpy("invokeNative");
         });
         afterEach(function(){
             transit.invokeNative = _invokeNative;
@@ -21,7 +21,7 @@ describe("Transit", function() {
             expect(f.transitNativeId).toEqual("someId");
         });
 
-        it("calls transit.performCall", function(){
+        it("calls transit.invokeNative", function(){
             var f = transit.nativeFunction("someId");
             expect(transit.invokeNative).not.toHaveBeenCalled();
             f();
@@ -160,16 +160,43 @@ describe("Transit", function() {
     describe("invokeNative", function(){
         var _doInvokeNative = transit.doInvokeNative;
         beforeEach(function(){
-            transit.doInvokeNative = jasmine.createSpy();
+            transit.doInvokeNative = jasmine.createSpy("doInvokeNative");
         });
         afterEach(function(){
             transit.doInvokeNative = _doInvokeNative;
         });
 
         it("calls doInvokeNative", function(){
-            var simpleThisArg = {};
-            transit.invokeNative("someId", simpleThisArg, []);
-            expect(transit.doInvokeNative).toHaveBeenCalledWith({nativeId:"someId", thisArg:simpleThisArg, args:[]});
+            var simpleObj = {a:"1"};
+            transit.invokeNative("someId", simpleObj, []);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith({
+                nativeId:"someId",
+                thisArg:simpleObj,
+                args:[]
+            });
+        });
+
+        it("treats global object as null for thisArg", function(){
+            transit.invokeNative("someId", window, []);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith({
+                nativeId: "someId",
+                thisArg: null,
+                args: []
+            });
+        });
+
+        it("passes arguments and this as proxified", function(){
+            var simpleObj = {a:"1"};
+            var complexObj = document;
+            transit.invokeNative("someId", complexObj, [1, simpleObj, complexObj]);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith({
+                nativeId: "someId",
+                thisArg: jasmine.any(String),
+                args: [1, simpleObj, jasmine.any(String)]
+            });
+
+            // logging expect(JSON.stringify(transit.doInvokeNative.mostRecentCall.args[0])).toEqual("findme");
+
         });
 
     });
