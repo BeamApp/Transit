@@ -2,7 +2,7 @@
 
 Transit bridges between JavaScript and iOS, OSX, Android. You can easily embed a WebView or scripted logic via JS into your application and pass in native code as functions and especially event handlers. Whenever your native code got called you can use all arguments as well as the `this` argument even if they are JavaScript, functions again!
 
-It does not rely on special JavaScript Runtimes such as JavaScript Corem or Rhino but can be used with any visual or non-visual component that understands JavaScript. That way, you can easily modify existing web pages to integrate with your native application (e.g. make `history.go(-1)` close the WebView or bind a button's `onClick` event to your native code). On the other hand, you can expose native functionality as accessible JavaScript functions (e.g. `[transit bind:<native code> toVariable:'navigator.vibrate']`).
+It does not rely on special JavaScript runtimes such as JavaScript Core or Rhino but can be used with any visual or non-visual component that understands JavaScript. That way, you can easily modify existing web pages to integrate with your native application (e.g. make `history.go(-1)` close the WebView or bind a button's `onClick` event to your native code). On the other hand, you can expose native functionality as accessible JavaScript functions (e.g. `[transit bind:<native code> toVariable:'navigator.vibrate']`).
 
 ## Example for Objective-C
 
@@ -75,7 +75,9 @@ will be translated to
 
 Internally, it's a factory to create this wrapper:
 
-	reateNative = (nativeId) ->	  f = -> transit.performCall(nativeId, this, arguments)	  f.nativeId = nativeId
+	reateNative = (nativeId) ->
+	  f = -> transit.performCall(nativeId, this, arguments)
+	  f.nativeId = nativeId
 	  f
 
 #### `performCall(nativeId, thisArg, otherArgs)`
@@ -95,7 +97,7 @@ Never called directly, but called from `nativeFunction(nativeId)` instead. It fi
 
 Similar to these steps, it stores `thisArg` as `callRequest.thisArg` before finishing with `return transit.requestCall(callRequest)`.
 
-#### requestCall(callRequest)
+#### `requestCall(callRequest)`
 
 This function has to be overriden by the native runtime to provide a blocked call-out. It must return the result as proper JavaScript value.
 
@@ -117,6 +119,8 @@ Values for 1. and 2. are created on the JavaScript side. Values for 3. are an im
 
 
 ### Native Side
+
+TBD: more meat
 
 #### Proxies
   
@@ -141,6 +145,8 @@ The finalizers of a `TransitJSFunction` and `TransitObject` must ensure that `tr
 *NOTE:* Make sure, the native function Ids are unique over time and for each JavaScript context. That includes a page reload!
 
 ## Scratchpad
+Here are some (outdated) thoughts that otherwise would have been lost.
+TBD: delete unneeded material and convert remaining parts into readable chunks :)
 
 ```
 
@@ -156,8 +162,18 @@ a.func("asd");
 
 
 
-_this.get("title") // _this.title_this.eval("this.options.success(%@)", args: "some param")
-_this.eval("__a(%@)", args: "some param")[transit eval:@"2+%d" context:someProxy arguments:2]; -> // (2+2)[_this eval:"%@.apply(%@)" arguments:arg[2], arg[1]]// (function() { this.options.success(MAGIC) }).apply(transit.resolveProxy(...)))
+_this.get("title") // _this.title
+_this.eval("this.options.success(%@)", args: "some param")
+
+_this.eval("__a(%@)", args: "some param")
+
+
+[transit eval:@"2+%d" context:someProxy arguments:2]; -> // (2+2)
+
+
+[_this eval:"%@.apply(%@)" arguments:arg[2], arg[1]]
+
+// (function() { this.options.success(MAGIC) }).apply(transit.resolveProxy(...)))
 
 // function(){(this.options.success("some param"))}.apply(transit.resolveProxy(…))
 
