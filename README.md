@@ -76,13 +76,13 @@ will be translated to
 Internally, it's a factory to create this wrapper:
 
 	reateNative = (nativeId) ->
-	  f = -> transit.performCall(nativeId, this, arguments)
+	  f = -> transit.invokeNative(nativeId, this, arguments)
 	  f.nativeId = nativeId
 	  f
 
-#### `performCall(nativeId, thisArg, otherArgs)`
+#### `invokeNative(nativeId, thisArg, otherArgs)`
 
-Never called directly, but called from `nativeFunction(nativeId)` instead. It first builds a  `callRequest = {nativeId: nativeId, arguments:[]}` object from each element of `otherArgs` by analyzing its nature and *push* a suitable value as argument to the `callRequest`. Each element falls into one of the following cases:
+Never called directly, but called from `nativeFunction(nativeId)` instead. It first builds a  `invocationDescription = {nativeId: nativeId, arguments:[]}` object from each element of `otherArgs` by analyzing its nature and *push* a suitable value as argument to the `invocationDescription`. Each element falls into one of the following cases:
 
 1. `typeof element == "function"`
     a. it's a native wrapper, then *push* "magic native function id"  
@@ -95,9 +95,9 @@ Never called directly, but called from `nativeFunction(nativeId)` instead. It fi
 		2. store "magic function id" at missing property
 	3. *push* `obj`
 
-Similar to these steps, it stores `thisArg` as `callRequest.thisArg` before finishing with `return transit.requestCall(callRequest)`.
+Similar to these steps, it stores `thisArg` as `invocationDescription.thisArg` before finishing with `return transit.doInvokeNative(invocationDescription)`.
 
-#### `requestCall(callRequest)`
+#### `doInvokeNative(invocationDescription)`
 
 This function has to be overriden by the native runtime to provide a blocked call-out. It must return the result as proper JavaScript value.
 
@@ -155,7 +155,7 @@ TBD: delete unneeded material and convert remaining parts into readable chunks :
 
 arr[0][@"title"] == "doc's title"
 
-f= (function(){transit.performCall("sdfsf", this, arguments)})
+f= (function(){transit.invokeNative("sdfsf", this, arguments)})
 
 a.func = f;
 a.func("asd");
