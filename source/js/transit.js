@@ -5,10 +5,10 @@
     };
 
     var PREFIX_MAGIC_FUNCTION = "__TRANSIT_JS_FUNCTION_";
-    var PREFIX_MAGIC_OBJECT = "__TRANSIT_PROXY_OBJECT_";
+    var PREFIX_MAGIC_OBJECT = "__TRANSIT_OBJECT_PROXY_";
 
     transit.doInvokeNative = function(invocationDescription){
-        throw "must be replaced by native runtime";
+        throw "must be replaced by native runtime " + invocationDescription;
     };
 
     transit.nativeFunction = function(nativeId){
@@ -19,6 +19,21 @@
         return f;
     };
 
+    transit.proxifyMissingFunctionProperties = function(missing, existing) {
+        for(var key in existing) {
+            if(existing.hasOwnProperty(key)){
+                var existingValue = existing[key];
+
+                if(typeof existingValue === "function") {
+                    missing[key] = transit.proxify(existingValue);
+                }
+                if(typeof existingValue === "object") {
+                    transit.proxifyMissingFunctionProperties(missing[key], existingValue);
+                }
+            }
+        }
+    };
+
     transit.proxify = function(obj) {
         if(typeof obj === "function") {
             return PREFIX_MAGIC_FUNCTION + transit.retainElement(obj);
@@ -26,13 +41,13 @@
 
         if(typeof obj === "object") {
             try {
-                var json = JSON.stringify(obj);
-                return obj;
+                var copy = JSON.parse(JSON.stringify(obj));
+                transit.proxifyMissingFunctionProperties(copy, obj);
+                return copy;
             } catch (e) {
                 return PREFIX_MAGIC_OBJECT + transit.retainElement(obj);
             }
         }
-
 
         return obj;
     };

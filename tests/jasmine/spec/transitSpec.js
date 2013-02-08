@@ -69,40 +69,44 @@ describe("Transit", function() {
     });
 
     describe("proxify", function(){
+        var _undefined;
+        var _bool = true;
+        var _number = 42;
+        var _string = "foobar";
+        var _simpleArr = [1,2,3];
+        //noinspection JSUnusedAssignment
+        var _simpleObj = {_u:_undefined, _b:_bool, _n:_number, _s:_string, _sa:_simpleArr};
+        var _function = function(){};
+
         afterEach(function(){
             // cleanup after messy tests
             transit.retained = {};
         });
 
-        it("keeps identify for simple values", function(){
-            var _undefined;
-            var _bool = true;
-            var _number = 42;
-            var _string = "foobar";
-            var _simpleArr = [1,2,3];
-            var _simpleObj = {_u:_undefined, _b:_bool, _n:_number, _s:_string, _sa:_simpleArr};
-
+        it("keeps identify for scalar values", function(){
             expect(transit.proxify(_undefined)).toBe(_undefined);
             expect(transit.proxify(_bool)).toBe(_bool);
             expect(transit.proxify(_number)).toBe(_number);
             expect(transit.proxify(_string)).toBe(_string);
-            expect(transit.proxify(_simpleArr)).toBe(_simpleArr);
-            expect(transit.proxify(_simpleObj)).toBe(_simpleObj);
+        });
+
+        it("returns equal objects if no functions", function(){
+            expect(transit.proxify(_simpleArr)).toEqual(_simpleArr);
+            expect(transit.proxify(_simpleObj)).toEqual(_simpleObj);
         });
 
         it("returns magic marker and retains functions", function(){
-            var f = function(){};
-            var marker = transit.proxify(f);
+            var marker = transit.proxify(_function);
 
             expect(marker).toMatch(/^__TRANSIT_JS_FUNCTION_/);
 
             var retainId = marker.match(/^__TRANSIT_JS_FUNCTION_(.*)/)[1];
             var expectedRetained = {};
-            expectedRetained[retainId] = f;
+            expectedRetained[retainId] = _function;
             expect(transit.retained).toEqual(expectedRetained);
         });
 
-        xit("returns magic marker and retains complex object", function(){
+        it("returns magic marker and retains complex object", function(){
             var o = {};
             o.cicle = o;
 
@@ -114,6 +118,39 @@ describe("Transit", function() {
             var expectedRetained = {};
             expectedRetained[retainId] = o;
             expect(transit.retained).toEqual(expectedRetained);
+        });
+
+        it("replaces function properties with magic markers", function(){
+            var obj = {func: _function, nested:{_b: _bool, func:_function}, _b:_bool, _n:_number, _s: _string};
+
+            var actual = transit.proxify(obj);
+
+            expect(Object.getOwnPropertyNames(actual)).toEqual(["nested", "_b", "_n", "_s", "func"]);
+            expect(actual._b).toEqual(_bool);
+            expect(actual._n).toEqual(_number);
+            expect(actual._s).toEqual(_string);
+            expect(actual.func).toMatch(/^__TRANSIT_JS_FUNCTION_/);
+
+            expect(Object.getOwnPropertyNames(actual.nested)).toEqual(["_b", "func"]);
+            expect(actual.nested._b).toEqual(_bool);
+            expect(actual.nested.func).toMatch(/^__TRANSIT_JS_FUNCTION_/);
+        });
+
+        it("keeps order of function elements in array", function(){
+            var f0 = function(){};
+            var f1 = function(){};
+            var f2 = function(){};
+
+            function funcForMarker(marker) {
+                var retainId = marker.match(/^__TRANSIT_JS_FUNCTION_(.*)/)[1];
+                return transit.retained[retainId];
+            }
+
+            var actual = transit.proxify([f0, f1, f2]);
+            expect(actual.length).toEqual(3);
+            expect(funcForMarker(actual[0])).toBe(f0);
+            expect(funcForMarker(actual[1])).toBe(f1);
+            expect(funcForMarker(actual[2])).toBe(f2);
         });
 
     });
