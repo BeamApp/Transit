@@ -34,5 +34,10 @@
     STAssertEqualObjects([context eval:@"@ + @" arguments:(@[@"2+2", @4])], @"2+24", @"'2+2' + 4 == '2+24'");
 }
 
+-(void)testThisArg {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    STAssertEqualObjects([context eval:@"this.a + @" thisArg:@{@"a":@"foo"} arguments:@[@"bar"]], @"foobar", @"this has been set");
+}
+
 
 @end

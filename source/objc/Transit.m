@@ -108,7 +108,9 @@
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments {
     SBJsonParser *parser = [SBJsonParser new];
     NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments];
-    NSString* js = [NSString stringWithFormat: @"JSON.stringify({v:%@})", jsExpression];
+    NSString* jsThisArg = thisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
+    NSString* jsApplyExpression = [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsThisArg];
+    NSString* js = [NSString stringWithFormat: @"JSON.stringify({v: %@})", jsApplyExpression];
     NSString* jsResult = [_webView stringByEvaluatingJavaScriptFromString: js];
     return [parser objectWithString:jsResult][@"v"];
 }
