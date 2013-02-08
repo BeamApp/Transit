@@ -100,9 +100,8 @@ describe("Transit", function() {
 
             expect(marker).toMatch(/^__TRANSIT_JS_FUNCTION_/);
 
-            var retainId = marker.match(/^__TRANSIT_JS_FUNCTION_(.*)/)[1];
             var expectedRetained = {};
-            expectedRetained[retainId] = _function;
+            expectedRetained[marker] = _function;
             expect(transit.retained).toEqual(expectedRetained);
         });
 
@@ -114,9 +113,8 @@ describe("Transit", function() {
 
             expect(marker).toMatch(/^__TRANSIT_OBJECT_PROXY_/);
 
-            var retainId = marker.match(/^__TRANSIT_OBJECT_PROXY_(.*)/)[1];
             var expectedRetained = {};
-            expectedRetained[retainId] = o;
+            expectedRetained[marker] = o;
             expect(transit.retained).toEqual(expectedRetained);
         });
 
@@ -141,16 +139,11 @@ describe("Transit", function() {
             var f1 = function(){};
             var f2 = function(){};
 
-            function funcForMarker(marker) {
-                var retainId = marker.match(/^__TRANSIT_JS_FUNCTION_(.*)/)[1];
-                return transit.retained[retainId];
-            }
-
             var actual = transit.proxify([f0, f1, f2]);
             expect(actual.length).toEqual(3);
-            expect(funcForMarker(actual[0])).toBe(f0);
-            expect(funcForMarker(actual[1])).toBe(f1);
-            expect(funcForMarker(actual[2])).toBe(f2);
+            expect(transit.retained[actual[0]]).toBe(f0);
+            expect(transit.retained[actual[1]]).toBe(f1);
+            expect(transit.retained[actual[2]]).toBe(f2);
         });
 
     });

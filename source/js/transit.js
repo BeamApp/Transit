@@ -36,7 +36,7 @@
 
     transit.proxify = function(obj) {
         if(typeof obj === "function") {
-            return PREFIX_MAGIC_FUNCTION + transit.retainElement(obj);
+            return transit.retainElement(obj);
         }
 
         if(typeof obj === "object") {
@@ -45,7 +45,7 @@
                 transit.proxifyMissingFunctionProperties(copy, obj);
                 return copy;
             } catch (e) {
-                return PREFIX_MAGIC_OBJECT + transit.retainElement(obj);
+                return transit.retainElement(obj);
             }
         }
 
@@ -62,8 +62,17 @@
     };
 
     transit.retainElement = function(element){
-        transit.retained[++transit.lastRetainId] = element;
-        return ""+transit.lastRetainId;
+        transit.lastRetainId++;
+        var id = "" + transit.lastRetainId;
+        if(typeof element === "object") {
+            id = PREFIX_MAGIC_OBJECT + id;
+        }
+        if(typeof element === "function") {
+            id = PREFIX_MAGIC_FUNCTION + id;
+        }
+
+        transit.retained[id] = element;
+        return id;
     };
 
     transit.releaseElementWithId = function(retainId) {
