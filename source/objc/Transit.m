@@ -45,8 +45,9 @@
 
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments {
     SBJsonParser *parser = [SBJsonParser new];
-    NSString* js = [NSString stringWithFormat: @"JSON.stringify([%@])", jsCode];
-    return [parser objectWithString:[_webView stringByEvaluatingJavaScriptFromString: js]][0];
+    NSString* js = [NSString stringWithFormat: @"JSON.stringify({v:%@})", jsCode];
+    NSString* jsResult = [_webView stringByEvaluatingJavaScriptFromString: js];
+    return [parser objectWithString:jsResult][@"v"];
 }
 
 @end

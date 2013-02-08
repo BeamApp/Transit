@@ -17,12 +17,18 @@
     return result;
 }
 
--(void)testEmptyPageExecutesJS {
+-(void)testResultTypes {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     
     STAssertEqualObjects([context eval:@"2+2"], @4, @"number");
     STAssertEqualObjects([context eval:@"3>2"], @YES, @"boolean");
     STAssertEqualObjects([context eval:@"'foo'+'bar'"], @"foobar", @"string");
+    
+    STAssertEqualObjects([context eval:@"{a:1,b:'two'}"],(@{@"a":@1,@"b":@"two"}), @"object");
+    STAssertEqualObjects([context eval:@"null"], NSNull.null, @"null");
+    STAssertEqualObjects([context eval:@"undefined"], nil, @"undefined");
 }
+
+
 
 @end
