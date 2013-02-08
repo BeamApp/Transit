@@ -14,6 +14,7 @@
 
 -(void)dispose;
 -(BOOL)disposed;
+-(TransitProxy*)transitGlobalVarProxy;
 
 @property(readonly) NSString* proxyId;
 
@@ -26,3 +27,10 @@
 
 @end
 
+@interface TransitJSDirectExpression : NSObject
+
+-(id)initWithExpression:(NSString*)expression;
+
+@property(readonly) NSString* expression;
+
+@end

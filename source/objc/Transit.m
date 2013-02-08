@@ -10,12 +10,6 @@
 #import "Transit+Private.h"
 #import "SBJson.h"
 
-@interface TransitJSDirectExpression : NSObject
-
-@property(readonly) NSString* expression;
-
-@end
-
 @implementation TransitJSDirectExpression
 
 -(id)initWithExpression:(NSString*)expression {
@@ -122,8 +116,8 @@
 }
 
 -(id)transitGlobalVarProxy {
-    // TODO use root context if available
-    return [TransitJSDirectExpression expression:@"transit"];
+    NSAssert(_rootContext, @"rootcontext not set");
+    return _rootContext.transitGlobalVarProxy;
 }
 
 +(NSString*)jsRepresentation:(id)object {
@@ -166,11 +160,16 @@
 @implementation TransitContext
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
-    @throw @"not implemented, yet";
+    return [TransitProxy jsExpressionFromCode:@"@.retained[@]" arguments:@[self.transitGlobalVarProxy, proxyId]];
 }
 
 -(void)releaseProxy:(TransitProxy*)proxy {
     @throw @"not implemented, yet";
+}
+
+-(id)transitGlobalVarProxy {
+    // TODO use root context if available
+    return [TransitJSDirectExpression expression:@"transit"];
 }
 
 @end

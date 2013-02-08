@@ -8,6 +8,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "Transit.h"
+#import "Transit+Private.h"
 #import "OCMock.h"
 
 @interface TransitNativeFunctionTests : SenTestCase
@@ -41,13 +42,22 @@
     [mock verify];
 }
 
+-(id)contextStubForTransitGlobalVar {
+    TransitContext *context = [OCMockObject niceMockForClass:TransitContext.class];
+    id globalVar = [[TransitJSDirectExpression alloc] initWithExpression:@"transit"];
+    [[[(id)context stub] andReturn:globalVar] transitGlobalVarProxy];
+    return context;
+}
+
 -(void)testJSRepresentation {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:nil nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
-    STAssertEqualObjects(func.jsRepresentation, @"transit.nativeFunction(\"someId\")", @"native jsCall");
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self contextStubForTransitGlobalVar] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    NSString* actual = func.jsRepresentation;
+    NSLog(@"actual: %@", actual);
+    STAssertEqualObjects(actual, @"transit.nativeFunction(\"someId\")", @"native jsCall");
 }
 
 -(void)testInExpression {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:nil nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self contextStubForTransitGlobalVar] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
     
     STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func]], @"transit.nativeFunction(\"someId\")('foo')", @"native func");
 }
