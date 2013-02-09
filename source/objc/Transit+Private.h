@@ -44,4 +44,10 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 @end
 
+@interface TransitUIWebViewContext(Private)
+
+@property(copy) void (^handleRequestBlock)(TransitUIWebViewContext*,NSURLRequest*);
+
+@end
+
 extern NSString* _TRANSIT_JS_RUNTIME_CODE;

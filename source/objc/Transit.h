@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @class TransitContext;
 
 @interface TransitProxy : NSObject
@@ -15,6 +16,7 @@
 -(id)initWithRootContext:(TransitContext*)rootContext;
 -(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId;
 -(id)initWithRootContext:(TransitContext*)rootContext value:(id)value;
+-(id)initWithRootContext:(TransitContext *)rootContext jsRepresentation:(NSString*)jsRepresentation;
 
 -(TransitContext*)rootContext;
 @property(nonatomic, readonly) id value;
@@ -33,7 +35,7 @@
 
 @end
 
-@interface TransitUIWebViewContext : TransitContext
+@interface TransitUIWebViewContext : TransitContext<UIWebViewDelegate>
 
 +(id)contextWithUIWebView:(UIWebView*)webView;
 

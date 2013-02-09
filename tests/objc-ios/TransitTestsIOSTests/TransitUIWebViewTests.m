@@ -102,5 +102,58 @@
     STAssertEqualObjects(@2, [context eval:@"window.findme.v"], @"code has been injected");
 }
 
+-(TransitJSFunction*)callContext:(TransitContext*)context {
+    NSString* js = @"(function(arg){\n"
+            "window.globalTestVar = 'beforeCall '+arg;\n"
+            "var iFrame = document.createElement('iframe');\n"
+            "iFrame.setAttribute('src', 'transit:'+arg);\n"
+            "document.documentElement.appendChild(iFrame);\n"
+            "iFrame.parentNode.removeChild(iFrame);\n"
+            "iFrame = null;\n"
+            "return window.globalTestVar;\n"
+        "})";
+    return [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:js];
+}
+
+-(void)testSimpleCallFromWebView{
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    context.handleRequestBlock = ^(TransitUIWebViewContext *ctx, NSURLRequest* req) {
+        [ctx eval:@"window.globalTestVar = 'changedFromContext'"];
+    };
+    TransitFunction *func = [self callContext:context];
+    
+    [func call];
+    
+    STAssertEqualObjects(@"changedFromContext", [context eval:@"window.globalTestVar"], @"var changed in native code");
+}
+
+-(void)testRecursiveCallBetweenWebViewAndNative {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [self callContext:context];
+    
+    int expectedMaxDepth = 63;
+
+    context.handleRequestBlock = ^(TransitUIWebViewContext *ctx, NSURLRequest* req) {
+        int arg = req.URL.resourceSpecifier.intValue;
+        
+        if(arg <= expectedMaxDepth){
+            NSNumber *succ = @(arg+1);
+            [func callWithArguments:@[succ]];
+            
+            if(succ.intValue <= expectedMaxDepth) {
+                STAssertEqualObjects(succ, [ctx eval:@"window.globalTestVar"], @"correct reentrant values");
+            } else {
+                NSString* expected = [NSString stringWithFormat:@"beforeCall %d", expectedMaxDepth+1];
+                STAssertEqualObjects(expected, [ctx eval:@"window.globalTestVar"], @"max depth reached, frame will not block if max depth is exceed");
+            }
+        }
+        [ctx eval:@"window.globalTestVar = @" arguments:@[@(arg)]];
+    };
+    
+    [func callWithArguments:@[@1]];
+    
+    STAssertEqualObjects(@1, [context eval:@"window.globalTestVar"], @"var changed in native code");
+}
+
 
 @end

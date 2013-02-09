@@ -83,6 +83,11 @@
     return self;
 }
 
+-(id)initWithRootContext:(TransitContext *)rootContext jsRepresentation:(NSString*)jsRepresentation {
+    return [self initWithRootContext:rootContext value:[TransitJSDirectExpression expression:jsRepresentation]];
+}
+
+
 -(id)initWithRootContext:(TransitContext*)rootContext {
     return [self initWithRootContext:rootContext proxyId:nil];
 }
@@ -133,8 +138,12 @@
     if(_proxyId && _rootContext)
        return [_rootContext jsRepresentationForProxyWithId:_proxyId];
     
-    if(_value)
-        return [self.class jsRepresentation:_value];
+    if(_value) {
+        if([_value respondsToSelector:@selector(jsRepresentation)])
+            return [_value jsRepresentation];
+        else
+            return [self.class jsRepresentation:_value];
+    }
     
     return [self.class jsRepresentation:self];
 }
@@ -246,13 +255,25 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 }
 
 -(id)transitGlobalVarProxy {
-    // TODO use root context if available
     return [TransitJSDirectExpression expression:@"transit"];
 }
 
 @end
 
-@implementation TransitUIWebViewContext
+@implementation TransitUIWebViewContext{
+    void(^_handleRequestBlock)(TransitUIWebViewContext*,NSURLRequest*);
+}
+
+-(void)setHandleRequestBlock:(void (^)(TransitUIWebViewContext*,NSURLRequest*))testCallBlock {
+    _handleRequestBlock = [testCallBlock copy];
+}
+
+-(void (^)(TransitUIWebViewContext*,NSURLRequest*))handleRequestBlock {
+    return _handleRequestBlock;
+}
+
+NSString* _TRANSIT_SCHEME = @"transit";
+NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 +(id)contextWithUIWebView:(UIWebView*)webView {
     return [[self alloc] initWithUIWebView: webView];
@@ -268,6 +289,7 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 }
 
 -(void)bindToWebView {
+    _webView.delegate = self;
     if(!_webView.loading)
         [self eval:_TRANSIT_JS_RUNTIME_CODE];
 }
@@ -281,6 +303,18 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
     NSString* js = [NSString stringWithFormat: @"JSON.stringify({v: %@})", jsApplyExpression];
     NSString* jsResult = [_webView stringByEvaluatingJavaScriptFromString: js];
     return [parser objectWithString:jsResult][@"v"];
+}
+
+#pragma UIWebViewDelegate
+
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if([request.URL.scheme isEqual:_TRANSIT_SCHEME]){
+        if(self.handleRequestBlock)
+            self.handleRequestBlock(self, request);
+            
+        return NO;
+    }
+    return YES;
 }
 
 @end
