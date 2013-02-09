@@ -191,6 +191,8 @@
 @end
 
 NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
+NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_ = @"__TRANSIT_JS_FUNCTION_";
+NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
 
 @implementation TransitContext {
     NSMutableDictionary* _retainedNativeProxies;
@@ -226,7 +228,8 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 }
 
 -(void)releaseJSProxyWithId:(NSString*)id {
-    @throw @"not implemented, yet";
+    // TODO: implement
+//    @throw @"not implemented, yet";
 }
 
 -(void)retainNativeProxy:(TransitProxy*)proxy {
@@ -254,14 +257,69 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
     return _retainedNativeProxies;
 }
 
+-(NSString*)transitGlobalVarName {
+    return @"transit";
+}
+
 -(id)transitGlobalVarProxy {
-    return [TransitJSDirectExpression expression:@"transit"];
+    return [TransitJSDirectExpression expression:self.transitGlobalVarName];
+}
+
+
++(NSRegularExpression*)regularExpressionForMarker:(NSString*)marker {
+    static NSMutableDictionary* cache;
+    if(!cache)cache = [NSMutableDictionary dictionary];
+    
+    NSRegularExpression *result = cache[marker];
+    if(!result) {
+        NSString* pattern = [NSString stringWithFormat:@"^%@([\\d\\w]+)$", [NSRegularExpression escapedPatternForString:marker]];
+        result = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:nil];
+        cache[marker] = result;
+    }
+    return result;
+}
+
++(id)proxyIdFromString:(NSString*)string forMarker:(NSString*)marker {
+    NSRegularExpression* expression = [self regularExpressionForMarker:marker];
+    NSTextCheckingResult *match = [expression firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
+    if(match) {
+        return [string substringWithRange:[match rangeAtIndex:1]];
+    }
+    return nil;
+}
+
+-(id)recursivelyReplaceMarkersWithProxies:(id)unproxified {
+    if([unproxified isKindOfClass:NSString.class]) {
+        id objectProxyId = [self.class proxyIdFromString:unproxified forMarker:_TRANSIT_MARKER_PREFIX_OBJECT_PROXY_];
+        if(objectProxyId)
+            return [[TransitProxy alloc] initWithRootContext:self proxyId:objectProxyId];
+        
+        id functionProxyId = [self.class proxyIdFromString:unproxified forMarker:_TRANSIT_MARKER_PREFIX_JS_FUNCTION_];
+        if(functionProxyId)
+            return [[TransitJSFunction alloc] initWithRootContext:self proxyId:functionProxyId];
+    }
+    if([unproxified isKindOfClass:NSDictionary.class]) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:unproxified];
+        for (id key in dict.allKeys) {
+            dict[key] = [self recursivelyReplaceMarkersWithProxies:dict[key]];
+        }
+        return dict;
+    }
+    if([unproxified isKindOfClass:NSArray.class]) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:unproxified];
+        for(int i=0; i<array.count; i++)
+            array[i] = [self recursivelyReplaceMarkersWithProxies:array[i]];
+        return array;
+    }
+
+    return unproxified;
 }
 
 @end
 
 @implementation TransitUIWebViewContext{
     void(^_handleRequestBlock)(TransitUIWebViewContext*,NSURLRequest*);
+    BOOL _proxifiedEval;
 }
 
 -(void)setHandleRequestBlock:(void (^)(TransitUIWebViewContext*,NSURLRequest*))testCallBlock {
@@ -270,6 +328,14 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 
 -(void (^)(TransitUIWebViewContext*,NSURLRequest*))handleRequestBlock {
     return _handleRequestBlock;
+}
+
+-(BOOL)proxifyEval {
+    return _proxifiedEval;
+}
+
+-(void)setProxifyEval:(BOOL)proxifyEval {
+    _proxifiedEval = proxifyEval;
 }
 
 NSString* _TRANSIT_SCHEME = @"transit";
@@ -290,8 +356,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 -(void)bindToWebView {
     _webView.delegate = self;
-    if(!_webView.loading)
+    if(!_webView.loading) {
         [self eval:_TRANSIT_JS_RUNTIME_CODE];
+        _proxifiedEval = YES;
+    }
 }
 
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments {
@@ -300,9 +368,18 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     id adjustedThisArg = thisArg == self ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
     NSString* jsApplyExpression = [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg];
-    NSString* js = [NSString stringWithFormat: @"JSON.stringify({v: %@})", jsApplyExpression];
+    NSString* jsWrappedApplyExpression = jsApplyExpression;
+    if(_proxifiedEval)
+        jsWrappedApplyExpression = [NSString stringWithFormat:@"%@.proxify(%@)", self.transitGlobalVarName, jsApplyExpression];
+    NSString* js = [NSString stringWithFormat: @"JSON.stringify({v: %@})", jsWrappedApplyExpression];
     NSString* jsResult = [_webView stringByEvaluatingJavaScriptFromString: js];
-    return [parser objectWithString:jsResult][@"v"];
+    
+    id parsedResult = [parser objectWithString:jsResult][@"v"];
+    id enhancedResult = parsedResult;
+    if(_proxifiedEval)
+        enhancedResult = [self recursivelyReplaceMarkersWithProxies:parsedResult];
+    
+    return enhancedResult;
 }
 
 #pragma UIWebViewDelegate

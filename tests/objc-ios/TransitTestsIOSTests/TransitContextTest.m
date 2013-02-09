@@ -171,6 +171,44 @@
     STAssertNil(proxy, @"proxy is free");
 }
 
+-(void)testDoNotReplaceSimpleObjectsWithMarkers {
+    TransitContext* context = TransitContext.new;
+    STAssertEqualObjects(@42, [context recursivelyReplaceMarkersWithProxies:@42], @"do nothing on numbers");
+    STAssertEqualObjects(@"foobar", [context recursivelyReplaceMarkersWithProxies:@"foobar"], @"do nothing on simple string");
+}
+
+-(void)testReplaceMarkerStrings {
+    TransitContext* context = TransitContext.new;
+    
+    NSString* marker = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, @"someId"];
+    id proxy = [context recursivelyReplaceMarkersWithProxies:marker];
+    STAssertTrue([proxy isKindOfClass:TransitProxy.class], @"object proxy");
+    STAssertFalse([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
+    STAssertEqualObjects(@"someId", [proxy proxyId], @"extracts proxy id");
+
+    marker = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, @"someId"];
+    proxy = [context recursivelyReplaceMarkersWithProxies:marker];
+    STAssertTrue([proxy isKindOfClass:TransitProxy.class], @"object proxy");
+    STAssertTrue([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
+    STAssertEqualObjects(@"someId", [proxy proxyId], @"extracts proxy id");
+}
+
+-(void)testDetectsMarkerStringsInComplexObject {
+    TransitContext* context = TransitContext.new;
+    
+    NSString* marker = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, @"someId"];
+    id detected = [context recursivelyReplaceMarkersWithProxies:@[@1, @"two", @{@"three":@3, @4: marker}]];
+    STAssertEqualObjects(@1, detected[0], @"one");
+    STAssertEqualObjects(@"two", detected[1], @"two");
+    STAssertEqualObjects(@3, detected[2][@"three"], @"three");
+    id proxy = detected[2][@4];
+    STAssertTrue([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
+    STAssertEqualObjects(@"someId", [proxy proxyId], @"extracts proxy id");
+}
+
+
+
+
 
 
 @end

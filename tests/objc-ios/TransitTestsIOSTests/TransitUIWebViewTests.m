@@ -49,7 +49,17 @@
     STAssertEqualObjects([context eval:@"3>2"], @YES, @"boolean");
     STAssertEqualObjects([context eval:@"'foo'+'bar'"], @"foobar", @"string");
     
-    STAssertEqualObjects([context eval:@"{a:1,b:'two'}"],(@{@"a":@1,@"b":@"two"}), @"object");
+    id object = [context eval:@"{a:1,b:'two'}"];
+    // isKindOf: test crucial since recursiveMarkerReplacement tests this way, too
+    STAssertTrue([object isKindOfClass:NSDictionary.class], @"NSDictionary");
+    STAssertEqualObjects(object,(@{@"a":@1,@"b":@"two"}), @"object");
+    
+    id array = [context eval:@"[1,2,3]"];
+    // isKindOf: test crucial since recursiveMarkerReplacement tests this way, too
+    STAssertTrue([array isKindOfClass:NSArray.class], @"NSArray");
+    STAssertEqualObjects(array,(@[@1,@2,@3]), @"array");
+    
+    
     STAssertEqualObjects([context eval:@"null"], NSNull.null, @"null");
     STAssertEqualObjects([context eval:@"undefined"], nil, @"undefined");
 }
@@ -67,6 +77,8 @@
 -(void)testInjectsCode {
     _TRANSIT_JS_RUNTIME_CODE = @"window.findme = true";
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    context.proxifyEval = NO;
+    
     STAssertEqualObjects(@YES, [context eval:@"window.findme"], @"code has been injected");
     [self.class waitForWebViewToBeLoaded:context.webView];
     STAssertEqualObjects(@"Empty Page", [context eval:@"document.title"], @"can access title");
@@ -76,6 +88,8 @@
 -(void)testInjectsCodeOnReloadOfHTMLString {
     _TRANSIT_JS_RUNTIME_CODE = @"window.findme = true";
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    context.proxifyEval = NO;
+    
     STAssertEqualObjects(@YES, [context eval:@"window.findme"], @"code has been injected");
 
     [context.webView loadHTMLString:@"<head><title>Changed</title></head><body></body>" baseURL:nil];
@@ -88,6 +102,7 @@
 -(void)testInjectsCodeOnReloadOfURLLoad {
     _TRANSIT_JS_RUNTIME_CODE = @"window.findme = {v:1, add:function(){window.findme.v++;}}";
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    context.proxifyEval = NO;
     
     STAssertEqualObjects(@1, [context eval:@"window.findme.v"], @"code has been injected");
     [context eval:@"window.findme.add()"];
@@ -157,8 +172,33 @@
 
 -(void)testRealInjectionCodeCreatesGlobalTransitObject {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    STAssertTrue(context.proxifyEval, @"proxification enabled");
+    context.proxifyEval = NO;
     id actual = [context eval:@"window.transit"];
-    STAssertEqualObjects((@{@"lastReainId":@0, @"retained":@{}}), actual, @"transit exists");
+
+    STAssertEqualObjects((@{@"lastRetainId":@0, @"retained":@{}}), actual, @"transit exists");
+}
+
+-(void)testTransitProxifiesFunction {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    id proxified = [context eval:@"function(){}"];
+    id lastRetainId = [context eval:@"transit.lastRetainId"];
+    
+    STAssertEqualObjects(@1, lastRetainId, @"has been retained");
+    STAssertTrue([proxified isKindOfClass:TransitProxy.class], @"is proxy");
+    STAssertTrue([proxified isKindOfClass:TransitJSFunction.class], @"is function");
+    STAssertEqualObjects(([NSString stringWithFormat:@"%@", lastRetainId]), [proxified proxyId], @"detected proxy id");
+}
+
+-(void)testTransitProxifiesDocument {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    id proxified = [context eval:@"document"];
+    id lastRetainId = [context eval:@"transit.lastRetainId"];
+    
+    STAssertEqualObjects(@1, lastRetainId, @"has been retained");
+    STAssertTrue([proxified isKindOfClass:TransitProxy.class], @"is proxy");
+    STAssertFalse([proxified isKindOfClass:TransitJSFunction.class], @"is not a function");
+    STAssertEqualObjects(([NSString stringWithFormat:@"%@", lastRetainId]), [proxified proxyId], @"has been proxified");
 }
 
 

@@ -32,6 +32,8 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 -(void)retainNativeProxy:(TransitProxy*)proxy;
 -(void)releaseNativeProxy:(TransitProxy*)proxy;
 
+-(id)recursivelyReplaceMarkersWithProxies:(id)unproxified;
+
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId;
 
 @end
@@ -47,7 +49,10 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 @interface TransitUIWebViewContext(Private)
 
 @property(copy) void (^handleRequestBlock)(TransitUIWebViewContext*,NSURLRequest*);
+@property(assign) BOOL proxifyEval;
 
 @end
 
 extern NSString* _TRANSIT_JS_RUNTIME_CODE;
+extern NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_;
+extern NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_;
