@@ -62,6 +62,7 @@
 
 @implementation TransitProxy {
     NSString* _proxyId;
+    __weak TransitContext* _rootContext;
 }
 
 -(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId {
@@ -85,18 +86,26 @@
     return _rootContext == nil;
 }
 
+-(void)clearRootContextAndProxyId {
+    _rootContext = nil;
+    _proxyId = nil;
+}
+
 -(void)dispose {
     if(_rootContext) {
         if(_proxyId){
             [_rootContext releaseJSProxyWithId: _proxyId];
-            _proxyId = nil;
         }
-        _rootContext = nil;
+        [self clearRootContextAndProxyId];
     }
 }
 
 -(NSString*)proxyId {
     return _proxyId;
+}
+
+-(TransitContext*)rootContext{
+    return _rootContext;
 }
 
 -(id)eval:(NSString*)jsCode {
@@ -160,35 +169,68 @@
 
 @end
 
+NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
+
 @implementation TransitContext {
-    NSMutableDictionary* _retainedProxies;
+    NSMutableDictionary* _retainedNativeProxies;
 }
 
 -(id)init {
     self = [super init];
     if(self){
-        _retainedProxies = [NSMutableDictionary dictionary];
+        _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT++;
+        _retainedNativeProxies = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
 -(void)dealloc {
     // dispose manually from here to maintain correct life cycle
-    [self disposeAllProxies];
+    [self disposeAllNativeProxies];
+    _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT--;
+}
+
+-(void)dispose {
+    [self disposeAllNativeProxies];
 }
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
     return [TransitProxy jsExpressionFromCode:@"@.retained[@]" arguments:@[self.transitGlobalVarProxy, proxyId]];
 }
 
--(void)disposeAllProxies {
-    for (id proxy in _retainedProxies.allValues) {
+-(void)disposeAllNativeProxies {
+    for (id proxy in _retainedNativeProxies.allValues) {
         [proxy dispose];
     }
 }
 
 -(void)releaseJSProxyWithId:(NSString*)id {
     @throw @"not implemented, yet";
+}
+
+-(void)retainNativeProxy:(TransitProxy*)proxy {
+    NSParameterAssert(proxy.rootContext == self);
+    NSParameterAssert(proxy.proxyId);
+    
+//    if(_retainedNativeProxies[proxy.proxyId])
+//        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"cannot retain native proxy twice" userInfo:nil];
+    
+    _retainedNativeProxies[proxy.proxyId] = proxy;
+}
+
+-(void)releaseNativeProxy:(TransitProxy *)proxy {
+    NSParameterAssert(proxy.rootContext == self);
+    NSParameterAssert(proxy.proxyId);
+    
+//    id existing = _retainedNativeProxies[proxy.proxyId];
+//    if(!existing)
+//        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"cannot release unretained proxy" userInfo:nil];
+
+    [_retainedNativeProxies removeObjectForKey:proxy.proxyId];
+}
+
+-(NSDictionary*)retainedNativeProxies {
+    return _retainedNativeProxies;
 }
 
 -(id)transitGlobalVarProxy {
@@ -262,8 +304,11 @@
 }
 
 -(void)dispose {
-    // explicit implementation needed to prevent compiler warning... weird
-    [super dispose];
+    if(self.rootContext) {
+        if(self.proxyId)
+            [self.rootContext releaseNativeProxy:self];
+        [self clearRootContextAndProxyId];
+    }
 }
 
 @end

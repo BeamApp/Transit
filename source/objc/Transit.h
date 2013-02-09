@@ -15,7 +15,7 @@
 -(id)initWithRootContext:(TransitContext*)rootContext;
 -(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId;
 
-@property(readonly) TransitContext* rootContext;
+-(TransitContext*)rootContext;
 
 -(id)eval:(NSString*)jsCode;
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments;
@@ -42,8 +42,6 @@
 @end
 
 @interface TransitFunction : TransitProxy
-
-@property(readonly) TransitContext* rootContext;
 
 -(id)call;
 -(id)callWithArguments:(NSArray*)arguments;

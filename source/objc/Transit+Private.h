@@ -18,13 +18,18 @@
 
 @property(readonly) NSString* proxyId;
 
+-(void)clearRootContextAndProxyId;
+
 @end
+
+extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 @interface TransitContext(Private)
 
-@property (readonly) NSMutableDictionary* retainedProxies;
+@property (readonly) NSMutableDictionary* retainedNativeProxies;
 
 -(void)releaseJSProxyWithId:(NSString*)proxy;
+-(void)retainNativeProxy:(TransitProxy*)proxy;
 -(void)releaseNativeProxy:(TransitProxy*)proxy;
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId;

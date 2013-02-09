@@ -62,9 +62,24 @@
     STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func]], @"transit.nativeFunction(\"someId\")('foo')", @"native func");
 }
 
--(void)testDisposeDoesNotThrowException {
+-(void)testDisposeOnNilContextDoesNotThrowException {
     TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithRootContext:nil nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
     [func dispose];
+}
+
+-(void)testExplicitDispose {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context proxyId:@"someId"];
+    
+    // calls for the first time
+    [[context expect] releaseNativeProxy:func];
+    [func dispose];
+    [context verify];
+    
+    // does not call a second time
+    STAssertTrue(func.disposed, @"is disposed");
+    [func dispose];
+    [context verify];
 }
 
 @end
