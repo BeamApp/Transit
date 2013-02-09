@@ -206,9 +206,34 @@
     STAssertEqualObjects(@"someId", [proxy proxyId], @"extracts proxy id");
 }
 
+-(void)testInvokeNativeWithMissingFunction {
+    TransitContext* context = TransitContext.new;
+    id result = [context invokeNativeDescription:@{@"nativeId":@"missing"}];
+    STAssertTrue([result isKindOfClass:NSError.class], @"missing native functions results in error");
+}
 
-
-
+-(void)testInvokeNativeWithThisArgVariations {
+    @autoreleasepool {
+        TransitContext* context = TransitContext.new;
+        TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"someId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+            
+            return thisArg;
+        }];
+        
+        // js: this == undefined
+        id result = [func callWithThisArg:nil arguments:@[]];
+        STAssertTrue(result == context, @"undefined");
+        
+        // js: this == null
+        result = [func callWithThisArg:nil arguments:@[]];
+        STAssertTrue(result == context, @"null");
+        
+        // js: this == "3", e.g. transit.nativeFunc("someId").apply("3");
+        result = [func callWithThisArg:@"3" arguments:@[]];
+        STAssertTrue([result isKindOfClass:TransitProxy.class], @"is proxy");
+        STAssertEqualObjects(@"3", [(TransitProxy*)result value], @"wraps '3'");
+    }
+}
 
 
 @end

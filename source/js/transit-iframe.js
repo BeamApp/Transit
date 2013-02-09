@@ -17,7 +17,15 @@
         iFrame.parentNode.removeChild(iFrame);
         iFrame = null;
 
-        return transit.nativeInvokeTransferObject;
+        if(transit.nativeInvokeTransferObject === invocationDescription) {
+            throw new Error("internal error with transit: invocation transfer object not filled.");
+        }
+        var result = transit.nativeInvokeTransferObject;
+        if(result instanceof Error) {
+            throw result;
+        } else {
+            return result;
+        }
     };
 
 })("transit");

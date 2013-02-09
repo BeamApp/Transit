@@ -36,6 +36,8 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId;
 
+-(id)invokeNativeDescription:(NSDictionary*)description;
+
 @end
 
 @interface TransitJSDirectExpression : NSObject
@@ -46,12 +48,16 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 @end
 
+@interface TransitNativeFunction(Private)
+
+-(id)callWithProxifedThisArg:(TransitProxy*)thisArg proxifiedArguments:(NSArray*)arguments;
+
+@end
 
 typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,NSURLRequest*);
 @interface TransitUIWebViewContext(Private)
 
 -(void)invokeNative;
--(id)invokeNativeDescription:(NSDictionary*)description;
 
 @property(copy) TransitUIWebViewContextRequestHandler handleRequestBlock;
 @property(assign) BOOL proxifyEval;

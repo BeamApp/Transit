@@ -216,5 +216,73 @@
     STAssertEqualObjects(@5, result, @"correctly passes values");
 }
 
+-(id)captureErrorMessageFromContext:(TransitContext*)context whenCallingFunction:(TransitFunction*)function {
+    NSString* js = @"(function(){\n"
+    "var result = 'initial';"
+    "try{\n"
+    "   result = 'no error ' + @();\n"
+    "} catch(e) {\n"
+    "   result = e.message;\n"
+    "}\n"
+    "return result;\n"
+    "})()";
+    
+    id result = [context eval:js arguments:@[function]];
+    return result;
+}
+
+-(void)testInvokeNativeProducesJSExceptionIfNotHandledCorrectly {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    context.handleRequestBlock = nil;
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        // do nothing
+        return nil;
+    }];
+    
+    id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
+    STAssertEqualObjects(@"internal error with transit: invocation transfer object not filled.", result, @"exception should be passed along");
+}
+
+-(void)testInvokeNativeThatThrowsExceptionWithoutLocalizedReason {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:nil];
+    }];
+    [context retainNativeProxy:func];
+    id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
+    [func dispose];
+    STAssertEqualObjects(@"ExceptionName: some reason", result, @"exception should be passed along");
+}
+
+-(void)testInvokeNativeThatThrowsExceptionWithLocalizedReason {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:@{NSLocalizedDescriptionKey: @"localized description"}];
+    }];
+    [context retainNativeProxy:func];
+    id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
+    [func dispose];
+    STAssertEqualObjects(@"localized description", result, @"exception should be passed along");
+}
+
+-(void)testInvokeNativeWithJSProxies {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        STAssertTrue([thisArg isKindOfClass:TransitJSFunction.class], @"this became js function proxy");
+        STAssertTrue([arguments[0] isKindOfClass:TransitProxy.class], @"proxy");
+        
+        return [(TransitProxy*)arguments[0] proxyId];
+    }];
+    [context retainNativeProxy:func];
+    // "this" will be a function -> proxy
+    // arguments[0] is the window object -> proxy
+    id result = [context eval:@"@.call(function(){}, window)" arguments:@[func]];
+    [func dispose];
+    id lastProxyId = [context eval:@"transit.lastRetainId"];
+    NSString* expectedProxyId = [NSString stringWithFormat:@"%@", lastProxyId];
+    
+    STAssertEqualObjects(expectedProxyId, result, @"proxy ids match");
+}
+
 
 @end

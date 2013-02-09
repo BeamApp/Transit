@@ -17,6 +17,12 @@
 
 @implementation TransitProxyTests
 
+-(void)testJSRepresentationForNSError {
+    NSError *error = [NSError errorWithDomain:@"transit" code:1 userInfo:@{NSLocalizedDescriptionKey:@"some description"}];
+    id actual = [TransitProxy jsExpressionFromCode:@"@" arguments:@[error]];
+    STAssertEqualObjects(@"new Error(\"some description\")", actual, @"error");
+}
+
 - (void)testJSExpressionFromCodeAndArguments {
     STAssertEqualObjects(@"no arguments", [TransitProxy jsExpressionFromCode:@"no arguments" arguments:@[]], @"no arguments");
     

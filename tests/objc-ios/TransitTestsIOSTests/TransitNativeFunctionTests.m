@@ -26,19 +26,23 @@
 
 -(void)testWillCallBlock {
     id mock = [OCMockObject mockForProtocol:@protocol(TransitBlockTestProtocol)];
+    __block TransitProxy* receivedThis;
     TransitFunctionBlock block = ^(TransitProxy* _this, NSArray* arguments){
+        receivedThis = _this;
         return [mock callWithThisArg:_this arguments:arguments];
     };
     
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:nil nativeId:@"someId" block:block];
+    TransitContext *context = TransitContext.new;
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"someId" block:block];
     
     id thisArg = @{@"a":@1};
     id args = @[@1, @"b"];
     id returnValue = @"result";
     
-    [[[mock stub] andReturn:returnValue] callWithThisArg:thisArg arguments:args];
+    [[[mock stub] andReturn:returnValue] callWithThisArg:OCMOCK_ANY arguments:args];
     id actualResult = [func callWithThisArg:thisArg arguments:args];
     STAssertTrue(actualResult == returnValue, @"passes result");
+    STAssertTrue(receivedThis.value == thisArg, @"naked this arg has been wrapped");
     [mock verify];
 }
 
