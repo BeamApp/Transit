@@ -33,9 +33,11 @@ public class MainActivity extends Activity {
 			@Override
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
-				Log.d("MainActivity", "Error received.");
+				Log.e("Console", "Error received.");
 			}
 		});
+		
+		webView.loadUrl("javascript:" + transit.getAdapter().getScript());
 		
 		webView.loadData(
 				"<html><head><title>Transit</title></head><body>Hello World!</body></html>",
