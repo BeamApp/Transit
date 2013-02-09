@@ -55,7 +55,7 @@ public class AndroidTest extends ActivityInstrumentationTestCase2<MainActivity> 
 			TransitProxy.jsExpressionFromCode("@", this);
 			fail();
 		} catch (IllegalArgumentException e) {
-			assertTrue(true);
+			// ok
 		}
 	}
 
@@ -104,6 +104,15 @@ public class AndroidTest extends ActivityInstrumentationTestCase2<MainActivity> 
 	public void testTransitInjected() {
 		TransitProxy transitExists = getActivity().transit.eval("window.transit != null");
 		assertEquals(true, (boolean)transitExists.getBooleanValue());
+	}
+	
+	public void testException() {
+		try {
+			getActivity().transit.eval("(void 0).toString()");
+			fail();
+		} catch (TransitException e) {
+			assertEquals("Cannot call method 'toString' of undefined", e.getMessage());
+		}
 	}
 
 }

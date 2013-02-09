@@ -134,8 +134,7 @@ public class TransitWebChromeClient extends WebChromeClient {
 			process(result);
 		} else if (message.equals(MAGIC_EXCEPTION_IDENTIFIER)) {
 			TransitEvalAction action = waitingEvaluations.pop();
-			action.exception = new TransitException(unmarshal(defaultValue)
-					.toString());
+			action.exception = new TransitException(String.valueOf(unmarshalJson(defaultValue)));
 			action.lock.open();
 			process(result);
 		} else if (message.equals(MAGIC_POLL_IDENTIFIER)) {
