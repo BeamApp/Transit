@@ -87,7 +87,10 @@
 
 -(void)dispose {
     if(_rootContext) {
-        [_rootContext releaseProxy: self];
+        if(_proxyId){
+            [_rootContext releaseJSProxyWithId: _proxyId];
+            _proxyId = nil;
+        }
         _rootContext = nil;
     }
 }
@@ -157,13 +160,34 @@
 
 @end
 
-@implementation TransitContext
+@implementation TransitContext {
+    NSMutableDictionary* _retainedProxies;
+}
+
+-(id)init {
+    self = [super init];
+    if(self){
+        _retainedProxies = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
+-(void)dealloc {
+    // dispose manually from here to maintain correct life cycle
+    [self disposeAllProxies];
+}
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
     return [TransitProxy jsExpressionFromCode:@"@.retained[@]" arguments:@[self.transitGlobalVarProxy, proxyId]];
 }
 
--(void)releaseProxy:(TransitProxy*)proxy {
+-(void)disposeAllProxies {
+    for (id proxy in _retainedProxies.allValues) {
+        [proxy dispose];
+    }
+}
+
+-(void)releaseJSProxyWithId:(NSString*)id {
     @throw @"not implemented, yet";
 }
 

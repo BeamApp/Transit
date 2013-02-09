@@ -27,7 +27,7 @@
     id actual = [func call];
     STAssertEqualObjects(@"someResult", actual, @"result passed along");
 
-    [[context expect] releaseProxy:func];
+    [[context expect] releaseJSProxyWithId:func.proxyId];
     [func dispose];
     
     [context verify];
@@ -42,7 +42,7 @@
     id actual = [func callWithThisArg:@{@"one":@1} arguments:@[@1,@"two", @YES]];
     STAssertEqualObjects(@"someResult", actual, @"result passed along");
     
-    [[context expect] releaseProxy:func];
+    [[context expect] releaseJSProxyWithId:func.proxyId];
     [func dispose];
     
     [context verify];

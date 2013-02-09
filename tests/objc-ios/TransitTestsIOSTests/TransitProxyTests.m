@@ -49,10 +49,10 @@
 
 -(void)testExplicitDispose {
     id context = [OCMockObject mockForClass:TransitContext.class];
-    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context];
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:@"someId"];
     
     // calls for the first time
-    [[context expect] releaseProxy:proxy];
+    [[context expect] releaseJSProxyWithId:@"someId"];
     [proxy dispose];
     [context verify];
     
@@ -62,16 +62,26 @@
     [context verify];
 }
 
--(void)createAndReleseProxyWithContext:(TransitContext*)context {
-    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context];
+-(void)createAndReleseProxyWithContext:(TransitContext*)context proxyId:(NSString*)proxyId{
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:proxyId];
     proxy = nil;
 }
 
 -(void)testImplicitDisposeOnDealloc {
     id context = [OCMockObject mockForClass:TransitContext.class];
 
-    [[context expect] releaseProxy:OCMOCK_ANY];
-    [self createAndReleseProxyWithContext:context];
+    [[context expect] releaseJSProxyWithId:@"fakeId"];
+    [self createAndReleseProxyWithContext:context proxyId:@"fakeId"];
+    [context verify];
+}
+
+-(void)testNoJSReleaseIfNoProxyId {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context];
+    
+    STAssertNil(proxy.proxyId, @"proxy without id");
+    // does not call anything on context
+    [proxy dispose];
     [context verify];
 }
 

@@ -22,7 +22,11 @@
 
 @interface TransitContext(Private)
 
--(void)releaseProxy:(TransitProxy*)proxy;
+@property (readonly) NSMutableDictionary* retainedProxies;
+
+-(void)releaseJSProxyWithId:(NSString*)proxy;
+-(void)releaseNativeProxy:(TransitProxy*)proxy;
+
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId;
 
 @end
