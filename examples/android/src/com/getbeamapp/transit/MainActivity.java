@@ -1,7 +1,5 @@
 package com.getbeamapp.transit;
 
-import java.util.concurrent.Executors;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,11 +7,10 @@ import android.util.Log;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	public TransitWebChromeClient transit;
+	public TransitContext transit;
 	public WebView webView;
 
 	@SuppressLint("SetJavaScriptEnabled")
@@ -23,16 +20,14 @@ public class MainActivity extends Activity {
 
 		webView = new WebView(this);
 		webView.getSettings().setJavaScriptEnabled(true);
-
-		transit = new TransitWebChromeClient(this, webView) {
+		
+		this.transit = TransitContext.forWebView(webView, new TransitWebChromeClient(webView) {
 			@Override
 			public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
 				Log.d("Console", consoleMessage.message());
 				return true;
 			}
-		};
-
-		webView.setWebChromeClient(transit);
+		});
 
 		webView.setWebViewClient(new WebViewClient() {
 			@Override

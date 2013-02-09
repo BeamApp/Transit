@@ -9,9 +9,8 @@ import java.util.concurrent.Semaphore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.ConditionVariable;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.webkit.JsPromptResult;
@@ -60,7 +59,7 @@ public class TransitWebChromeClient extends WebChromeClient {
 
 		public final ConditionVariable lock = new ConditionVariable();
 
-		public Object result;
+		public TransitProxy result;
 
 		public RuntimeException exception;
 
@@ -76,21 +75,26 @@ public class TransitWebChromeClient extends WebChromeClient {
 
 	private final Map<String, TransitNativeFunction> callbacks = new HashMap<String, TransitWebChromeClient.TransitNativeFunction>();
 
-	private final WebView webView;
-	private final Activity context;
+	final WebView webView;
+	private TransitContext context;
 
-	public TransitWebChromeClient(Activity context, WebView webView) {
+	public TransitWebChromeClient(WebView webView) {
 		super();
-		this.context = context;
 		this.webView = webView;
 	}
+	
+	public TransitProxy unmarshal(Object o) {
+		return new TransitProxy(context);
+	}
+	
+	public void setTransitContext(TransitContext context) {
+		this.context = context;
+	}
 
-	public Object unmarshal(String dataAsString) {
+	public Object unmarshalJson(String dataAsString) {
 		try {
-			JSONObject object = new JSONObject("{\"data\": " + dataAsString
-					+ "}");
-			Object data = object.get("data");
-			return data;
+			JSONObject object = new JSONObject("{\"data\": " + dataAsString + "}");
+			return object.get("data");
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		}
@@ -119,24 +123,27 @@ public class TransitWebChromeClient extends WebChromeClient {
 		return true;
 	}
 
-	public Object evaluate(String stringToEvaluate) {
+	public void runOnUiThread(Runnable runnable) {
+		if (isUiThread()) {
+			runnable.run();
+		} else {
+			new Handler(Looper.getMainLooper()).post(runnable);
+		}
+	}
+
+	public TransitProxy evaluate(String stringToEvaluate) {
 		TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
 		actions.push(action);
 		lock.release();
 
-		Runnable toExecute = new Runnable() {
+		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				webView.loadUrl("javascript:prompt('" + MAGIC_RETURN_IDENTIFIER
-						+ "', JSON.stringify(eval(prompt('" + MAGIC_POLL_IDENTIFIER + "'))))");
+						+ "', JSON.stringify(eval(prompt('"
+						+ MAGIC_POLL_IDENTIFIER + "'))))");
 			}
-		};
-
-		if (isUiThread()) {
-			toExecute.run();
-		} else {
-			this.context.runOnUiThread(toExecute);
-		}
+		});
 
 		action.lock.block();
 
