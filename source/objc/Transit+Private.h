@@ -43,3 +43,5 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 @property(readonly) NSString* expression;
 
 @end
+
+extern NSString* _TRANSIT_JS_RUNTIME_CODE;

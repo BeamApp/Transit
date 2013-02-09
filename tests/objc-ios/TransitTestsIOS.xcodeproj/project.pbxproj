@@ -29,6 +29,7 @@
 		CB18EF5316C58FC70051CC7C /* TransitProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */; };
 		CB18EF5716C595B50051CC7C /* TransitJSFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */; };
 		CB18EF5916C5A04D0051CC7C /* TransitContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */; };
+		CBE29FD816C671F4004AED2B /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 		CB18EF5516C590F80051CC7C /* Transit+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Transit+Private.h"; sourceTree = "<group>"; };
 		CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitJSFunctionTests.m; sourceTree = "<group>"; };
 		CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitContextTest.m; sourceTree = "<group>"; };
+		CBE29FD716C671F4004AED2B /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testPage.html; sourceTree = "<group>"; };
 		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -162,6 +164,7 @@
 		CB18EEEB16C549050051CC7C /* TransitTestsIOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				CBE29FD516C671DD004AED2B /* TestResources */,
 				CB18EEEC16C549050051CC7C /* Supporting Files */,
 				CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */,
 				CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */,
@@ -192,6 +195,14 @@
 			name = Transit;
 			path = ../../source/objc;
 			sourceTree = SOURCE_ROOT;
+		};
+		CBE29FD516C671DD004AED2B /* TestResources */ = {
+			isa = PBXGroup;
+			children = (
+				CBE29FD716C671F4004AED2B /* testPage.html */,
+			);
+			name = TestResources;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -278,6 +289,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB18EEF016C549050051CC7C /* InfoPlist.strings in Resources */,
+				CBE29FD816C671F4004AED2B /* testPage.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

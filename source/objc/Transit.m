@@ -262,8 +262,14 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
     self = [self init];
     if(self) {
         _webView = webView;
+        [self bindToWebView];
     }
     return self;
+}
+
+-(void)bindToWebView {
+    if(!_webView.loading)
+        [self eval:_TRANSIT_JS_RUNTIME_CODE];
 }
 
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments {
@@ -342,3 +348,10 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 }
 
 @end
+
+// NOTE: this value is automatically generated from grunt. DO NOT CHANGE IT
+NSString* _TRANSIT_JS_RUNTIME_CODE = @
+    // _TRANSIT_JS_RUNTIME_CODE
+    "window.transit={}"
+    //
+    ;
