@@ -14,6 +14,10 @@ public class TransitContext extends AbstractTransitContext {
 	public static TransitContext forWebView(WebView webView) {
 		return forWebView(webView, new TransitWebChromeClient(webView));
 	}
+	
+	public TransitWebChromeClient getAdapter() {
+		return this.adapter;
+	}
 
 	@Override
 	public TransitProxy eval(String stringToEvaluate, TransitProxy context,
