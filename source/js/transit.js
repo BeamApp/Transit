@@ -18,7 +18,7 @@
 
     transit.nativeFunction = function(nativeId){
         var f = function(){
-            transit.invokeNative(nativeId, this, arguments);
+            return transit.invokeNative(nativeId, this, arguments);
         };
         f.transitNativeId = PREFIX_MAGIC_NATIVE_FUNCTION + nativeId;
         return f;

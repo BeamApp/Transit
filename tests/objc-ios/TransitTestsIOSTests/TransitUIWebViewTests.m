@@ -201,5 +201,20 @@
     STAssertEqualObjects(([NSString stringWithFormat:@"%@", lastRetainId]), [proxified proxyId], @"has been proxified");
 }
 
+-(void)testCallThroughJavaScript {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        int a = [arguments[0] intValue];
+        int b = [arguments[1] intValue];
+        return @(a+b);
+    }];
+    [context retainNativeProxy:func];
+    id result = [context eval:@"@(2,3)" arguments:@[func]];
+    [func dispose];
+    
+    STAssertEqualObjects(@5, [context eval:@"transit.nativeInvokeTransferObject"], @"has been evaluated");
+    STAssertEqualObjects(@5, result, @"correctly passes values");
+}
+
 
 @end

@@ -46,9 +46,14 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 @end
 
+
+typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,NSURLRequest*);
 @interface TransitUIWebViewContext(Private)
 
-@property(copy) void (^handleRequestBlock)(TransitUIWebViewContext*,NSURLRequest*);
+-(void)invokeNative;
+-(id)invokeNativeDescription:(NSDictionary*)description;
+
+@property(copy) TransitUIWebViewContextRequestHandler handleRequestBlock;
 @property(assign) BOOL proxifyEval;
 
 @end
