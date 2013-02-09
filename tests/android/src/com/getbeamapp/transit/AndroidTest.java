@@ -1,24 +1,12 @@
 package com.getbeamapp.transit;
 
-import java.util.concurrent.Semaphore;
-
-import android.app.NativeActivity;
 import android.os.ConditionVariable;
 import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
-
-import com.getbeamapp.transit.MainActivity;
-import com.getbeamapp.transit.TransitNativeFunction;
-import com.getbeamapp.transit.TransitProxy;
 
 public class AndroidTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	public AndroidTest() {
 		super(MainActivity.class);
-	}
-
-	public void testPresence() {
-		assertNotNull(getActivity());
 	}
 
 	public void testAdd() {
@@ -102,6 +90,20 @@ public class AndroidTest extends ActivityInstrumentationTestCase2<MainActivity> 
 		function = null;
 		System.gc();
 		assertTrue("Function not garbage collected.", lock.block(1000));
+	}
+	
+	public void testSetup() {
+		MainActivity activity = getActivity();
+		assertNotNull(activity);
+		
+		TransitContext transit = activity.transit;
+		assertNotNull(transit);
+		assertNotNull(transit.getAdapter().getScript());
+	}
+	
+	public void testTransitInjected() {
+		TransitProxy transitExists = getActivity().transit.eval("window.transit != null");
+		assertEquals(true, (boolean)transitExists.getBooleanValue());
 	}
 
 }
