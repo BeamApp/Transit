@@ -9,155 +9,160 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 public class TransitProxy {
-	public enum Type {
-		UNKNOWN, BOOLEAN, NUMBER, STRING, ARRAY, OBJECT
-	}
+    public enum Type {
+        UNKNOWN,
+        BOOLEAN,
+        NUMBER,
+        STRING,
+        ARRAY,
+        OBJECT
+    }
 
-	protected Type type = Type.UNKNOWN;
+    protected Type type = Type.UNKNOWN;
 
-	protected AbstractTransitContext rootContext;
+    protected AbstractTransitContext rootContext;
 
-	private Object value;
+    private Object value;
 
-	public TransitProxy(AbstractTransitContext rootContext) {
-		this.rootContext = rootContext;
-	}
+    public TransitProxy(AbstractTransitContext rootContext) {
+        this.rootContext = rootContext;
+    }
 
-	public static TransitProxy withValue(AbstractTransitContext rootContext,
-			Object value) {
-		TransitProxy result = new TransitProxy(rootContext);
-		result.value = value;
+    public static TransitProxy withValue(AbstractTransitContext rootContext,
+            Object value) {
+        TransitProxy result = new TransitProxy(rootContext);
+        result.value = value;
 
-		if (value instanceof Boolean) {
-			result.type = Type.BOOLEAN;
-		} else if (value instanceof Number) {
-			result.type = Type.NUMBER;
-		} else if (value instanceof String) {
-			result.type = Type.STRING;
-		} else if (value instanceof Array) {
-			result.type = Type.ARRAY;
-		} else {
-			result.type = Type.OBJECT;
-		}
+        if (value instanceof Boolean) {
+            result.type = Type.BOOLEAN;
+        } else if (value instanceof Number) {
+            result.type = Type.NUMBER;
+        } else if (value instanceof String) {
+            result.type = Type.STRING;
+        } else if (value instanceof Array) {
+            result.type = Type.ARRAY;
+        } else {
+            result.type = Type.OBJECT;
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public TransitProxy get(String key) {
-		return null;
-	}
+    public TransitProxy get(String key) {
+        return null;
+    }
 
-	public TransitProxy get(int index) {
-		return null;
-	}
+    public TransitProxy get(int index) {
+        return null;
+    }
 
-	public Object get() {
-		return value;
-	}
+    public Object get() {
+        return value;
+    }
 
-	private void assertType(Type expected) {
-		if (type != expected) {
-			throw new AssertionError(String.format(
-					"Expected value to be %s but was %s", expected, type));
-		}
-	}
+    private void assertType(Type expected) {
+        if (type != expected) {
+            throw new AssertionError(String.format(
+                    "Expected value to be %s but was %s", expected, type));
+        }
+    }
 
-	public String getStringValue() {
-		assertType(Type.STRING);
-		return (String) value;
-	}
+    public String getStringValue() {
+        assertType(Type.STRING);
+        return (String) value;
+    }
 
-	public int getIntegerValue() {
-		assertType(Type.NUMBER);
-		return (Integer) value;
-	}
+    public int getIntegerValue() {
+        assertType(Type.NUMBER);
+        return (Integer) value;
+    }
 
-	public float getFloatValue() {
-		assertType(Type.NUMBER);
-		return (Float) value;
-	}
+    public float getFloatValue() {
+        assertType(Type.NUMBER);
+        return (Float) value;
+    }
 
-	public double getDoubleValue() {
-		assertType(Type.NUMBER);
-		return (Double) value;
-	}
+    public double getDoubleValue() {
+        assertType(Type.NUMBER);
+        return (Double) value;
+    }
 
-	public boolean getBooleanValue() {
-		assertType(Type.BOOLEAN);
-		return (Boolean) value;
-	}
+    public boolean getBooleanValue() {
+        assertType(Type.BOOLEAN);
+        return (Boolean) value;
+    }
 
-	public Array getArrayValue() {
-		assertType(Type.ARRAY);
-		return (Array) value;
-	}
+    public Array getArrayValue() {
+        assertType(Type.ARRAY);
+        return (Array) value;
+    }
 
-	public Map<String, Object> getObjectValue() {
-		assertType(Type.OBJECT);
-		return new HashMap<String, Object>();
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("[TransitProxy type:%s value:%s]", type, value);
-	}
+    public Map<String, Object> getObjectValue() {
+        assertType(Type.OBJECT);
+        return new HashMap<String, Object>();
+    }
 
-	public TransitProxy eval(String stringToEvaluate) {
-		return eval(stringToEvaluate, this, new Object[0]);
-	}
+    @Override
+    public String toString() {
+        return String.format("[TransitProxy type:%s value:%s]", type, value);
+    }
 
-	public TransitProxy eval(String stringToEvaluate, Object... arguments) {
-		return eval(stringToEvaluate, this, new Object[0]);
-	}
+    public TransitProxy eval(String stringToEvaluate) {
+        return eval(stringToEvaluate, this, new Object[0]);
+    }
 
-	public TransitProxy eval(String stringToEvaluate, TransitProxy context,
-			Object... arguments) {
-		return rootContext.eval(stringToEvaluate, context, arguments);
-	}
+    public TransitProxy eval(String stringToEvaluate, Object... arguments) {
+        return eval(stringToEvaluate, this, new Object[0]);
+    }
 
-	public static String jsExpressionFromCode(String stringToEvaluate,
-			Object... arguments) {
-		StringBuffer output = new StringBuffer();
-		Pattern pattern = Pattern.compile("(.*?)@");
-		Matcher matcher = pattern.matcher(stringToEvaluate);
+    public TransitProxy eval(String stringToEvaluate, TransitProxy context,
+            Object... arguments) {
+        return rootContext.eval(stringToEvaluate, context, arguments);
+    }
 
-		int index = 0;
-		while (matcher.find()) {
-			output.append(matcher.group(1));
-			String replacement = "";
+    public static String jsExpressionFromCode(String stringToEvaluate,
+            Object... arguments) {
+        StringBuffer output = new StringBuffer();
+        Pattern pattern = Pattern.compile("(.*?)@");
+        Matcher matcher = pattern.matcher(stringToEvaluate);
 
-			if (index >= arguments.length) {
-				matcher.appendReplacement(output, "@");
-				continue;
-			}
+        int index = 0;
+        while (matcher.find()) {
+            output.append(matcher.group(1));
+            String replacement = "";
 
-			Object argument = arguments[index];
+            if (index >= arguments.length) {
+                matcher.appendReplacement(output, "@");
+                continue;
+            }
 
-			if (argument instanceof JavaScriptRepresentable) {
-				replacement = ((JavaScriptRepresentable) argument)
-						.getJavaScriptRepresentation();
-			} else if (argument instanceof Boolean) {
-				replacement = String.valueOf(argument);
-			} else if (argument instanceof Number) {
-				replacement = String.valueOf(argument);
-			} else if (argument instanceof String) {
-				replacement = JSONObject.quote((String) argument);
-			} else if (argument instanceof Array) {
-				replacement = "[]"; // TODO
-			} else if (argument instanceof Map) {
-				replacement = "{}"; // TODO
-			} else if (argument == null) {
-				replacement = "null";
-			} else {
-				throw new IllegalArgumentException("Argument at index " + index
-						+ " can't be serialized.");
-			}
+            Object argument = arguments[index];
 
-			matcher.appendReplacement(output, replacement);
-			index++;
-		}
+            if (argument instanceof JavaScriptRepresentable) {
+                replacement = ((JavaScriptRepresentable) argument)
+                        .getJavaScriptRepresentation();
+            } else if (argument instanceof Boolean) {
+                replacement = String.valueOf(argument);
+            } else if (argument instanceof Number) {
+                replacement = String.valueOf(argument);
+            } else if (argument instanceof String) {
+                replacement = JSONObject.quote((String) argument);
+            } else if (argument instanceof Array) {
+                replacement = "[]"; // TODO
+            } else if (argument instanceof Map) {
+                replacement = "{}"; // TODO
+            } else if (argument == null) {
+                replacement = "null";
+            } else {
+                throw new IllegalArgumentException("Argument at index " + index
+                        + " can't be serialized.");
+            }
 
-		matcher.appendTail(output);
-		return output.toString();
-	}
+            matcher.appendReplacement(output, replacement);
+            index++;
+        }
+
+        matcher.appendTail(output);
+        return output.toString();
+    }
 }

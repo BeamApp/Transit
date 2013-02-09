@@ -1,5 +1,5 @@
 package com.getbeamapp.transit;
 
 public interface JavaScriptRepresentable {
-	public String getJavaScriptRepresentation();
+    public String getJavaScriptRepresentation();
 }
