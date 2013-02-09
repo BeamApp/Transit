@@ -112,7 +112,7 @@ public class TransitWebChromeClient extends WebChromeClient {
 				JSONObject object = new JSONObject(dataAsJsonString);
 				return object.get("data");
 			} catch (JSONException e) {
-				throw new RuntimeException("Failed to parse JSON payload", e);
+				throw new TransitException("Failed to parse JSON payload", e);
 			}
 		}
 	}
@@ -134,7 +134,7 @@ public class TransitWebChromeClient extends WebChromeClient {
 			process(result);
 		} else if (message.equals(MAGIC_EXCEPTION_IDENTIFIER)) {
 			TransitEvalAction action = waitingEvaluations.pop();
-			action.exception = new RuntimeException(unmarshal(defaultValue)
+			action.exception = new TransitException(unmarshal(defaultValue)
 					.toString());
 			action.lock.open();
 			process(result);
@@ -215,7 +215,7 @@ public class TransitWebChromeClient extends WebChromeClient {
 				output.write(readBuffer, 0, read);
 			} while (true);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new TransitException(e);
 		}
 	}
 

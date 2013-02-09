@@ -57,7 +57,7 @@ public class TransitProxy {
 
 	private void assertType(Type expected) {
 		if (type != expected) {
-			throw new RuntimeException(String.format(
+			throw new AssertionError(String.format(
 					"Expected value to be %s but was %s", expected, type));
 		}
 	}
