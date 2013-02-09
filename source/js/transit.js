@@ -104,8 +104,4 @@
 
     window[globalName] = transit;
 
-})(
-  // TRANSIT_GLOBAL_NAME
-    "transit"
-  // TRANSIT_GLOBAL_NAME
-);
+})("transit");

@@ -155,5 +155,11 @@
     STAssertEqualObjects(@1, [context eval:@"window.globalTestVar"], @"var changed in native code");
 }
 
+-(void)testRealInjectionCodeCreatesGlobalTransitObject {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    id actual = [context eval:@"window.transit"];
+    STAssertEqualObjects((@{@"lastReainId":@0, @"retained":@{}}), actual, @"transit exists");
+}
+
 
 @end
