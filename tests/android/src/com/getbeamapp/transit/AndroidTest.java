@@ -22,7 +22,7 @@ public class AndroidTest extends ActivityInstrumentationTestCase2<MainActivity> 
 	}
 
 	public void testAdd() {
-		assertEquals(4, getActivity().transit.eval("2 + 2"));
+		assertEquals(4, (int)getActivity().transit.eval("2 + 2").getIntegerValue());
 	}
 
 	public void testExpressionsFromCode() {

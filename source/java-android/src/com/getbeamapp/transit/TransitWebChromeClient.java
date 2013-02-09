@@ -1,5 +1,8 @@
 package com.getbeamapp.transit;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -9,6 +12,7 @@ import java.util.concurrent.Semaphore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.res.Resources;
 import android.os.ConditionVariable;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,6 +26,8 @@ public class TransitWebChromeClient extends WebChromeClient {
 	public static final String MAGIC_INVOKE_IDENTIFIER = "__TRANSIT_MAGIC_INVOKE";
 	public static final String MAGIC_POLL_IDENTIFIER = "__TRANSIT_MAGIC_POLL";
 	public static final String MAGIC_RETURN_IDENTIFIER = "__TRANSIT_MAGIC_RETURN";
+	public static final String MAGIC_EXCEPTION_IDENTIFIER = "__TRANSIT_MAGIC_EXCEPTION";
+	public static final String TAG = "TransitAdapter";
 
 	private final Stack<TransitAction> actions = new Stack<TransitAction>();
 
@@ -69,7 +75,8 @@ public class TransitWebChromeClient extends WebChromeClient {
 
 		@Override
 		public String toJavaScript() {
-			return stringToEvaluate;
+			return "{ \"type\": \"EVAL\", \"data\": "
+					+ JSONObject.quote(stringToEvaluate) + " }";
 		}
 	}
 
@@ -82,21 +89,31 @@ public class TransitWebChromeClient extends WebChromeClient {
 		super();
 		this.webView = webView;
 	}
-	
-	public TransitProxy unmarshal(Object o) {
-		return new TransitProxy(context);
-	}
-	
+
 	public void setTransitContext(TransitContext context) {
 		this.context = context;
 	}
 
-	public Object unmarshalJson(String dataAsString) {
-		try {
-			JSONObject object = new JSONObject("{\"data\": " + dataAsString + "}");
-			return object.get("data");
-		} catch (JSONException e) {
-			throw new RuntimeException(e);
+	public TransitProxy unmarshal(String dataAsJsonString) {
+		Object o = unmarshalJson(dataAsJsonString);
+
+		if (o == null) {
+			return null;
+		} else {
+			return TransitProxy.withValue(context, o);
+		}
+	}
+
+	public Object unmarshalJson(String dataAsJsonString) {
+		if (dataAsJsonString == null) {
+			return null;
+		} else {
+			try {
+				JSONObject object = new JSONObject(dataAsJsonString);
+				return object.get("data");
+			} catch (JSONException e) {
+				throw new RuntimeException("Failed to parse JSON payload", e);
+			}
 		}
 	}
 
@@ -104,7 +121,7 @@ public class TransitWebChromeClient extends WebChromeClient {
 	public boolean onJsPrompt(WebView view, String url, String message,
 			String defaultValue, JsPromptResult result) {
 
-		Log.d("TransitWCC", message);
+		Log.d(TAG, String.format("%s --- %s", message, defaultValue));
 
 		if (message.equals(MAGIC_INVOKE_IDENTIFIER)) {
 			invoke(unmarshal(defaultValue));
@@ -113,14 +130,26 @@ public class TransitWebChromeClient extends WebChromeClient {
 			TransitEvalAction action = waitingEvaluations.pop();
 			action.result = unmarshal(defaultValue);
 			action.lock.open();
+			Log.i(TAG, String.format("Resolved `%s`", action.stringToEvaluate));
+			process(result);
+		} else if (message.equals(MAGIC_EXCEPTION_IDENTIFIER)) {
+			TransitEvalAction action = waitingEvaluations.pop();
+			action.exception = new RuntimeException(unmarshal(defaultValue)
+					.toString());
+			action.lock.open();
 			process(result);
 		} else if (message.equals(MAGIC_POLL_IDENTIFIER)) {
+			lock.release(); // peek for free
 			process(result);
 		} else {
 			return super.onJsPrompt(view, url, message, defaultValue, result);
 		}
 
 		return true;
+	}
+
+	private boolean isUiThread() {
+		return Looper.getMainLooper().getThread() == Thread.currentThread();
 	}
 
 	public void runOnUiThread(Runnable runnable) {
@@ -131,31 +160,70 @@ public class TransitWebChromeClient extends WebChromeClient {
 		}
 	}
 
+	public void runOnNonUiThread(Runnable runnable) {
+		if (isUiThread()) {
+			Executors.newSingleThreadExecutor().execute(runnable);
+		} else {
+			runnable.run();
+		}
+	}
+
 	public TransitProxy evaluate(String stringToEvaluate) {
 		TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
+
 		actions.push(action);
 		lock.release();
+		Log.i(TAG, "Pushed action and released Lock");
 
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				webView.loadUrl("javascript:prompt('" + MAGIC_RETURN_IDENTIFIER
-						+ "', JSON.stringify(eval(prompt('"
-						+ MAGIC_POLL_IDENTIFIER + "'))))");
+				Log.d(TAG, "transit.poll()");
+				webView.loadUrl("javascript:transit.poll()");
 			}
 		});
 
+		Log.i(TAG, String.format("Waiting for `%s`", stringToEvaluate));
 		action.lock.block();
 
 		if (action.exception != null) {
+			Log.i(TAG, String.format("Got exception for `%s`: %s",
+					stringToEvaluate, action.exception));
 			throw action.exception;
 		} else {
+			Log.i(TAG, String.format("Got result for `%s`: %s",
+					stringToEvaluate, action.result));
 			return action.result;
 		}
 	}
 
-	private boolean isUiThread() {
-		return Looper.getMainLooper().getThread() == Thread.currentThread();
+	public void readResource(int id, ByteArrayOutputStream output) {
+		try {
+			Resources res = webView.getResources();
+			InputStream inputStream = res.openRawResource(id);
+
+			byte[] readBuffer = new byte[4 * 1024];
+
+			int read;
+
+			do {
+				read = inputStream.read(readBuffer, 0, readBuffer.length);
+				if (read == -1) {
+					break;
+				}
+
+				output.write(readBuffer, 0, read);
+			} while (true);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public String getScript() {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		readResource(R.raw.transit, output);
+		readResource(R.raw.runtime, output);
+		return output.toString();
 	}
 
 	private void invoke(final Object descriptionString) {
@@ -171,6 +239,7 @@ public class TransitWebChromeClient extends WebChromeClient {
 				} catch (Exception e) {
 					actions.push(new TransitExceptionAction(e));
 				} finally {
+					Log.i(TAG, "Pushed action and released Lock");
 					lock.release();
 				}
 			}
@@ -180,15 +249,22 @@ public class TransitWebChromeClient extends WebChromeClient {
 	private final Stack<TransitEvalAction> waitingEvaluations = new Stack<TransitEvalAction>();
 
 	private void process(final JsPromptResult result) {
-		Runnable toExecute = new Runnable() {
+		runOnNonUiThread(new Runnable() {
 			@Override
 			public void run() {
 				TransitAction action = null;
+
+				Log.i(TAG, "Acquire lock");
 
 				try {
 					lock.acquire();
 				} catch (Exception e) {
 					result.confirm(new TransitExceptionAction(e).toString());
+					return;
+				}
+
+				if (actions.isEmpty()) {
+					result.confirm();
 					return;
 				}
 
@@ -198,15 +274,10 @@ public class TransitWebChromeClient extends WebChromeClient {
 					waitingEvaluations.push((TransitEvalAction) action);
 				}
 
-				result.confirm(action.toJavaScript());
+				String response = action.toJavaScript();
+				Log.d(TAG, String.format("Returning %s", response));
+				result.confirm(response);
 			}
-		};
-
-		if (isUiThread()) {
-			Executors.newSingleThreadExecutor().execute(toExecute);
-		} else {
-			toExecute.run();
-		}
-
+		});
 	}
 }
