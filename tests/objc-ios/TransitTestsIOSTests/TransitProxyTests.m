@@ -97,4 +97,32 @@
     [context verify];
 }
 
+-(void)testDelegatesEvalToRootContext {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:@"someId"];
+    
+    [[[context stub] andReturn:@"4"] eval:@"2+2" thisArg:proxy arguments:@[]];
+    NSString* actual = [proxy eval:@"2+2"];
+    STAssertEqualObjects(@"4", actual, @"passed through");
+    [context verify];
+}
+
+-(void)testHasNoJSRepresentationIfWithoutProxyAndValue {
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:nil];
+    STAssertThrows([proxy jsRepresentation], @"has no intrinsict representation");
+}
+
+-(void)testDelegatesJSRepesentationToValue {
+    STAssertEqualObjects(@"42", [[[TransitProxy alloc] initWithRootContext:nil value:@42] jsRepresentation], @"int");
+    
+    STAssertEqualObjects(@"42.5", [[[TransitProxy alloc] initWithRootContext:nil value:@42.5] jsRepresentation], @"float");
+    STAssertEqualObjects(@"true", [[[TransitProxy alloc] initWithRootContext:nil value:@YES] jsRepresentation], @"bool true");
+    STAssertEqualObjects(@"false", [[[TransitProxy alloc] initWithRootContext:nil value:@NO] jsRepresentation], @"bool false");
+    
+    STAssertEqualObjects(@"\"foobar\"", [[[TransitProxy alloc] initWithRootContext:nil value:@"foobar"] jsRepresentation], @"string");
+    
+    STAssertEqualObjects(@"[1,2]", [[[TransitProxy alloc] initWithRootContext:nil value:(@[@1, @2])] jsRepresentation], @"array");
+    STAssertEqualObjects(@"{\"a\":1}", [[[TransitProxy alloc] initWithRootContext:nil value:(@{@"a": @1})] jsRepresentation], @"dictionary");
+}
+
 @end

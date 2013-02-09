@@ -14,8 +14,10 @@
 
 -(id)initWithRootContext:(TransitContext*)rootContext;
 -(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId;
+-(id)initWithRootContext:(TransitContext*)rootContext value:(id)value;
 
 -(TransitContext*)rootContext;
+@property(nonatomic, readonly) id value;
 
 -(id)eval:(NSString*)jsCode;
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments;

@@ -74,6 +74,15 @@
     return self;
 }
 
+-(id)initWithRootContext:(TransitContext*)rootContext value:(id)value {
+    self = [self init];
+    if(self){
+        _rootContext = rootContext;
+        _value = value;
+    }
+    return self;
+}
+
 -(id)initWithRootContext:(TransitContext*)rootContext {
     return [self initWithRootContext:rootContext proxyId:nil];
 }
@@ -109,20 +118,23 @@
 }
 
 -(id)eval:(NSString*)jsCode {
-    return [self eval:jsCode thisArg:nil arguments:@[]];
+    return [self eval:jsCode thisArg:self arguments:@[]];
 }
 
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments {
-    return [self eval:jsCode thisArg:nil arguments:arguments];
+    return [self eval:jsCode thisArg:self arguments:arguments];
 }
 
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments {
-    @throw @"must be implemented by subclass";
+    return [_rootContext eval:jsCode thisArg:thisArg arguments:arguments];
 }
 
 -(NSString*)jsRepresentation {
     if(_proxyId && _rootContext)
        return [_rootContext jsRepresentationForProxyWithId:_proxyId];
+    
+    if(_value)
+        return [self.class jsRepresentation:_value];
     
     return [self.class jsRepresentation:self];
 }
@@ -257,8 +269,9 @@ NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments {
     SBJsonParser *parser = [SBJsonParser new];
     NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments];
-    NSString* jsThisArg = thisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
-    NSString* jsApplyExpression = [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsThisArg];
+    id adjustedThisArg = thisArg == self ? nil : thisArg;
+    NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
+    NSString* jsApplyExpression = [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg];
     NSString* js = [NSString stringWithFormat: @"JSON.stringify({v: %@})", jsApplyExpression];
     NSString* jsResult = [_webView stringByEvaluatingJavaScriptFromString: js];
     return [parser objectWithString:jsResult][@"v"];
