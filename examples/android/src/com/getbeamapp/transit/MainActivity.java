@@ -1,5 +1,7 @@
 package com.getbeamapp.transit;
 
+import java.util.concurrent.Executors;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -44,6 +46,14 @@ public class MainActivity extends Activity {
 				"text/html", null);
 
 		setContentView(webView);
+		
+		Executors.newSingleThreadExecutor().execute(new Runnable() {
+			@Override
+			public void run() {
+				Log.i("DEBUG", transit.toString());
+				return;
+			}
+		});
 	}
 
 }
