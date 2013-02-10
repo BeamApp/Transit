@@ -32,6 +32,9 @@
 		CB2751F816C7C364004E957A /* forge_benchmark.html in Resources */ = {isa = PBXBuildFile; fileRef = CB2751F716C7C364004E957A /* forge_benchmark.html */; };
 		CB27520116C7C3EA004E957A /* ForgeBenchmarkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB2751FF16C7C3EA004E957A /* ForgeBenchmarkViewController.m */; };
 		CB27520216C7C3EA004E957A /* ForgeBenchmarkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB27520016C7C3EA004E957A /* ForgeBenchmarkViewController.xib */; };
+		CB91AE9016C7FB5100F46154 /* jasmine in Resources */ = {isa = PBXBuildFile; fileRef = CB91AE8F16C7FB5100F46154 /* jasmine */; };
+		CB91AE9516C7FB7B00F46154 /* JasmineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */; };
+		CB91AE9616C7FB7B00F46154 /* JasmineViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */; };
 		CBE29FD816C671F4004AED2B /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +82,10 @@
 		CB2751FE16C7C3EA004E957A /* ForgeBenchmarkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgeBenchmarkViewController.h; sourceTree = "<group>"; };
 		CB2751FF16C7C3EA004E957A /* ForgeBenchmarkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgeBenchmarkViewController.m; sourceTree = "<group>"; };
 		CB27520016C7C3EA004E957A /* ForgeBenchmarkViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForgeBenchmarkViewController.xib; sourceTree = "<group>"; };
+		CB91AE8F16C7FB5100F46154 /* jasmine */ = {isa = PBXFileReference; lastKnownFileType = folder; name = jasmine; path = ../jasmine; sourceTree = "<group>"; };
+		CB91AE9216C7FB7B00F46154 /* JasmineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JasmineViewController.h; sourceTree = "<group>"; };
+		CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JasmineViewController.m; sourceTree = "<group>"; };
+		CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JasmineViewController.xib; sourceTree = "<group>"; };
 		CBE29FD716C671F4004AED2B /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testPage.html; sourceTree = "<group>"; };
 		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -112,6 +119,7 @@
 		CB18EEB816C549050051CC7C = {
 			isa = PBXGroup;
 			children = (
+				CB91AE8F16C7FB5100F46154 /* jasmine */,
 				CB2751F516C7C304004E957A /* Resource */,
 				CB18EEFC16C549970051CC7C /* Transit */,
 				CB18EECD16C549050051CC7C /* TransitTestsIOS */,
@@ -154,6 +162,9 @@
 				CB2751FE16C7C3EA004E957A /* ForgeBenchmarkViewController.h */,
 				CB2751FF16C7C3EA004E957A /* ForgeBenchmarkViewController.m */,
 				CB27520016C7C3EA004E957A /* ForgeBenchmarkViewController.xib */,
+				CB91AE9216C7FB7B00F46154 /* JasmineViewController.h */,
+				CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */,
+				CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */,
 			);
 			path = TransitTestsIOS;
 			sourceTree = "<group>";
@@ -303,6 +314,8 @@
 				CB18EEDE16C549050051CC7C /* Default-568h@2x.png in Resources */,
 				CB2751F816C7C364004E957A /* forge_benchmark.html in Resources */,
 				CB27520216C7C3EA004E957A /* ForgeBenchmarkViewController.xib in Resources */,
+				CB91AE9016C7FB5100F46154 /* jasmine in Resources */,
+				CB91AE9616C7FB7B00F46154 /* JasmineViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +383,7 @@
 				CB18EED816C549050051CC7C /* AppDelegate.m in Sources */,
 				CB18EEFF16C549E50051CC7C /* Transit.m in Sources */,
 				CB27520116C7C3EA004E957A /* ForgeBenchmarkViewController.m in Sources */,
+				CB91AE9516C7FB7B00F46154 /* JasmineViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

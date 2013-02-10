@@ -8,20 +8,22 @@
 
 #import "AppDelegate.h"
 #import "ForgeBenchmarkViewController.h"
+#import "JasmineViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    UIViewController *viewController1;
+    UIViewController *viewController1, *viewController2;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         viewController1 = [[ForgeBenchmarkViewController alloc] initWithNibName:@"ForgeBenchmarkViewController" bundle:nil];
+        viewController2 = [[JasmineViewController alloc] initWithNibName:@"JasmineViewController" bundle:nil];
     } else {
     }
 
     self.tabBarController = [[UITabBarController alloc] init];
-    self.tabBarController.viewControllers = @[viewController1];
+    self.tabBarController.viewControllers = @[viewController1, viewController2];
     self.window.rootViewController = self.tabBarController;
     
     

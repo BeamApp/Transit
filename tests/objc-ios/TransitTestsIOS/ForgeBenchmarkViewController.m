@@ -19,6 +19,15 @@
 
 @implementation ForgeBenchmarkViewController
 
+-(id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if(self) {
+        self.title = @"Forge Benchmark";
+    }
+    return self;
+}
+
+
 - (void)viewDidLoad
 {
     // this VC embed the benchmark from trigger.io
@@ -27,7 +36,6 @@
     // http://trigger.io/cross-platform-application-development-blog/2012/02/24/why-trigger-io-doesnt-use-phonegap-5x-faster-native-bridge/         
     
     [super viewDidLoad];
-    self.title = @"Forge Benchmark";
     NSURL *url = [NSBundle.mainBundle URLForResource:@"forge_benchmark" withExtension:@"html"];
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
     
