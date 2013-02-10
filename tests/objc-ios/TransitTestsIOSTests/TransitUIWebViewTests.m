@@ -187,7 +187,7 @@
     STAssertEqualObjects(@1, lastRetainId, @"has been retained");
     STAssertTrue([proxified isKindOfClass:TransitProxy.class], @"is proxy");
     STAssertTrue([proxified isKindOfClass:TransitJSFunction.class], @"is function");
-    STAssertEqualObjects(([NSString stringWithFormat:@"%@", lastRetainId]), [proxified proxyId], @"detected proxy id");
+    STAssertEqualObjects(([NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, lastRetainId]), [proxified proxyId], @"detected proxy id");
 }
 
 -(void)testTransitProxifiesDocument {
@@ -198,7 +198,7 @@
     STAssertEqualObjects(@1, lastRetainId, @"has been retained");
     STAssertTrue([proxified isKindOfClass:TransitProxy.class], @"is proxy");
     STAssertFalse([proxified isKindOfClass:TransitJSFunction.class], @"is not a function");
-    STAssertEqualObjects(([NSString stringWithFormat:@"%@", lastRetainId]), [proxified proxyId], @"has been proxified");
+    STAssertEqualObjects(([NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, lastRetainId]), [proxified proxyId], @"has been proxified");
 }
 
 -(void)testCallThroughJavaScript {
@@ -279,9 +279,9 @@
     id result = [context eval:@"@.call(function(){}, window)" arguments:@[func]];
     [func dispose];
     id lastProxyId = [context eval:@"transit.lastRetainId"];
-    NSString* expectedProxyId = [NSString stringWithFormat:@"%@", lastProxyId];
+    NSString* expectedProxyId = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, lastProxyId];
     
-    STAssertEqualObjects(expectedProxyId, result, @"proxy ids match");
+    STAssertEqualObjects(expectedProxyId, [result proxyId], @"proxy ids match");
 }
 
 -(void)exceptionWillBePropagatedOnContext:(TransitContext*)context {
@@ -320,5 +320,20 @@
         STAssertEqualObjects(@"Error while evaluating JavaScript. Seems to be invalid: function(){return 4*#;}.call(null)", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
     }
 }
+
+-(void)testCanCallJSFunction {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction* func = [context eval:@"function(a,b){return a+b}"];
+    NSNumber* result = [func callWithArguments:@[@1, @2]];
+    STAssertEqualObjects(@3, result, @"sum");
+}
+
+-(void)testCanUseObjectProxy {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitProxy* proxy = [context eval:@"window.location"];
+    NSString* result = [context eval:@"@.pathname" arguments:@[proxy]];
+    STAssertEqualObjects(@"blank", result, @"document.title");
+}
+
 
 @end

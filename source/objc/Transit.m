@@ -288,7 +288,7 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
     NSRegularExpression* expression = [self regularExpressionForMarker:marker];
     NSTextCheckingResult *match = [expression firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
     if(match) {
-        return [string substringWithRange:[match rangeAtIndex:1]];
+        return [string substringWithRange:[match rangeAtIndex:0]];
     }
     return nil;
 }

@@ -184,13 +184,13 @@
     id proxy = [context recursivelyReplaceMarkersWithProxies:marker];
     STAssertTrue([proxy isKindOfClass:TransitProxy.class], @"object proxy");
     STAssertFalse([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
-    STAssertEqualObjects(@"someId", [proxy proxyId], @"extracts proxy id");
+    STAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
 
     marker = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, @"someId"];
     proxy = [context recursivelyReplaceMarkersWithProxies:marker];
     STAssertTrue([proxy isKindOfClass:TransitProxy.class], @"object proxy");
     STAssertTrue([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
-    STAssertEqualObjects(@"someId", [proxy proxyId], @"extracts proxy id");
+    STAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
 }
 
 -(void)testDetectsMarkerStringsInComplexObject {
@@ -203,7 +203,7 @@
     STAssertEqualObjects(@3, detected[2][@"three"], @"three");
     id proxy = detected[2][@4];
     STAssertTrue([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
-    STAssertEqualObjects(@"someId", [proxy proxyId], @"extracts proxy id");
+    STAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
 }
 
 -(void)testInvokeNativeWithMissingFunction {
