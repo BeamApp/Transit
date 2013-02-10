@@ -23,10 +23,23 @@ import android.webkit.WebView;
 
 public class TransitWebChromeClient extends WebChromeClient {
 
-    public static final String MAGIC_INVOKE_IDENTIFIER = "__TRANSIT_MAGIC_INVOKE";
-    public static final String MAGIC_POLL_IDENTIFIER = "__TRANSIT_MAGIC_POLL";
-    public static final String MAGIC_RETURN_IDENTIFIER = "__TRANSIT_MAGIC_RETURN";
-    public static final String MAGIC_EXCEPTION_IDENTIFIER = "__TRANSIT_MAGIC_EXCEPTION";
+    public enum TransitRequest {
+        INVOKE("__TRANSIT_MAGIC_INVOKE"),
+        POLL("__TRANSIT_MAGIC_POLL"),
+        RETURN("__TRANSIT_MAGIC_RETURN"),
+        EXCEPTION("__TRANSIT_MAGIC_EXCEPTION");
+
+        private String string;
+
+        TransitRequest(String string) {
+            this.string = string;
+        }
+
+        public boolean equals(String string) {
+            return this.string == string;
+        }
+    }
+
     public static final String TAG = "TransitAdapter";
 
     private final Stack<TransitAction> actions = new Stack<TransitAction>();
@@ -123,21 +136,21 @@ public class TransitWebChromeClient extends WebChromeClient {
 
         Log.d(TAG, String.format("%s --- %s", message, defaultValue));
 
-        if (message.equals(MAGIC_INVOKE_IDENTIFIER)) {
+        if (TransitRequest.INVOKE.equals(message)) {
             invoke(unmarshal(defaultValue));
             process(result);
-        } else if (message.equals(MAGIC_RETURN_IDENTIFIER)) {
+        } else if (TransitRequest.RETURN.equals(message)) {
             TransitEvalAction action = waitingEvaluations.pop();
             action.result = unmarshal(defaultValue);
             action.lock.open();
             Log.i(TAG, String.format("Resolved `%s`", action.stringToEvaluate));
             process(result);
-        } else if (message.equals(MAGIC_EXCEPTION_IDENTIFIER)) {
+        } else if (TransitRequest.EXCEPTION.equals(message)) {
             TransitEvalAction action = waitingEvaluations.pop();
             action.exception = new TransitException(String.valueOf(unmarshalJson(defaultValue)));
             action.lock.open();
             process(result);
-        } else if (message.equals(MAGIC_POLL_IDENTIFIER)) {
+        } else if (TransitRequest.POLL.equals(message)) {
             lock.release(); // peek for free
             process(result);
         } else {
