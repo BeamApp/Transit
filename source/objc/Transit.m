@@ -161,6 +161,8 @@
 }
 
 +(NSString*)jsRepresentation:(id)object {
+    if(object == nil)
+        return @"undefined";
     if([object respondsToSelector:@selector(jsRepresentation)])
         return [object performSelector:@selector(jsRepresentation)];
     if([object isKindOfClass:NSError.class]) {
@@ -460,7 +462,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 -(void)invokeNative {
     id description = [self eval:@"@.nativeInvokeTransferObject" arguments:@[self.transitGlobalVarProxy]];
     id result = [self invokeNativeDescription:description];
-    [self eval:@"@.nativeInvokeTransferObject = @" arguments:@[self.transitGlobalVarProxy, result]];
+    if(result == nil)
+        [self eval:@"@.nativeInvokeTransferObject = undefined" arguments:@[self.transitGlobalVarProxy]];
+    else
+        [self eval:@"@.nativeInvokeTransferObject = @" arguments:@[self.transitGlobalVarProxy, result]];
 }
 
 #pragma UIWebViewDelegate

@@ -265,6 +265,27 @@
     STAssertEqualObjects(@"localized description", result, @"exception should be passed along");
 }
 
+-(void)testNativeFunctionCanReturnVoid {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        return nil;
+    }];
+    [context retainNativeProxy:func];
+    id result = [context eval:@"@()" arguments:@[func]];
+    STAssertNil(result, @"objc:nil == js:void");
+}
+
+-(void)testNativeFunctionCanReturnNull {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        return NSNull.null;
+    }];
+    [context retainNativeProxy:func];
+    id result = [context eval:@"@()" arguments:@[func]];
+    STAssertEqualObjects(NSNull.null, result, @"objc:NSNull == js:null");
+}
+
+
 -(void)testInvokeNativeWithJSProxies {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
