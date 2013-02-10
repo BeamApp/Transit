@@ -1,0 +1,12 @@
+{
+    "ios": {
+        "device": "device", 
+        "simulatorsdk": "6.0", 
+        "simulatorfamily": "iphone", 
+        "profiles": {
+            "DEFAULT": {
+                "provisioning_profile": "/Users/behrens/Library/MobileDevice/Provisioning Profiles/0FFE7B9E-790A-4EB0-8C9A-D3CEC073057C.mobileprovision"
+            }
+        }
+    }
+}
