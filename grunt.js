@@ -64,5 +64,6 @@ module.exports = function(grunt) {
 
 // Default task.
     grunt.registerTask('default', 'continuous watch');
+    grunt.registerTask('travis', 'lint jasmine');
     grunt.registerTask('continuous', 'lint jasmine replace');
 };
