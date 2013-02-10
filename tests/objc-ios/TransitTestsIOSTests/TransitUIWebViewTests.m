@@ -366,4 +366,39 @@
     // #### 254.20 calls/s with len 1000 (3965 ms for 1000 calls)
 }
 
+-(void)testJasmine {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:UIWebView.new];
+    NSURL *url = [NSBundle.mainBundle URLForResource:@"SpecRunner" withExtension:@"html" subdirectory:@"jasmine"];
+    [context.webView loadRequest:[NSURLRequest requestWithURL:url]];
+    
+    __block BOOL finished = NO;
+    TransitFunction *onFinish = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"onFinish" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        id results = [thisArg eval:@"{failed:this.results().failedCount, passed:this.results().passedCount}" thisArg:arguments[0] arguments:@[]];
+        finished = YES;
+        STAssertEqualObjects(@0, results[@"failed"], @"no test failed");
+        STAssertTrue([results[@"passed"] intValue]>=51, @"at the time of writing, 51 tests should have passed");
+        return @"finished :)";
+    }];
+    
+    TransitFunction *onLoad = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"onLoad" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        [context eval:@"jasmineEnv.addReporter({reportRunnerResults: @})" arguments:@[onFinish]];
+        return @"foo";
+    }];
+    [context retainNativeProxy:onLoad];
+    [context retainNativeProxy:onFinish];
+    [context eval:@"window.onload=@" arguments:@[onLoad]];
+    
+    [self.class waitForWebViewToBeLoaded:context.webView];
+    STAssertEqualObjects(@"Jasmine Spec Runner", [context eval:@"document.title"], @"page loaded");
+    
+    while (!finished) {
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        NSLog(@"waiting for tests to have finished");
+    }
+    
+    [onLoad dispose];
+    [onFinish dispose];
+    
+}
+
 @end

@@ -139,13 +139,11 @@
        return [_rootContext jsRepresentationForProxyWithId:_proxyId];
     
     if(_value) {
-        if([_value respondsToSelector:@selector(jsRepresentation)])
-            return [_value jsRepresentation];
-        else
-            return [self.class jsRepresentation:_value];
+        return [self.class jsRepresentation:_value];
     }
     
-    return [self.class jsRepresentation:self];
+    // call inner implementation (_) to prevent stack overflow
+    return [self.class _jsRepresentation:self];
 }
 
 -(id)transitGlobalVarProxy {
@@ -153,18 +151,24 @@
     return _rootContext.transitGlobalVarProxy;
 }
 
-+(NSString*)jsRepresentation:(id)object {
-    if([object isKindOfClass:NSError.class]) {
-        NSString* desc = [object userInfo][NSLocalizedDescriptionKey];
-        return [NSString stringWithFormat:@"new Error(%@)", [self jsRepresentation:desc]];
-    }
-    
++(NSString*)_jsRepresentation:(id)object {
     SBJsonWriter* writer = [SBJsonWriter new];
     NSString* json = [writer stringWithObject: @[object]];
     if(json == nil)
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"cannot be represented as JSON: %@", object] userInfo:nil];
-
+    
     return [json substringWithRange:NSMakeRange(1, json.length-2)];
+}
+
++(NSString*)jsRepresentation:(id)object {
+    if([object respondsToSelector:@selector(jsRepresentation)])
+        return [object performSelector:@selector(jsRepresentation)];
+    if([object isKindOfClass:NSError.class]) {
+        NSString* desc = [object userInfo][NSLocalizedDescriptionKey];
+        return [NSString stringWithFormat:@"new Error(%@)", [self _jsRepresentation:desc]];
+    }
+    
+    return [self _jsRepresentation:object];
 }
 
 +(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments {
@@ -180,7 +184,7 @@
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too few arguments" userInfo:nil];
         
         id elem = mutableArguments[0];
-        NSString* jsRepresentation = [elem respondsToSelector:@selector(jsRepresentation)] ? [elem performSelector:@selector(jsRepresentation)] : [self jsRepresentation:elem];
+        NSString* jsRepresentation = [self jsRepresentation:elem];
         NSString* result =  [NSString stringWithFormat:@"%@", jsRepresentation];
         
         [mutableArguments removeObjectAtIndex:0];
