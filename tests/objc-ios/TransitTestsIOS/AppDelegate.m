@@ -7,14 +7,24 @@
 //
 
 #import "AppDelegate.h"
+#import "ForgeBenchmarkViewController.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    UIViewController *viewController1;
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        viewController1 = [[ForgeBenchmarkViewController alloc] initWithNibName:@"ForgeBenchmarkViewController" bundle:nil];
+    } else {
+    }
+
+    self.tabBarController = [[UITabBarController alloc] init];
+    self.tabBarController.viewControllers = @[viewController1];
+    self.window.rootViewController = self.tabBarController;
+    
+    
     [self.window makeKeyAndVisible];
     return YES;
 }
