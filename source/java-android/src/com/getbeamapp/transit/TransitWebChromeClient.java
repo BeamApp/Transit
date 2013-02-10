@@ -270,7 +270,7 @@ public class TransitWebChromeClient extends WebChromeClient {
 
                 try {
                     lock.acquire();
-                } catch (Exception e) {
+                } catch (InterruptedException e) {
                     result.confirm(new TransitExceptionAction(e).toString());
                     return;
                 }
