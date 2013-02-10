@@ -33,13 +33,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onReceivedError(WebView view, int errorCode,
-                    String description, String failingUrl) {
-                Log.e("Console", "Error received.");
-            }
-        });
+        webView.setWebViewClient(new WebViewClient());
         
         transit.getAdapter().initialize();
 
