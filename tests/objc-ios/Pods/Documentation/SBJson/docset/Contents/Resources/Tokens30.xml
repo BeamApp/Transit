@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBJsonWriter.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBJsonWriter</TokenIdentifier>
+			<Abstract type="html">The JSON writer class.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>
+			
+			<NodeRef refid="30"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonWriter/setMaxDepth:</TokenIdentifier>
+			<Abstract type="html">The maximum recursing depth.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger maxDepth</Declaration>
+			
+			
+			<Anchor>//api/name/maxDepth</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonWriter/maxDepth</TokenIdentifier>
+			<Abstract type="html">The maximum recursing depth.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger maxDepth</Declaration>
+			
+			
+			<Anchor>//api/name/maxDepth</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonWriter/setError:</TokenIdentifier>
+			<Abstract type="html">Return an error trace, or nil if there was no errors.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly, copy) NSString *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonWriter/error</TokenIdentifier>
+			<Abstract type="html">Return an error trace, or nil if there was no errors.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly, copy) NSString *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonWriter/setHumanReadable:</TokenIdentifier>
+			<Abstract type="html">Whether we are generating human-readable (multiline) JSON.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL humanReadable</Declaration>
+			
+			
+			<Anchor>//api/name/humanReadable</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonWriter/humanReadable</TokenIdentifier>
+			<Abstract type="html">Whether we are generating human-readable (multiline) JSON.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL humanReadable</Declaration>
+			
+			
+			<Anchor>//api/name/humanReadable</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonWriter/setSortKeys:</TokenIdentifier>
+			<Abstract type="html">Whether or not to sort the dictionary keys in the output.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL sortKeys</Declaration>
+			
+			
+			<Anchor>//api/name/sortKeys</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonWriter/sortKeys</TokenIdentifier>
+			<Abstract type="html">Whether or not to sort the dictionary keys in the output.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL sortKeys</Declaration>
+			
+			
+			<Anchor>//api/name/sortKeys</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonWriter/setSortKeysComparator:</TokenIdentifier>
+			<Abstract type="html">An optional comparator to be used if sortKeys is YES.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSComparator sortKeysComparator</Declaration>
+			
+			
+			<Anchor>//api/name/sortKeysComparator</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonWriter/sortKeysComparator</TokenIdentifier>
+			<Abstract type="html">An optional comparator to be used if sortKeys is YES.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSComparator sortKeysComparator</Declaration>
+			
+			
+			<Anchor>//api/name/sortKeysComparator</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonWriter/stringWithObject:</TokenIdentifier>
+			<Abstract type="html">Return JSON representation for the given object.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>- (NSString *)stringWithObject:(id)value</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>value</Name>
+					<Abstract type="html">any instance that can be represented as JSON text.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/stringWithObject:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonWriter/dataWithObject:</TokenIdentifier>
+			<Abstract type="html">Return JSON representation for the given object.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>- (NSData *)dataWithObject:(id)value</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>value</Name>
+					<Abstract type="html">any instance that can be represented as JSON text.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/dataWithObject:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonWriter/stringWithObject:error:</TokenIdentifier>
+			<Abstract type="html">Return JSON representation (or fragment) for the given object.</Abstract>
+			<DeclaredIn>SBJsonWriter.h</DeclaredIn>			
+			
+			<Declaration>- (NSString *)stringWithObject:(id)value error:(NSError **)error</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>value</Name>
+					<Abstract type="html">any instance that can be represented as a JSON fragment</Abstract>
+				</Parameter><Parameter>
+					<Name>error</Name>
+					<Abstract type="html">pointer to object to be populated with NSError on failure</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/stringWithObject:error:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

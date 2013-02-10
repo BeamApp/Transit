@@ -34,6 +34,16 @@ describe("Transit", function() {
             obj.func([1,2], "bar");
             expect(transit.invokeNative).toHaveBeenCalledWith("someId", obj, [[1,2], "bar"]);
         });
+
+        it("uses result of transit.invokeNative", function(){
+            transit.invokeNative = transit.invokeNative.andReturn(3);
+
+            var f = transit.nativeFunction("someId");
+            expect(transit.invokeNative).not.toHaveBeenCalled();
+            var result = f(1,2);
+            expect(transit.invokeNative).toHaveBeenCalledWith("someId", window, [1,2]);
+            expect(result).toEqual(3);
+        });
     });
 
     describe("retained", function(){

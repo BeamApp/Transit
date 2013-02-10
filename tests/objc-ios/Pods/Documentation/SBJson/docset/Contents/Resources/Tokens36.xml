@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/SBJsonStreamParserDelegate.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/SBJsonStreamParserDelegate</TokenIdentifier>
+			<Abstract type="html">Delegate for interacting directly with the stream parser</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>
+			
+			<NodeRef refid="36"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parserFoundObjectStart:</TokenIdentifier>
+			<Abstract type="html">Called when object start is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parserFoundObjectStart:(SBJsonStreamParser *)parser</Declaration>
+			
+			
+			<Anchor>//api/name/parserFoundObjectStart:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parser:foundObjectKey:</TokenIdentifier>
+			<Abstract type="html">Called when object key is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parser:(SBJsonStreamParser *)parser foundObjectKey:(NSString *)key</Declaration>
+			
+			
+			<Anchor>//api/name/parser:foundObjectKey:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parserFoundObjectEnd:</TokenIdentifier>
+			<Abstract type="html">Called when object end is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parserFoundObjectEnd:(SBJsonStreamParser *)parser</Declaration>
+			
+			
+			<Anchor>//api/name/parserFoundObjectEnd:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parserFoundArrayStart:</TokenIdentifier>
+			<Abstract type="html">Called when array start is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parserFoundArrayStart:(SBJsonStreamParser *)parser</Declaration>
+			
+			
+			<Anchor>//api/name/parserFoundArrayStart:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parserFoundArrayEnd:</TokenIdentifier>
+			<Abstract type="html">Called when array end is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parserFoundArrayEnd:(SBJsonStreamParser *)parser</Declaration>
+			
+			
+			<Anchor>//api/name/parserFoundArrayEnd:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parser:foundBoolean:</TokenIdentifier>
+			<Abstract type="html">Called when a boolean value is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parser:(SBJsonStreamParser *)parser foundBoolean:(BOOL)x</Declaration>
+			
+			
+			<Anchor>//api/name/parser:foundBoolean:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parserFoundNull:</TokenIdentifier>
+			<Abstract type="html">Called when a null value is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parserFoundNull:(SBJsonStreamParser *)parser</Declaration>
+			
+			
+			<Anchor>//api/name/parserFoundNull:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parser:foundNumber:</TokenIdentifier>
+			<Abstract type="html">Called when a number is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parser:(SBJsonStreamParser *)parser foundNumber:(NSNumber *)num</Declaration>
+			
+			
+			<Anchor>//api/name/parser:foundNumber:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBJsonStreamParserDelegate/parser:foundString:</TokenIdentifier>
+			<Abstract type="html">Called when a string is found</Abstract>
+			<DeclaredIn>SBJsonStreamParser.h</DeclaredIn>			
+			
+			<Declaration>- (void)parser:(SBJsonStreamParser *)parser foundString:(NSString *)string</Declaration>
+			
+			
+			<Anchor>//api/name/parser:foundString:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

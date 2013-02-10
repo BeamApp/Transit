@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Categories/NSObject+SBProxyForJson.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cat/NSObject(SBProxyForJson)</TokenIdentifier>
+			<Abstract type="html">Enable JSON writing for non-native objects</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>
+			
+			<NodeRef refid="33"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSObject(SBProxyForJson)/proxyForJson</TokenIdentifier>
+			<Abstract type="html">Allows generation of JSON for otherwise unsupported classes.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (id)proxyForJson</Declaration>
+			
+			
+			<Anchor>//api/name/proxyForJson</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

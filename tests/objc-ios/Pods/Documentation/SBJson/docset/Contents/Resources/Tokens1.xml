@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBJsonParser.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBJsonParser</TokenIdentifier>
+			<Abstract type="html">Parse JSON Strings and NSData objects</Abstract>
+			<DeclaredIn>SBJsonParser.h</DeclaredIn>
+			
+			<NodeRef refid="1"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonParser/setMaxDepth:</TokenIdentifier>
+			<Abstract type="html">The maximum recursing depth.</Abstract>
+			<DeclaredIn>SBJsonParser.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger maxDepth</Declaration>
+			
+			
+			<Anchor>//api/name/maxDepth</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonParser/maxDepth</TokenIdentifier>
+			<Abstract type="html">The maximum recursing depth.</Abstract>
+			<DeclaredIn>SBJsonParser.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger maxDepth</Declaration>
+			
+			
+			<Anchor>//api/name/maxDepth</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonParser/setError:</TokenIdentifier>
+			<Abstract type="html">Description of parse error</Abstract>
+			<DeclaredIn>SBJsonParser.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSString *error</Declaration>
+			
+			<ReturnValue><Abstract type="html">A string describing the error encountered, or nil if no error occured.</Abstract></ReturnValue>
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonParser/error</TokenIdentifier>
+			<Abstract type="html">Description of parse error</Abstract>
+			<DeclaredIn>SBJsonParser.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSString *error</Declaration>
+			
+			<ReturnValue><Abstract type="html">A string describing the error encountered, or nil if no error occured.</Abstract></ReturnValue>
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonParser/objectWithData:</TokenIdentifier>
+			<Abstract type="html">Return the object represented by the given NSData object.</Abstract>
+			<DeclaredIn>SBJsonParser.h</DeclaredIn>			
+			
+			<Declaration>- (id)objectWithData:(NSData *)data</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>data</Name>
+					<Abstract type="html">An NSData containing UTF8 encoded data to parse.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The NSArray or NSDictionary represented by the object, or nil if an error occured.</Abstract></ReturnValue>
+			<Anchor>//api/name/objectWithData:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonParser/objectWithString:</TokenIdentifier>
+			<Abstract type="html">Return the object represented by the given string</Abstract>
+			<DeclaredIn>SBJsonParser.h</DeclaredIn>			
+			
+			<Declaration>- (id)objectWithString:(NSString *)repr</Declaration>
+			
+			<ReturnValue><Abstract type="html">The NSArray or NSDictionary represented by the object, or nil if an error occured.</Abstract></ReturnValue>
+			<Anchor>//api/name/objectWithString:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonParser/objectWithString:error:</TokenIdentifier>
+			<Abstract type="html">Return the object represented by the given string</Abstract>
+			<DeclaredIn>SBJsonParser.h</DeclaredIn>			
+			
+			<Declaration>- (id)objectWithString:(NSString *)jsonText error:(NSError **)error</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>jsonText</Name>
+					<Abstract type="html">the json string to parse</Abstract>
+				</Parameter><Parameter>
+					<Name>error</Name>
+					<Abstract type="html">pointer to an NSError object to populate on error</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The NSArray or NSDictionary represented by the object, or nil if an error occured.</Abstract></ReturnValue>
+			<Anchor>//api/name/objectWithString:error:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

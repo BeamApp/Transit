@@ -21,7 +21,7 @@ TransitNativeFunc* callback = [transit nativeFuncWithBlock:^(TransitContext* _th
 }];
 
 // returns TransitContext as Proxy
-arr = [transit eval:@"jQuery(document).ready(%@)" arguments:callback];
+arr = [transit eval:@"jQuery(document).ready(@)" arguments:callback];
 ```
 
 TBD: Another Example with callbacks
@@ -33,7 +33,7 @@ In cases where Transit cannot give you access to a JavaScript value directly (e.
 TBD: more in-depth explanation.
 
 ![Class Diagram: Transit Proxies](http://yuml.me/diagram/dir:LR;scale:80;/class/[TransitProxy|valueType;boolValue;intValue;floatValue;stringValue;listValue;dictValue;rootContext|objectForKey:;objectAtIndex:;objectForKeyPath:|eval:;eval:arguments:;eval:context:arguments:;functionWithBlock:;]^-[TransitFunction],
-[TransitFunction|call;callWithArguments:;callWithContext:arguments:]^-[TransitJSFunction],
+[TransitFunction|call;callWithArguments:;callWithThisArg:arguments:]^-[TransitJSFunction],
 [TransitFunction]^-[TransitNativeFunction|dispose],
 [TransitProxy]^-[TransitUndefined],
 [TransitProxy]^-[TransitString],
@@ -122,6 +122,11 @@ Values for 1. and 2. are created on the JavaScript side. Values for 3. are an im
 
 TBD: more meat
 
+### `eval` functions
+
+The different variations of `eval` take the `@`-sign in the JavaScript to fill-in arguments.
+If you want to have the character `'@'` in JavaScript, use the unicode char `'\u0040'`.
+
 #### Proxies
   
 ```
@@ -165,13 +170,13 @@ a.func("asd");
 _this.get("title") // _this.title
 _this.eval("this.options.success(%@)", args: "some param")
 
-_this.eval("__a(%@)", args: "some param")
+_this.eval("__a(@)", args: "some param")
 
 
 [transit eval:@"2+%d" context:someProxy arguments:2]; -> // (2+2)
 
 
-[_this eval:"%@.apply(%@)" arguments:arg[2], arg[1]]
+[_this eval:"@.apply(@)" arguments:arg[2], arg[1]]
 
 // (function() { this.options.success(MAGIC) }).apply(transit.resolveProxy(...)))
 
@@ -183,7 +188,7 @@ callNative(document)
  
 callNative(function(){})
 
-[transit eval:@"console.log=%@" arguments:callback];
+[transit eval:@"console.log=@" arguments:callback];
 
 
 
@@ -223,5 +228,5 @@ func = context funcWithBlock…
 
 
 
-[transit eval:@"jQuery(document).ready(%@)" arguments:callback];
+[transit eval:@"jQuery(document).ready(@)" arguments:callback];
 ```

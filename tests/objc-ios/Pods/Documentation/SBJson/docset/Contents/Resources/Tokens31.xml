@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Categories/NSData+NSData_SBJsonParsing.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cat/NSData(NSData_SBJsonParsing)</TokenIdentifier>
+			<Abstract type="html">Adds JSON parsing methods to NSData</Abstract>
+			<DeclaredIn>NSObject+SBJson.h</DeclaredIn>
+			
+			<NodeRef refid="31"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/NSData(NSData_SBJsonParsing)/JSONValue</TokenIdentifier>
+			<Abstract type="html">Decodes the receiver&apos;s JSON data</Abstract>
+			<DeclaredIn>NSObject+SBJson.h</DeclaredIn>			
+			
+			<Declaration>- (id)JSONValue</Declaration>
+			
+			<ReturnValue><Abstract type="html">the NSDictionary or NSArray represented by the receiver, or nil on error.</Abstract></ReturnValue>
+			<Anchor>//api/name/JSONValue</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>
