@@ -37,11 +37,12 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         private String string;
 
         TransitRequest(String string) {
+            assert(string != null);
             this.string = string;
         }
 
         public boolean equals(String string) {
-            return this.string == string;
+            return this.string.equals(string);
         }
     }
 
