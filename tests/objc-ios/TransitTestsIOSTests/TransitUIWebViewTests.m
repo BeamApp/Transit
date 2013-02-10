@@ -335,5 +335,35 @@
     STAssertEqualObjects(@"blank", result, @"document.title");
 }
 
+-(void)testPerformance {
+    int num = 10;
+    int len = 10;
+    NSString* longString = [@"" stringByPaddingToLength:len withString:@"c" startingAtIndex:0];
+
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *nativeFunc = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+
+        return [arguments[0] stringByAppendingFormat:@"%d", [arguments[1] intValue] ];
+    }];
+    [context retainNativeProxy:nativeFunc];
+    
+    TransitFunction* jsFunc = [context eval:@"function(a,b){return @(a,b);}" arguments:@[nativeFunc]];
+    
+    NSDate *start = [NSDate date];
+    for(int i=0;i<num;i++) {
+        NSString* result = [jsFunc callWithArguments:@[longString, @(i)]];
+        STAssertEqualObjects(([longString stringByAppendingFormat:@"%d", i]), result, @"correct concat");
+    }
+    NSDate *methodFinish = [NSDate date];
+    [nativeFunc dispose];
+
+    NSTimeInterval ti = [methodFinish timeIntervalSinceDate:start];
+    NSLog(@"#### %.2f calls/s with len %d (%.0f ms for %d calls)", num/ti, len, ti * 1000, num);
+    
+    // results on iPhone 5 iOS 6.0.1:
+    // #### 289.29 calls/s with len 10 (3457 ms for 1000 calls)
+    // #### 284.18 calls/s with len 100 (3519 ms for 1000 calls)
+    // #### 254.20 calls/s with len 1000 (3965 ms for 1000 calls)
+}
 
 @end
