@@ -284,5 +284,41 @@
     STAssertEqualObjects(expectedProxyId, result, @"proxy ids match");
 }
 
+-(void)exceptionWillBePropagatedOnContext:(TransitContext*)context {
+    @try {
+        [context eval:@"(function(){throw new Error('some error')})()"];
+        STFail(@"should throw exception");
+    }
+    @catch (NSException *exception) {
+        STAssertEqualObjects(@"TransitException", exception.name, @"exception.name");
+        STAssertEqualObjects(@"some error", exception.reason, @"exception.reason");
+        STAssertEqualObjects(@"Error while executing JavaScript: some error", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
+    }
+}
+
+-(void)testJSExceptionWillBePropagatedWithProxify {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    [self exceptionWillBePropagatedOnContext: context];
+}
+
+-(void)testJSExceptionWillBePropagatedWithoutProxify {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    context.proxifyEval = NO;
+    [self exceptionWillBePropagatedOnContext: context];
+}
+
+-(void)testExceptionWithInvalidJS {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    @try {
+        id result = [context eval:@"4*#"];
+        STFail(@"should throw exception");
+        STAssertEqualObjects(@"?", result, @"should never reach this line");
+    }
+    @catch (NSException *exception) {
+        STAssertEqualObjects(@"TransitException", exception.name, @"exception.name");
+        STAssertEqualObjects(@"Invalid JavaScript: function(){return 4*#;}.call(null)", exception.reason, @"exception.reason");
+        STAssertEqualObjects(@"Error while evaluating JavaScript. Seems to be invalid: function(){return 4*#;}.call(null)", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
+    }
+}
 
 @end

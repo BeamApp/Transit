@@ -411,13 +411,41 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     id adjustedThisArg = thisArg == self ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
     NSString* jsApplyExpression = [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg];
-    NSString* jsWrappedApplyExpression = jsApplyExpression;
-    if(_proxifiedEval)
-        jsWrappedApplyExpression = [NSString stringWithFormat:@"%@.proxify(%@)", self.transitGlobalVarName, jsApplyExpression];
-    NSString* js = [NSString stringWithFormat: @"JSON.stringify({v: %@})", jsWrappedApplyExpression];
+    NSString* jsWrappedApplyExpression;
+    if(_proxifiedEval) {
+        jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
+                                    "var result;"
+                                    "try{"
+                                        "result = %@;"
+                                    "}catch(e){"
+                                        "return {e:e.message};"
+                                    "}"
+                                    "return {v:%@.proxify(result)};"
+                                    "})()", jsApplyExpression, self.transitGlobalVarName];
+    } else {
+        jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
+                                    "try{"
+                                        "return {v:%@};"
+                                    "}catch(e){"
+                                        "return {e:e.message};"
+                                    "}"
+                                    "})()", jsApplyExpression];
+    }
+    
+    NSString* js = [NSString stringWithFormat: @"JSON.stringify(%@)", jsWrappedApplyExpression];
     NSString* jsResult = [_webView stringByEvaluatingJavaScriptFromString: js];
     
-    id parsedResult = [parser objectWithString:jsResult][@"v"];
+    id parsedObject = [parser objectWithString:jsResult];
+    if(parsedObject == nil) {
+        @throw [NSException exceptionWithName:@"TransitException"
+                                       reason:[NSString stringWithFormat:@"Invalid JavaScript: %@", jsApplyExpression] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while evaluating JavaScript. Seems to be invalid: %@", jsApplyExpression]}];
+        
+    }
+    
+    if(parsedObject[@"e"]) {
+        @throw [NSException exceptionWithName:@"TransitException" reason:parsedObject[@"e"] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while executing JavaScript: %@", parsedObject[@"e"]]}];
+    }
+    id parsedResult = parsedObject[@"v"];
     id enhancedResult = parsedResult;
     if(_proxifiedEval)
         enhancedResult = [self recursivelyReplaceMarkersWithProxies:parsedResult];
