@@ -2,6 +2,8 @@ package com.getbeamapp.transit;
 
 import java.util.concurrent.Executors;
 
+import com.getbeamapp.transit.prompt.TransitChromeClient;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,7 +25,7 @@ public class MainActivity extends Activity {
         webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        this.transit = TransitContext.forWebView(webView, new TransitWebChromeClient(webView) {
+        this.transit = TransitChromeClient.createContext(webView, new TransitChromeClient(webView) {
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
                 Log.d("Console", consoleMessage.message());
@@ -38,8 +40,8 @@ public class MainActivity extends Activity {
                 Log.e("Console", "Error received.");
             }
         });
-
-        webView.loadUrl("javascript:" + transit.getAdapter().getScript());
+        
+        transit.getAdapter().initialize();
 
         webView.loadData(
                 "<html><head><title>Transit</title></head><body>Hello World!</body></html>",

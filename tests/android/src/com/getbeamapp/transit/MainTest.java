@@ -1,16 +1,14 @@
 package com.getbeamapp.transit;
 
+import com.getbeamapp.transit.prompt.TransitChromeClient;
+
 import android.os.ConditionVariable;
 import android.test.ActivityInstrumentationTestCase2;
 
-public class AndroidTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class MainTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
-    public AndroidTest() {
+    public MainTest() {
         super(MainActivity.class);
-    }
-
-    public void testAdd() {
-        assertEquals(4, (int) getActivity().transit.eval("2 + 2").getIntegerValue());
     }
 
     public void testExpressionsFromCode() {
@@ -75,29 +73,6 @@ public class AndroidTest extends ActivityInstrumentationTestCase2<MainActivity> 
         function = null;
         System.gc();
         assertTrue("Function not garbage collected.", lock.block(1000));
-    }
-
-    public void testSetup() {
-        MainActivity activity = getActivity();
-        assertNotNull(activity);
-
-        TransitContext transit = activity.transit;
-        assertNotNull(transit);
-        assertNotNull(transit.getAdapter().getScript());
-    }
-
-    public void testTransitInjected() {
-        TransitProxy transitExists = getActivity().transit.eval("window.transit != null");
-        assertEquals(true, (boolean) transitExists.getBooleanValue());
-    }
-
-    public void testException() {
-        try {
-            getActivity().transit.eval("(void 0).toString()");
-            fail();
-        } catch (TransitException e) {
-            assertEquals("Cannot call method 'toString' of undefined", e.getMessage());
-        }
     }
 
 }

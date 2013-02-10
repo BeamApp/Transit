@@ -4,18 +4,13 @@ import android.webkit.WebView;
 
 public class TransitContext extends AbstractTransitContext {
 
-    private final TransitWebChromeClient adapter;
+    private final TransitAdapter adapter;
 
-    private TransitContext(TransitWebChromeClient adapter) {
+    public TransitContext(TransitAdapter adapter) {
         this.adapter = adapter;
-        adapter.setTransitContext(this);
     }
 
-    public static TransitContext forWebView(WebView webView) {
-        return forWebView(webView, new TransitWebChromeClient(webView));
-    }
-
-    public TransitWebChromeClient getAdapter() {
+    public TransitAdapter getAdapter() {
         return this.adapter;
     }
 
@@ -26,9 +21,7 @@ public class TransitContext extends AbstractTransitContext {
     }
 
     public static TransitContext forWebView(WebView webView,
-            TransitWebChromeClient adapter) {
-        assert webView == adapter.webView;
-        webView.setWebChromeClient(adapter);
+            TransitAdapter adapter) {
         return new TransitContext(adapter);
     }
 

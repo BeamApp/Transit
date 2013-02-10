@@ -1,4 +1,4 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.prompt;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.res.Resources;
-import android.os.ConditionVariable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -21,7 +20,13 @@ import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-public class TransitWebChromeClient extends WebChromeClient {
+import com.getbeamapp.transit.R;
+import com.getbeamapp.transit.TransitAdapter;
+import com.getbeamapp.transit.TransitContext;
+import com.getbeamapp.transit.TransitException;
+import com.getbeamapp.transit.TransitProxy;
+
+public class TransitChromeClient extends WebChromeClient implements TransitAdapter {
 
     public enum TransitRequest {
         INVOKE("__TRANSIT_MAGIC_INVOKE"),
@@ -50,64 +55,33 @@ public class TransitWebChromeClient extends WebChromeClient {
         public Object callWithContextAndArguments(Object thisArg, Object[] args);
     }
 
-    private class TransitAction {
-
-        public String toJavaScript() {
-            return toString();
-        }
-    }
-
-    private class TransitExceptionAction extends TransitAction {
-        private Exception exception;
-
-        public TransitExceptionAction(Exception e) {
-            this.exception = e;
-        }
-    }
-
-    private class TransitReturnResultAction extends TransitAction {
-        private Object object;
-
-        public TransitReturnResultAction(Object o) {
-            this.object = o;
-        }
-    }
-
-    private class TransitEvalAction extends TransitAction {
-        private String stringToEvaluate;
-
-        public final ConditionVariable lock = new ConditionVariable();
-
-        public TransitProxy result;
-
-        public RuntimeException exception;
-
-        public TransitEvalAction(String stringToEvaluate) {
-            this.stringToEvaluate = stringToEvaluate;
-        }
-
-        @Override
-        public String toJavaScript() {
-            return "{ \"type\": \"EVAL\", \"data\": "
-                    + JSONObject.quote(stringToEvaluate) + " }";
-        }
-    }
-
-    private final Map<String, TransitNativeFunction> callbacks = new HashMap<String, TransitWebChromeClient.TransitNativeFunction>();
+    private final Map<String, TransitNativeFunction> callbacks = new HashMap<String, TransitChromeClient.TransitNativeFunction>();
 
     final WebView webView;
     private TransitContext context;
 
-    public TransitWebChromeClient(WebView webView) {
+    public TransitChromeClient(WebView forWebView) {
         super();
-        this.webView = webView;
+        this.webView = forWebView;
+        this.webView.setWebChromeClient(this);
+    }
+    
+    public final void initialize() {
+        Log.d(TAG, "Injecting script...");
+        webView.loadUrl("javascript:" + getScript());
+    }
+    
+    public static TransitContext createContext(WebView webView) {
+        return createContext(webView, new TransitChromeClient(webView));
+    }
+    
+    public static TransitContext createContext(WebView webView, TransitChromeClient adapter) {
+        assert adapter.webView == webView;
+        adapter.context = new TransitContext(adapter);
+        return adapter.context;
     }
 
-    public void setTransitContext(TransitContext context) {
-        this.context = context;
-    }
-
-    public TransitProxy unmarshal(String dataAsJsonString) {
+    private final TransitProxy unmarshal(String dataAsJsonString) {
         Object o = unmarshalJson(dataAsJsonString);
 
         if (o == null) {
@@ -117,7 +91,7 @@ public class TransitWebChromeClient extends WebChromeClient {
         }
     }
 
-    public Object unmarshalJson(String dataAsJsonString) {
+    private final Object unmarshalJson(String dataAsJsonString) {
         if (dataAsJsonString == null) {
             return null;
         } else {
@@ -164,7 +138,7 @@ public class TransitWebChromeClient extends WebChromeClient {
         return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 
-    public void runOnUiThread(Runnable runnable) {
+    private void runOnUiThread(Runnable runnable) {
         if (isUiThread()) {
             runnable.run();
         } else {
@@ -180,7 +154,7 @@ public class TransitWebChromeClient extends WebChromeClient {
         }
     }
 
-    public TransitProxy evaluate(String stringToEvaluate) {
+    public final TransitProxy evaluate(String stringToEvaluate) {
         TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
 
         actions.push(action);
