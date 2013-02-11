@@ -75,6 +75,7 @@ public class MainTest extends TestCase {
     @SuppressWarnings("unchecked")
     public void testJsonParsing() throws JSONException {
         JSONObject o = new JSONObject();
+        o.put("null", null);
         o.put("a", 1);
         
         JSONObject o2 = new JSONObject();
@@ -87,6 +88,7 @@ public class MainTest extends TestCase {
         o.put("d", a);
         
         Map<String, Object> map = JsonConverter.toNativeMap(o);
+        assertNull(map.get("null"));
         assertEquals(1, map.get("a"));
         assertEquals("2", ((Map<String, Object>) map.get("b")).get("c"));
         assertEquals(3, ((List<Object>) map.get("d")).get(0));
