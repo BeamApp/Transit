@@ -172,6 +172,7 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
         NSString* desc = [object userInfo][NSLocalizedDescriptionKey];
         return [NSString stringWithFormat:@"new Error(%@)", [self _jsRepresentation:desc]];
     }
+    // TODO: handle dictionaries and arrays #7
     
     return [self _jsRepresentation:object];
 }
@@ -216,6 +217,7 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
 
 @implementation TransitContext {
     NSMutableDictionary* _retainedNativeProxies;
+    int _lastRetainId;
 }
 
 -(id)init {
@@ -239,7 +241,7 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
     // assuming that proxyId is a string that does not contain characters that need to be escaped, this is way(!) faster
-    return [NSString stringWithFormat:@"%@.retained[\"%@\"]", self.transitGlobalVarJSExpression, proxyId];
+    return [[NSString stringWithFormat:@"%@.r(\"%@\")", self.transitGlobalVarJSExpression, proxyId] stringAsJSExpression];
     
 //    return [TransitProxy jsExpressionFromCode:@"@.retained[@]" arguments:@[self.transitGlobalVarProxy, proxyId]];
 }
@@ -254,6 +256,31 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
     // TODO: implement
 //    @throw @"not implemented, yet";
 }
+
+-(NSString*)nextRetainId {
+    return [NSString stringWithFormat:@"%d", ++_lastRetainId];
+}
+
+-(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block {
+    TransitNativeFunction* function = [[TransitNativeFunction alloc] initWithRootContext:self nativeId:[self nextRetainId] block:block];
+    [self retainNativeProxy:function];
+    return function;
+}
+
+-(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block {
+    TransitFunction *original = [self eval:path];
+    if(!original)
+        return nil;
+    
+    TransitFunction *function = [self functionWithBlock:^id(TransitProxy *thisArg, NSArray *arguments) {
+        return block(original, thisArg, arguments);
+    }];
+    
+    [self eval:@"@ = @" arguments:@[path.stringAsJSExpression, function]];
+    
+    return function;
+}
+
 
 -(void)retainNativeProxy:(TransitProxy*)proxy {
     NSParameterAssert(proxy.rootContext == self);
@@ -348,6 +375,7 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
     }
     @catch (NSException *exception) {
         NSString *desc = exception.userInfo[NSLocalizedDescriptionKey] ? exception.userInfo[NSLocalizedDescriptionKey] : [NSString stringWithFormat:@"%@: %@", exception.name, exception.reason];
+        NSLog(@"TRANSIT-NATIVE-ERROR: %@ while called from javascript with arguments %@", desc, arguments);
         return [NSError errorWithDomain:@"transit" code:5 userInfo:@{NSLocalizedDescriptionKey: desc}];
     }
     @finally {
@@ -424,6 +452,11 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return [_parser objectWithString:json];
 }
 
+-(NSString*)_eval:(NSString*)js {
+    NSString* jsWrapped = [NSString stringWithFormat: @"JSON.stringify(%@)", js];
+    return [_webView stringByEvaluatingJavaScriptFromString: jsWrapped];
+}
+
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
     NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments];
     id adjustedThisArg = thisArg == self ? nil : thisArg;
@@ -450,21 +483,24 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
                                     "})()", jsApplyExpression];
     }
     
-    NSString* js = [NSString stringWithFormat: @"JSON.stringify(%@)", jsWrappedApplyExpression];
-    NSString* jsonResult = [_webView stringByEvaluatingJavaScriptFromString: js];
+    NSString* jsonResult = [self _eval:jsWrappedApplyExpression];
 
     if(!returnJSResult)
         return nil;
     
     id parsedObject = [self parseJSON:jsonResult];
     if(parsedObject == nil) {
-        @throw [NSException exceptionWithName:@"TransitException"
+        NSException *e = [NSException exceptionWithName:@"TransitException"
                                        reason:[NSString stringWithFormat:@"Invalid JavaScript: %@", jsApplyExpression] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while evaluating JavaScript. Seems to be invalid: %@", jsApplyExpression]}];
         
+        NSLog(@"TRANSIT-JS-ERROR: %@ while evaluating %@", e, jsApplyExpression);
+        @throw e;
     }
     
     if(parsedObject[@"e"]) {
-        @throw [NSException exceptionWithName:@"TransitException" reason:parsedObject[@"e"] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while executing JavaScript: %@", parsedObject[@"e"]]}];
+        NSException *e = [NSException exceptionWithName:@"TransitException" reason:parsedObject[@"e"] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while executing JavaScript: %@", parsedObject[@"e"]]}];
+        NSLog(@"TRANSIT-JS-ERROR: %@ while evaluating %@", e, jsApplyExpression);
+        @throw e;
     }
     id parsedResult = parsedObject[@"v"];
     id enhancedResult = parsedResult;
@@ -580,10 +616,6 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if(self.disposed)
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"function already disposed" userInfo:nil];
     
-    NSMutableArray *argumentsPlaceholder = [NSMutableArray array];
-    while(argumentsPlaceholder.count<arguments.count)
-          [argumentsPlaceholder addObject:@"@"];
-    
     // most frequent cases: zore or one argument, no specific this arg
     BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
     
@@ -595,10 +627,14 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]] ];
         return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
     }
+    if(noSpecificThisArg && arguments.count == 2) {
+        NSString* js = [NSString stringWithFormat:@"%@(%@,%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]], [TransitProxy jsRepresentation:arguments[1]] ];
+        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
+    }
 
     // general case
-    NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [argumentsPlaceholder componentsJoinedByString:@","]];
-    return [self.rootContext eval:js thisArg:thisArg arguments:arguments returnJSResult:returnResult];
+    NSString* js = [[NSString stringWithFormat:@"%@.apply(this, %@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments]] stringAsJSExpression];
+    return [self.rootContext eval:js thisArg:thisArg arguments:@[] returnJSResult:returnResult];
 }
 
 @end
@@ -606,6 +642,6 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 // NOTE: this value is automatically generated by grunt. DO NOT CHANGE ANYTHING BEHIND THIS LINE
 NSString* _TRANSIT_JS_RUNTIME_CODE = @
     // _TRANSIT_JS_RUNTIME_CODE_START
-    "(function(){/*global Document Element */\n\n(function(globalName){\n    var transit = {\n        retained:{},\n        lastRetainId: 0\n    };\n\n    var PREFIX_MAGIC_FUNCTION = \"__TRANSIT_JS_FUNCTION_\";\n    var PREFIX_MAGIC_NATIVE_FUNCTION = \"__TRANSIT_NATIVE_FUNCTION_\";\n    var PREFIX_MAGIC_OBJECT = \"__TRANSIT_OBJECT_PROXY_\";\n\n    var GLOBAL_OBJECT = window;\n\n    transit.doInvokeNative = function(invocationDescription){\n        throw \"must be replaced by native runtime \" + invocationDescription;\n    };\n\n    transit.nativeFunction = function(nativeId){\n        var f = function(){\n            return transit.invokeNative(nativeId, this, arguments);\n        };\n        f.transitNativeId = PREFIX_MAGIC_NATIVE_FUNCTION + nativeId;\n        return f;\n    };\n\n    transit.recursivelyProxifyMissingFunctionProperties = function(missing, existing) {\n        for(var key in existing) {\n            if(existing.hasOwnProperty(key)) {\n                var existingValue = existing[key];\n\n                if(typeof existingValue === \"function\") {\n                    missing[key] = transit.proxify(existingValue);\n                }\n                if(typeof existingValue === \"object\" && typeof missing[key] === \"object\" && missing[key] !== null) {\n                    transit.recursivelyProxifyMissingFunctionProperties(missing[key], existingValue);\n                }\n            }\n        }\n    };\n\n    transit.proxify = function(elem) {\n        if(typeof elem === \"function\") {\n            if(typeof elem.transitNativeId !== \"undefined\") {\n                return elem.transitNativeId;\n            } else {\n                return transit.retainElement(elem);\n            }\n        }\n\n        if(typeof elem === \"object\") {\n            if(elem instanceof Document || elem instanceof Element) {\n                return transit.retainElement(elem);\n            }\n\n            var copy;\n            try {\n                copy = JSON.parse(JSON.stringify(elem));\n            } catch (e) {\n                return transit.retainElement(elem);\n            }\n            transit.recursivelyProxifyMissingFunctionProperties(copy, elem);\n            return copy;\n        }\n\n        return elem;\n    };\n\n    transit.invokeNative = function(nativeId, thisArg, args) {\n        var invocationDescription = {\n            nativeId: nativeId,\n            thisArg: (thisArg === GLOBAL_OBJECT) ? null : transit.proxify(thisArg),\n            args: []\n        };\n\n        for(var i = 0;i<args.length; i++) {\n            invocationDescription.args.push(transit.proxify(args[i]));\n        }\n\n        return transit.doInvokeNative(invocationDescription);\n    };\n\n    transit.retainElement = function(element){\n        transit.lastRetainId++;\n        var id = \"\" + transit.lastRetainId;\n        if(typeof element === \"object\") {\n            id = PREFIX_MAGIC_OBJECT + id;\n        }\n        if(typeof element === \"function\") {\n            id = PREFIX_MAGIC_FUNCTION + id;\n        }\n\n        transit.retained[id] = element;\n        return id;\n    };\n\n    transit.releaseElementWithId = function(retainId) {\n        if(typeof transit.retained[retainId] === \"undefined\") {\n            throw \"no retained element with Id \" + retainId;\n        }\n\n        delete transit.retained[retainId];\n    };\n\n    window[globalName] = transit;\n\n})(\"transit\");(function(globalName){\n    var transit = window[globalName];\n\n    var callCount = 0;\n    transit.doInvokeNative = function(invocationDescription){\n        invocationDescription.callNumber = ++callCount;\n        transit.nativeInvokeTransferObject = invocationDescription;\n\n        var iFrame = document.createElement('iframe');\n        iFrame.setAttribute('src', 'transit:'+callCount);\n\n        /* this call blocks until native code returns */\n        /* native ccde reads from and writes to transit.nativeInvokeTransferObject */\n        document.documentElement.appendChild(iFrame);\n\n        /* free resources */\n        iFrame.parentNode.removeChild(iFrame);\n        iFrame = null;\n\n        if(transit.nativeInvokeTransferObject === invocationDescription) {\n            throw new Error(\"internal error with transit: invocation transfer object not filled.\");\n        }\n        var result = transit.nativeInvokeTransferObject;\n        if(result instanceof Error) {\n            throw result;\n        } else {\n            return result;\n        }\n    };\n\n})(\"transit\");})()"
+    "(function(){/*global Document Element */\n\n(function(globalName){\n    var transit = {\n        retained:{},\n        lastRetainId: 0\n    };\n\n    var PREFIX_MAGIC_FUNCTION = \"__TRANSIT_JS_FUNCTION_\";\n    var PREFIX_MAGIC_NATIVE_FUNCTION = \"__TRANSIT_NATIVE_FUNCTION_\";\n    var PREFIX_MAGIC_OBJECT = \"__TRANSIT_OBJECT_PROXY_\";\n\n    var GLOBAL_OBJECT = window;\n\n    transit.doInvokeNative = function(invocationDescription){\n        throw \"must be replaced by native runtime \" + invocationDescription;\n    };\n\n    transit.nativeFunction = function(nativeId){\n        var f = function(){\n            return transit.invokeNative(nativeId, this, arguments);\n        };\n        f.transitNativeId = PREFIX_MAGIC_NATIVE_FUNCTION + nativeId;\n        return f;\n    };\n\n    transit.recursivelyProxifyMissingFunctionProperties = function(missing, existing) {\n        for(var key in existing) {\n            if(existing.hasOwnProperty(key)) {\n                var existingValue = existing[key];\n\n                if(typeof existingValue === \"function\") {\n                    missing[key] = transit.proxify(existingValue);\n                }\n                if(typeof existingValue === \"object\" && typeof missing[key] === \"object\" && missing[key] !== null) {\n                    transit.recursivelyProxifyMissingFunctionProperties(missing[key], existingValue);\n                }\n            }\n        }\n    };\n\n    transit.proxify = function(elem) {\n        if(typeof elem === \"function\") {\n            if(typeof elem.transitNativeId !== \"undefined\") {\n                return elem.transitNativeId;\n            } else {\n                return transit.retainElement(elem);\n            }\n        }\n\n        if(typeof elem === \"object\") {\n            if(elem instanceof Document || elem instanceof Element) {\n                return transit.retainElement(elem);\n            }\n\n            var copy;\n            try {\n                copy = JSON.parse(JSON.stringify(elem));\n            } catch (e) {\n                return transit.retainElement(elem);\n            }\n            transit.recursivelyProxifyMissingFunctionProperties(copy, elem);\n            return copy;\n        }\n\n        return elem;\n    };\n\n    transit.invokeNative = function(nativeId, thisArg, args) {\n        var invocationDescription = {\n            nativeId: nativeId,\n            thisArg: (thisArg === GLOBAL_OBJECT) ? null : transit.proxify(thisArg),\n            args: []\n        };\n\n        for(var i = 0;i<args.length; i++) {\n            invocationDescription.args.push(transit.proxify(args[i]));\n        }\n\n        return transit.doInvokeNative(invocationDescription);\n    };\n\n    transit.retainElement = function(element){\n        transit.lastRetainId++;\n        var id = \"\" + transit.lastRetainId;\n        if(typeof element === \"object\") {\n            id = PREFIX_MAGIC_OBJECT + id;\n        }\n        if(typeof element === \"function\") {\n            id = PREFIX_MAGIC_FUNCTION + id;\n        }\n\n        transit.retained[id] = element;\n        return id;\n    };\n\n    transit.r = function(retainId) {\n        return transit.retained[retainId];\n    };\n\n    transit.releaseElementWithId = function(retainId) {\n        if(typeof transit.retained[retainId] === \"undefined\") {\n            throw \"no retained element with Id \" + retainId;\n        }\n\n        delete transit.retained[retainId];\n    };\n\n    window[globalName] = transit;\n\n})(\"transit\");(function(globalName){\n    var transit = window[globalName];\n\n    var callCount = 0;\n    transit.doInvokeNative = function(invocationDescription){\n        invocationDescription.callNumber = ++callCount;\n        transit.nativeInvokeTransferObject = invocationDescription;\n\n        var iFrame = document.createElement('iframe');\n        iFrame.setAttribute('src', 'transit:'+callCount);\n\n        /* this call blocks until native code returns */\n        /* native ccde reads from and writes to transit.nativeInvokeTransferObject */\n        document.documentElement.appendChild(iFrame);\n\n        /* free resources */\n        iFrame.parentNode.removeChild(iFrame);\n        iFrame = null;\n\n        if(transit.nativeInvokeTransferObject === invocationDescription) {\n            throw new Error(\"internal error with transit: invocation transfer object not filled.\");\n        }\n        var result = transit.nativeInvokeTransferObject;\n        if(result instanceof Error) {\n            throw result;\n        } else {\n            return result;\n        }\n    };\n\n})(\"transit\");})()"
     // _TRANSIT_JS_RUNTIME_CODE_END
     ;

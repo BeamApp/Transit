@@ -18,7 +18,7 @@
 
 @implementation TransitJSFunctionTests
 
--(void)testCallWithoutArguments {
+-(void)testCallRetainedWithoutArguments {
     id context = [OCMockObject mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context proxyId:@"proxyId"];
     [[[context stub] andReturn:@"someJSRepresentation"] jsRepresentationForProxyWithId:@"proxyId"];
@@ -33,17 +33,74 @@
     [context verify];
 }
 
+-(void)testCallWithoutArguments {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:@"func"];
+    
+    [[context expect] eval:@"func()" thisArg:nil arguments:nil returnJSResult:YES];
+    
+    [func call];
+    [context verify];
+}
+
+-(void)testCallWithEmptyArguments {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:@"func"];
+    
+    [[context expect] eval:@"func()" thisArg:nil arguments:nil returnJSResult:YES];
+    
+    [func callWithArguments:@[]];
+    [context verify];
+}
+
+-(void)testCallWithNilArguments {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:@"func"];
+    
+    [[context expect] eval:@"func()" thisArg:nil arguments:nil returnJSResult:YES];
+    
+    [func callWithArguments:nil];
+    [context verify];
+}
+
+-(void)testCallWithOneArgument {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:@"func"];
+    
+    [[context expect] eval:@"func(1)" thisArg:nil arguments:nil returnJSResult:YES];
+    
+    [func callWithArguments:@[@1]];
+    [context verify];
+}
+
+-(void)testCallWithTwoArguments {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:@"func"];
+    
+    [[context expect] eval:@"func(1,2)" thisArg:nil arguments:nil returnJSResult:YES];
+    
+    [func callWithArguments:@[@1, @2]];
+    [context verify];
+}
+
+-(void)_testCallWithTwoArguments {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:@"func"];
+    
+    [[context expect] eval:@"func.apply(this, [1,2])" thisArg:nil arguments:@[] returnJSResult:YES];
+    
+    [func callWithArguments:@[@1, @2]];
+    [context verify];
+}
+
+
 -(void)testCallWithThisAndArguments {
     id context = [OCMockObject mockForClass:TransitContext.class];
-    TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context proxyId:@"proxyId"];
-    [[[context stub] andReturn:@"someJSRepresentation"] jsRepresentationForProxyWithId:@"proxyId"];
-    [[[context stub] andReturn:@"someResult"] eval:@"someJSRepresentation(@,@,@)" thisArg:@{@"one":@1} arguments:@[@1,@"two",@YES] returnJSResult:YES];
+    TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:@"someJSRepresentation"];
+    [[[context stub] andReturn:@"someResult"] eval:@"someJSRepresentation.apply(this, [1,\"two\",true])" thisArg:@{@"one":@1} arguments:@[] returnJSResult:YES];
     
     id actual = [func callWithThisArg:@{@"one":@1} arguments:@[@1,@"two", @YES]];
     STAssertEqualObjects(@"someResult", actual, @"result passed along");
-    
-    [[context expect] releaseJSProxyWithId:func.proxyId];
-    [func dispose];
     
     [context verify];
 }

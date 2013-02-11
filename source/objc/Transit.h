@@ -17,6 +17,7 @@
 @end
 
 @class TransitContext;
+@class TransitFunction;
 
 @interface TransitProxy : NSObject
 
@@ -40,7 +41,13 @@
 
 @end
 
+typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
+typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitProxy *thisArg, NSArray* arguments);
+
 @interface TransitContext : TransitProxy
+
+-(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block;
+-(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block;
 
 @end
 
@@ -66,8 +73,6 @@
 -(void)callAsyncWithThisArg:(id)thisArg arguments:(NSArray*)arguments;
 
 @end
-
-typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
 
 @interface TransitNativeFunction : TransitFunction
 
