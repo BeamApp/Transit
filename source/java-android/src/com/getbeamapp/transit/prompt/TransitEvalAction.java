@@ -81,7 +81,7 @@ class TransitEvalAction extends TransitAction {
     }
 
     @Override
-    public String toJavaScript() {
+    public String getJavaScriptRepresentation() {
         return "{ \"type\": \"EVAL\", \"data\": "
                 + JSONObject.quote(stringToEvaluate) + " }";
     }

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
-public class TransitProxy {
+public class TransitProxy implements JavaScriptRepresentable {
     public enum Type {
         UNKNOWN,
         BOOLEAN,
@@ -164,5 +164,18 @@ public class TransitProxy {
 
         matcher.appendTail(output);
         return output.toString();
+    }
+
+    public static TransitProxy proxify(AbstractTransitContext context, Object o) {
+        if (o instanceof TransitProxy) {
+            return (TransitProxy) o;
+        } else {
+            return withValue(context, o);
+        }
+    }
+
+    @Override
+    public String getJavaScriptRepresentation() {
+        return "{}";
     }
 }

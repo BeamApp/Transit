@@ -1,9 +1,16 @@
 package com.getbeamapp.transit.prompt;
 
-class TransitReturnResultAction extends TransitAction {
-    private Object object;
+import com.getbeamapp.transit.JavaScriptRepresentable;
 
-    public TransitReturnResultAction(Object o) {
+class TransitReturnResultAction extends TransitAction {
+    private JavaScriptRepresentable object;
+
+    public TransitReturnResultAction(JavaScriptRepresentable o) {
         this.object = o;
+    }
+    
+    @Override
+    public String getJavaScriptRepresentation() {
+        return createJavaScriptRepresentation("RETURN", object.getJavaScriptRepresentation());
     }
 }

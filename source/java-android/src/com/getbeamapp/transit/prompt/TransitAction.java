@@ -1,9 +1,11 @@
 package com.getbeamapp.transit.prompt;
 
-public class TransitAction {
+import org.json.JSONObject;
 
-    public String toJavaScript() {
-        return toString();
+import com.getbeamapp.transit.JavaScriptRepresentable;
+
+public abstract class TransitAction implements JavaScriptRepresentable {
+    protected String createJavaScriptRepresentation(String type, String data) {
+        return "{ \"type\": " + JSONObject.quote(type) + ", \"data\": " + JSONObject.quote(data) + " }";
     }
-    
 }

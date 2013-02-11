@@ -119,8 +119,9 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                 // TODO: raise NotExpected exception
             } else {
                 TransitEvalAction action = waitingEvaluations.pop();
-                action.resolveWith(unmarshal(defaultValue));
-                Log.i(TAG, String.format("Resolved `%s`", action.getStringToEvaluate()));
+                Object returnValue = unmarshal(defaultValue);
+                action.resolveWith(returnValue);
+                Log.i(TAG, String.format("Resolved `%s` with `%s`", action.getStringToEvaluate(), returnValue));
                 process(result);
             }
         } else if (TransitRequest.EXCEPTION.equals(message)) {
@@ -128,7 +129,9 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                 Log.d(TAG, String.format("Got exception from JavaScript: %s", defaultValue));
             } else {
                 TransitEvalAction action = waitingEvaluations.pop();
-                action.rejectWith(String.valueOf(unmarshalJson(defaultValue)));
+                String error = String.valueOf(unmarshalJson(defaultValue));
+                action.rejectWith(error);
+                Log.i(TAG, String.format("Rejected `%s` with `%s`", action.getStringToEvaluate(), error));
             }
 
             process(result);
@@ -220,7 +223,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                 try {
                     Object result = callback.callWithContextAndArguments(null,
                             null);
-                    actions.push(new TransitReturnResultAction(result));
+                    actions.push(new TransitReturnResultAction(TransitProxy.proxify(context, result)));
                 } catch (Exception e) {
                     actions.push(new TransitExceptionAction(e));
                 } finally {
@@ -259,7 +262,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                     waitingEvaluations.push((TransitEvalAction) action);
                 }
 
-                String response = action.toJavaScript();
+                String response = action.getJavaScriptRepresentation();
                 Log.d(TAG, String.format("Returning %s", response));
                 result.confirm(response);
             }
