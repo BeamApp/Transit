@@ -112,14 +112,16 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
     }
     
     public void testNativeRecursion() {
+        final int calls = 100;
+        
         TransitContext transit = getActivity().transit;
         final TransitCallable callable = new TransitCallable() {
             @Override
             public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
                 int v = arguments[0].getIntegerValue();
                 
-                if (v < 8) {
-                    return thisArg.eval(TransitProxy.jsExpressionFromCode("f(@)", v));
+                if (v < calls) {
+                    return thisArg.eval(TransitProxy.jsExpressionFromCode("f(@ + 1)", v));
                 } else {
                     return v;
                 }
@@ -127,6 +129,6 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         };
 
         final TransitNativeFunction function = transit.registerCallable(callable);
-        assertEquals(100, transit.eval("window.f = @; f(0)", function));
+        assertEquals(calls, transit.eval("window.f = @; f(0)", function).getIntegerValue());
     }
 }

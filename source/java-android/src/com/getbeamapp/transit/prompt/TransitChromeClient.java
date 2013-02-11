@@ -80,6 +80,8 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     final WebView webView;
     private TransitContext context;
 
+    private boolean active = false;
+
     public TransitChromeClient(WebView forWebView) {
         super();
         this.webView = forWebView;
@@ -129,6 +131,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             String defaultValue, JsPromptResult result) {
 
         Log.d(TAG, String.format("%s --- %s", message, defaultValue));
+        active = true;
 
         if (TransitRequest.INVOKE.equals(message)) {
             invoke(unmarshal(defaultValue));
@@ -188,13 +191,14 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         this.lock.open();
     }
 
+    // TODO: Make sure no "outside" evaluate-calls cause conflicts with active Transit threads
+    
     public final TransitProxy evaluate(String stringToEvaluate) {
-        boolean mustPoll = true; // TODO
-
+        Log.d(TAG, String.format("Evaluate %s (active: %s)", stringToEvaluate, active));
         TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
         pushAction(action);
 
-        if (mustPoll) {
+        if (!active) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -205,7 +209,6 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         }
 
         Log.i(TAG, String.format("Waiting for `%s`", stringToEvaluate));
-
         return action.block();
     }
 
@@ -282,13 +285,13 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             public void run() {
                 lock.block();
 
-                TransitAction action = null;
-
                 if (actions.empty()) {
-                    action = new TransitReturnResultAction(null);
-                } else {
-                    action = actions.pop();
+                    active = false;
+                    result.confirm();
+                    return;
                 }
+                
+                TransitAction action = actions.pop();
 
                 if (action instanceof TransitEvalAction) {
                     waitingEvaluations.push((TransitEvalAction) action);
