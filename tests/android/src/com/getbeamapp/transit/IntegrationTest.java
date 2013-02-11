@@ -50,13 +50,15 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
             @Override
             public Object evaluate(Object thisArg, Object... arguments) {
                 called[0] = true;
-                return null;
+                return 42;
             }
         };
 
         TransitNativeFunction function = transit.registerCallable(callable);
-        transit.eval("@()", function);
+        TransitProxy result = transit.eval("@()", function);
 
         assertTrue("Native function not called.", called[0]);
+        assertNotNull(result);
+        assertEquals(42, (int)result.getIntegerValue());
     }
 }

@@ -16,6 +16,8 @@ public final class JsonConverter {
             return toNativeMap((JSONObject) o);
         } else if (o instanceof JSONArray) {
             return toNativeList((JSONArray) o);
+        } else if (o == JSONObject.NULL) {
+            return null;
         } else {
             return o;
         }

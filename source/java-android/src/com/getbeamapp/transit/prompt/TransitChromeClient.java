@@ -241,7 +241,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     private void invoke(final TransitProxy invokeDescriptor) {
         lock.close();
 
-        final String nativeId = (String) invokeDescriptor.getObjectValue().get("nativeId");
+        final String nativeId = invokeDescriptor.get("nativeId").getStringValue();
         Log.d(TAG, String.format("Invoking native function `%s`", nativeId));
 
         final TransitNativeFunction callback = context.getCallback(nativeId);
@@ -256,9 +256,9 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
                     try {
                         Object resultObject = callback.call();
-                        TransitProxy result = TransitProxy.proxify(context, resultObject);
+                        TransitProxy result = TransitProxy.withValue(context, resultObject);
                         action = new TransitReturnResultAction(result);
-                        Log.d(TAG, String.format("Invoked native function `%s` with result `%s`", nativeId, result));
+                        Log.d(TAG, String.format("Invoked native function `%s` with result `%s`", nativeId, resultObject));
                     } catch (Exception e) {
                         Log.e(TAG, String.format("Exception invoking native function `%s`", nativeId), e);
                         action = new TransitExceptionAction(e);
