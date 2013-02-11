@@ -130,7 +130,6 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
             process(result);
         } else if (TransitRequest.POLL.equals(message)) {
-            lock.release(); // peek for free
             process(result);
         } else {
             return super.onJsPrompt(view, url, message, defaultValue, result);
@@ -160,11 +159,13 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     }
 
     public final TransitProxy evaluate(String stringToEvaluate) {
+        TransitReturnResultAction returnAction = new TransitReturnResultAction(null);
+        actions.push(returnAction);
+        lock.release();
+        
         TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
-
         actions.push(action);
         lock.release();
-        Log.i(TAG, "Pushed action and released Lock");
 
         runOnUiThread(new Runnable() {
             @Override
@@ -258,8 +259,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                 }
 
                 if (actions.isEmpty()) {
-                    result.confirm();
-                    return;
+                    throw new TransitException("Action list is empty.");
                 }
 
                 action = actions.pop();
