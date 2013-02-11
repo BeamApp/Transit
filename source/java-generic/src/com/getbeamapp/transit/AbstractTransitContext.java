@@ -10,7 +10,7 @@ public abstract class AbstractTransitContext extends TransitProxy {
     @Override
     public abstract TransitProxy eval(String stringToEvaluate, TransitProxy context, Object... arguments);
 
-    private int _nextNativeId = 0;
+    private long _nextNativeId = 0;
 
     public String nextNativeId() {
         return String.valueOf(_nextNativeId++);
