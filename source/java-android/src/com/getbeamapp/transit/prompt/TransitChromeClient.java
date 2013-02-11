@@ -41,6 +41,31 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             this.string = string;
         }
 
+        public String getString() {
+            return string;
+        }
+
+        public boolean equals(String string) {
+            return this.string.equals(string);
+        }
+    }
+
+    public enum TransitResponse {
+        RETURN("RETURN"),
+        EXCEPTION("EXCEPTION"),
+        EVAL("EVAL");
+
+        private String string;
+
+        TransitResponse(String string) {
+            assert (string != null);
+            this.string = string;
+        }
+
+        public String getString() {
+            return string;
+        }
+
         public boolean equals(String string) {
             return this.string.equals(string);
         }

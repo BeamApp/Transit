@@ -1,6 +1,7 @@
 package com.getbeamapp.transit.prompt;
 
 import com.getbeamapp.transit.TransitException;
+import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
 
 class TransitExceptionAction extends TransitAction {
     private Throwable throwable;
@@ -16,6 +17,6 @@ class TransitExceptionAction extends TransitAction {
 
     @Override
     public String getJavaScriptRepresentation() {
-        return createJavaScriptRepresentation("EXCEPTION", throwable.toString());
+        return createJavaScriptRepresentation(TransitResponse.EXCEPTION, throwable.toString());
     }
 }
