@@ -462,10 +462,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 -(void)invokeNative {
     id description = [self eval:@"@.nativeInvokeTransferObject" arguments:@[self.transitGlobalVarProxy]];
     id result = [self invokeNativeDescription:description];
-    if(result == nil)
-        [self eval:@"@.nativeInvokeTransferObject = undefined" arguments:@[self.transitGlobalVarProxy]];
-    else
-        [self eval:@"@.nativeInvokeTransferObject = @" arguments:@[self.transitGlobalVarProxy, result]];
+    
+    NSString* resultJsRepresentation = [TransitProxy jsRepresentation:result];
+    NSString* js = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarName, resultJsRepresentation];
+    [self.webView stringByEvaluatingJavaScriptFromString:js];
 }
 
 #pragma UIWebViewDelegate
