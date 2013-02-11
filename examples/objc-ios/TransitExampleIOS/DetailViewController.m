@@ -62,13 +62,13 @@
     // shoot sound is disabled on mobile. Hook into shoot logic to start sound
     [transit replaceFunctionAt:@"EntityPlayer.prototype.shoot" withFunctionWithBlock:^id(TransitFunction *original, TransitProxy *thisArg, NSArray *arguments) {
         [self playShootSound];
-        return [transit eval:@"@.apply(@,@)" arguments:@[original, thisArg, arguments]];
+        return [original callWithThisArg:thisArg arguments:arguments];
     }];
     
     // vibrate
     TransitReplaceFunctionBlock vibrate = ^id(TransitFunction *original, TransitProxy *thisArg, NSArray *arguments) {
         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
-        return [transit eval:@"@.apply(@,@)" arguments:@[original, thisArg, arguments]];
+        return [original callWithThisArg:thisArg arguments:arguments];
     };
     
     [transit replaceFunctionAt:@"EntityEnemyHeart.prototype.kill" withFunctionWithBlock:vibrate];

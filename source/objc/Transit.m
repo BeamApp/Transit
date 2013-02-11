@@ -172,6 +172,7 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
         NSString* desc = [object userInfo][NSLocalizedDescriptionKey];
         return [NSString stringWithFormat:@"new Error(%@)", [self _jsRepresentation:desc]];
     }
+    // TODO: handle dictionaries and arrays #7
     
     return [self _jsRepresentation:object];
 }
@@ -374,6 +375,7 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
     }
     @catch (NSException *exception) {
         NSString *desc = exception.userInfo[NSLocalizedDescriptionKey] ? exception.userInfo[NSLocalizedDescriptionKey] : [NSString stringWithFormat:@"%@: %@", exception.name, exception.reason];
+        NSLog(@"TRANSIT-NATIVE-ERROR: %@ while called from javascript with arguments %@", desc, arguments);
         return [NSError errorWithDomain:@"transit" code:5 userInfo:@{NSLocalizedDescriptionKey: desc}];
     }
     @finally {
@@ -488,14 +490,16 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     
     id parsedObject = [self parseJSON:jsonResult];
     if(parsedObject == nil) {
-        @throw [NSException exceptionWithName:@"TransitException"
+        NSException *e = [NSException exceptionWithName:@"TransitException"
                                        reason:[NSString stringWithFormat:@"Invalid JavaScript: %@", jsApplyExpression] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while evaluating JavaScript. Seems to be invalid: %@", jsApplyExpression]}];
         
+        NSLog(@"TRANSIT-JS-ERROR: %@ while evaluating %@", e, jsApplyExpression);
+        @throw e;
     }
     
     if(parsedObject[@"e"]) {
         NSException *e = [NSException exceptionWithName:@"TransitException" reason:parsedObject[@"e"] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while executing JavaScript: %@", parsedObject[@"e"]]}];
-        NSLog(@"ERROR: %@", e);
+        NSLog(@"TRANSIT-JS-ERROR: %@ while evaluating %@", e, jsApplyExpression);
         @throw e;
     }
     id parsedResult = parsedObject[@"v"];
@@ -612,10 +616,6 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if(self.disposed)
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"function already disposed" userInfo:nil];
     
-    NSMutableArray *argumentsPlaceholder = [NSMutableArray array];
-    while(argumentsPlaceholder.count<arguments.count)
-          [argumentsPlaceholder addObject:@"@"];
-    
     // most frequent cases: zore or one argument, no specific this arg
     BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
     
@@ -627,13 +627,14 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]] ];
         return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
     }
+    if(noSpecificThisArg && arguments.count == 2) {
+        NSString* js = [NSString stringWithFormat:@"%@(%@,%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]], [TransitProxy jsRepresentation:arguments[1]] ];
+        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
+    }
 
     // general case
-    NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [argumentsPlaceholder componentsJoinedByString:@","]];
-    return [self.rootContext eval:js thisArg:thisArg arguments:arguments returnJSResult:returnResult];
-    
-    // TODO: translate to this
-//    return [self.rootContext eval:@"@.apply(@,@)" arguments:@[self.jsRepresentation, thisArg, arguments]];
+    NSString* js = [[NSString stringWithFormat:@"%@.apply(this, %@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments]] stringAsJSExpression];
+    return [self.rootContext eval:js thisArg:thisArg arguments:@[] returnJSResult:returnResult];
 }
 
 @end
