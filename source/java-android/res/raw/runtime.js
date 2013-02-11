@@ -1,5 +1,10 @@
 (function(globalName){
   var transit = window[globalName];
+  var returnValue = null;
+
+  function log() {
+    console.log.apply(console, arguments);
+  }
 
   function post(type, data) {
     if (data != null) {
@@ -14,27 +19,30 @@
       return postException(e);
     }
 
-    // null is returned on __TRANSIT_MAGIC_POLL
-    if (result != null) {
-      switch(result.type) {
-        case "EXCEPTION":
-          throw(result.data);
-        case "EVAL":
-          evaluate(result.data);
-          break;
-        case "RETURN":
-          return result.data;
-        default:
-          throw("Unknown result type: " + result.type)
-      }
+    if (result == null) {
+      log("Poll completed.");
+      return;
     }
+
+    if (result.type === "EXCEPTION") {
+      throw(result.data);
+    } else if (result.type === "EVAL") {
+      returnValue = evaluateAndReturn(result.data);
+    } else if (result.type === "RETURN") {
+      returnValue = eval(result.data);
+    } else {
+      throw("Unknown result type: " + result.type)
+    }
+
+    return returnValue;
   }
 
   function postException(e) {
+    log("Exception: " + e);
     return post("__TRANSIT_MAGIC_EXCEPTION", transit.proxify(e.toString()));
   }
 
-  function evaluate(script) {
+  function evaluateAndReturn(script) {
     var result;
 
     try {
@@ -43,15 +51,21 @@
       return postException(e);
     }
 
-    post("__TRANSIT_MAGIC_RETURN", transit.proxify(result));
+    // Eval seems to return `undefined` if prompt is called
+    // so we look into the cached returnValue
+    if ( typeof result === "undefined" ) {
+      result = returnValue;
+    }
+
+    return post("__TRANSIT_MAGIC_RETURN", transit.proxify(result));
   }
 
   transit.doInvokeNative = function(invocationDescription) {
-    post("__TRANSIT_MAGIC_INVOKE", invocationDescription);
+    return post("__TRANSIT_MAGIC_INVOKE", invocationDescription);
   };
 
   transit.poll = function() {
-    post("__TRANSIT_MAGIC_POLL");
+    return post("__TRANSIT_MAGIC_POLL");
   };
 
 })(
