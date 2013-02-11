@@ -17,7 +17,7 @@ public class TransitContext extends AbstractTransitContext {
     @Override
     public TransitProxy eval(String stringToEvaluate, TransitProxy context,
             Object... arguments) {
-        return adapter.evaluate(stringToEvaluate);
+        return adapter.evaluate(TransitProxy.jsExpressionFromCode(stringToEvaluate, context, arguments));
     }
 
     public static TransitContext forWebView(WebView webView,

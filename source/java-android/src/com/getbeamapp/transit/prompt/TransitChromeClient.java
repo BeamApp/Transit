@@ -37,7 +37,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         private String string;
 
         TransitRequest(String string) {
-            assert(string != null);
+            assert (string != null);
             this.string = string;
         }
 
@@ -66,16 +66,16 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         this.webView = forWebView;
         this.webView.setWebChromeClient(this);
     }
-    
+
     public final void initialize() {
         Log.d(TAG, "Injecting script...");
         webView.loadUrl("javascript:" + getScript());
     }
-    
+
     public static TransitContext createContext(WebView webView) {
         return createContext(webView, new TransitChromeClient(webView));
     }
-    
+
     public static TransitContext createContext(WebView webView, TransitChromeClient adapter) {
         assert adapter.webView == webView;
         adapter.context = new TransitContext(adapter);
@@ -121,9 +121,14 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             Log.i(TAG, String.format("Resolved `%s`", action.stringToEvaluate));
             process(result);
         } else if (TransitRequest.EXCEPTION.equals(message)) {
-            TransitEvalAction action = waitingEvaluations.pop();
-            action.exception = new TransitException(String.valueOf(unmarshalJson(defaultValue)));
-            action.lock.open();
+            if (waitingEvaluations.empty()) {
+                Log.d(TAG, String.format("Got exception from JavaScript: %s", defaultValue));
+            } else {
+                TransitEvalAction action = waitingEvaluations.pop();
+                action.exception = new TransitException(String.valueOf(unmarshalJson(defaultValue)));
+                action.lock.open();
+            }
+
             process(result);
         } else if (TransitRequest.POLL.equals(message)) {
             lock.release(); // peek for free

@@ -5,13 +5,13 @@ public abstract class TransitFunction extends TransitProxy {
         super(rootContext);
     }
 
-    public final TransitProxy call() {
+    public final Object call() {
         return call(null, new Object[0]);
     }
 
-    public final TransitProxy call(Object... arguments) {
+    public final Object call(Object... arguments) {
         return call(null, arguments);
     }
 
-    public abstract TransitProxy call(TransitProxy context, Object... arguments);
+    public abstract Object call(Object context, Object... arguments);
 }

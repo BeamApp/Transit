@@ -1,14 +1,19 @@
 package com.getbeamapp.transit;
 
-import com.getbeamapp.transit.prompt.TransitChromeClient;
-
+import junit.framework.TestCase;
 import android.os.ConditionVariable;
-import android.test.ActivityInstrumentationTestCase2;
 
-public class MainTest extends ActivityInstrumentationTestCase2<MainActivity> {
+public class MainTest extends TestCase {
+
+    private final TransitCallable noop;
 
     public MainTest() {
-        super(MainActivity.class);
+        this.noop = new TransitCallable() {
+            @Override
+            public Object evaluate(Object thisArg, Object... arguments) {
+                return null;
+            }
+        };
     }
 
     public void testExpressionsFromCode() {
@@ -49,12 +54,12 @@ public class MainTest extends ActivityInstrumentationTestCase2<MainActivity> {
     }
 
     public void testFunction() {
-        TransitNativeFunction function = new TransitNativeFunction(null, "some-id");
+        TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id");
         assertEquals("transit.nativeFunction(\"some-id\")", function.getJavaScriptRepresentation());
     }
 
     public void testFunctionInExpression() {
-        TransitNativeFunction function = new TransitNativeFunction(null, "some-id");
+        TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id");
         assertEquals("transit.nativeFunction(\"some-id\")('foo')", TransitProxy.jsExpressionFromCode("@('foo')", function));
     }
 
@@ -62,7 +67,7 @@ public class MainTest extends ActivityInstrumentationTestCase2<MainActivity> {
         final ConditionVariable lock = new ConditionVariable();
 
         @SuppressWarnings("unused")
-        TransitNativeFunction function = new TransitNativeFunction(null, "some-id") {
+        TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id") {
             @Override
             protected void finalize() throws Throwable {
                 super.finalize();

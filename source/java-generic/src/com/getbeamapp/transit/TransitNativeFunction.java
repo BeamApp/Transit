@@ -4,21 +4,25 @@ public class TransitNativeFunction extends TransitFunction implements JavaScript
 
     private final String nativeId;
 
-    public TransitNativeFunction(AbstractTransitContext rootContext) {
+    private final TransitCallable implementation;
+
+    public TransitNativeFunction(AbstractTransitContext rootContext, TransitCallable callable) {
         super(rootContext);
         this.nativeId = rootContext.nextNativeId();
+        this.implementation = callable;
         assert (nativeId != null);
     }
 
-    TransitNativeFunction(AbstractTransitContext rootContext, String nativeId) {
+    TransitNativeFunction(AbstractTransitContext rootContext, TransitCallable callable, String nativeId) {
         super(rootContext);
         this.nativeId = nativeId;
+        this.implementation = callable;
         assert (nativeId != null);
     }
 
     @Override
-    public TransitProxy call(TransitProxy context, Object... arguments) {
-        return null;
+    public Object call(Object thisArg, Object... arguments) {
+        return implementation.evaluate(thisArg, arguments);
     }
 
     @Override

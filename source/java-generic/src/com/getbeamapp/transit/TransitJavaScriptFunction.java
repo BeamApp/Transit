@@ -7,7 +7,7 @@ public class TransitJavaScriptFunction extends TransitFunction {
     }
 
     @Override
-    public TransitProxy call(TransitProxy context, Object... arguments) {
+    public Object call(Object context, Object... arguments) {
         return null;
     }
 
