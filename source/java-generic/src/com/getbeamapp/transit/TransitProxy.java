@@ -42,6 +42,8 @@ public class TransitProxy implements JavaScriptRepresentable {
             result.type = Type.ARRAY;
         } else if (value instanceof Map) {
             result.type = Type.OBJECT;
+        } else if (value == null) {
+            result.type = Type.OBJECT;
         } else {
             throw new IllegalArgumentException(String.format("TransitProxy doesn't support instances of `%s`", value.getClass().getName()));
         }
