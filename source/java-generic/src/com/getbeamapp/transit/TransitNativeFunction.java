@@ -37,5 +37,10 @@ public class TransitNativeFunction extends TransitFunction implements JavaScript
     public String getJavaScriptRepresentation() {
         return "transit.nativeFunction(\"" + nativeId + "\")";
     }
+    
+    @Override
+    public String toString() {
+        return String.format("[%s nativeId:%s]", this.getClass().getSimpleName(), nativeId);
+    }
 
 }

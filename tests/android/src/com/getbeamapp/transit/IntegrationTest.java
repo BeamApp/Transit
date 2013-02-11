@@ -104,7 +104,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         };
 
         TransitNativeFunction function = transit.registerCallable(callable);
-        transit.eval("@(@, @)", function, function);
+        transit.eval("@(@, @)", function, function, function);
         
         assertEquals(2, calledWithArgs.size());
         assertEquals(function, calledWithArgs.get(0));

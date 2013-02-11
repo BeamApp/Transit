@@ -57,6 +57,10 @@ public class TransitProxy implements JavaScriptRepresentable {
             }
         }
 
+        if (value instanceof String) {
+            return createFromString(context, (String) value);
+        }
+
         TransitProxy result = new TransitProxy(context);
 
         if (value instanceof Boolean) {
@@ -65,9 +69,6 @@ public class TransitProxy implements JavaScriptRepresentable {
         } else if (value instanceof Number) {
             result.type = Type.NUMBER;
             result.numberValue = (Number) value;
-        } else if (value instanceof String) {
-            result.type = Type.STRING;
-            result.stringValue = (String) value;
         } else if (value instanceof Object[]) {
             result.type = Type.ARRAY;
             result.arrayValue = convertArray(context, Arrays.asList((Object[]) value));
@@ -84,6 +85,23 @@ public class TransitProxy implements JavaScriptRepresentable {
             throw new IllegalArgumentException(String.format("TransitProxy doesn't support instances of `%s`", value.getClass().getName()));
         }
 
+        return result;
+    }
+
+    public static final Pattern NATIVE_FUNCTION_PATTERN = Pattern.compile("^__TRANSIT_NATIVE_FUNCTION_(.+)$");
+
+    private static TransitProxy createFromString(AbstractTransitContext context, String value) {
+        Matcher nativeFunctionMatcher = NATIVE_FUNCTION_PATTERN.matcher(value);
+
+        if (nativeFunctionMatcher.matches()) {
+            TransitNativeFunction callback = context.getCallback(nativeFunctionMatcher.group(1));
+            assert (callback != null);
+            return callback;
+        }
+
+        TransitProxy result = new TransitProxy(context);
+        result.type = Type.STRING;
+        result.stringValue = value;
         return result;
     }
 
@@ -211,23 +229,9 @@ public class TransitProxy implements JavaScriptRepresentable {
             Object argument = arguments[index];
 
             if (argument instanceof JavaScriptRepresentable) {
-                replacement = ((JavaScriptRepresentable) argument)
-                        .getJavaScriptRepresentation();
-            } else if (argument instanceof Boolean) {
-                replacement = String.valueOf(argument);
-            } else if (argument instanceof Number) {
-                replacement = String.valueOf(argument);
-            } else if (argument instanceof String) {
-                replacement = JSONObject.quote((String) argument);
-            } else if (argument instanceof Array) {
-                replacement = "[]"; // TODO
-            } else if (argument instanceof Map) {
-                replacement = "{}"; // TODO
-            } else if (argument == null) {
-                replacement = "null";
+                replacement = ((JavaScriptRepresentable) argument).getJavaScriptRepresentation();
             } else {
-                throw new IllegalArgumentException("Argument at index " + index
-                        + " can't be serialized.");
+                replacement = TransitProxy.withValue(null, argument).getJavaScriptRepresentation();
             }
 
             matcher.appendReplacement(output, replacement);

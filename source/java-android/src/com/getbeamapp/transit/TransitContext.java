@@ -1,5 +1,9 @@
 package com.getbeamapp.transit;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import android.webkit.WebView;
 
 public class TransitContext extends AbstractTransitContext {
@@ -17,7 +21,11 @@ public class TransitContext extends AbstractTransitContext {
     @Override
     public TransitProxy eval(String stringToEvaluate, TransitProxy context,
             Object... arguments) {
-        return adapter.evaluate(TransitProxy.jsExpressionFromCode(stringToEvaluate, context, arguments));
+        List<Object> newArgs = new LinkedList<Object>();
+        newArgs.add(context);
+        newArgs.addAll(Arrays.asList(arguments));
+        Object[] newArgsArray = newArgs.toArray(new Object[newArgs.size()]);
+        return adapter.evaluate(TransitProxy.jsExpressionFromCode(stringToEvaluate, newArgsArray));
     }
 
     public static TransitContext forWebView(WebView webView,
