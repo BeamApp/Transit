@@ -55,7 +55,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
             }
         };
 
-        TransitNativeFunction function = new TransitNativeFunction(transit, callable);
+        TransitNativeFunction function = transit.registerCallable(callable);
         transit.eval("@()", function);
 
         assertTrue("Native function not called.", lock.block(TIMEOUT));

@@ -24,5 +24,12 @@ public abstract class AbstractTransitContext extends TransitProxy {
     public TransitNativeFunction getCallback(String string) {
         return callbacks.get(string);
     }
+    
+    public TransitNativeFunction registerCallable(TransitCallable callable) {
+        String nativeId = nextNativeId();
+        TransitNativeFunction function = new TransitNativeFunction(this, callable, nativeId);
+        callbacks.put(nativeId, function);
+        return function;
+    }
 
 }
