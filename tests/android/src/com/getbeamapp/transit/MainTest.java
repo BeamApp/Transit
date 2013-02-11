@@ -1,5 +1,14 @@
 package com.getbeamapp.transit;
 
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.getbeamapp.transit.prompt.TransitChromeClient;
+
 import junit.framework.TestCase;
 import android.os.ConditionVariable;
 
@@ -61,6 +70,27 @@ public class MainTest extends TestCase {
     public void testFunctionInExpression() {
         TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id");
         assertEquals("transit.nativeFunction(\"some-id\")('foo')", TransitProxy.jsExpressionFromCode("@('foo')", function));
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void testJsonParsing() throws JSONException {
+        JSONObject o = new JSONObject();
+        o.put("a", 1);
+        
+        JSONObject o2 = new JSONObject();
+        o2.put("c", "2");
+        o.put("b", o2);
+        
+        JSONArray a = new JSONArray();
+        a.put(3);
+        a.put("4");
+        o.put("d", a);
+        
+        Map<String, Object> map = JsonConverter.toNativeMap(o);
+        assertEquals(1, map.get("a"));
+        assertEquals("2", ((Map<String, Object>) map.get("b")).get("c"));
+        assertEquals(3, ((List<Object>) map.get("d")).get(0));
+        assertEquals("4", ((List<Object>) map.get("d")).get(1));
     }
 
     public void testFunctionDisposal() {
