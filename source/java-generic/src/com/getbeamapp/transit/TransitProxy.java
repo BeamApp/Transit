@@ -1,7 +1,6 @@
 package com.getbeamapp.transit;
 
 import java.lang.reflect.Array;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -100,9 +99,10 @@ public class TransitProxy implements JavaScriptRepresentable {
         return (Array) value;
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, Object> getObjectValue() {
         assertType(Type.OBJECT);
-        return new HashMap<String, Object>();
+        return (Map<String, Object>) this.value;
     }
 
     @Override

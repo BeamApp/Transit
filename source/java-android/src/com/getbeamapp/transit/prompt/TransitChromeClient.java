@@ -208,8 +208,8 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         return output.toString();
     }
 
-    private void invoke(final Object descriptionString) {
-        final String nativeId = descriptionString.toString(); // TODO
+    private void invoke(final TransitProxy invokeDescriptor) {
+        final String nativeId = (String)invokeDescriptor.getObjectValue().get("nativeId");
         final TransitNativeFunction callback = context.getCallback(nativeId);
 
         if (callback == null) {
