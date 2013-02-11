@@ -47,7 +47,7 @@
 -(void)testJsRepresentationForProxy {
     TransitContext *context = [TransitContext new];
     NSString* actual = [context jsRepresentationForProxyWithId:@"someId"];
-    STAssertEqualObjects(@"transit.retained[\"someId\"]", actual, @"proxy representation");
+    STAssertEqualObjects(@"transit.r(\"someId\")", actual, @"proxy representation as function to avoid messing this this");
 }
 
 -(TransitProxy*)stubWithContext:(TransitContext*)context proxyId:(NSString*)proxyId {

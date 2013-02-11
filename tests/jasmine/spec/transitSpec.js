@@ -76,6 +76,11 @@ describe("Transit", function() {
             expect(id1).not.toEqual(id2);
             expect(Object.getOwnPropertyNames(transit.retained)).toEqual([id1, id2]);
         });
+
+        it("provides access to retained via r function", function(){
+            var id = transit.retainElement({});
+            expect(transit.r(id)).toBe(transit.retained[id]);
+        });
     });
 
     describe("proxify", function(){

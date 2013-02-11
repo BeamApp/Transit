@@ -94,6 +94,10 @@
         return id;
     };
 
+    transit.r = function(retainId) {
+        return transit.retained[retainId];
+    };
+
     transit.releaseElementWithId = function(retainId) {
         if(typeof transit.retained[retainId] === "undefined") {
             throw "no retained element with Id " + retainId;
