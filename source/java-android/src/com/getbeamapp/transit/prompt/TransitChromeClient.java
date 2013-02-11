@@ -115,7 +115,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             invoke(unmarshal(defaultValue));
             process(result);
         } else if (TransitRequest.RETURN.equals(message)) {
-            if(waitingEvaluations.empty()) {
+            if (waitingEvaluations.empty()) {
                 // TODO: raise NotExpected exception
             } else {
                 TransitEvalAction action = waitingEvaluations.pop();
@@ -181,7 +181,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         });
 
         Log.i(TAG, String.format("Waiting for `%s`", stringToEvaluate));
-        
+
         return action.block();
     }
 
@@ -215,23 +215,29 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     }
 
     private void invoke(final Object descriptionString) {
-        final TransitNativeFunction callback = callbacks.get(descriptionString);
+        final String nativeId = descriptionString.toString(); // TODO
+        final TransitNativeFunction callback = callbacks.get(nativeId);
 
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Object resultObject = callback.callWithContextAndArguments(null, null);
-                    TransitProxy resultProxy = TransitProxy.proxify(context, resultObject);
-                    actions.push(new TransitReturnResultAction(resultProxy));
-                } catch (Exception e) {
-                    actions.push(new TransitExceptionAction(e));
-                } finally {
-                    Log.i(TAG, "Pushed action and released Lock");
-                    lock.release();
+        if (callback == null) {
+            actions.push(new TransitExceptionAction(String.format("Can't find native function for native ID `%s`", nativeId)));
+            lock.release();
+        } else {
+            Executors.newSingleThreadExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Object resultObject = callback.callWithContextAndArguments(null, null);
+                        TransitProxy resultProxy = TransitProxy.proxify(context, resultObject);
+                        actions.push(new TransitReturnResultAction(resultProxy));
+                    } catch (Exception e) {
+                        actions.push(new TransitExceptionAction(e));
+                    } finally {
+                        Log.i(TAG, "Pushed action and released Lock");
+                        lock.release();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private final Stack<TransitEvalAction> waitingEvaluations = new Stack<TransitEvalAction>();
