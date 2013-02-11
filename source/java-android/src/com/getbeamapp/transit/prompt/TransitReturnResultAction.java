@@ -11,6 +11,6 @@ class TransitReturnResultAction extends TransitAction {
     
     @Override
     public String getJavaScriptRepresentation() {
-        return createJavaScriptRepresentation("RETURN", object.getJavaScriptRepresentation());
+        return createJavaScriptRepresentation("RETURN", object);
     }
 }
