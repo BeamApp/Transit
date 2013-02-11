@@ -226,6 +226,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                         TransitProxy resultProxy = TransitProxy.proxify(context, resultObject);
                         action = new TransitReturnResultAction(resultProxy);
                     } catch (Exception e) {
+                        Log.e(TAG, String.format("Exception invoking native function `%s`", nativeId), e);
                         action = new TransitExceptionAction(e);
                     } finally {
                         if (action != null) {
