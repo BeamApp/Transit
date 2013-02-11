@@ -1,5 +1,9 @@
 package com.getbeamapp.transit;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.getbeamapp.transit.prompt.TransitChromeClient;
@@ -48,7 +52,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         TransitContext transit = getActivity().transit;
         TransitCallable callable = new TransitCallable() {
             @Override
-            public Object evaluate(Object thisArg, Object... arguments) {
+            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
                 called[0] = true;
                 return 42;
             }
@@ -60,5 +64,30 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         assertTrue("Native function not called.", called[0]);
         assertNotNull(result);
         assertEquals(42, (int)result.getIntegerValue());
+    }
+    
+    public void testNativeArguments() {
+        final TransitProxy[] calledWithThis = new TransitProxy[] { null };
+        final List<TransitProxy> calledWithArgs = new LinkedList<TransitProxy>();
+        
+        TransitContext transit = getActivity().transit;
+        TransitCallable callable = new TransitCallable() {
+            @Override
+            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
+                calledWithThis[0] = thisArg;
+                calledWithArgs.addAll(Arrays.asList(arguments));
+                return null;
+            }
+        };
+
+        TransitNativeFunction function = transit.registerCallable(callable);
+        transit.eval("@.call(0, 1, 2)", function);
+
+        assertNotNull(calledWithThis[0]);
+        assertEquals(2, calledWithArgs.size());
+        
+        assertEquals(0, calledWithThis[0].getIntegerValue());
+        assertEquals(1, calledWithArgs.get(0).getIntegerValue());
+        assertEquals(2, calledWithArgs.get(1).getIntegerValue());
     }
 }

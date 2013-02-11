@@ -87,7 +87,7 @@ public class TransitProxy implements JavaScriptRepresentable {
         return result;
     }
 
-    private static Map<String, TransitProxy> convertMap(AbstractTransitContext context, Map<?, ?> input) {
+    public static Map<String, TransitProxy> convertMap(AbstractTransitContext context, Map<?, ?> input) {
         Map<String, TransitProxy> output = new HashMap<String, TransitProxy>();
 
         for (Object keyObject : input.keySet()) {
@@ -97,7 +97,7 @@ public class TransitProxy implements JavaScriptRepresentable {
         return output;
     }
 
-    private static List<TransitProxy> convertArray(AbstractTransitContext context, Iterable<?> input) {
+    public static List<TransitProxy> convertArray(AbstractTransitContext context, Iterable<?> input) {
         List<TransitProxy> output = new LinkedList<TransitProxy>();
 
         for (Object o : input) {

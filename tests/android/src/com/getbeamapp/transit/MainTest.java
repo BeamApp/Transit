@@ -19,7 +19,7 @@ public class MainTest extends TestCase {
     public MainTest() {
         this.noop = new TransitCallable() {
             @Override
-            public Object evaluate(Object thisArg, Object... arguments) {
+            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
                 return null;
             }
         };
