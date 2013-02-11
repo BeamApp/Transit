@@ -23,6 +23,11 @@
 		CB4AE18316C9557B0083D29F /* MasterViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB4AE18116C9557B0083D29F /* MasterViewController_iPad.xib */; };
 		CB4AE18616C9557B0083D29F /* DetailViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB4AE18416C9557B0083D29F /* DetailViewController_iPhone.xib */; };
 		CB4AE18916C9557B0083D29F /* DetailViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB4AE18716C9557B0083D29F /* DetailViewController_iPad.xib */; };
+		CB6711BE16C983F1004B1893 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB6711BD16C983F1004B1893 /* AudioToolbox.framework */; };
+		CB6711C416C98894004B1893 /* explosion.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CB6711C116C98894004B1893 /* explosion.mp3 */; };
+		CB6711C516C98894004B1893 /* plasma-burst.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CB6711C216C98894004B1893 /* plasma-burst.mp3 */; };
+		CB6711C616C98894004B1893 /* xtype.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CB6711C316C98894004B1893 /* xtype.mp3 */; };
+		CB6711C816C98978004B1893 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB6711C716C98978004B1893 /* AVFoundation.framework */; };
 		CBCE188E16C9570900C2D816 /* Transit.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE188D16C9570900C2D816 /* Transit.m */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +55,11 @@
 		CB4AE18216C9557B0083D29F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController_iPad.xib; sourceTree = "<group>"; };
 		CB4AE18516C9557B0083D29F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DetailViewController_iPhone.xib; sourceTree = "<group>"; };
 		CB4AE18816C9557B0083D29F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DetailViewController_iPad.xib; sourceTree = "<group>"; };
+		CB6711BD16C983F1004B1893 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		CB6711C116C98894004B1893 /* explosion.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = explosion.mp3; sourceTree = "<group>"; };
+		CB6711C216C98894004B1893 /* plasma-burst.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "plasma-burst.mp3"; sourceTree = "<group>"; };
+		CB6711C316C98894004B1893 /* xtype.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = xtype.mp3; sourceTree = "<group>"; };
+		CB6711C716C98978004B1893 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CBCE188C16C9570900C2D816 /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
 		CBCE188D16C9570900C2D816 /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -59,6 +69,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB6711C816C98978004B1893 /* AVFoundation.framework in Frameworks */,
+				CB6711BE16C983F1004B1893 /* AudioToolbox.framework in Frameworks */,
 				CB4AE16116C9557B0083D29F /* UIKit.framework in Frameworks */,
 				CB4AE16316C9557B0083D29F /* Foundation.framework in Frameworks */,
 				CB4AE16516C9557B0083D29F /* CoreGraphics.framework in Frameworks */,
@@ -75,6 +87,7 @@
 				CBCE188A16C956E300C2D816 /* Transit */,
 				CB4AE16616C9557B0083D29F /* TransitExampleIOS */,
 				CB4AE15F16C9557A0083D29F /* Frameworks */,
+				CB6711C016C98894004B1893 /* Resources */,
 				CB4AE15D16C9557A0083D29F /* Products */,
 				164917E47F234124B248231A /* Pods.xcconfig */,
 			);
@@ -91,6 +104,8 @@
 		CB4AE15F16C9557A0083D29F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CB6711C716C98978004B1893 /* AVFoundation.framework */,
+				CB6711BD16C983F1004B1893 /* AudioToolbox.framework */,
 				CB4AE16016C9557B0083D29F /* UIKit.framework */,
 				CB4AE16216C9557B0083D29F /* Foundation.framework */,
 				CB4AE16416C9557B0083D29F /* CoreGraphics.framework */,
@@ -129,6 +144,17 @@
 				CB4AE17616C9557B0083D29F /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CB6711C016C98894004B1893 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CB6711C116C98894004B1893 /* explosion.mp3 */,
+				CB6711C216C98894004B1893 /* plasma-burst.mp3 */,
+				CB6711C316C98894004B1893 /* xtype.mp3 */,
+			);
+			name = Resources;
+			path = TransitExampleIOS/Resources;
 			sourceTree = "<group>";
 		};
 		CBCE188A16C956E300C2D816 /* Transit */ = {
@@ -201,6 +227,9 @@
 				CB4AE18316C9557B0083D29F /* MasterViewController_iPad.xib in Resources */,
 				CB4AE18616C9557B0083D29F /* DetailViewController_iPhone.xib in Resources */,
 				CB4AE18916C9557B0083D29F /* DetailViewController_iPad.xib in Resources */,
+				CB6711C416C98894004B1893 /* explosion.mp3 in Resources */,
+				CB6711C516C98894004B1893 /* plasma-burst.mp3 in Resources */,
+				CB6711C616C98894004B1893 /* xtype.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
