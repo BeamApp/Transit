@@ -115,18 +115,20 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             invoke(unmarshal(defaultValue));
             process(result);
         } else if (TransitRequest.RETURN.equals(message)) {
-            TransitEvalAction action = waitingEvaluations.pop();
-            action.result = unmarshal(defaultValue);
-            action.lock.open();
-            Log.i(TAG, String.format("Resolved `%s`", action.stringToEvaluate));
-            process(result);
+            if(waitingEvaluations.empty()) {
+                // TODO: raise NotExpected exception
+            } else {
+                TransitEvalAction action = waitingEvaluations.pop();
+                action.resolveWith(unmarshal(defaultValue));
+                Log.i(TAG, String.format("Resolved `%s`", action.getStringToEvaluate()));
+                process(result);
+            }
         } else if (TransitRequest.EXCEPTION.equals(message)) {
             if (waitingEvaluations.empty()) {
                 Log.d(TAG, String.format("Got exception from JavaScript: %s", defaultValue));
             } else {
                 TransitEvalAction action = waitingEvaluations.pop();
-                action.exception = new TransitException(String.valueOf(unmarshalJson(defaultValue)));
-                action.lock.open();
+                action.rejectWith(String.valueOf(unmarshalJson(defaultValue)));
             }
 
             process(result);
@@ -176,17 +178,8 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         });
 
         Log.i(TAG, String.format("Waiting for `%s`", stringToEvaluate));
-        action.lock.block();
-
-        if (action.exception != null) {
-            Log.i(TAG, String.format("Got exception for `%s`: %s",
-                    stringToEvaluate, action.exception));
-            throw action.exception;
-        } else {
-            Log.i(TAG, String.format("Got result for `%s`: %s",
-                    stringToEvaluate, action.result));
-            return action.result;
-        }
+        
+        return action.block();
     }
 
     public void readResource(int id, ByteArrayOutputStream output) {
