@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Stack;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,9 +48,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
     public static final String TAG = "TransitAdapter";
 
-    private final Stack<TransitAction> actions = new Stack<TransitAction>();
-
-    private final Semaphore lock = new Semaphore(0);
+    private final LinkedBlockingDeque<TransitAction> actions = new LinkedBlockingDeque<TransitAction>();
 
     final WebView webView;
     private TransitContext context;
@@ -159,21 +157,25 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     }
 
     public final TransitProxy evaluate(String stringToEvaluate) {
-        TransitReturnResultAction returnAction = new TransitReturnResultAction(null);
-        actions.push(returnAction);
-        lock.release();
-        
-        TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
-        actions.push(action);
-        lock.release();
+        boolean mustPoll = true; // TODO
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "transit.poll()");
-                webView.loadUrl("javascript:transit.poll()");
-            }
-        });
+        TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
+
+        if (mustPoll) {
+            actions.push(new TransitReturnResultAction(null));
+        }
+
+        actions.push(action);
+
+        if (mustPoll) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "transit.poll()");
+                    webView.loadUrl("javascript:transit.poll()");
+                }
+            });
+        }
 
         Log.i(TAG, String.format("Waiting for `%s`", stringToEvaluate));
 
@@ -210,12 +212,11 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     }
 
     private void invoke(final TransitProxy invokeDescriptor) {
-        final String nativeId = (String)invokeDescriptor.getObjectValue().get("nativeId");
+        final String nativeId = (String) invokeDescriptor.getObjectValue().get("nativeId");
         final TransitNativeFunction callback = context.getCallback(nativeId);
 
         if (callback == null) {
             actions.push(new TransitExceptionAction(String.format("Can't find native function for native ID `%s`", nativeId)));
-            lock.release();
         } else {
             Executors.newSingleThreadExecutor().execute(new Runnable() {
                 @Override
@@ -232,8 +233,6 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                     } finally {
                         if (action != null) {
                             actions.push(action);
-                            lock.release();
-                            Log.i(TAG, "Pushed action and released Lock");
                         }
                     }
                 }
@@ -248,19 +247,6 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             @Override
             public void run() {
                 TransitAction action = null;
-
-                Log.i(TAG, "Acquire lock");
-
-                try {
-                    lock.acquire();
-                } catch (InterruptedException e) {
-                    result.confirm(new TransitExceptionAction(e).toString());
-                    return;
-                }
-
-                if (actions.isEmpty()) {
-                    throw new TransitException("Action list is empty.");
-                }
 
                 action = actions.pop();
 
