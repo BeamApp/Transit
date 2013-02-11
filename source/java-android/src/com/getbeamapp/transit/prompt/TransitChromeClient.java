@@ -24,6 +24,7 @@ import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
 import com.getbeamapp.transit.TransitContext;
 import com.getbeamapp.transit.TransitException;
+import com.getbeamapp.transit.TransitNativeFunction;
 import com.getbeamapp.transit.TransitProxy;
 
 public class TransitChromeClient extends WebChromeClient implements TransitAdapter {
@@ -51,12 +52,6 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     private final Stack<TransitAction> actions = new Stack<TransitAction>();
 
     private final Semaphore lock = new Semaphore(0);
-
-    public interface TransitNativeFunction {
-        public Object callWithContextAndArguments(Object thisArg, Object[] args);
-    }
-
-    private final Map<String, TransitNativeFunction> callbacks = new HashMap<String, TransitChromeClient.TransitNativeFunction>();
 
     final WebView webView;
     private TransitContext context;
@@ -216,7 +211,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
     private void invoke(final Object descriptionString) {
         final String nativeId = descriptionString.toString(); // TODO
-        final TransitNativeFunction callback = callbacks.get(nativeId);
+        final TransitNativeFunction callback = context.getCallback(nativeId);
 
         if (callback == null) {
             actions.push(new TransitExceptionAction(String.format("Can't find native function for native ID `%s`", nativeId)));
@@ -226,7 +221,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                 @Override
                 public void run() {
                     try {
-                        Object resultObject = callback.callWithContextAndArguments(null, null);
+                        Object resultObject = callback.call();
                         TransitProxy resultProxy = TransitProxy.proxify(context, resultObject);
                         actions.push(new TransitReturnResultAction(resultProxy));
                     } catch (Exception e) {
