@@ -1,15 +1,21 @@
 package com.getbeamapp.transit.prompt;
 
-class TransitExceptionAction extends TransitAction {
-    private Exception exception;
+import com.getbeamapp.transit.TransitException;
 
-    public TransitExceptionAction(Exception e) {
+class TransitExceptionAction extends TransitAction {
+    private Throwable throwable;
+
+    public TransitExceptionAction(String message) {
+        this.throwable = new TransitException(message);
+    }
+
+    public TransitExceptionAction(Throwable e) {
         assert (e != null);
-        this.exception = e;
+        this.throwable = e;
     }
 
     @Override
     public String getJavaScriptRepresentation() {
-        return createJavaScriptRepresentation("EXCEPTION", exception.toString());
+        return createJavaScriptRepresentation("EXCEPTION", throwable.toString());
     }
 }
