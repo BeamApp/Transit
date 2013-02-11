@@ -90,4 +90,43 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         assertEquals(1, calledWithArgs.get(0).getIntegerValue());
         assertEquals(2, calledWithArgs.get(1).getIntegerValue());
     }
+    
+    public void testNativeIdentity() {
+        final List<TransitProxy> calledWithArgs = new LinkedList<TransitProxy>();
+        
+        TransitContext transit = getActivity().transit;
+        TransitCallable callable = new TransitCallable() {
+            @Override
+            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
+                calledWithArgs.addAll(Arrays.asList(arguments));
+                return null;
+            }
+        };
+
+        TransitNativeFunction function = transit.registerCallable(callable);
+        transit.eval("@(@, @)", function, function);
+        
+        assertEquals(2, calledWithArgs.size());
+        assertEquals(function, calledWithArgs.get(0));
+        assertEquals(calledWithArgs.get(0), calledWithArgs.get(1));
+    }
+    
+    public void testNativeRecursion() {
+        TransitContext transit = getActivity().transit;
+        final TransitCallable callable = new TransitCallable() {
+            @Override
+            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
+                int v = arguments[0].getIntegerValue();
+                
+                if (v < 8) {
+                    return thisArg.eval(TransitProxy.jsExpressionFromCode("f(@)", v));
+                } else {
+                    return v;
+                }
+            }
+        };
+
+        final TransitNativeFunction function = transit.registerCallable(callable);
+        assertEquals(100, transit.eval("window.f = @; f(0)", function));
+    }
 }
