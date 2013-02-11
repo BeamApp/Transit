@@ -2,6 +2,7 @@ package com.getbeamapp.transit;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,7 +32,6 @@ public class TransitProxy implements JavaScriptRepresentable {
     public static TransitProxy withValue(AbstractTransitContext rootContext,
             Object value) {
         TransitProxy result = new TransitProxy(rootContext);
-        result.value = value;
 
         if (value instanceof Boolean) {
             result.type = Type.BOOLEAN;
@@ -39,12 +39,15 @@ public class TransitProxy implements JavaScriptRepresentable {
             result.type = Type.NUMBER;
         } else if (value instanceof String) {
             result.type = Type.STRING;
-        } else if (value instanceof Array) {
+        } else if (value instanceof Array || value instanceof List) {
             result.type = Type.ARRAY;
-        } else {
+        } else if (value instanceof Map) {
             result.type = Type.OBJECT;
+        } else {
+            throw new IllegalArgumentException(String.format("TransitProxy doesn't support instances of `%s`", value.getClass().getName()));
         }
 
+        result.value = value;
         return result;
     }
 

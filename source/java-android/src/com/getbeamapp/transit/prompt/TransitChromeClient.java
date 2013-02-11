@@ -18,6 +18,7 @@ import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
+import com.getbeamapp.transit.JsonConverter;
 import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
 import com.getbeamapp.transit.TransitContext;
@@ -81,7 +82,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         if (o == null) {
             return null;
         } else {
-            return TransitProxy.withValue(context, o);
+            return TransitProxy.withValue(context, JsonConverter.toNative(o));
         }
     }
 
