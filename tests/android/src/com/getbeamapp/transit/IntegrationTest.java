@@ -1,9 +1,8 @@
 package com.getbeamapp.transit;
 
-import com.getbeamapp.transit.prompt.TransitChromeClient;
-
-import android.os.ConditionVariable;
 import android.test.ActivityInstrumentationTestCase2;
+
+import com.getbeamapp.transit.prompt.TransitChromeClient;
 
 public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -44,13 +43,13 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
     }
 
     public void testNativeFunction() {
-        final ConditionVariable lock = new ConditionVariable();
-
+        final boolean[] called = new boolean[] { false };
+        
         TransitContext transit = getActivity().transit;
         TransitCallable callable = new TransitCallable() {
             @Override
             public Object evaluate(Object thisArg, Object... arguments) {
-                lock.open();
+                called[0] = true;
                 return null;
             }
         };
@@ -58,6 +57,6 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         TransitNativeFunction function = transit.registerCallable(callable);
         transit.eval("@()", function);
 
-        assertTrue("Native function not called.", lock.block(TIMEOUT));
+        assertTrue("Native function not called.", called[0]);
     }
 }
