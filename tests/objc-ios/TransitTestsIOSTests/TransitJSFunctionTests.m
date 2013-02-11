@@ -22,7 +22,7 @@
     id context = [OCMockObject mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context proxyId:@"proxyId"];
     [[[context stub] andReturn:@"someJSRepresentation"] jsRepresentationForProxyWithId:@"proxyId"];
-    [[[context stub] andReturn:@"someResult"] eval:@"someJSRepresentation()" thisArg:nil arguments:@[]];
+    [[[context stub] andReturn:@"someResult"] eval:@"someJSRepresentation()" thisArg:nil arguments:nil returnJSResult:YES];
 
     id actual = [func call];
     STAssertEqualObjects(@"someResult", actual, @"result passed along");
@@ -37,7 +37,7 @@
     id context = [OCMockObject mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context proxyId:@"proxyId"];
     [[[context stub] andReturn:@"someJSRepresentation"] jsRepresentationForProxyWithId:@"proxyId"];
-    [[[context stub] andReturn:@"someResult"] eval:@"someJSRepresentation(@,@,@)" thisArg:@{@"one":@1} arguments:@[@1,@"two",@YES]];
+    [[[context stub] andReturn:@"someResult"] eval:@"someJSRepresentation(@,@,@)" thisArg:@{@"one":@1} arguments:@[@1,@"two",@YES] returnJSResult:YES];
     
     id actual = [func callWithThisArg:@{@"one":@1} arguments:@[@1,@"two", @YES]];
     STAssertEqualObjects(@"someResult", actual, @"result passed along");

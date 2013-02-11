@@ -24,6 +24,8 @@
 -(id)eval:(NSString*)jsCode;
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments;
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments;
+-(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments returnJSResult:(BOOL)returnJSResult;
+
 
 +(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments;
 
@@ -50,7 +52,8 @@
 -(id)call;
 -(id)callWithArguments:(NSArray*)arguments;
 -(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments;
-
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult;
+    
 @end
 
 typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);

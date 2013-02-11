@@ -123,15 +123,19 @@
 }
 
 -(id)eval:(NSString*)jsCode {
-    return [self eval:jsCode thisArg:self arguments:@[]];
+    return [self eval:jsCode thisArg:self arguments:@[] returnJSResult:YES];
 }
 
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments {
-    return [self eval:jsCode thisArg:self arguments:arguments];
+    return [self eval:jsCode thisArg:self arguments:arguments returnJSResult:YES];
 }
 
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments {
-    return [_rootContext eval:jsCode thisArg:thisArg arguments:arguments];
+    return [self eval:jsCode thisArg:thisArg arguments:arguments returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
+    return [_rootContext eval:jsCode thisArg:thisArg arguments:arguments returnJSResult:returnJSResult];
 }
 
 -(NSString*)jsRepresentation {
@@ -174,6 +178,13 @@
 }
 
 +(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments {
+    NSRange anyPlaceholder = [jsCode rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"@"]];
+    if(anyPlaceholder.location == NSNotFound) {
+        if(arguments.count>0)
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too many arguments" userInfo:nil];
+        return jsCode;
+    }
+    
     NSError* error;
     NSRegularExpression *regex = [NSRegularExpression
                                   regularExpressionWithPattern:@"@"
@@ -229,7 +240,10 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
 }
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
-    return [TransitProxy jsExpressionFromCode:@"@.retained[@]" arguments:@[self.transitGlobalVarProxy, proxyId]];
+    // assuming that proxyId is a string that does not contain characters that need to be escaped, this is way(!) faster
+    return [NSString stringWithFormat:@"%@.retained[\"%@\"]", self.transitGlobalVarName, proxyId];
+    
+//    return [TransitProxy jsExpressionFromCode:@"@.retained[@]" arguments:@[self.transitGlobalVarProxy, proxyId]];
 }
 
 -(void)disposeAllNativeProxies {
@@ -417,11 +431,11 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return [_parser objectWithString:json];
 }
 
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments {
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
     NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments];
     id adjustedThisArg = thisArg == self ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
-    NSString* jsApplyExpression = [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg];
+    NSString* jsApplyExpression = jsAdjustedThisArg ? [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg] : jsExpression;
     NSString* jsWrappedApplyExpression;
     if(_proxifiedEval) {
         jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
@@ -445,6 +459,9 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     
     NSString* js = [NSString stringWithFormat: @"JSON.stringify(%@)", jsWrappedApplyExpression];
     NSString* jsonResult = [_webView stringByEvaluatingJavaScriptFromString: js];
+
+    if(!returnJSResult)
+        return nil;
     
     id parsedObject = [self parseJSON:jsonResult];
     if(parsedObject == nil) {
@@ -496,15 +513,19 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 @implementation TransitFunction
 
 -(id)call {
-    return [self callWithThisArg:nil arguments:@[]];
+    return [self callWithThisArg:nil arguments:@[] returnResult:YES];
 }
 
 -(id)callWithArguments:(NSArray*)arguments {
-    return [self callWithThisArg:nil arguments:arguments];
+    return [self callWithThisArg:nil arguments:arguments returnResult:YES];
 }
 
 -(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments {
-    @throw @"must be implemented by subclass";
+    return [self callWithThisArg:thisArg arguments:arguments returnResult:YES];
+}
+
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult {
+    @throw [NSException exceptionWithName:@"Abstract" reason:@"must be implemented by subclass" userInfo:nil];;
 }
 
 @end
@@ -521,8 +542,9 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return self;
 }
 
--(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments {
-    return [self.rootContext invokeNativeFunc:self thisArg:thisArg arguments:arguments];
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments returnResult:(BOOL)returnResult {
+    id result = [self.rootContext invokeNativeFunc:self thisArg:thisArg arguments:arguments];
+    return returnResult ? result : nil;
 }
 
 -(id)callWithProxifedThisArg:(TransitProxy*)thisArg proxifiedArguments:(NSArray*)arguments {
@@ -546,7 +568,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 @implementation TransitJSFunction
 
--(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments {
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult {
     if(self.disposed)
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"function already disposed" userInfo:nil];
     
@@ -554,8 +576,21 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     while(argumentsPlaceholder.count<arguments.count)
           [argumentsPlaceholder addObject:@"@"];
     
+    // most frequent cases: zore or one argument, no specific this arg
+    BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
+    
+    if(noSpecificThisArg && arguments.count == 0) {
+        NSString* js = [NSString stringWithFormat:@"%@()", self.jsRepresentation];
+        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
+    }
+    if(noSpecificThisArg && arguments.count == 1) {
+        NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]] ];
+        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
+    }
+
+    // general case
     NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [argumentsPlaceholder componentsJoinedByString:@","]];
-    return [self.rootContext eval:js thisArg:thisArg arguments:arguments];
+    return [self.rootContext eval:js thisArg:thisArg arguments:arguments returnJSResult:returnResult];
 }
 
 @end

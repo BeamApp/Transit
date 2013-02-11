@@ -107,7 +107,7 @@
     id context = [OCMockObject mockForClass:TransitContext.class];
     TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:@"someId"];
     
-    [[[context stub] andReturn:@"4"] eval:@"2+2" thisArg:proxy arguments:@[]];
+    [[[context stub] andReturn:@"4"] eval:@"2+2" thisArg:proxy arguments:@[] returnJSResult:YES];
     NSString* actual = [proxy eval:@"2+2"];
     STAssertEqualObjects(@"4", actual, @"passed through");
     [context verify];

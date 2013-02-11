@@ -55,10 +55,10 @@
         TransitJSFunction *cb = arguments[1];
         // original API calls async, also this prevenst *very* deep recursion depths of up to 10,000!
         dispatch_async(dispatch_get_main_queue(), ^{
-            [cb callWithArguments:@[data]];
+            [cb callWithThisArg:nil arguments:@[data] returnResult:NO];
         });
         
-        return @0;
+        return nil;
     }];
     [self.transit retainNativeProxy:func];
     
