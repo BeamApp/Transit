@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 
 
+@interface NSString(Transit)
+
+-(NSString*)stringAsJSExpression;
+-(BOOL) isJSExpression;
+
+@end
+
 @class TransitContext;
 
 @interface TransitProxy : NSObject

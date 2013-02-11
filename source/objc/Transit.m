@@ -9,23 +9,25 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "SBJson.h"
+#import <objc/runtime.h>
 
-@implementation TransitJSDirectExpression
 
--(id)initWithExpression:(NSString*)expression {
-    self = [self init];
-    if(self) {
-        _expression = expression;
-    }
-    return self;
+@implementation NSString(Transit)
+
+void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION;
+
+-(NSString*)stringAsJSExpression {
+    if(self.isJSExpression)
+        return self;
+    
+    NSString *result = [NSString stringWithFormat:@"%@", self];
+    objc_setAssociatedObject(result, _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION, [NSNumber numberWithBool:YES], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    return result;
 }
 
--(NSString*)jsRepresentation{
-    return _expression;
-}
-
-+(id)expression:(NSString*)expression {
-    return [[self alloc] initWithExpression:expression];
+-(BOOL) isJSExpression {
+    id assoc = objc_getAssociatedObject(self, _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION);
+    return [assoc boolValue];
 }
 
 @end
@@ -84,7 +86,7 @@
 }
 
 -(id)initWithRootContext:(TransitContext *)rootContext jsRepresentation:(NSString*)jsRepresentation {
-    return [self initWithRootContext:rootContext value:[TransitJSDirectExpression expression:jsRepresentation]];
+    return [self initWithRootContext:rootContext value:jsRepresentation.stringAsJSExpression];
 }
 
 
@@ -150,11 +152,6 @@
     return [self.class _jsRepresentation:self];
 }
 
--(id)transitGlobalVarProxy {
-    NSAssert(_rootContext, @"rootcontext not set");
-    return _rootContext.transitGlobalVarProxy;
-}
-
 +(NSString*)_jsRepresentation:(id)object {
     SBJsonWriter* writer = [SBJsonWriter new];
     NSString* json = [writer stringWithObject: @[object]];
@@ -169,6 +166,8 @@
         return @"undefined";
     if([object respondsToSelector:@selector(jsRepresentation)])
         return [object performSelector:@selector(jsRepresentation)];
+    if([object isKindOfClass:NSString.class] && [object isJSExpression])
+        return object;
     if([object isKindOfClass:NSError.class]) {
         NSString* desc = [object userInfo][NSLocalizedDescriptionKey];
         return [NSString stringWithFormat:@"new Error(%@)", [self _jsRepresentation:desc]];
@@ -178,10 +177,9 @@
 }
 
 +(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments {
-    NSRange anyPlaceholder = [jsCode rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"@"]];
-    if(anyPlaceholder.location == NSNotFound) {
-        if(arguments.count>0)
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too many arguments" userInfo:nil];
+    if(jsCode.isJSExpression) {
+        if(arguments.count > 0)
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"jsExpression cannot take any additional arguments" userInfo:nil];
         return jsCode;
     }
     
@@ -207,7 +205,7 @@
     if(mutableArguments.count >0)
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too many arguments" userInfo:nil];
     
-    return jsCode;
+    return jsCode.stringAsJSExpression;
 }
 
 @end
@@ -241,7 +239,7 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
     // assuming that proxyId is a string that does not contain characters that need to be escaped, this is way(!) faster
-    return [NSString stringWithFormat:@"%@.retained[\"%@\"]", self.transitGlobalVarName, proxyId];
+    return [NSString stringWithFormat:@"%@.retained[\"%@\"]", self.transitGlobalVarJSExpression, proxyId];
     
 //    return [TransitProxy jsExpressionFromCode:@"@.retained[@]" arguments:@[self.transitGlobalVarProxy, proxyId]];
 }
@@ -282,14 +280,9 @@ NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
     return _retainedNativeProxies;
 }
 
--(NSString*)transitGlobalVarName {
-    return @"transit";
+-(NSString*)transitGlobalVarJSExpression {
+    return @"transit".stringAsJSExpression;
 }
-
--(id)transitGlobalVarProxy {
-    return [TransitJSDirectExpression expression:self.transitGlobalVarName];
-}
-
 
 +(NSRegularExpression*)regularExpressionForMarker:(NSString*)marker {
     static NSMutableDictionary* cache;
@@ -446,7 +439,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
                                         "return {e:e.message};"
                                     "}"
                                     "return {v:%@.proxify(result)};"
-                                    "})()", jsApplyExpression, self.transitGlobalVarName];
+                                    "})()", jsApplyExpression, self.transitGlobalVarJSExpression];
     } else {
         jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
                                     "try{"
@@ -483,7 +476,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 -(void)invokeNative {
     // nativeInvokeTransferObject is safe to parse and contains proxy-ids
-    NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)", self.transitGlobalVarName];
+    NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)", self.transitGlobalVarJSExpression];
     NSString* jsonDescription = [self.webView stringByEvaluatingJavaScriptFromString:jsReadTransferObject];
     id callDescription = [self recursivelyReplaceMarkersWithProxies:[self parseJSON:jsonDescription]];
     
@@ -491,7 +484,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     id result = [self invokeNativeDescription:callDescription];
     
     // simple assignment is safe to evaluate
-    NSString* jsWriteTransferObject = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarName, [TransitProxy jsRepresentation:result]];
+    NSString* jsWriteTransferObject = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSExpression, [TransitProxy jsRepresentation:result]];
     [self.webView stringByEvaluatingJavaScriptFromString:jsWriteTransferObject];
 }
 
@@ -501,7 +494,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if([request.URL.scheme isEqual:_TRANSIT_SCHEME]){
         if(self.handleRequestBlock)
             self.handleRequestBlock(self, request);
-            
+        
         return NO;
     }
     return YES;
@@ -567,7 +560,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 }
 
 -(NSString*)jsRepresentation {
-    return [TransitProxy jsExpressionFromCode:@"@.nativeFunction(@)" arguments:@[self.transitGlobalVarProxy, self.proxyId]];
+    return [TransitProxy jsExpressionFromCode:@"@.nativeFunction(@)" arguments:@[self.rootContext.transitGlobalVarJSExpression, self.proxyId]];
 }
 
 -(void)dispose {

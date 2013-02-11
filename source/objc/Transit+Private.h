@@ -14,11 +14,12 @@
 
 -(void)dispose;
 -(BOOL)disposed;
--(TransitProxy*)transitGlobalVarProxy;
 
 @property(readonly) NSString* proxyId;
 
 -(void)clearRootContextAndProxyId;
+
++(NSString*)jsRepresentation:(id)object;
 
 @end
 
@@ -38,13 +39,7 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 -(id)invokeNativeDescription:(NSDictionary*)description;
 
-@end
-
-@interface TransitJSDirectExpression : NSObject
-
--(id)initWithExpression:(NSString*)expression;
-
-@property(readonly) NSString* expression;
+-(NSString*)transitGlobalVarJSExpression;
 
 @end
 

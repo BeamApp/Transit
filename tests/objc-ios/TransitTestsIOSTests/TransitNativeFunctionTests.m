@@ -15,7 +15,6 @@
 
 @end
 
-
 @protocol TransitBlockTestProtocol <NSObject>
 
 -(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray *)arguments;
@@ -48,8 +47,8 @@
 
 -(id)contextStubForTransitGlobalVar {
     TransitContext *context = [OCMockObject niceMockForClass:TransitContext.class];
-    id globalVar = [[TransitJSDirectExpression alloc] initWithExpression:@"transit"];
-    [[[(id)context stub] andReturn:globalVar] transitGlobalVarProxy];
+    id globalVar = @"transit".stringAsJSExpression;
+    [[[(id)context stub] andReturn:globalVar] transitGlobalVarJSExpression];
     return context;
 }
 

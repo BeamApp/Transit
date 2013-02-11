@@ -37,6 +37,44 @@
     STAssertEqualObjects(@"'baz' + \"bam\" + 23", [TransitProxy jsExpressionFromCode:@"'baz' + @ + @" arguments:(@[@"bam", @23])], @"two strings");
 }
 
+-(void)testDoNotReplaceArgumentsTwice {
+    NSString* replaced = [TransitContext jsExpressionFromCode:@"str: @" arguments:@[@"foo@bar"]];
+    STAssertEqualObjects(@"str: \"foo@bar\"", replaced, @"first replacement");
+    
+    STAssertNoThrow([TransitContext jsExpressionFromCode:replaced arguments:@[]], @"does not try to replace a second time");
+    
+    STAssertThrows([TransitContext jsExpressionFromCode:replaced arguments:@[@"another argument"]], @"the @ in the string will not be recognized as placeholder. Hence, too many args");
+}
+
+-(void)testJSExpression {
+    NSString* varName = @"some.var".stringAsJSExpression;
+    
+    STAssertTrue(varName.isJSExpression, @"marked as JS Expression");
+    STAssertEqualObjects(varName, [TransitProxy jsRepresentation:varName], @"js expression is its own jsRepresentation");
+    
+    varName = [@[varName] copy][0];
+    STAssertTrue(varName.isJSExpression, @"marked as JS Expression");
+    STAssertEqualObjects(varName, [TransitProxy jsRepresentation:varName], @"js expression is its own jsRepresentation");
+}
+
+-(void)testMarkAsJSExpressionHasNoSideEffect {
+    NSString* s1 = @"someString";
+    NSString* s2 = s1.stringAsJSExpression;
+    
+    STAssertTrue(s1 != s2, @"not same identity");
+    STAssertFalse(s1.isJSExpression, @"s1 uneffected");
+    STAssertTrue(s2.isJSExpression, @"s2 correctly marked");
+}
+
+-(void)testJSExpressionWillNotBeUnderstoodAsString {
+    NSString* realString = @"some.var";
+    NSString* varName = realString.stringAsJSExpression;
+    
+    NSString* actual = [TransitProxy jsExpressionFromCode:@"@ = @" arguments:@[varName, realString]];
+    STAssertTrue(actual.isJSExpression, @"marked as JS expression");
+    STAssertEqualObjects(@"some.var = \"some.var\"", actual, @"replaced correctly");
+}
+
 - (void)testJSExpressionFromObjectWithJsRepresentation {
     TransitProxy* proxy = [OCMockObject mockForClass:TransitProxy.class];
     [[[(id)proxy stub] andReturn:@"myRepresentation"] jsRepresentation];
