@@ -217,13 +217,13 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     private void invoke(final Object descriptionString) {
         final TransitNativeFunction callback = callbacks.get(descriptionString);
 
-        new Thread(new Runnable() {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Object result = callback.callWithContextAndArguments(null,
-                            null);
-                    actions.push(new TransitReturnResultAction(TransitProxy.proxify(context, result)));
+                    Object resultObject = callback.callWithContextAndArguments(null, null);
+                    TransitProxy resultProxy = TransitProxy.proxify(context, resultObject);
+                    actions.push(new TransitReturnResultAction(resultProxy));
                 } catch (Exception e) {
                     actions.push(new TransitExceptionAction(e));
                 } finally {
@@ -231,7 +231,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                     lock.release();
                 }
             }
-        }).start();
+        });
     }
 
     private final Stack<TransitEvalAction> waitingEvaluations = new Stack<TransitEvalAction>();
