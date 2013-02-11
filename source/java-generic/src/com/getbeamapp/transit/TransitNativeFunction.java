@@ -22,7 +22,15 @@ public class TransitNativeFunction extends TransitFunction implements JavaScript
     @Override
     public Object call(Object thisArg, Object... arguments) {
         TransitProxy[] convertedArguments = TransitProxy.convertArray(rootContext, Arrays.asList(arguments)).toArray(new TransitProxy[0]);
-        return implementation.evaluate(TransitProxy.withValue(rootContext, thisArg), convertedArguments);
+        return call(TransitProxy.withValue(rootContext, thisArg), convertedArguments);
+    }
+    
+    public Object call(TransitProxy thisArg, TransitProxy... arguments) {
+        if(thisArg == null) {
+            thisArg = rootContext;
+        }
+        
+        return implementation.evaluate(thisArg, arguments);
     }
 
     @Override
