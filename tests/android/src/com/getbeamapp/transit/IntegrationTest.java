@@ -48,7 +48,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
 
     public void testNativeFunction() {
         final boolean[] called = new boolean[] { false };
-        
+
         TransitContext transit = getActivity().transit;
         TransitCallable callable = new TransitCallable() {
             @Override
@@ -63,13 +63,13 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
 
         assertTrue("Native function not called.", called[0]);
         assertNotNull(result);
-        assertEquals(42, (int)result.getIntegerValue());
+        assertEquals(42, (int) result.getIntegerValue());
     }
-    
+
     public void testNativeArguments() {
         final TransitProxy[] calledWithThis = new TransitProxy[] { null };
         final List<TransitProxy> calledWithArgs = new LinkedList<TransitProxy>();
-        
+
         TransitContext transit = getActivity().transit;
         TransitCallable callable = new TransitCallable() {
             @Override
@@ -85,15 +85,15 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
 
         assertNotNull(calledWithThis[0]);
         assertEquals(2, calledWithArgs.size());
-        
+
         assertEquals(0, calledWithThis[0].getIntegerValue());
         assertEquals(1, calledWithArgs.get(0).getIntegerValue());
         assertEquals(2, calledWithArgs.get(1).getIntegerValue());
     }
-    
+
     public void testNativeIdentity() {
         final List<TransitProxy> calledWithArgs = new LinkedList<TransitProxy>();
-        
+
         TransitContext transit = getActivity().transit;
         TransitCallable callable = new TransitCallable() {
             @Override
@@ -105,21 +105,22 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
 
         TransitNativeFunction function = transit.registerCallable(callable);
         transit.eval("@(@, @)", function, function, function);
-        
+
         assertEquals(2, calledWithArgs.size());
         assertEquals(function, calledWithArgs.get(0));
         assertEquals(calledWithArgs.get(0), calledWithArgs.get(1));
     }
-    
+
     public void testNativeRecursion() {
-        final int calls = 100;
-        
+        final int calls = 100; // Change to higher value if needed (1000 calls
+                               // require ~8s on my machine)
+
         TransitContext transit = getActivity().transit;
         final TransitCallable callable = new TransitCallable() {
             @Override
             public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
                 int v = arguments[0].getIntegerValue();
-                
+
                 if (v < calls) {
                     return thisArg.eval(TransitProxy.jsExpressionFromCode("f(@ + 1)", v));
                 } else {
