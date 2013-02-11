@@ -53,7 +53,11 @@
 -(id)callWithArguments:(NSArray*)arguments;
 -(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments;
 -(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult;
-    
+
+-(void)callAsync;
+-(void)callAsyncWithArguments:(NSArray*)arguments;
+-(void)callAsyncWithThisArg:(id)thisArg arguments:(NSArray*)arguments;
+
 @end
 
 typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);

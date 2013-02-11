@@ -528,6 +528,21 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     @throw [NSException exceptionWithName:@"Abstract" reason:@"must be implemented by subclass" userInfo:nil];;
 }
 
+-(void)callAsync {
+    [self callAsyncWithThisArg:nil arguments:@[]];
+}
+
+-(void)callAsyncWithArguments:(NSArray*)arguments {
+    [self callAsyncWithThisArg:nil arguments:arguments];
+}
+
+-(void)callAsyncWithThisArg:(id)thisArg arguments:(NSArray*)arguments {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self callWithThisArg:thisArg arguments:arguments returnResult:NO];
+    });
+}
+
+
 @end
 
 @implementation TransitNativeFunction
