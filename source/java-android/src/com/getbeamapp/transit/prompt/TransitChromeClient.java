@@ -220,15 +220,20 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             Executors.newSingleThreadExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
+                    TransitAction action = null;
+
                     try {
                         Object resultObject = callback.call();
                         TransitProxy resultProxy = TransitProxy.proxify(context, resultObject);
-                        actions.push(new TransitReturnResultAction(resultProxy));
+                        action = new TransitReturnResultAction(resultProxy);
                     } catch (Exception e) {
-                        actions.push(new TransitExceptionAction(e));
+                        action = new TransitExceptionAction(e);
                     } finally {
-                        Log.i(TAG, "Pushed action and released Lock");
-                        lock.release();
+                        if (action != null) {
+                            actions.push(action);
+                            lock.release();
+                            Log.i(TAG, "Pushed action and released Lock");
+                        }
                     }
                 }
             });
