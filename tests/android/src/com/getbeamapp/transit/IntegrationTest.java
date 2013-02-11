@@ -35,7 +35,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
             getActivity().transit.eval("(void 0).toString()");
             fail();
         } catch (TransitException e) {
-            assertEquals("Cannot call method 'toString' of undefined", e.getMessage());
+            assertEquals("TypeError: Cannot call method 'toString' of undefined", e.getMessage());
         }
     }
 

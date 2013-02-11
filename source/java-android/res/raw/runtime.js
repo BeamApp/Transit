@@ -31,7 +31,7 @@
   }
 
   function postException(e) {
-    return post("__TRANSIT_MAGIC_EXCEPTION", transit.proxify(e.message));
+    return post("__TRANSIT_MAGIC_EXCEPTION", transit.proxify(e.toString()));
   }
 
   function evaluate(script) {
