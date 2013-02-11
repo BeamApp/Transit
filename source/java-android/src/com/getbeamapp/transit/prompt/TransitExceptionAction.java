@@ -10,6 +10,6 @@ class TransitExceptionAction extends TransitAction {
 
     @Override
     public String getJavaScriptRepresentation() {
-        return createJavaScriptRepresentation("EXCEPTION", exception.getMessage());
+        return createJavaScriptRepresentation("EXCEPTION", exception.toString());
     }
 }
