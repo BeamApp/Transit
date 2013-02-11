@@ -3,8 +3,6 @@ package com.getbeamapp.transit.prompt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
