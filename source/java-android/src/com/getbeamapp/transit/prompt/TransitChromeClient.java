@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Stack;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingDeque;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.res.Resources;
+import android.os.ConditionVariable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -73,7 +73,9 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
     public static final String TAG = "TransitAdapter";
 
-    private final LinkedBlockingDeque<TransitAction> actions = new LinkedBlockingDeque<TransitAction>();
+    private final Stack<TransitAction> actions = new Stack<TransitAction>();
+
+    private final ConditionVariable lock = new ConditionVariable(true);
 
     final WebView webView;
     private TransitContext context;
@@ -181,16 +183,16 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         }
     }
 
+    private void pushAction(TransitAction action) {
+        this.actions.push(action);
+        this.lock.open();
+    }
+
     public final TransitProxy evaluate(String stringToEvaluate) {
         boolean mustPoll = true; // TODO
 
         TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
-
-        if (mustPoll) {
-            actions.push(new TransitReturnResultAction(null));
-        }
-
-        actions.push(action);
+        pushAction(action);
 
         if (mustPoll) {
             runOnUiThread(new Runnable() {
@@ -237,11 +239,15 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     }
 
     private void invoke(final TransitProxy invokeDescriptor) {
+        lock.close();
+
         final String nativeId = (String) invokeDescriptor.getObjectValue().get("nativeId");
+        Log.d(TAG, String.format("Invoking native function `%s`", nativeId));
+
         final TransitNativeFunction callback = context.getCallback(nativeId);
 
         if (callback == null) {
-            actions.push(new TransitExceptionAction(String.format("Can't find native function for native ID `%s`", nativeId)));
+            pushAction(new TransitExceptionAction(String.format("Can't find native function for native ID `%s`", nativeId)));
         } else {
             Executors.newSingleThreadExecutor().execute(new Runnable() {
                 @Override
@@ -250,14 +256,15 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
                     try {
                         Object resultObject = callback.call();
-                        TransitProxy resultProxy = TransitProxy.proxify(context, resultObject);
-                        action = new TransitReturnResultAction(resultProxy);
+                        TransitProxy result = TransitProxy.proxify(context, resultObject);
+                        action = new TransitReturnResultAction(result);
+                        Log.d(TAG, String.format("Invoked native function `%s` with result `%s`", nativeId, result));
                     } catch (Exception e) {
                         Log.e(TAG, String.format("Exception invoking native function `%s`", nativeId), e);
                         action = new TransitExceptionAction(e);
                     } finally {
                         if (action != null) {
-                            actions.push(action);
+                            pushAction(action);
                         }
                     }
                 }
@@ -271,9 +278,15 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         runOnNonUiThread(new Runnable() {
             @Override
             public void run() {
+                lock.block();
+
                 TransitAction action = null;
 
-                action = actions.pop();
+                if (actions.empty()) {
+                    action = new TransitReturnResultAction(null);
+                } else {
+                    action = actions.pop();
+                }
 
                 if (action instanceof TransitEvalAction) {
                     waitingEvaluations.push((TransitEvalAction) action);
