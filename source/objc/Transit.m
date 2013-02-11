@@ -368,6 +368,7 @@ TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER
 @implementation TransitUIWebViewContext{
     TransitUIWebViewContextRequestHandler _handleRequestBlock;
     BOOL _proxifiedEval;
+    SBJsonParser *_parser;
 }
 
 -(void)setHandleRequestBlock:(TransitUIWebViewContextRequestHandler)testCallBlock {
@@ -398,6 +399,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if(self) {
         _webView = webView;
         _handleRequestBlock = _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER;
+        _parser = SBJsonParser.new;
         [self bindToWebView];
     }
     return self;
@@ -411,8 +413,11 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     }
 }
 
+-(id)parseJSON:(NSString*)json {
+    return [_parser objectWithString:json];
+}
+
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments {
-    SBJsonParser *parser = [SBJsonParser new];
     NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments];
     id adjustedThisArg = thisArg == self ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
@@ -439,9 +444,9 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     }
     
     NSString* js = [NSString stringWithFormat: @"JSON.stringify(%@)", jsWrappedApplyExpression];
-    NSString* jsResult = [_webView stringByEvaluatingJavaScriptFromString: js];
+    NSString* jsonResult = [_webView stringByEvaluatingJavaScriptFromString: js];
     
-    id parsedObject = [parser objectWithString:jsResult];
+    id parsedObject = [self parseJSON:jsonResult];
     if(parsedObject == nil) {
         @throw [NSException exceptionWithName:@"TransitException"
                                        reason:[NSString stringWithFormat:@"Invalid JavaScript: %@", jsApplyExpression] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while evaluating JavaScript. Seems to be invalid: %@", jsApplyExpression]}];
@@ -460,12 +465,17 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 }
 
 -(void)invokeNative {
-    id description = [self eval:@"@.nativeInvokeTransferObject" arguments:@[self.transitGlobalVarProxy]];
-    id result = [self invokeNativeDescription:description];
+    // nativeInvokeTransferObject is safe to parse and contains proxy-ids
+    NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)", self.transitGlobalVarName];
+    NSString* jsonDescription = [self.webView stringByEvaluatingJavaScriptFromString:jsReadTransferObject];
+    id callDescription = [self recursivelyReplaceMarkersWithProxies:[self parseJSON:jsonDescription]];
     
-    NSString* resultJsRepresentation = [TransitProxy jsRepresentation:result];
-    NSString* js = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarName, resultJsRepresentation];
-    [self.webView stringByEvaluatingJavaScriptFromString:js];
+    // actually perform call
+    id result = [self invokeNativeDescription:callDescription];
+    
+    // simple assignment is safe to evaluate
+    NSString* jsWriteTransferObject = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarName, [TransitProxy jsRepresentation:result]];
+    [self.webView stringByEvaluatingJavaScriptFromString:jsWriteTransferObject];
 }
 
 #pragma UIWebViewDelegate
