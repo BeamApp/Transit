@@ -28,8 +28,17 @@ id TransitNilSafe(id valueOrNil);
 @property(nonatomic, readonly) id value;
 
 -(id)eval:(NSString*)jsCode;
+
+-(id)eval:(NSString*)jsCode arg:(id)arg0;
+-(id)eval:(NSString*)jsCode arg:(id)arg0 arg:(id)arg1;
+-(id)eval:(NSString*)jsCode arg:(id)arg0 arg:(id)arg1 arg:(id)arg2;
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments;
+
+-(id)eval:(NSString*)jsCode thisArg:(id)thisArg;
+-(id)eval:(NSString*)jsCode thisArg:(id)thisArg arg:(id)arg0;
+-(id)eval:(NSString*)jsCode thisArg:(id)thisArg arg:(id)arg0 arg:(id)arg1;
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments;
+
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments returnJSResult:(BOOL)returnJSResult;
 
 @end
@@ -37,9 +46,14 @@ id TransitNilSafe(id valueOrNil);
 typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
 typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitProxy *thisArg, NSArray* arguments);
 
+@protocol TransitFunctionBodyProtocol <NSObject>
+-(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray *)arguments;
+@end
+
 @interface TransitContext : TransitProxy
 
 -(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block;
+-(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 -(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block;
 
 @end
@@ -57,11 +71,22 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitProx
 @interface TransitFunction : TransitProxy
 
 -(id)call;
+-(id)callWithArg:(id)arg0;
+-(id)callWithArg:(id)arg0 arg:(id)arg1;
+-(id)callWithArg:(id)arg0 arg:(id)arg1 arg:(id)arg2;
 -(id)callWithArguments:(NSArray*)arguments;
+
+
+-(id)callWithThisArg:(id)thisArg;
+-(id)callWithThisArg:(id)thisArg arg:(id)arg0;
+-(id)callWithThisArg:(id)thisArg arg:(id)arg0 arg:(id)arg1;
 -(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments;
+
 -(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult;
 
 -(void)callAsync;
+-(void)callAsyncWithArg:(id)arg0;
+-(void)callAsyncWithArg:(id)arg0 arg:(id)arg1;
 -(void)callAsyncWithArguments:(NSArray*)arguments;
 -(void)callAsyncWithThisArg:(id)thisArg arguments:(NSArray*)arguments;
 

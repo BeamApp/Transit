@@ -227,15 +227,15 @@
         }];
         
         // js: this == undefined
-        id result = [func callWithThisArg:nil arguments:@[]];
+        id result = [func callWithThisArg:nil];
         STAssertTrue(result == context, @"undefined");
         
         // js: this == null
-        result = [func callWithThisArg:nil arguments:@[]];
+        result = [func callWithThisArg:NSNull.null];
         STAssertTrue(result == context, @"null");
         
         // js: this == "3", e.g. transit.nativeFunc("someId").apply("3");
-        result = [func callWithThisArg:@"3" arguments:@[]];
+        result = [func callWithThisArg:@"3"];
         STAssertTrue([result isKindOfClass:TransitProxy.class], @"is proxy");
         STAssertEqualObjects(@"3", [(TransitProxy*)result value], @"wraps '3'");
     }

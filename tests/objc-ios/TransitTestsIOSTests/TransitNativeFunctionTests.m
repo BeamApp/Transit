@@ -18,7 +18,7 @@
 @implementation TransitNativeFunctionTests
 
 -(void)testWillCallBlock {
-    id mock = [OCMockObject mockForProtocol:@protocol(TransitBlockTestProtocol)];
+    id mock = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
     __block TransitProxy* receivedThis;
     TransitFunctionBlock block = ^(TransitProxy* _this, NSArray* arguments){
         receivedThis = _this;
