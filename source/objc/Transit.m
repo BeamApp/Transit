@@ -9,6 +9,8 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "SBJson.h"
+#import "SBJsonStreamWriterAccumulator.h"
+#import "SBJsonStreamWriterState.h"
 #import <objc/runtime.h>
 
 
@@ -58,6 +60,58 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
         offset += ([replacement length] - resultRange.length);
     }
     return mutableString;
+}
+
+@end
+
+@interface TransitJSRepresentationStreamWriter : SBJsonStreamWriter
+
+@property (nonatomic, unsafe_unretained) SBJsonStreamWriterState *state; // Internal
+
+@end
+
+@implementation TransitJSRepresentationStreamWriter
+
+-(BOOL)writeValue:(id)value {
+    // nil -> undefined
+    if(value == nil)
+        return [self writeJSExpression:@"undefined"];
+    
+    // NSString marked as jsExpression -> jsEpxression
+    if([value isKindOfClass:NSString.class] && [value isJSExpression])
+        return [self writeJSExpression:value];
+    
+    // TransitProxy -> must provide own representation
+    if([value isKindOfClass:TransitProxy.class]) {
+        NSString* jsRepresentation = [(TransitProxy*)value _jsRepresentation];
+        if(jsRepresentation == nil) {
+            self.error = [NSString stringWithFormat:@"TransitProxy %@ has no jsRepresentation", value];
+            return NO;
+        }
+        return [self writeJSExpression:jsRepresentation];
+    }
+    // NSError -> new Error(desc)
+    if([value isKindOfClass:NSError.class]) {
+        NSString* desc = [value userInfo][NSLocalizedDescriptionKey];
+        NSString* jsExpression = [NSString stringWithFormat:@"new Error(%@)", [TransitProxy jsRepresentation:desc]];
+        return [self writeJSExpression:jsExpression];
+    }
+    
+    // any valid JSON value
+    return [super writeValue:value];
+}
+
+-(BOOL)writeJSExpression:(NSString*)jsExpression {
+	if ([self.state isInvalidState:self]) return NO;
+	if ([self.state expectingKey:self]) return NO;
+	[self.state appendSeparator:self];
+	if (self.humanReadable) [self.state appendWhitespace:self];
+    
+	NSData *data = [jsExpression dataUsingEncoding:NSUTF8StringEncoding];
+    [self.delegate writer:self appendBytes:data.bytes length:data.length];
+
+	[self.state transitionState:self];
+	return YES;
 }
 
 @end
@@ -140,7 +194,7 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
     return [_rootContext eval:jsCode thisArg:thisArg arguments:arguments returnJSResult:returnJSResult];
 }
 
--(NSString*)jsRepresentation {
+-(NSString*)_jsRepresentation {
     if(_proxyId && _rootContext)
        return [_rootContext jsRepresentationForProxyWithId:_proxyId];
     
@@ -148,33 +202,25 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
         return [self.class jsRepresentation:_value];
     }
     
-    // call inner implementation (_) to prevent stack overflow
-    return [self.class _jsRepresentation:self];
+    return nil;
 }
 
-+(NSString*)_jsRepresentation:(id)object {
-    SBJsonWriter* writer = [SBJsonWriter new];
-    NSString* json = [writer stringWithObject: @[object]];
-    if(json == nil)
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"cannot be represented as JSON: %@", object] userInfo:nil];
-    
-    return [json substringWithRange:NSMakeRange(1, json.length-2)];
+-(NSString*)jsRepresentation {
+    return [self.class jsRepresentation:self];
 }
+
 
 +(NSString*)jsRepresentation:(id)object {
-    if(object == nil)
-        return @"undefined";
-    if([object respondsToSelector:@selector(jsRepresentation)])
-        return [object performSelector:@selector(jsRepresentation)];
-    if([object isKindOfClass:NSString.class] && [object isJSExpression])
-        return object;
-    if([object isKindOfClass:NSError.class]) {
-        NSString* desc = [object userInfo][NSLocalizedDescriptionKey];
-        return [NSString stringWithFormat:@"new Error(%@)", [self _jsRepresentation:desc]];
-    }
-    // TODO: handle dictionaries and arrays #7
+    SBJsonStreamWriterAccumulator *accumulator = [[SBJsonStreamWriterAccumulator alloc] init];
     
-    return [self _jsRepresentation:object];
+	SBJsonStreamWriter *streamWriter = [[TransitJSRepresentationStreamWriter alloc] init];
+    streamWriter.delegate = accumulator;
+    BOOL ok = [streamWriter writeValue:object];
+    if(!ok) {
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"cannot be represented as JS (%@): %@", streamWriter.error, object] userInfo:nil];
+    }
+    
+    return [NSString.alloc initWithData:accumulator.data encoding:NSUTF8StringEncoding];
 }
 
 +(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments {
@@ -595,7 +641,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return _block(thisArg, arguments);
 }
 
--(NSString*)jsRepresentation {
+-(NSString*)_jsRepresentation {
     return [TransitProxy jsExpressionFromCode:@"@.nativeFunction(@)" arguments:@[self.rootContext.transitGlobalVarJSExpression, self.proxyId]];
 }
 

@@ -20,6 +20,7 @@
 -(void)clearRootContextAndProxyId;
 
 +(NSString*)jsRepresentation:(id)object;
+-(NSString*)_jsRepresentation;
 
 @end
 

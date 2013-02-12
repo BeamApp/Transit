@@ -77,8 +77,11 @@
 
 - (void)testJSExpressionFromObjectWithJsRepresentation {
     TransitProxy* proxy = [OCMockObject mockForClass:TransitProxy.class];
-    [[[(id)proxy stub] andReturn:@"myRepresentation"] jsRepresentation];
-    STAssertEqualObjects(proxy.jsRepresentation, @"myRepresentation", @"works");
+    [[[(id)proxy stub] andReturn:@"myRepresentation"] _jsRepresentation];
+    [[[(id)proxy stub] andReturnValue:@NO] isKindOfClass:NSString.class];
+    [[[(id)proxy stub] andReturnValue:@YES] isKindOfClass:TransitProxy.class];
+    STAssertEqualObjects(proxy._jsRepresentation, @"myRepresentation", @"works");
+    
     STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"return @" arguments:@[proxy]], @"return myRepresentation", @"static method uses instance jsRepresentation");
 }
 
@@ -168,5 +171,28 @@
     STAssertEqualObjects(@"[1,2]", [[[TransitProxy alloc] initWithRootContext:nil value:(@[@1, @2])] jsRepresentation], @"array");
     STAssertEqualObjects(@"{\"a\":1}", [[[TransitProxy alloc] initWithRootContext:nil value:(@{@"a": @1})] jsRepresentation], @"dictionary");
 }
+
+-(void)testJsRepresentationOfArrayWithProxies {
+    id values = @[@"string", @"expression".stringAsJSExpression];
+    
+    id actual = [TransitProxy jsRepresentation:values];
+    STAssertEqualObjects(@"[\"string\",expression]", actual, @"calls jsRepresentation of elements in array");
+}
+
+-(void)testJsRepresentationOfDictionaryWithProxies {
+    id values = @{@"a":@"string", @"b":@"expression".stringAsJSExpression};
+    
+    id actual = [TransitProxy jsRepresentation:values];
+    STAssertEqualObjects(@"{\"a\":\"string\",\"b\":expression}", actual, @"calls jsRepresentation of elements in object");
+}
+
+-(void)testJSRepresentationOfNestedDictionaryWithProxies {
+    id values = @{@"a":@"string", @"b":@[@"expression".stringAsJSExpression]};
+    
+    id actual = [TransitProxy jsRepresentation:values];
+    STAssertEqualObjects(@"{\"a\":\"string\",\"b\":[expression]}", actual, @"calls jsRepresentation of elements in nested object");
+    
+}
+
 
 @end
