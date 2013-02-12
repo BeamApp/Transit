@@ -9,6 +9,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "Transit.h"
 #import "Transit+Private.h"
+#import "OCMock.h"
 
 @interface TransitUIWebViewTests : SenTestCase
 
@@ -436,5 +437,46 @@
     [onFinish dispose];
     
 }
+
+-(void)testThrowsExceptionIfDelegateReplaced {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:UIWebView.new];
+    
+    STAssertTrue(context.webView.delegate == context, @"delegate wired");
+
+    id otherDelegate = [NSObject new];
+    STAssertThrows([context.webView setDelegate: otherDelegate], @"delegate property must not be replaced");
+    STAssertTrue(context.webView.delegate == otherDelegate, @"delegate replaced");
+}
+
+-(void)testOriginalDelegateWillBeCalled {
+    UIWebView* webView = UIWebView.new;
+    id mockedDelegate = [OCMockObject mockForProtocol:@protocol(UIWebViewDelegate)];
+    
+    webView.delegate = mockedDelegate;
+    STAssertTrue(webView.delegate == mockedDelegate, @"delegate wired to mock");
+    
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:webView];
+    
+    STAssertTrue(webView.delegate == context, @"delegate wired to context");
+    
+    // test if context passes calls through
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://some.server"]];
+    NSError *error = [NSError errorWithDomain:@"test" code:123 userInfo:nil];
+    
+    [[mockedDelegate expect] webView:webView shouldStartLoadWithRequest:request navigationType:UIWebViewNavigationTypeReload];
+    [webView.delegate webView:webView shouldStartLoadWithRequest:request navigationType:UIWebViewNavigationTypeReload];
+    
+    [[mockedDelegate expect] webViewDidStartLoad:webView];
+    [webView.delegate webViewDidStartLoad:webView];
+    
+    [[mockedDelegate expect] webViewDidFinishLoad:webView];
+    [webView.delegate webViewDidFinishLoad:webView];
+
+    [[mockedDelegate expect] webView:webView didFailLoadWithError:error];
+    [webView.delegate webView:webView didFailLoadWithError:error];
+
+    STAssertNoThrow([mockedDelegate verify], @"verify");
+}
+
 
 @end

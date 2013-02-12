@@ -452,6 +452,7 @@ TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER
     BOOL _codeInjected;
     SBJsonParser *_parser;
     NSString* _lastEvaluatedJSCode;
+    id<UIWebViewDelegate> _originalDelegate;
 }
 
 -(void)setHandleRequestBlock:(TransitUIWebViewContextRequestHandler)testCallBlock {
@@ -493,12 +494,30 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return self;
 }
 
+-(void)dealloc {
+    [_webView removeObserver:self forKeyPath:@"delegate"];
+}
+
 -(void)updateCodeInjected {
     _codeInjected = [[self _eval:@"typeof transit"] isEqualToString:@"\"object\""];
 }
 
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if(change[NSKeyValueChangeNewKey] != self)
+        @throw [NSException exceptionWithName:@"TransitException" reason:@"UIWebView.delegate must not be changed" userInfo:@{NSLocalizedDescriptionKey: @"UIWebView.delegate must not be changed"}];
+                
+    // not implemented in super class
+    // [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
 -(void)bindToWebView {
+    _originalDelegate = _webView.delegate;
     _webView.delegate = self;
+    [_webView addObserver:self forKeyPath:@"delegate" options:NSKeyValueObservingOptionNew context:nil];
+    [self injectCodeToWebView];
+}
+
+-(void)injectCodeToWebView {
     [self updateCodeInjected];
     if(!_codeInjected) {
         [self eval:_TRANSIT_JS_RUNTIME_CODE];
@@ -591,11 +610,28 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         
         return NO;
     }
+    
+    if([_originalDelegate respondsToSelector:_cmd])
+        return [_originalDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
+    
     return YES;
 }
 
+-(void)webViewDidStartLoad:(UIWebView *)webView {
+    if([_originalDelegate respondsToSelector:_cmd])
+        return [_originalDelegate webViewDidStartLoad:webView];
+}
+
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
-    [self bindToWebView];
+    [self injectCodeToWebView];
+    
+    if([_originalDelegate respondsToSelector:_cmd])
+        return [_originalDelegate webViewDidFinishLoad:webView];
+}
+
+-(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    if([_originalDelegate respondsToSelector:_cmd])
+        return [_originalDelegate webView:webView didFailLoadWithError:error];
 }
 
 @end
