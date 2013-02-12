@@ -15,12 +15,6 @@
 
 @end
 
-@protocol TransitBlockTestProtocol <NSObject>
-
--(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray *)arguments;
-
-@end
-
 @implementation TransitNativeFunctionTests
 
 -(void)testWillCallBlock {

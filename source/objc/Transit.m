@@ -321,8 +321,8 @@ NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_"
 }
 
 -(void)releaseJSProxyWithId:(NSString*)id {
-    // TODO: implement
-//    @throw @"not implemented, yet";
+//    NSLog(@"release proxy with id %@", id);
+    [self eval:@"@.releaseElementWithId(@)" thisArg:nil arguments:@[self.transitGlobalVarJSExpression, id] returnJSResult:NO];
 }
 
 -(NSString*)nextNativeFunctionId {

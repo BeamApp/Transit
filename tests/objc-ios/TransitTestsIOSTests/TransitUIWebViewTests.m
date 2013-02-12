@@ -478,5 +478,43 @@
     STAssertNoThrow([mockedDelegate verify], @"verify");
 }
 
+-(void)testJSContextKeepsDisposedJSFunction {
+    TransitUIWebViewContext* context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    
+    id funcMock = [OCMockObject mockForProtocol:@protocol(TransitBlockTestProtocol)];
+    
+    TransitFunction *nFunc = [context functionWithBlock:^id(TransitProxy *thisArg, NSArray *arguments) {
+        return [funcMock callWithThisArg:thisArg arguments:arguments];
+    }];
+    
+    TransitJSFunction *jsFunc1 = [context eval:@"function(a){@('from1: '+a)}" arguments:@[nFunc]];
+    TransitJSFunction *jsFunc2 = [context eval:@"function(a){@('from2: '+a)}" arguments:@[jsFunc1]];
+
+    [[funcMock expect] callWithThisArg:OCMOCK_ANY arguments:@[@"from1: Foo"]];
+    [jsFunc1 callWithArguments:@[@"Foo"]];
+
+    [[funcMock expect] callWithThisArg:OCMOCK_ANY arguments:@[@"from1: from2: Bar"]];
+    [jsFunc2 callWithArguments:@[@"Bar"]];
+
+    NSString* jsListRetained = @"(function(){"
+        "var keys = [];"
+        "for(var key in transit.retained){"
+            "keys.push('##'+key);"
+        "}"
+        "return keys;})()";
+    id retained = [context eval:jsListRetained];
+    STAssertEqualObjects((@[@"##__TRANSIT_JS_FUNCTION_1", @"##__TRANSIT_JS_FUNCTION_2"]), retained, @"two functions retained");
+    
+    [jsFunc1 dispose];
+    
+    retained = [context eval:jsListRetained];
+    STAssertEqualObjects((@[@"##__TRANSIT_JS_FUNCTION_2"]), retained, @"only one functions retained");
+    
+    [[funcMock expect] callWithThisArg:OCMOCK_ANY arguments:@[@"from1: from2: No Crash"]];
+    [jsFunc2 callWithArguments:@[@"No Crash"]];
+    
+    STAssertNoThrow([funcMock verify], @"mock is fine");
+}
+
 
 @end

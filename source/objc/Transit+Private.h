@@ -10,6 +10,13 @@
 
 #import "Transit.h"
 
+
+@protocol TransitBlockTestProtocol <NSObject>
+
+-(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray *)arguments;
+
+@end
+
 @interface TransitProxy(Private)
 
 -(id)initWithRootContext:(TransitContext*)rootContext;
