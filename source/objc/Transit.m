@@ -617,26 +617,33 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     NSString* jsApplyExpression = [@"null" isEqualToString:jsAdjustedThisArg] ? jsExpression : [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg];
     
     NSString* jsWrappedApplyExpression;
-    if(_proxifiedEval && _codeInjected) {
+    if(!returnJSResult) {
         jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
-                                    "var result;"
-                                    "try{"
                                     "%@"
-                                    "result = %@;"
-                                    "}catch(e){"
-                                    "return {e:e.message};"
-                                    "}"
-                                    "return {v:%@.proxify(result)};"
-                                    "})()", jsProxiesOnScope, jsApplyExpression, self.transitGlobalVarJSExpression];
-    } else {
-        jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
-                                    "try{"
                                     "%@"
-                                    "return {v:%@};"
-                                    "}catch(e){"
-                                    "return {e:e.message};"
-                                    "}"
                                     "})()", jsProxiesOnScope, jsApplyExpression];
+    } else {
+        if(_proxifiedEval && _codeInjected) {
+            jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
+                                        "var result;"
+                                        "try{"
+                                        "%@"
+                                        "result = %@;"
+                                        "}catch(e){"
+                                        "return {e:e.message};"
+                                        "}"
+                                        "return {v:%@.proxify(result)};"
+                                        "})()", jsProxiesOnScope, jsApplyExpression, self.transitGlobalVarJSExpression];
+        } else {
+            jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
+                                        "try{"
+                                        "%@"
+                                        "return {v:%@};"
+                                        "}catch(e){"
+                                        "return {e:e.message};"
+                                        "}"
+                                        "})()", jsProxiesOnScope, jsApplyExpression];
+        }
     }
     
     NSString* jsonResult = [self _eval:jsWrappedApplyExpression];
