@@ -21,6 +21,11 @@ public class TransitContext extends AbstractTransitContext {
     @Override
     public TransitProxy eval(String stringToEvaluate, TransitProxy context,
             Object... arguments) {
+
+        if (context == null) {
+            context = this;
+        }
+
         List<Object> newArgs = new LinkedList<Object>();
         newArgs.add(context);
         newArgs.addAll(Arrays.asList(arguments));
