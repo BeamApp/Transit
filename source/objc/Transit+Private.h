@@ -12,8 +12,15 @@
 
 @interface TransitProxy(Private)
 
+-(id)initWithRootContext:(TransitContext*)rootContext;
+-(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId;
+-(id)initWithRootContext:(TransitContext*)rootContext value:(id)value;
+-(id)initWithRootContext:(TransitContext *)rootContext jsRepresentation:(NSString*)jsRepresentation;
+
 -(void)dispose;
 -(BOOL)disposed;
+
++(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments;
 
 @property(readonly) NSString* proxyId;
 
@@ -21,6 +28,7 @@
 
 +(NSString*)jsRepresentation:(id)object;
 -(NSString*)_jsRepresentation;
+-(NSString*)jsRepresentation;
 
 @end
 
@@ -49,6 +57,7 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 @interface TransitNativeFunction(Private)
 
 -(id)callWithProxifedThisArg:(TransitProxy*)thisArg proxifiedArguments:(NSArray*)arguments;
+-(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block;
 
 @end
 

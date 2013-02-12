@@ -21,23 +21,14 @@
 
 @interface TransitProxy : NSObject
 
--(id)initWithRootContext:(TransitContext*)rootContext;
--(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId;
--(id)initWithRootContext:(TransitContext*)rootContext value:(id)value;
--(id)initWithRootContext:(TransitContext *)rootContext jsRepresentation:(NSString*)jsRepresentation;
-
 -(TransitContext*)rootContext;
+
 @property(nonatomic, readonly) id value;
 
 -(id)eval:(NSString*)jsCode;
 -(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments;
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments;
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments returnJSResult:(BOOL)returnJSResult;
-
-
-+(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments;
-
--(NSString*)jsRepresentation;
 
 @end
 
@@ -76,11 +67,8 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitProx
 
 @interface TransitNativeFunction : TransitFunction
 
--(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block;
-
 -(void)dispose;
 
-@property(readonly) NSString* nativeId;
 @property(readonly) TransitFunctionBlock block;
 
 @end
