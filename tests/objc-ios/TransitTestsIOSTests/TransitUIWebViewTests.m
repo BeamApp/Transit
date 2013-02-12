@@ -352,8 +352,8 @@
     }
     @catch (NSException *exception) {
         STAssertEqualObjects(@"TransitException", exception.name, @"exception.name");
-        STAssertEqualObjects(@"Invalid JavaScript: function(){return 4*#;}.call(null)", exception.reason, @"exception.reason");
-        STAssertEqualObjects(@"Error while evaluating JavaScript. Seems to be invalid: function(){return 4*#;}.call(null)", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
+        STAssertEqualObjects(@"Invalid JavaScript: 4*#", exception.reason, @"exception.reason");
+        STAssertEqualObjects(@"Error while evaluating JavaScript. Seems to be invalid: 4*#", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
     }
 }
 

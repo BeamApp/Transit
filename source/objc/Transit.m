@@ -604,12 +604,8 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return [_webView stringByEvaluatingJavaScriptFromString: _lastEvaluatedJSCode];
 }
 
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
-    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
-    
-    NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
-    id adjustedThisArg = thisArg == self ? nil : thisArg;
-    NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
+
+-(id)_evalJsExpression:(NSString*)jsExpression jsThisArg:(NSString*)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet*)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
     
     NSMutableString* jsProxiesOnScope = [NSMutableString stringWithString:@""];
     if(proxiesOnScope.count>0) {
@@ -618,39 +614,40 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         }
     }
     
-    NSString* jsApplyExpression = jsAdjustedThisArg ? [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg] : jsExpression;
+    NSString* jsApplyExpression = [@"null" isEqualToString:jsAdjustedThisArg] ? jsExpression : [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg];
+    
     NSString* jsWrappedApplyExpression;
     if(_proxifiedEval && _codeInjected) {
         jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
                                     "var result;"
                                     "try{"
-                                        "%@"
-                                        "result = %@;"
+                                    "%@"
+                                    "result = %@;"
                                     "}catch(e){"
-                                        "return {e:e.message};"
+                                    "return {e:e.message};"
                                     "}"
                                     "return {v:%@.proxify(result)};"
                                     "})()", jsProxiesOnScope, jsApplyExpression, self.transitGlobalVarJSExpression];
     } else {
         jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
                                     "try{"
-                                        "%@"
-                                        "return {v:%@};"
+                                    "%@"
+                                    "return {v:%@};"
                                     "}catch(e){"
-                                        "return {e:e.message};"
+                                    "return {e:e.message};"
                                     "}"
                                     "})()", jsProxiesOnScope, jsApplyExpression];
     }
     
     NSString* jsonResult = [self _eval:jsWrappedApplyExpression];
-
+    
     if(!returnJSResult)
         return nil;
     
     id parsedObject = [self parseJSON:jsonResult];
     if(parsedObject == nil) {
         NSException *e = [NSException exceptionWithName:@"TransitException"
-                                       reason:[NSString stringWithFormat:@"Invalid JavaScript: %@", jsApplyExpression] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while evaluating JavaScript. Seems to be invalid: %@", jsApplyExpression]}];
+                                                 reason:[NSString stringWithFormat:@"Invalid JavaScript: %@", jsApplyExpression] userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"Error while evaluating JavaScript. Seems to be invalid: %@", jsApplyExpression]}];
         
         NSLog(@"TRANSIT-JS-ERROR: %@ while evaluating %@", e, jsApplyExpression);
         @throw e;
@@ -669,6 +666,16 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return enhancedResult;
 }
 
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    
+    NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
+    id adjustedThisArg = thisArg == self ? nil : thisArg;
+    NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
+    
+    return [self _evalJsExpression:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult];
+}
+
 -(void)invokeNative {
     // nativeInvokeTransferObject is safe to parse and contains proxy-ids
     NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)", self.transitGlobalVarJSExpression];
@@ -678,12 +685,12 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     // actually perform call
     id result = [self invokeNativeDescription:callDescription];
     
-    // simple assignment is safe to evaluate
-//    NSString* jsWriteTransferObject = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSExpression, [TransitProxy jsRepresentation:result]];
-//    [self.webView stringByEvaluatingJavaScriptFromString:jsWriteTransferObject];
+    //[self eval:@"@.nativeInvokeTransferObject=@" thisArg:nil arguments:@[self.transitGlobalVarJSExpression,TransitNilSafe(result)] returnJSResult:NO];
     
-    // TODO: check how to increase performance, again
-    [self eval:@"@.nativeInvokeTransferObject=@" thisArg:nil arguments:@[self.transitGlobalVarJSExpression,TransitNilSafe(result)] returnJSResult:NO];
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    NSString* jsResult = [self.class jsRepresentation:result collectingProxiesOnScope:proxiesOnScope];
+    NSString* js = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSExpression, jsResult];
+    [self _evalJsExpression:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO];
 }
 
 #pragma UIWebViewDelegate
