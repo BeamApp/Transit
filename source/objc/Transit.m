@@ -34,6 +34,10 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
 
 @end
 
+id TransitNilSafe(id valueOrNil) {
+    return valueOrNil ? valueOrNil : @"undefined".stringAsJSExpression;
+}
+
 @implementation NSString(TransRegExp)
 
 -(NSString*)stringByReplacingMatchesOf:(NSRegularExpression*)regex withTransformation:(NSString*(^)(NSString*element)) block {
@@ -67,6 +71,7 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
 @interface TransitJSRepresentationStreamWriter : SBJsonStreamWriter
 
 @property (nonatomic, unsafe_unretained) SBJsonStreamWriterState *state; // Internal
+@property(nonatomic, strong) NSMutableOrderedSet* proxiesOnScope;
 
 @end
 
@@ -83,17 +88,19 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
     
     // TransitProxy -> must provide own representation
     if([value isKindOfClass:TransitProxy.class]) {
-        NSString* jsRepresentation = [(TransitProxy*)value _jsRepresentation];
+        TransitProxy* proxy = (TransitProxy*)value;
+        NSString* jsRepresentation = [proxy _jsRepresentationCollectingProxiesOnScope:self.proxiesOnScope];
         if(jsRepresentation == nil) {
             self.error = [NSString stringWithFormat:@"TransitProxy %@ has no jsRepresentation", value];
             return NO;
         }
+        
         return [self writeJSExpression:jsRepresentation];
     }
     // NSError -> new Error(desc)
     if([value isKindOfClass:NSError.class]) {
         NSString* desc = [value userInfo][NSLocalizedDescriptionKey];
-        NSString* jsExpression = [NSString stringWithFormat:@"new Error(%@)", [TransitProxy jsRepresentation:desc]];
+        NSString* jsExpression = [NSString stringWithFormat:@"new Error(%@)", [TransitProxy jsRepresentation:desc collectingProxiesOnScope:self.proxiesOnScope]];
         return [self writeJSExpression:jsExpression];
     }
     
@@ -194,27 +201,26 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
     return [_rootContext eval:jsCode thisArg:thisArg arguments:arguments returnJSResult:returnJSResult];
 }
 
--(NSString*)_jsRepresentation {
-    if(_proxyId && _rootContext)
-       return [_rootContext jsRepresentationForProxyWithId:_proxyId];
+-(NSString*)_jsRepresentationCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
+    if(_proxyId && _rootContext) {
+        [proxiesOnScope addObject:self];
+        return [_rootContext jsRepresentationForProxyWithId:_proxyId];
+    }
     
     if(_value) {
-        return [self.class jsRepresentation:_value];
+        return [self.class jsRepresentation:_value collectingProxiesOnScope:proxiesOnScope];
     }
     
     return nil;
 }
 
--(NSString*)jsRepresentation {
-    return [self.class jsRepresentation:self];
-}
-
-
-+(NSString*)jsRepresentation:(id)object {
++(NSString*)jsRepresentation:(id)object collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
     SBJsonStreamWriterAccumulator *accumulator = [[SBJsonStreamWriterAccumulator alloc] init];
     
-	SBJsonStreamWriter *streamWriter = [[TransitJSRepresentationStreamWriter alloc] init];
+	TransitJSRepresentationStreamWriter *streamWriter = [[TransitJSRepresentationStreamWriter alloc] init];
     streamWriter.delegate = accumulator;
+    streamWriter.proxiesOnScope = proxiesOnScope;
+    
     BOOL ok = [streamWriter writeValue:object];
     if(!ok) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"cannot be represented as JS (%@): %@", streamWriter.error, object] userInfo:nil];
@@ -223,7 +229,7 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
     return [NSString.alloc initWithData:accumulator.data encoding:NSUTF8StringEncoding];
 }
 
-+(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments {
++(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
     if(jsCode.isJSExpression) {
         if(arguments.count > 0)
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"jsExpression cannot take any additional arguments" userInfo:nil];
@@ -242,7 +248,7 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too few arguments" userInfo:nil];
         
         id elem = mutableArguments[0];
-        NSString* jsRepresentation = [self jsRepresentation:elem];
+        NSString* jsRepresentation = [self jsRepresentation:elem collectingProxiesOnScope:proxiesOnScope];
         NSString* result =  [NSString stringWithFormat:@"%@", jsRepresentation];
         
         [mutableArguments removeObjectAtIndex:0];
@@ -535,9 +541,12 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 }
 
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
-    NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments];
+    // TODO: make use of this
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    
+    NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
     id adjustedThisArg = thisArg == self ? nil : thisArg;
-    NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
+    NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
     NSString* jsApplyExpression = jsAdjustedThisArg ? [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg] : jsExpression;
     NSString* jsWrappedApplyExpression;
     if(_proxifiedEval && _codeInjected) {
@@ -597,8 +606,11 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     id result = [self invokeNativeDescription:callDescription];
     
     // simple assignment is safe to evaluate
-    NSString* jsWriteTransferObject = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSExpression, [TransitProxy jsRepresentation:result]];
-    [self.webView stringByEvaluatingJavaScriptFromString:jsWriteTransferObject];
+//    NSString* jsWriteTransferObject = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSExpression, [TransitProxy jsRepresentation:result]];
+//    [self.webView stringByEvaluatingJavaScriptFromString:jsWriteTransferObject];
+    
+    // TODO: check how to increase performance, again
+    [self eval:@"@.nativeInvokeTransferObject=@" thisArg:nil arguments:@[self.transitGlobalVarJSExpression,TransitNilSafe(result)] returnJSResult:NO];
 }
 
 #pragma UIWebViewDelegate
@@ -692,8 +704,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return _block(thisArg, arguments);
 }
 
--(NSString*)_jsRepresentation {
-    return [TransitProxy jsExpressionFromCode:@"@.nativeFunction(@)" arguments:@[self.rootContext.transitGlobalVarJSExpression, self.proxyId]];
+-(NSString*)_jsRepresentationCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
+    // TODO: use short notation
+    [proxiesOnScope addObject:self];
+    return [TransitProxy jsExpressionFromCode:@"@.nativeFunction(@)" arguments:@[self.rootContext.transitGlobalVarJSExpression, self.proxyId] collectingProxiesOnScope:proxiesOnScope];
 }
 
 -(void)dispose {
@@ -714,24 +728,27 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"function already disposed" userInfo:nil];
     
     // most frequent cases: zore or one argument, no specific this arg
-    BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
+//    BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
     
-    if(noSpecificThisArg && arguments.count == 0) {
-        NSString* js = [NSString stringWithFormat:@"%@()", self.jsRepresentation];
-        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
-    }
-    if(noSpecificThisArg && arguments.count == 1) {
-        NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]] ];
-        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
-    }
-    if(noSpecificThisArg && arguments.count == 2) {
-        NSString* js = [NSString stringWithFormat:@"%@(%@,%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]], [TransitProxy jsRepresentation:arguments[1]] ];
-        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
-    }
+    // TODO: re-enable shortcuts
+//    if(noSpecificThisArg && arguments.count == 0) {
+//        NSString* js = [NSString stringWithFormat:@"%@()", self.jsRepresentation];
+//        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
+//    }
+//    if(noSpecificThisArg && arguments.count == 1) {
+//        NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]] ];
+//        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
+//    }
+//    if(noSpecificThisArg && arguments.count == 2) {
+//        NSString* js = [NSString stringWithFormat:@"%@(%@,%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]], [TransitProxy jsRepresentation:arguments[1]] ];
+//        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
+//    }
 
     // general case
-    NSString* js = [[NSString stringWithFormat:@"%@.apply(this, %@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments]] stringAsJSExpression];
-    return [self.rootContext eval:js thisArg:thisArg arguments:@[] returnJSResult:returnResult];
+//    NSString* js = [[NSString stringWithFormat:@"%@.apply(this, %@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments]] stringAsJSExpression];
+//    return [self.rootContext eval:js thisArg:thisArg arguments:@[] returnJSResult:returnResult];
+    
+    return [self.rootContext eval:@"@.apply(this,@)" thisArg:thisArg arguments:@[self, (arguments?arguments:@[])] returnJSResult:returnResult];
 }
 
 @end

@@ -54,7 +54,11 @@
 
 -(void)testJSRepresentation {
     TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self contextStubForTransitGlobalVar] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
-    NSString* actual = func.jsRepresentation;
+    
+    NSMutableOrderedSet* set = NSMutableOrderedSet.orderedSet;
+    NSString* actual = [func _jsRepresentationCollectingProxiesOnScope:set];
+    STAssertEqualObjects(@[func], set.array, @"proxy on scope");
+    
     NSLog(@"actual: %@", actual);
     STAssertEqualObjects(actual, @"transit.nativeFunction(\"someId\")", @"native jsCall");
 }
@@ -62,7 +66,9 @@
 -(void)testInExpression {
     TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self contextStubForTransitGlobalVar] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
     
-    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func]], @"transit.nativeFunction(\"someId\")('foo')", @"native func");
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func] collectingProxiesOnScope:proxiesOnScope], @"transit.nativeFunction(\"someId\")('foo')", @"native func");
+    STAssertEqualObjects(@[func], proxiesOnScope.array, @"");
 }
 
 -(void)testDisposeOnNilContextDoesNotThrowException {

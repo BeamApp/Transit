@@ -20,15 +20,13 @@
 -(void)dispose;
 -(BOOL)disposed;
 
-+(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments;
-
 @property(readonly) NSString* proxyId;
 
 -(void)clearRootContextAndProxyId;
 
-+(NSString*)jsRepresentation:(id)object;
--(NSString*)_jsRepresentation;
--(NSString*)jsRepresentation;
++(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
++(NSString*)jsRepresentation:(id)object collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
+-(NSString*)_jsRepresentationCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
 
 @end
 

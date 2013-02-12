@@ -16,6 +16,8 @@
 
 @end
 
+id TransitNilSafe(id valueOrNil);
+
 @class TransitContext;
 @class TransitFunction;
 

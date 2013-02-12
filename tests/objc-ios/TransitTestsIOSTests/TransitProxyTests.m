@@ -19,42 +19,56 @@
 
 -(void)testJSRepresentationForNSError {
     NSError *error = [NSError errorWithDomain:@"transit" code:1 userInfo:@{NSLocalizedDescriptionKey:@"some description"}];
-    id actual = [TransitProxy jsExpressionFromCode:@"@" arguments:@[error]];
+    
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    id actual = [TransitProxy jsExpressionFromCode:@"@" arguments:@[error] collectingProxiesOnScope:proxiesOnScope];
     STAssertEqualObjects(@"new Error(\"some description\")", actual, @"error");
+    STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies needed");
 }
 
 - (void)testJSExpressionFromCodeAndArguments {
-    STAssertEqualObjects(@"no arguments", [TransitProxy jsExpressionFromCode:@"no arguments" arguments:@[]], @"no arguments");
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+
+    STAssertEqualObjects(@"no arguments", [TransitProxy jsExpressionFromCode:@"no arguments" arguments:@[] collectingProxiesOnScope:proxiesOnScope], @"no arguments");
     
-    STAssertEqualObjects(@"int: 23", [TransitProxy jsExpressionFromCode:@"int: @" arguments:@[@23]], @"one int");
-    STAssertEqualObjects(@"float: 42.5", [TransitProxy jsExpressionFromCode:@"float: @" arguments:@[@42.5]], @"one float");
-    STAssertEqualObjects(@"bool: true", [TransitProxy jsExpressionFromCode:@"bool: @" arguments:@[@YES]], @"one true");
-    STAssertEqualObjects(@"bool: false", [TransitProxy jsExpressionFromCode:@"bool: @" arguments:@[@NO]], @"one false");
+    STAssertEqualObjects(@"int: 23", [TransitProxy jsExpressionFromCode:@"int: @" arguments:@[@23] collectingProxiesOnScope:proxiesOnScope], @"one int");
+    STAssertEqualObjects(@"float: 42.5", [TransitProxy jsExpressionFromCode:@"float: @" arguments:@[@42.5] collectingProxiesOnScope:proxiesOnScope], @"one float");
+    STAssertEqualObjects(@"bool: true", [TransitProxy jsExpressionFromCode:@"bool: @" arguments:@[@YES] collectingProxiesOnScope:proxiesOnScope], @"one true");
+    STAssertEqualObjects(@"bool: false", [TransitProxy jsExpressionFromCode:@"bool: @" arguments:@[@NO] collectingProxiesOnScope:proxiesOnScope], @"one false");
     
-    STAssertEqualObjects(@"string: \"foobar\"", [TransitProxy jsExpressionFromCode:@"string: @" arguments:@[@"foobar"]], @"one string");
+    STAssertEqualObjects(@"string: \"foobar\"", [TransitProxy jsExpressionFromCode:@"string: @" arguments:@[@"foobar"] collectingProxiesOnScope:proxiesOnScope], @"one string");
     
-    STAssertEqualObjects(@"\"foo\" + \"bar\"", [TransitProxy jsExpressionFromCode:@"@ + @" arguments:(@[@"foo", @"bar"])], @"two strings");
-    STAssertEqualObjects(@"'baz' + \"bam\" + 23", [TransitProxy jsExpressionFromCode:@"'baz' + @ + @" arguments:(@[@"bam", @23])], @"two strings");
+    STAssertEqualObjects(@"\"foo\" + \"bar\"", [TransitProxy jsExpressionFromCode:@"@ + @" arguments:(@[@"foo", @"bar"]) collectingProxiesOnScope:proxiesOnScope], @"two strings");
+    STAssertEqualObjects(@"'baz' + \"bam\" + 23", [TransitProxy jsExpressionFromCode:@"'baz' + @ + @" arguments:(@[@"bam", @23]) collectingProxiesOnScope:proxiesOnScope], @"two strings");
+    
+    STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies needed for any of the above expressions");
 }
 
 -(void)testDoNotReplaceArgumentsTwice {
-    NSString* replaced = [TransitContext jsExpressionFromCode:@"str: @" arguments:@[@"foo@bar"]];
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    
+    NSString* replaced = [TransitContext jsExpressionFromCode:@"str: @" arguments:@[@"foo@bar"] collectingProxiesOnScope:proxiesOnScope];
     STAssertEqualObjects(@"str: \"foo@bar\"", replaced, @"first replacement");
     
-    STAssertNoThrow([TransitContext jsExpressionFromCode:replaced arguments:@[]], @"does not try to replace a second time");
+    STAssertNoThrow([TransitContext jsExpressionFromCode:replaced arguments:@[] collectingProxiesOnScope:proxiesOnScope], @"does not try to replace a second time");
     
-    STAssertThrows([TransitContext jsExpressionFromCode:replaced arguments:@[@"another argument"]], @"the @ in the string will not be recognized as placeholder. Hence, too many args");
+    STAssertThrows([TransitContext jsExpressionFromCode:replaced arguments:@[@"another argument"] collectingProxiesOnScope:proxiesOnScope], @"the @ in the string will not be recognized as placeholder. Hence, too many args");
+    
+    STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies needed for any of the above expressions");
 }
 
 -(void)testJSExpression {
     NSString* varName = @"some.var".stringAsJSExpression;
     
     STAssertTrue(varName.isJSExpression, @"marked as JS Expression");
-    STAssertEqualObjects(varName, [TransitProxy jsRepresentation:varName], @"js expression is its own jsRepresentation");
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    STAssertEqualObjects(varName, [TransitProxy jsRepresentation:varName collectingProxiesOnScope:proxiesOnScope], @"js expression is its own jsRepresentation");
     
     varName = [@[varName] copy][0];
     STAssertTrue(varName.isJSExpression, @"marked as JS Expression");
-    STAssertEqualObjects(varName, [TransitProxy jsRepresentation:varName], @"js expression is its own jsRepresentation");
+    STAssertEqualObjects(varName, [TransitProxy jsRepresentation:varName collectingProxiesOnScope:proxiesOnScope], @"js expression is its own jsRepresentation");
+    
+    STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies on scope");
 }
 
 -(void)testMarkAsJSExpressionHasNoSideEffect {
@@ -69,29 +83,42 @@
 -(void)testJSExpressionWillNotBeUnderstoodAsString {
     NSString* realString = @"some.var";
     NSString* varName = realString.stringAsJSExpression;
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     
-    NSString* actual = [TransitProxy jsExpressionFromCode:@"@ = @" arguments:@[varName, realString]];
+    NSString* actual = [TransitProxy jsExpressionFromCode:@"@ = @" arguments:@[varName, realString] collectingProxiesOnScope:proxiesOnScope];
     STAssertTrue(actual.isJSExpression, @"marked as JS expression");
     STAssertEqualObjects(@"some.var = \"some.var\"", actual, @"replaced correctly");
+    STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies on scope");
 }
 
 - (void)testJSExpressionFromObjectWithJsRepresentation {
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     TransitProxy* proxy = [OCMockObject mockForClass:TransitProxy.class];
-    [[[(id)proxy stub] andReturn:@"myRepresentation"] _jsRepresentation];
+    [[[(id)proxy stub] andReturn:@"myRepresentation"] _jsRepresentationCollectingProxiesOnScope:proxiesOnScope];
     [[[(id)proxy stub] andReturnValue:@NO] isKindOfClass:NSString.class];
     [[[(id)proxy stub] andReturnValue:@YES] isKindOfClass:TransitProxy.class];
-    STAssertEqualObjects(proxy._jsRepresentation, @"myRepresentation", @"works");
+    STAssertEqualObjects([proxy _jsRepresentationCollectingProxiesOnScope:proxiesOnScope], @"myRepresentation", @"works");
     
-    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"return @" arguments:@[proxy]], @"return myRepresentation", @"static method uses instance jsRepresentation");
+    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"return @" arguments:@[proxy] collectingProxiesOnScope:proxiesOnScope], @"return myRepresentation", @"static method uses instance jsRepresentation");
+    
+    STAssertEqualObjects(@[], proxiesOnScope.array, @"mock does not put itself onto set");
 }
 
 - (void)testJSExpressionWithInvalidArgumentCount {
-    STAssertThrowsSpecificNamed([TransitProxy jsExpressionFromCode:@"expect arg: @" arguments:@[]], NSException, NSInvalidArgumentException, @"too few arguments");
-    STAssertThrowsSpecificNamed([TransitProxy jsExpressionFromCode:@"expect nothing" arguments:@[@"some"]], NSException, NSInvalidArgumentException, @"too many arguments");
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+
+    STAssertThrowsSpecificNamed([TransitProxy jsExpressionFromCode:@"expect arg: @" arguments:@[] collectingProxiesOnScope:proxiesOnScope], NSException, NSInvalidArgumentException, @"too few arguments");
+    STAssertThrowsSpecificNamed([TransitProxy jsExpressionFromCode:@"expect nothing" arguments:@[@"some"] collectingProxiesOnScope:proxiesOnScope], NSException, NSInvalidArgumentException, @"too many arguments");
+    
+    STAssertEqualObjects(@[], proxiesOnScope.array, @"well, proxies collected halfway though would appear here");
 }
 
 - (void)testJSExpressionWithInvalidArgumentType {
-    STAssertThrowsSpecificNamed([TransitProxy jsExpressionFromCode:@"obj: @" arguments:@[self]], NSException, NSInvalidArgumentException, @"cannot make JSON");
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    
+    STAssertThrowsSpecificNamed([TransitProxy jsExpressionFromCode:@"obj: @" arguments:@[self] collectingProxiesOnScope:proxiesOnScope], NSException, NSInvalidArgumentException, @"cannot make JSON");
+
+    STAssertEqualObjects(@[], proxiesOnScope.array, @"well, proxies collected halfway though would appear here");
 }
 
 -(void)testExplicitDispose {
@@ -139,7 +166,9 @@
     TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:proxyId];
     
     [[[context stub] andReturn:@"fancyJsRepresentation"] jsRepresentationForProxyWithId:proxyId];
-    NSString* actual = proxy.jsRepresentation;
+    NSMutableOrderedSet* set = NSMutableOrderedSet.orderedSet;
+    NSString* actual = [proxy _jsRepresentationCollectingProxiesOnScope:set];
+    STAssertEqualObjects(@[proxy], set.array, @"proxy on scope");
     STAssertEqualObjects(@"fancyJsRepresentation", actual, @"proxy representation from context");
     [context verify];
 }
@@ -156,42 +185,75 @@
 
 -(void)testHasNoJSRepresentationIfWithoutProxyAndValue {
     TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:nil];
-    STAssertThrows([proxy jsRepresentation], @"has no intrinsict representation");
+    STAssertNil([proxy _jsRepresentationCollectingProxiesOnScope:nil], @"has no intrinsict representation");
 }
 
 -(void)testDelegatesJSRepesentationToValue {
-    STAssertEqualObjects(@"42", [[[TransitProxy alloc] initWithRootContext:nil value:@42] jsRepresentation], @"int");
+    NSString*(^jsAndNoProxyOnScope)(TransitProxy*) = ^(TransitProxy* proxy) {
+        NSMutableOrderedSet* set = NSMutableOrderedSet.orderedSet;
+        NSString* result = [proxy _jsRepresentationCollectingProxiesOnScope:set];
+        STAssertEqualObjects(@[], set.array, @"no proxies needed on scope");
+        return result;
+    };
     
-    STAssertEqualObjects(@"42.5", [[[TransitProxy alloc] initWithRootContext:nil value:@42.5] jsRepresentation], @"float");
-    STAssertEqualObjects(@"true", [[[TransitProxy alloc] initWithRootContext:nil value:@YES] jsRepresentation], @"bool true");
-    STAssertEqualObjects(@"false", [[[TransitProxy alloc] initWithRootContext:nil value:@NO] jsRepresentation], @"bool false");
+    STAssertEqualObjects(@"42", jsAndNoProxyOnScope([[TransitProxy alloc] initWithRootContext:nil value:@42]), @"int");
     
-    STAssertEqualObjects(@"\"foobar\"", [[[TransitProxy alloc] initWithRootContext:nil value:@"foobar"] jsRepresentation], @"string");
+    STAssertEqualObjects(@"42.5", jsAndNoProxyOnScope([[TransitProxy alloc] initWithRootContext:nil value:@42.5]), @"float");
+    STAssertEqualObjects(@"true", jsAndNoProxyOnScope([[TransitProxy alloc] initWithRootContext:nil value:@YES]), @"bool true");
+    STAssertEqualObjects(@"false", jsAndNoProxyOnScope([[TransitProxy alloc] initWithRootContext:nil value:@NO]), @"bool false");
     
-    STAssertEqualObjects(@"[1,2]", [[[TransitProxy alloc] initWithRootContext:nil value:(@[@1, @2])] jsRepresentation], @"array");
-    STAssertEqualObjects(@"{\"a\":1}", [[[TransitProxy alloc] initWithRootContext:nil value:(@{@"a": @1})] jsRepresentation], @"dictionary");
+    STAssertEqualObjects(@"\"foobar\"", jsAndNoProxyOnScope([[TransitProxy alloc] initWithRootContext:nil value:@"foobar"]), @"string");
+    
+    STAssertEqualObjects(@"[1,2]", jsAndNoProxyOnScope([[TransitProxy alloc] initWithRootContext:nil value:(@[@1, @2])]), @"array");
+    STAssertEqualObjects(@"{\"a\":1}", jsAndNoProxyOnScope([[TransitProxy alloc] initWithRootContext:nil value:(@{@"a": @1})]), @"dictionary");
 }
 
 -(void)testJsRepresentationOfArrayWithProxies {
-    id values = @[@"string", @"expression".stringAsJSExpression];
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:@"someId"];
     
-    id actual = [TransitProxy jsRepresentation:values];
-    STAssertEqualObjects(@"[\"string\",expression]", actual, @"calls jsRepresentation of elements in array");
+    id values = @[@"string", @"expression".stringAsJSExpression, proxy];
+
+    NSMutableOrderedSet* proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    id actual = [TransitProxy jsRepresentation:values collectingProxiesOnScope:proxiesOnScope];
+    
+    STAssertEqualObjects(@"[\"string\",expression,PROXY_REPRESENTATION]", actual, @"calls jsRepresentation of elements in array");
+    STAssertEqualObjects(@[proxy], proxiesOnScope.array, @"one proxy on scope");
+    
+    [proxy clearRootContextAndProxyId];
 }
 
 -(void)testJsRepresentationOfDictionaryWithProxies {
-    id values = @{@"a":@"string", @"b":@"expression".stringAsJSExpression};
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:@"someId"];
+
+    id values = @{@"a":@"string", @"b":@"expression".stringAsJSExpression, @"c":proxy};
     
-    id actual = [TransitProxy jsRepresentation:values];
-    STAssertEqualObjects(@"{\"a\":\"string\",\"b\":expression}", actual, @"calls jsRepresentation of elements in object");
+    NSMutableOrderedSet* proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    id actual = [TransitProxy jsRepresentation:values collectingProxiesOnScope:proxiesOnScope];
+    
+    STAssertEqualObjects(@"{\"a\":\"string\",\"b\":expression,\"c\":PROXY_REPRESENTATION}", actual, @"calls jsRepresentation of elements in object");
+    STAssertEqualObjects(@[proxy], proxiesOnScope.array, @"one proxy on scope");
+    
+    [proxy clearRootContextAndProxyId];
 }
 
 -(void)testJSRepresentationOfNestedDictionaryWithProxies {
-    id values = @{@"a":@"string", @"b":@[@"expression".stringAsJSExpression]};
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
+    TransitProxy *proxy = [[TransitProxy alloc] initWithRootContext:context proxyId:@"someId"];
     
-    id actual = [TransitProxy jsRepresentation:values];
-    STAssertEqualObjects(@"{\"a\":\"string\",\"b\":[expression]}", actual, @"calls jsRepresentation of elements in nested object");
+    id values = @{@"a":@"string", @"b":@[@"expression".stringAsJSExpression, proxy], @"c":proxy};
     
+    NSMutableOrderedSet* proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    id actual = [TransitProxy jsRepresentation:values collectingProxiesOnScope:proxiesOnScope];
+
+    STAssertEqualObjects(@"{\"a\":\"string\",\"b\":[expression,PROXY_REPRESENTATION],\"c\":PROXY_REPRESENTATION}", actual, @"calls jsRepresentation of elements in nested object");
+    STAssertEqualObjects(@[proxy], proxiesOnScope.array, @"one proxy on scope");
+
+    [proxy clearRootContextAndProxyId];
 }
 
 

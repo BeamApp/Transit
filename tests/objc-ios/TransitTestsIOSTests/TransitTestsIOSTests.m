@@ -15,18 +15,23 @@
 
 @implementation TransitTestsIOSTests
 
-- (void)setUp
-{
-    [super setUp];
+-(void)testTransitNilSafeOnString {
+    id value = @"undefined";
+    id actual = TransitNilSafe(value);
     
-    // Set-up code here.
+    STAssertEqualObjects(value, actual, @"equal");
+    STAssertTrue(value == actual, @"same");
+    STAssertFalse([actual isJSExpression], @"plain string");
 }
 
-- (void)tearDown
-{
-    // Tear-down code here.
+-(void)testTransitNilSafeOnNil {
+    id value = nil;
+    id actual = TransitNilSafe(value);
     
-    [super tearDown];
+    STAssertFalse(value == actual, @"same");
+    STAssertEqualObjects(@"undefined", actual, @"string containined 'undefined'");
+    STAssertTrue([actual isJSExpression], @"marked as jsExpression");
 }
+
 
 @end
