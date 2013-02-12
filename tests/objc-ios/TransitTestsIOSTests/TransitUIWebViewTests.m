@@ -90,19 +90,32 @@
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     context.proxifyEval = NO;
     
-    STAssertEqualObjects(@YES, [context eval:@"window.findme"], @"code has been injected");
+    STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
+
+    // wait for page to be fully loaded, otherwise JS code won't get replaced on reload below
+    [self.class waitForWebViewToBeLoaded:context.webView];
+    
+    STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
 
     [context.webView loadHTMLString:@"<head><title>Changed</title></head><body></body>" baseURL:nil];
     [self.class waitForWebViewToBeLoaded:context.webView];
     
     STAssertEqualObjects(@"Changed", [context eval:@"document.title"], @"code has been injected");
-    STAssertEqualObjects(@YES, [context eval:@"window.findme"], @"code has been injected");
+    STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
 }
 
 -(void)testInjectsCodeOnReloadOfURLLoad {
     _TRANSIT_JS_RUNTIME_CODE = @"window.findme = {v:1, add:function(){window.findme.v++;}}";
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     context.proxifyEval = NO;
+    
+
+    STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
+    
+    // wait for page to be fully loaded, otherwise JS code won't get replaced on reload below
+    [self.class waitForWebViewToBeLoaded:context.webView];
+
+    STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
     
     STAssertEqualObjects(@1, [context eval:@"window.findme.v"], @"code has been injected");
     [context eval:@"window.findme.add()"];
@@ -114,7 +127,8 @@
     [self.class waitForWebViewToBeLoaded:context.webView];
     
     STAssertEqualObjects(@"TestPage from File", [context eval:@"document.title"], @"code has been injected");
-    STAssertEqualObjects(@2, [context eval:@"window.findme.v"], @"code has been injected");
+    STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
+    STAssertEqualObjects(@1, [context eval:@"window.findme.v"], @"code has been reset");
 }
 
 -(TransitJSFunction*)callContext:(TransitContext*)context {

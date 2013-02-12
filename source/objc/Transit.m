@@ -449,6 +449,7 @@ TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER
 @implementation TransitUIWebViewContext{
     TransitUIWebViewContextRequestHandler _handleRequestBlock;
     BOOL _proxifiedEval;
+    BOOL _codeInjected;
     SBJsonParser *_parser;
     NSString* _lastEvaluatedJSCode;
 }
@@ -486,16 +487,22 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         _webView = webView;
         _handleRequestBlock = _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER;
         _parser = SBJsonParser.new;
+        _proxifiedEval = YES;
         [self bindToWebView];
     }
     return self;
 }
 
+-(void)updateCodeInjected {
+    _codeInjected = [[self _eval:@"typeof transit"] isEqualToString:@"\"object\""];
+}
+
 -(void)bindToWebView {
     _webView.delegate = self;
-    if(!_webView.loading) {
+    [self updateCodeInjected];
+    if(!_codeInjected) {
         [self eval:_TRANSIT_JS_RUNTIME_CODE];
-        _proxifiedEval = YES;
+        _codeInjected = YES;
     }
 }
 
@@ -514,7 +521,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg] : @"null";
     NSString* jsApplyExpression = jsAdjustedThisArg ? [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg] : jsExpression;
     NSString* jsWrappedApplyExpression;
-    if(_proxifiedEval) {
+    if(_proxifiedEval && _codeInjected) {
         jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
                                     "var result;"
                                     "try{"
@@ -587,6 +594,9 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return YES;
 }
 
+-(void)webViewDidFinishLoad:(UIWebView *)webView {
+    [self bindToWebView];
+}
 
 @end
 
