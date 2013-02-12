@@ -450,6 +450,7 @@ TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER
     TransitUIWebViewContextRequestHandler _handleRequestBlock;
     BOOL _proxifiedEval;
     SBJsonParser *_parser;
+    NSString* _lastEvaluatedJSCode;
 }
 
 -(void)setHandleRequestBlock:(TransitUIWebViewContextRequestHandler)testCallBlock {
@@ -466,6 +467,10 @@ TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER
 
 -(void)setProxifyEval:(BOOL)proxifyEval {
     _proxifiedEval = proxifyEval;
+}
+
+-(NSString *)lastEvaluatedJSCode {
+    return _lastEvaluatedJSCode;
 }
 
 NSString* _TRANSIT_SCHEME = @"transit";
@@ -499,8 +504,8 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 }
 
 -(NSString*)_eval:(NSString*)js {
-    NSString* jsWrapped = [NSString stringWithFormat: @"JSON.stringify(%@)", js];
-    return [_webView stringByEvaluatingJavaScriptFromString: jsWrapped];
+    _lastEvaluatedJSCode = [NSString stringWithFormat: @"JSON.stringify(%@)", js];
+    return [_webView stringByEvaluatingJavaScriptFromString: _lastEvaluatedJSCode];
 }
 
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {

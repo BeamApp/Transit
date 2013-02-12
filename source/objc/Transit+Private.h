@@ -42,6 +42,8 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 -(NSString*)transitGlobalVarJSExpression;
 
+-(NSString*)lastEvaluatedJSCode;
+
 @end
 
 @interface TransitNativeFunction(Private)

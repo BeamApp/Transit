@@ -351,9 +351,10 @@
 
 -(void)testCanUseObjectProxy {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitProxy* proxy = [context eval:@"window.location"];
-    NSString* result = [context eval:@"@.pathname" arguments:@[proxy]];
-    STAssertEqualObjects(@"blank", result, @"document.title");
+    [self.class waitForWebViewToBeLoaded:context.webView];
+    TransitProxy* proxy = [context eval:@"window.document"];
+    NSString* result = [context eval:@"@.title" arguments:@[proxy]];
+    STAssertEqualObjects(@"Empty Page", result, @"document.title");
 }
 
 -(void)testPerformance {
