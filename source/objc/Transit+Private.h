@@ -39,6 +39,8 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 @property (readonly) NSMutableDictionary* retainedNativeProxies;
 
 -(void)releaseJSProxyWithId:(NSString*)proxy;
+-(void)drainJSProxies;
+
 -(void)retainNativeProxy:(TransitProxy*)proxy;
 -(void)releaseNativeProxy:(TransitProxy*)proxy;
 
@@ -79,3 +81,4 @@ typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,N
 extern NSString* _TRANSIT_JS_RUNTIME_CODE;
 extern NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_;
 extern NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_;
+extern NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD;

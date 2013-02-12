@@ -294,13 +294,16 @@ id TransitNilSafe(id valueOrNil) {
 @end
 
 NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
+NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD = 250;
 NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_ = @"__TRANSIT_JS_FUNCTION_";
 NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
 NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_";
 
+
 @implementation TransitContext {
     NSMutableDictionary* _retainedNativeProxies;
     int _lastNativeFunctionId;
+    NSMutableArray* _jsProxiesToBeReleased;
 }
 
 -(id)init {
@@ -308,6 +311,7 @@ NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_"
     if(self){
         _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT++;
         _retainedNativeProxies = [NSMutableDictionary dictionary];
+        _jsProxiesToBeReleased = [NSMutableArray array];
     }
     return self;
 }
@@ -344,9 +348,20 @@ NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_"
     }
 }
 
+-(void)drainJSProxies {
+    [self eval:@"(function(ids){"
+     "for(var i=0;i<ids.length;i++)"
+        "@.releaseElementWithId(ids[i]);"
+     "})(@)" thisArg:nil arguments:@[self.transitGlobalVarJSExpression, _jsProxiesToBeReleased] returnJSResult:NO];
+    [_jsProxiesToBeReleased removeAllObjects];
+    
+}
+
+
 -(void)releaseJSProxyWithId:(NSString*)id {
-//    NSLog(@"release proxy with id %@", id);
-    [self eval:@"@.releaseElementWithId(@)" thisArg:nil arguments:@[self.transitGlobalVarJSExpression, id] returnJSResult:NO];
+    [_jsProxiesToBeReleased addObject:id];
+    if(_jsProxiesToBeReleased.count > _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD)
+        [self drainJSProxies];
 }
 
 -(NSString*)nextNativeFunctionId {

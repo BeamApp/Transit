@@ -503,6 +503,7 @@
     STAssertEqualObjects((@[@"##__TRANSIT_JS_FUNCTION_1", @"##__TRANSIT_JS_FUNCTION_2"]), retained, @"two functions retained");
     
     [jsFunc1 dispose];
+    [context drainJSProxies];
     
     retained = [context eval:jsListRetained];
     STAssertEqualObjects((@[@"##__TRANSIT_JS_FUNCTION_2"]), retained, @"only one functions retained");
