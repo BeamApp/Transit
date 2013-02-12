@@ -45,29 +45,36 @@
     [mock verify];
 }
 
--(id)contextStubForTransitGlobalVar {
-    TransitContext *context = [OCMockObject niceMockForClass:TransitContext.class];
-    id globalVar = @"transit".stringAsJSExpression;
-    [[[(id)context stub] andReturn:globalVar] transitGlobalVarJSExpression];
+-(id)simpleContext {
+    TransitContext *context = [[TransitContext alloc] init];
+//    id globalVar = @"transit".stringAsJSExpression;
+//    [[[(id)context stub] andReturn:globalVar] transitGlobalVarJSExpression];
     return context;
 }
 
 -(void)testJSRepresentation {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self contextStubForTransitGlobalVar] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
     
     NSMutableOrderedSet* set = NSMutableOrderedSet.orderedSet;
     NSString* actual = [func _jsRepresentationCollectingProxiesOnScope:set];
     STAssertEqualObjects(@[func], set.array, @"proxy on scope");
     
-    NSLog(@"actual: %@", actual);
-    STAssertEqualObjects(actual, @"transit.nativeFunction(\"someId\")", @"native jsCall");
+    STAssertEqualObjects(actual, @"someId", @"just the id, corresponding variable will be put on scope");
+}
+
+-(void)testJSRepresentationToResolveProxy {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    
+    NSString* actual = [func jsRepresentationToResolveProxy];
+    
+    STAssertEqualObjects(actual, @"transit.nativeFunction(\"someId\")", @"actual function factory to create scoped variables on TransitContext-eval");
 }
 
 -(void)testInExpression {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self contextStubForTransitGlobalVar] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
     
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
-    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func] collectingProxiesOnScope:proxiesOnScope], @"transit.nativeFunction(\"someId\")('foo')", @"native func");
+    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func] collectingProxiesOnScope:proxiesOnScope], @"someId('foo')", @"just the id, corresponding variable will be put on scope");
     STAssertEqualObjects(@[func], proxiesOnScope.array, @"");
 }
 

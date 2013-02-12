@@ -27,6 +27,7 @@
 +(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
 +(NSString*)jsRepresentation:(id)object collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
 -(NSString*)_jsRepresentationCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
+-(NSString*)jsRepresentationToResolveProxy;
 
 @end
 
@@ -43,12 +44,17 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 -(id)recursivelyReplaceMarkersWithProxies:(id)unproxified;
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId;
+-(NSString*)jsRepresentationToResolveProxyWithId:(NSString*)proxyId;
+-(NSString*)jsRepresentationForNativeFunctionWithId:(NSString*)proxyId;
+-(NSString*)jsRepresentationToResolveNativeFunctionWithId:(NSString*)proxyId;
 
 -(id)invokeNativeDescription:(NSDictionary*)description;
 
 -(NSString*)transitGlobalVarJSExpression;
 
 -(NSString*)lastEvaluatedJSCode;
+
+-(NSString*)nextNativeFunctionId;
 
 @end
 

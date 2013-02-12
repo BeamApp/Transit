@@ -47,7 +47,13 @@
 -(void)testJsRepresentationForProxy {
     TransitContext *context = [TransitContext new];
     NSString* actual = [context jsRepresentationForProxyWithId:@"someId"];
-    STAssertEqualObjects(@"transit.r(\"someId\")", actual, @"proxy representation as function to avoid messing this this");
+    STAssertEqualObjects(@"someId", actual, @"proxy representation is just the id, corresponding var will be put on scope");
+}
+
+-(void)testJsRepresentationToResolveProxy {
+    TransitContext *context = [TransitContext new];
+    NSString* actual = [context jsRepresentationToResolveProxyWithId:@"someId"];
+    STAssertEqualObjects(@"transit.r(\"someId\")", actual, @"proxy representation as function");
 }
 
 -(TransitProxy*)stubWithContext:(TransitContext*)context proxyId:(NSString*)proxyId {
@@ -233,6 +239,12 @@
         STAssertTrue([result isKindOfClass:TransitProxy.class], @"is proxy");
         STAssertEqualObjects(@"3", [(TransitProxy*)result value], @"wraps '3'");
     }
+}
+
+-(void)testNativeFunctionIdsMatchMagicMarker {
+    TransitContext* context = TransitContext.alloc.init;
+    STAssertEqualObjects(@"__TRANSIT_NATIVE_FUNCTION_1", [context nextNativeFunctionId], @"first native function");
+    STAssertEqualObjects(@"__TRANSIT_NATIVE_FUNCTION_2", [context nextNativeFunctionId], @"second native function");
 }
 
 
