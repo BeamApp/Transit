@@ -38,4 +38,8 @@ public class TransitContext extends AbstractTransitContext {
         return new TransitContext(adapter);
     }
 
+    @Override
+    public String getJavaScriptRepresentation() {
+        return "window";
+    }
 }
