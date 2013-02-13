@@ -298,12 +298,13 @@ NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD = 250;
 NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_ = @"__TRANSIT_JS_FUNCTION_";
 NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
 NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_";
-
+NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 
 @implementation TransitContext {
     NSMutableDictionary* _retainedNativeProxies;
     int _lastNativeFunctionId;
     NSMutableArray* _jsProxiesToBeReleased;
+    NSString* _transitGlobalVarJSExpression;
 }
 
 -(id)init {
@@ -312,6 +313,7 @@ NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_"
         _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT++;
         _retainedNativeProxies = [NSMutableDictionary dictionary];
         _jsProxiesToBeReleased = [NSMutableArray array];
+        _transitGlobalVarJSExpression = @"transit".stringAsJSExpression;
     }
     return self;
 }
@@ -352,7 +354,7 @@ NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_"
     [self eval:@"(function(ids){"
      "for(var i=0;i<ids.length;i++)"
         "@.releaseElementWithId(ids[i]);"
-     "})(@)" thisArg:nil arguments:@[self.transitGlobalVarJSExpression, _jsProxiesToBeReleased] returnJSResult:NO];
+     "})(@)" thisArg:nil arguments:@[_transitGlobalVarJSExpression, _jsProxiesToBeReleased] returnJSResult:NO];
     [_jsProxiesToBeReleased removeAllObjects];
     
 }
@@ -422,7 +424,7 @@ NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_"
 }
 
 -(NSString*)transitGlobalVarJSExpression {
-    return @"transit".stringAsJSExpression;
+    return _transitGlobalVarJSExpression;
 }
 
 +(NSRegularExpression*)regularExpressionForMarker:(NSString*)marker {
@@ -451,23 +453,29 @@ NSString* _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION = @"__TRANSIT_NATIVE_FUNCTION_"
     // TODO: correctly parse native functions
     
     if([unproxified isKindOfClass:NSString.class]) {
-        id objectProxyId = [self.class proxyIdFromString:unproxified forMarker:_TRANSIT_MARKER_PREFIX_OBJECT_PROXY_];
-        if(objectProxyId)
-            return [[TransitProxy alloc] initWithRootContext:self proxyId:objectProxyId];
-        
-        id functionProxyId = [self.class proxyIdFromString:unproxified forMarker:_TRANSIT_MARKER_PREFIX_JS_FUNCTION_];
-        if(functionProxyId)
-            return [[TransitJSFunction alloc] initWithRootContext:self proxyId:functionProxyId];
+        if([unproxified length] >= _TRANSIT_MARKER_PREFIX_MIN_LEN && [unproxified characterAtIndex:0] == '_' && [unproxified characterAtIndex:1] == '_') {
+            id objectProxyId = [self.class proxyIdFromString:unproxified forMarker:_TRANSIT_MARKER_PREFIX_OBJECT_PROXY_];
+            if(objectProxyId)
+                return [[TransitProxy alloc] initWithRootContext:self proxyId:objectProxyId];
+            
+            id functionProxyId = [self.class proxyIdFromString:unproxified forMarker:_TRANSIT_MARKER_PREFIX_JS_FUNCTION_];
+            if(functionProxyId)
+                return [[TransitJSFunction alloc] initWithRootContext:self proxyId:functionProxyId];
+        }
     }
     if([unproxified isKindOfClass:NSDictionary.class]) {
-        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:unproxified];
+        // JSONParser already returns mutable values
+        //NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:unproxified];
+        NSMutableDictionary *dict = unproxified;
         for (id key in dict.allKeys) {
             dict[key] = [self recursivelyReplaceMarkersWithProxies:dict[key]];
         }
         return dict;
     }
     if([unproxified isKindOfClass:NSArray.class]) {
-        NSMutableArray *array = [NSMutableArray arrayWithArray:unproxified];
+        // JSONParser already returns mutable values
+        //NSMutableArray *array = [NSMutableArray arrayWithArray:unproxified];
+        NSMutableArray *array = unproxified;
         for(int i=0; i<array.count; i++)
             array[i] = [self recursivelyReplaceMarkersWithProxies:array[i]];
         return array;
@@ -685,9 +693,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 -(void)invokeNative {
     // nativeInvokeTransferObject is safe to parse and contains proxy-ids
-    NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)", self.transitGlobalVarJSExpression];
+    NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)",self.transitGlobalVarJSExpression];
     NSString* jsonDescription = [self.webView stringByEvaluatingJavaScriptFromString:jsReadTransferObject];
-    id callDescription = [self recursivelyReplaceMarkersWithProxies:[self parseJSON:jsonDescription]];
+    id parsedJSON = [self parseJSON:jsonDescription];
+    id callDescription = [self recursivelyReplaceMarkersWithProxies:parsedJSON];
     
     // actually perform call
     id result = [self invokeNativeDescription:callDescription];
