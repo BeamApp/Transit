@@ -99,6 +99,9 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitProx
 
 -(void)dispose;
 
+@property(nonatomic, assign) BOOL async;
+@property(nonatomic, assign) BOOL noThis;
+
 @property(readonly) TransitFunctionBlock block;
 
 @end

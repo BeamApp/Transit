@@ -7,75 +7,99 @@ describe("Transit", function() {
     });
 
     describe("nativeFunction", function(){
-        var _invokeNative = transit.invokeNative;
-        beforeEach(function(){
-            transit.invokeNative = jasmine.createSpy("invokeNative");
-        });
-        afterEach(function(){
-            transit.invokeNative = _invokeNative;
-        });
+        describe("blocked", function(){
+            var _invokeNative = transit.invokeNative;
+            beforeEach(function(){
+                transit.invokeNative = jasmine.createSpy("invokeNative");
+            });
+            afterEach(function(){
+                transit.invokeNative = _invokeNative;
+            });
 
-        it("attaches native attribute", function(){
-            var f = transit.nativeFunction("someId");
-            expect(typeof f).toEqual("function");
-            expect(f.transitNativeId).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
-        });
+            it("attaches native attribute", function(){
+                var f = transit.nativeFunction("someId");
+                expect(typeof f).toEqual("function");
+                expect(f.transitNativeId).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
+            });
 
-        it("calls transit.invokeNative", function(){
-            var f = transit.nativeFunction("someId");
-            expect(transit.invokeNative).not.toHaveBeenCalled();
-            f();
-            expect(transit.invokeNative).toHaveBeenCalledWith("someId", window, []);
+            it("calls transit.invokeNative", function(){
+                var f = transit.nativeFunction("someId");
+                expect(transit.invokeNative).not.toHaveBeenCalled();
+                f();
+                expect(transit.invokeNative).toHaveBeenCalledWith("someId", window, [], undefined);
 
-            var obj = {func:f};
-            obj.func("foo");
-            expect(transit.invokeNative).toHaveBeenCalledWith("someId", obj, ["foo"]);
+                var obj = {func:f};
+                obj.func("foo");
+                expect(transit.invokeNative).toHaveBeenCalledWith("someId", obj, ["foo"], undefined);
 
-            obj.func([1,2], "bar");
-            expect(transit.invokeNative).toHaveBeenCalledWith("someId", obj, [[1,2], "bar"]);
-        });
+                obj.func([1,2], "bar");
+                expect(transit.invokeNative).toHaveBeenCalledWith("someId", obj, [[1,2], "bar"], undefined);
 
-        it("uses result of transit.invokeNative", function(){
-            transit.invokeNative = transit.invokeNative.andReturn(3);
+                f.transitNoThis = true;
+                obj.func([1,2], "bar");
+                expect(transit.invokeNative).toHaveBeenCalledWith("someId", obj, [[1,2], "bar"], true);
+            });
 
-            var f = transit.nativeFunction("someId");
-            expect(transit.invokeNative).not.toHaveBeenCalled();
-            var result = f(1,2);
-            expect(transit.invokeNative).toHaveBeenCalledWith("someId", window, [1,2]);
-            expect(result).toEqual(3);
-        });
-    });
+            it("uses result of transit.invokeNative", function(){
+                transit.invokeNative = transit.invokeNative.andReturn(3);
 
-    describe("asyncNativeFunction", function(){
-        var _queueNative = transit.queueNative;
-
-        beforeEach(function(){
-            transit.queueNative = jasmine.createSpy("queueNative");
-        });
-        afterEach(function(){
-            transit.queueNative = _queueNative;
+                var f = transit.nativeFunction("someId");
+                expect(transit.invokeNative).not.toHaveBeenCalled();
+                var result = f(1,2);
+                expect(transit.invokeNative).toHaveBeenCalledWith("someId", window, [1,2], undefined);
+                expect(result).toEqual(3);
+            });
         });
 
-        it("attaches native attribute", function(){
-            var f = transit.nativeFunction("someId", {async:true});
-            expect(typeof f).toEqual("function");
-            expect(f.transitNativeId).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
+        describe("async", function(){
+            var _queueNative = transit.queueNative;
+
+            beforeEach(function(){
+                transit.queueNative = jasmine.createSpy("queueNative");
+            });
+            afterEach(function(){
+                transit.queueNative = _queueNative;
+            });
+
+            it("attaches native attribute", function(){
+                var f = transit.nativeFunction("someId", {async:true});
+                expect(typeof f).toEqual("function");
+                expect(f.transitNativeId).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
+            });
+
+            it("calls transit.queueNative", function(){
+                var f = transit.nativeFunction("someId", {async:true});
+                expect(transit.queueNative).not.toHaveBeenCalled();
+                f();
+                expect(transit.queueNative).toHaveBeenCalledWith("someId", window, [], undefined);
+
+                var obj = {func:f};
+                obj.func("foo");
+                expect(transit.queueNative).toHaveBeenCalledWith("someId", obj, ["foo"], undefined);
+
+                obj.func([1,2], "bar");
+                expect(transit.queueNative).toHaveBeenCalledWith("someId", obj, [[1,2], "bar"], undefined);
+
+                f.transitNoThis = true;
+                obj.func([1,2], "bar");
+                expect(transit.queueNative).toHaveBeenCalledWith("someId", obj, [[1,2], "bar"], true);
+            });
+
         });
 
-        it("calls transit.queueNative", function(){
-            var f = transit.nativeFunction("someId", {async:true});
-            expect(transit.queueNative).not.toHaveBeenCalled();
-            f();
-            expect(transit.queueNative).toHaveBeenCalledWith("someId", window, []);
+        describe("noThis", function(){
+            it("omits noThis attribute on default", function(){
+                var f = transit.nativeFunction("someId");
+                expect(typeof f).toEqual("function");
+                expect(f.transitNoThis).toBeFalsy();
+            });
+            it("attraches noThis attribute if specified", function(){
+                var f = transit.nativeFunction("someId", {noThis:true});
+                expect(typeof f).toEqual("function");
+                expect(f.transitNoThis).toBeTruthy();
+            });
 
-            var obj = {func:f};
-            obj.func("foo");
-            expect(transit.queueNative).toHaveBeenCalledWith("someId", obj, ["foo"]);
-
-            obj.func([1,2], "bar");
-            expect(transit.queueNative).toHaveBeenCalledWith("someId", obj, [[1,2], "bar"]);
         });
-
     });
 
     describe("retained", function(){
@@ -245,6 +269,16 @@ describe("Transit", function() {
             });
         });
 
+        it("omits thisArg of asked for it", function(){
+            var simpleObj = {a:"1"};
+            var desc = transit.createInvocationDescription("someId", simpleObj, [], true);
+            expect(desc).toEqual({
+                nativeId:"someId",
+                thisArg:null,
+                args:[]
+            });
+        });
+
         it("treats global object as null for thisArg", function(){
             var desc = transit.createInvocationDescription("someId", window, []);
             expect(desc).toEqual({
@@ -293,8 +327,8 @@ describe("Transit", function() {
 
         describe("invokeNative", function(){
             it("calls doInvokeNative with description from createInvocationDescription", function(){
-                transit.invokeNative(1,2,3);
-                expect(transit.createInvocationDescription).toHaveBeenCalledWith(1,2,3);
+                transit.invokeNative(1,2,3,true);
+                expect(transit.createInvocationDescription).toHaveBeenCalledWith(1,2,3, true);
                 expect(transit.doInvokeNative).toHaveBeenCalledWith(_fakeInvocationDescription);
 
                 expect(transit.createInvocationDescription.callCount).toEqual(1);

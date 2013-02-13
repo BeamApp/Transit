@@ -37,17 +37,18 @@
 
     transit.nativeFunction = function(nativeId, options){
         var f;
-
         if(options && options.async) {
             f = function(){
-                transit.queueNative(nativeId, this, arguments);
+                transit.queueNative(nativeId, this, arguments, f.transitNoThis);
             };
         } else {
             f = function(){
-                return transit.invokeNative(nativeId, this, arguments);
+                return transit.invokeNative(nativeId, this, arguments, f.transitNoThis);
             };
         }
+        f.transitNoThis = options && options.noThis;
         f.transitNativeId = PREFIX_MAGIC_NATIVE_FUNCTION + nativeId;
+
         return f;
     };
 
@@ -96,10 +97,10 @@
         return elem;
     };
 
-    transit.createInvocationDescription = function(nativeId, thisArg, args) {
+    transit.createInvocationDescription = function(nativeId, thisArg, args, noThis) {
         var invocationDescription = {
             nativeId: nativeId,
-            thisArg: (thisArg === GLOBAL_OBJECT) ? null : transit.proxify(thisArg),
+            thisArg: noThis ? null : ((thisArg === GLOBAL_OBJECT) ? null : transit.proxify(thisArg)),
             args: []
         };
 
@@ -110,8 +111,8 @@
         return invocationDescription;
     };
 
-    transit.invokeNative = function(nativeId, thisArg, args) {
-        var invocationDescription = transit.createInvocationDescription(nativeId, thisArg, args);
+    transit.invokeNative = function(nativeId, thisArg, args, noThis) {
+        var invocationDescription = transit.createInvocationDescription(nativeId, thisArg, args, noThis);
         return transit.doInvokeNative(invocationDescription);
     };
 

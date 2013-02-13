@@ -45,7 +45,7 @@
 -(void)setupTransit {
     self.transit = [[TransitUIWebViewContext alloc] initWithUIWebView:self.webView];
     
-    TransitFunction *asyncFunc = [self.transit asyncFunctionWithBlock:^(TransitProxy *thisArg, NSArray *arguments) {
+    TransitNativeFunction *asyncFunc = (TransitNativeFunction*)[self.transit asyncFunctionWithBlock:^(TransitProxy *thisArg, NSArray *arguments) {
         NSString* data = arguments[0];
         TransitFunction *cb = arguments[1];
         
@@ -54,19 +54,16 @@
         [cb callAsyncWithArg:data];
     }];
     
-    TransitFunction *blockingFunc = [self.transit functionWithBlock:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitNativeFunction *blockingFunc = (TransitNativeFunction*)[self.transit functionWithBlock:^id(TransitProxy *thisArg, NSArray *arguments) {
         NSString* data = arguments[0];
         return data;
     }];
+
+    // avoid unneeded passing of this == window.forge.internal object for each call on window.forge.internal.ping(...)
+    asyncFunc.noThis = YES;
+    blockingFunc.noThis = YES;
     
-    // fake forge API to make same benchmark work
-    // but: ensure thisArg is always null to avoid unneeded serialization and get better performance, hence the ugly .apply()-statements ;)
-    // TODO: 
-    [self.transit eval:@"window.forge = "
-     "{internal:{"
-        "ping: function(){return @.apply(null, arguments)},"
-        "pingBlocked: function(){return @.apply(null, arguments)},"
-     "}}" arguments:@[asyncFunc, blockingFunc]];
+    [self.transit eval:@"window.forge = {internal:{ping: @, pingBlocked: @}}" arg:asyncFunc arg:blockingFunc];
 }
 
 @end
