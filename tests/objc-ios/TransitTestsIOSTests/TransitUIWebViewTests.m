@@ -47,8 +47,11 @@
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     id actual = [context eval:@"window"];
     STAssertEqualObjects(context, actual, @"just to get better output on failure");
-    STAssertTrue(context == actual, @"window is proxy again");
+    STAssertTrue(context == actual, @"window is same proxy again");
     
+    actual = [context eval:@"this"];
+    STAssertEqualObjects(context, actual, @"just to get better output on failure");
+    STAssertTrue(context == actual, @"this = window is same proxy again");
 }
 
 -(void)testResultTypes {
