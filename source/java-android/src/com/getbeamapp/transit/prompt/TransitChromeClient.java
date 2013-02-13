@@ -191,6 +191,11 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         this.actions.push(action);
         this.lock.open();
     }
+    
+    @Override
+    public void releaseProxy(String proxyId) {
+        webView.loadUrl(String.format("javascript:transit.releaseProxy(%s)", JSONObject.quote(proxyId)));
+    }
 
     public final TransitProxy evaluate(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable... arguments) {
         // TODO: Make sure no "outside" evaluate-calls cause conflicts with

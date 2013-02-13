@@ -31,6 +31,11 @@ public class MainTest extends TestCase {
             public TransitProxy evalWithContext(String arg0, Object arg1, Object... arg2) {
                 return null;
             }
+            
+            @Override
+            public void releaseProxy(String arg0) {
+                return;
+            }
         };
     }
 
@@ -70,10 +75,22 @@ public class MainTest extends TestCase {
             // ok
         }
     }
+    
+    public void testProxify() {
+        assertEquals(TransitProxy.class, transit.proxify(1).getClass());
+        assertEquals(TransitProxy.class, transit.proxify("a").getClass());
+        assertEquals(TransitJavaScriptFunction.class, transit.proxify("__TRANSIT_JS_FUNCTION_1").getClass());
+        assertNull(transit.proxify("__TRANSIT_NATIVE_FUNCTION_1"));
+    }
 
     public void testFunction() {
         TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id");
         assertEquals("transit.nativeFunction(\"some-id\")", function.getJavaScriptRepresentation());
+    }
+    
+    public void testJsFunction() {
+        TransitJavaScriptFunction function = new TransitJavaScriptFunction(null, "some-id");
+        assertEquals("transit.r(\"some-id\")", function.getJavaScriptRepresentation());
     }
 
     public void testFunctionInExpression() {

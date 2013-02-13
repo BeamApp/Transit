@@ -32,4 +32,6 @@ public abstract class TransitContext extends TransitProxy {
         return function;
     }
 
+    public abstract void releaseProxy(String id);
+
 }

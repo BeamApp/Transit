@@ -43,6 +43,8 @@ public class TransitProxy implements JavaScriptRepresentable {
 
     public static final Pattern NATIVE_FUNCTION_PATTERN = Pattern.compile("^__TRANSIT_NATIVE_FUNCTION_(.+)$");
 
+    public static final Pattern JS_FUNCTION_PATTERN = Pattern.compile("^__TRANSIT_JS_FUNCTION_(.+)$");
+
     private static TransitProxy createFromString(TransitContext context, String value) {
         Matcher nativeFunctionMatcher = NATIVE_FUNCTION_PATTERN.matcher(value);
 
@@ -50,6 +52,12 @@ public class TransitProxy implements JavaScriptRepresentable {
             TransitNativeFunction callback = context.getCallback(nativeFunctionMatcher.group(1));
             assert (callback != null);
             return callback;
+        }
+
+        Matcher jsFunctionMatcher = JS_FUNCTION_PATTERN.matcher(value);
+
+        if (jsFunctionMatcher.matches()) {
+            return new TransitJavaScriptFunction(context, jsFunctionMatcher.group(1));
         }
 
         TransitProxy result = new TransitProxy(context);
@@ -149,9 +157,9 @@ public class TransitProxy implements JavaScriptRepresentable {
     public String toString() {
         return String.format("[TransitProxy type:%s value:%s]", type, get());
     }
-    
+
     public TransitProxy proxify(Object value) {
-        
+
         if (value instanceof TransitProxy) {
             TransitProxy other = (TransitProxy) value;
 
@@ -161,7 +169,7 @@ public class TransitProxy implements JavaScriptRepresentable {
                 value = other.get();
             }
         }
-        
+
         if (value instanceof String) {
             return createFromString(rootContext, (String) value);
         }
@@ -200,7 +208,7 @@ public class TransitProxy implements JavaScriptRepresentable {
     public TransitProxy eval(String stringToEvaluate, Object... arguments) {
         return evalWithContext(stringToEvaluate, this, arguments);
     }
-    
+
     public TransitProxy evalWithContext(String stringToEvaluate, Object context) {
         return evalWithContext(stringToEvaluate, context, new Object[0]);
     }

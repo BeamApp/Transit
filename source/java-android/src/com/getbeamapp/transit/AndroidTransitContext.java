@@ -35,6 +35,11 @@ public class AndroidTransitContext extends TransitContext {
             TransitAdapter adapter) {
         return new AndroidTransitContext(adapter);
     }
+    
+    @Override
+    public void releaseProxy(String id) {
+        adapter.releaseProxy(id);
+    }
 
     @Override
     public String getJavaScriptRepresentation() {

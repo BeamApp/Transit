@@ -5,11 +5,30 @@ import junit.framework.TestCase;
 import com.google.android.testing.mocking.AndroidMock;
 import com.google.android.testing.mocking.UsesMocks;
 
-@UsesMocks(value = AndroidTransitContext.class)
+@UsesMocks(value = { AndroidTransitContext.class, TransitAdapter.class })
 public class MockTest extends TestCase {
 
     private final TransitCallable noop;
     private final TransitAdapter noopAdapter;
+
+    class NoopAdapter implements TransitAdapter {
+
+        @Override
+        public void initialize() {
+            noop.evaluate(null);
+        }
+
+        @Override
+        public TransitProxy evaluate(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable... arguments) {
+            return null;
+        }
+
+        @Override
+        public void releaseProxy(String proxyId) {
+            return;
+        }
+
+    }
 
     public MockTest() {
         this.noop = new TransitCallable() {
@@ -30,6 +49,12 @@ public class MockTest extends TestCase {
             public TransitProxy evaluate(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable... arguments) {
                 return null;
             }
+
+            @Override
+            public void releaseProxy(String proxyId) {
+                return;
+            }
+
         };
     }
 
@@ -50,8 +75,17 @@ public class MockTest extends TestCase {
             assertEquals("Expectation failure on verify: get(): expected: 2, actual: 1", msg);
         }
     }
-    
-    public void testProxyRelase() {
-        TransitContext ctx = new AndroidTransitContext(noopAdapter);
+
+    public void testProxyRelase() throws InterruptedException {
+        TransitAdapter adapter = AndroidMock.createNiceMock(TransitAdapter.class);
+        adapter.releaseProxy("1");
+        AndroidMock.expectLastCall();
+        AndroidMock.replay(adapter);
+
+        AndroidTransitContext ctx = new AndroidTransitContext(adapter);
+        
+        ctx.proxify("__TRANSIT_JS_FUNCTION_1");
+        System.gc();
+        AndroidMock.verify(adapter);
     }
 }
