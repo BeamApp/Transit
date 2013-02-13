@@ -61,7 +61,7 @@
     [self.transit retainNativeProxy:func];
     
     // fake forge API to make same benchmark work
-    [self.transit eval:@"window.forge = {internal:{ping:@}}" arguments:@[func]];
+    [self.transit eval:@"window.forge = {internal:{ping:function(){return @.apply(null, arguments)}}}" arguments:@[func]];
 }
 
 @end
