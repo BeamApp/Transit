@@ -15,6 +15,7 @@ import android.os.ConditionVariable;
 public class MainTest extends TestCase {
 
     private final TransitCallable noop;
+    private TransitContext transit;
 
     public MainTest() {
         this.noop = new TransitCallable() {
@@ -23,22 +24,30 @@ public class MainTest extends TestCase {
                 return null;
             }
         };
+        
+        this.transit = new TransitContext() {
+            
+            @Override
+            public TransitProxy evalWithContext(String arg0, Object arg1, Object... arg2) {
+                return null;
+            }
+        };
     }
 
     public void testExpressionsFromCode() {
-        assertEquals("no arguments", TransitProxy.jsExpressionFromCode("no arguments"));
-        assertEquals("int: 23", TransitProxy.jsExpressionFromCode("int: @", 23));
-        assertEquals("float: 42.5", TransitProxy.jsExpressionFromCode("float: @", 42.5));
-        assertEquals("bool: true", TransitProxy.jsExpressionFromCode("bool: @", true));
-        assertEquals("bool: false", TransitProxy.jsExpressionFromCode("bool: @", false));
-        assertEquals("string: \"foobar\"", TransitProxy.jsExpressionFromCode("string: @", "foobar"));
-        assertEquals("\"foo\" + \"bar\"", TransitProxy.jsExpressionFromCode("@ + @", "foo", "bar"));
-        assertEquals("'baz' + \"bam\" + 23", TransitProxy.jsExpressionFromCode("'baz' + @ + @", "bam", 23));
+        assertEquals("no arguments", transit.jsExpressionFromCode("no arguments"));
+        assertEquals("int: 23", transit.jsExpressionFromCode("int: @", 23));
+        assertEquals("float: 42.5", transit.jsExpressionFromCode("float: @", 42.5));
+        assertEquals("bool: true", transit.jsExpressionFromCode("bool: @", true));
+        assertEquals("bool: false", transit.jsExpressionFromCode("bool: @", false));
+        assertEquals("string: \"foobar\"", transit.jsExpressionFromCode("string: @", "foobar"));
+        assertEquals("\"foo\" + \"bar\"", transit.jsExpressionFromCode("@ + @", "foo", "bar"));
+        assertEquals("'baz' + \"bam\" + 23", transit.jsExpressionFromCode("'baz' + @ + @", "bam", 23));
     }
 
     public void testWrongArgumentCount() {
-        assertEquals("arg: @", TransitProxy.jsExpressionFromCode("arg: @"));
-        assertEquals("arg: 1", TransitProxy.jsExpressionFromCode("arg: @", 1, 2));
+        assertEquals("arg: @", transit.jsExpressionFromCode("arg: @"));
+        assertEquals("arg: 1", transit.jsExpressionFromCode("arg: @", 1, 2));
     }
 
     public void testCustomRepresentation() {
@@ -50,12 +59,12 @@ public class MainTest extends TestCase {
             }
         };
 
-        assertEquals("return myRepresentation", TransitProxy.jsExpressionFromCode("return @", object));
+        assertEquals("return myRepresentation", transit.jsExpressionFromCode("return @", object));
     }
 
     public void testInvalidObject() {
         try {
-            TransitProxy.jsExpressionFromCode("@", this);
+            transit.jsExpressionFromCode("@", this);
             fail();
         } catch (IllegalArgumentException e) {
             // ok
@@ -69,7 +78,7 @@ public class MainTest extends TestCase {
 
     public void testFunctionInExpression() {
         TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id");
-        assertEquals("transit.nativeFunction(\"some-id\")('foo')", TransitProxy.jsExpressionFromCode("@('foo')", function));
+        assertEquals("transit.nativeFunction(\"some-id\")('foo')", transit.jsExpressionFromCode("@('foo')", function));
     }
     
     @SuppressWarnings("unchecked")

@@ -22,7 +22,7 @@ import com.getbeamapp.transit.JavaScriptRepresentable;
 import com.getbeamapp.transit.JsonConverter;
 import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
-import com.getbeamapp.transit.TransitContext;
+import com.getbeamapp.transit.AndroidTransitContext;
 import com.getbeamapp.transit.TransitException;
 import com.getbeamapp.transit.TransitNativeFunction;
 import com.getbeamapp.transit.TransitProxy;
@@ -79,7 +79,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     private final ConditionVariable lock = new ConditionVariable(true);
 
     final WebView webView;
-    private TransitContext context;
+    private AndroidTransitContext context;
 
     private boolean active = false;
 
@@ -94,13 +94,13 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         webView.loadUrl("javascript:" + getScript());
     }
 
-    public static TransitContext createContext(WebView webView) {
+    public static AndroidTransitContext createContext(WebView webView) {
         return createContext(webView, new TransitChromeClient(webView));
     }
 
-    public static TransitContext createContext(WebView webView, TransitChromeClient adapter) {
+    public static AndroidTransitContext createContext(WebView webView, TransitChromeClient adapter) {
         assert adapter.webView == webView;
-        adapter.context = new TransitContext(adapter);
+        adapter.context = new AndroidTransitContext(adapter);
         return adapter.context;
     }
 
@@ -110,7 +110,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         if (o == null) {
             return null;
         } else {
-            return TransitProxy.withValue(context, JsonConverter.toNative(o));
+            return context.proxify(JsonConverter.toNative(o));
         }
     }
 
@@ -197,7 +197,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         // active Transit threads
 
         Log.d(TAG, String.format("Evaluate %s (active: %s)", stringToEvaluate, active));
-        TransitEvalAction action = new TransitEvalAction(stringToEvaluate, thisArg, arguments);
+        TransitEvalAction action = new TransitEvalAction(context, stringToEvaluate, thisArg, arguments);
         pushAction(action);
 
         if (!active) {
@@ -263,7 +263,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
                     try {
                         Object resultObject = callback.call(thisArg, arguments);
-                        TransitProxy result = TransitProxy.withValue(context, resultObject);
+                        TransitProxy result = context.proxify(resultObject);
                         action = new TransitReturnResultAction(result);
                         Log.d(TAG, String.format("Invoked native function `%s` with result `%s`", nativeId, resultObject));
                     } catch (Exception e) {

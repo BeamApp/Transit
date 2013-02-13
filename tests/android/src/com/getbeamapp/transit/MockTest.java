@@ -34,7 +34,7 @@ public class MockTest extends TestCase {
     }
 
     public void testMockLibrary() {
-        AbstractTransitContext ctx = new TransitContext(noopAdapter);
+        TransitContext ctx = new AndroidTransitContext(noopAdapter);
         TransitProxy proxy = AndroidMock.createMock(TransitProxy.class, ctx);
         AndroidMock.expect(proxy.get()).andReturn(42);
         AndroidMock.expect(proxy.get()).andReturn(42);
@@ -50,6 +50,9 @@ public class MockTest extends TestCase {
             String msg = e.getMessage().trim().replaceAll("[\\r\\n\\s\\t]+", " ");
             assertEquals("Expectation failure on verify: get(): expected: 2, actual: 1", msg);
         }
-
+    }
+    
+    public void testProxyRelase() {
+        TransitContext ctx = new AndroidTransitContext(noopAdapter);
     }
 }

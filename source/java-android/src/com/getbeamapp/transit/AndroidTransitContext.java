@@ -2,11 +2,11 @@ package com.getbeamapp.transit;
 
 import android.webkit.WebView;
 
-public class TransitContext extends AbstractTransitContext {
+public class AndroidTransitContext extends TransitContext {
 
     private final TransitAdapter adapter;
 
-    public TransitContext(TransitAdapter adapter) {
+    public AndroidTransitContext(TransitAdapter adapter) {
         this.adapter = adapter;
     }
 
@@ -25,15 +25,15 @@ public class TransitContext extends AbstractTransitContext {
         TransitProxy[] proxifiedArguments = new TransitProxy[arguments.length];
 
         for (int i = 0; i < arguments.length; i++) {
-            proxifiedArguments[i] = TransitProxy.withValue(this, arguments[i]);
+            proxifiedArguments[i] = proxify(arguments[i]);
         }
 
-        return adapter.evaluate(stringToEvaluate, TransitProxy.withValue(this, context), proxifiedArguments);
+        return adapter.evaluate(stringToEvaluate, proxify(context), proxifiedArguments);
     }
 
-    public static TransitContext forWebView(WebView webView,
+    public static AndroidTransitContext forWebView(WebView webView,
             TransitAdapter adapter) {
-        return new TransitContext(adapter);
+        return new AndroidTransitContext(adapter);
     }
 
     @Override

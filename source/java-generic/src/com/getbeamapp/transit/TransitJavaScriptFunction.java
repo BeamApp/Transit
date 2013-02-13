@@ -2,7 +2,7 @@ package com.getbeamapp.transit;
 
 public class TransitJavaScriptFunction extends TransitFunction {
 
-    public TransitJavaScriptFunction(AbstractTransitContext rootContext) {
+    public TransitJavaScriptFunction(TransitContext rootContext) {
         super(rootContext);
     }
 

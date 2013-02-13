@@ -1,7 +1,7 @@
 package com.getbeamapp.transit;
 
 public abstract class TransitFunction extends TransitProxy {
-    public TransitFunction(AbstractTransitContext rootContext) {
+    public TransitFunction(TransitContext rootContext) {
         super(rootContext);
     }
 

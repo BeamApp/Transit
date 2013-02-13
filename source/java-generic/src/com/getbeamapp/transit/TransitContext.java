@@ -3,9 +3,9 @@ package com.getbeamapp.transit;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractTransitContext extends TransitProxy {
+public abstract class TransitContext extends TransitProxy {
 
-    public AbstractTransitContext() {
+    public TransitContext() {
         super(null);
         this.rootContext = this;
     }

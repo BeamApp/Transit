@@ -21,7 +21,7 @@ public class TransitProxy implements JavaScriptRepresentable {
 
     protected Type type = Type.UNKNOWN;
 
-    protected AbstractTransitContext rootContext;
+    protected TransitContext rootContext;
 
     private Number numberValue;
 
@@ -33,61 +33,17 @@ public class TransitProxy implements JavaScriptRepresentable {
 
     private Map<String, TransitProxy> objectValue;
 
-    public TransitProxy(AbstractTransitContext rootContext) {
+    TransitProxy(TransitContext rootContext) {
         this.rootContext = rootContext;
     }
 
-    public AbstractTransitContext getRootContext() {
+    public TransitContext getRootContext() {
         return rootContext;
-    }
-
-    public static TransitProxy withValue(AbstractTransitContext context,
-            Object value) {
-
-        if (value instanceof TransitProxy) {
-            TransitProxy other = (TransitProxy) value;
-
-            if (other.getRootContext() == context) {
-                return (TransitProxy) value;
-            } else {
-                value = other.get();
-            }
-        }
-
-        if (value instanceof String) {
-            return createFromString(context, (String) value);
-        }
-
-        TransitProxy result = new TransitProxy(context);
-
-        if (value instanceof Boolean) {
-            result.type = Type.BOOLEAN;
-            result.booleanValue = (Boolean) value;
-        } else if (value instanceof Number) {
-            result.type = Type.NUMBER;
-            result.numberValue = (Number) value;
-        } else if (value instanceof Object[]) {
-            result.type = Type.ARRAY;
-            result.arrayValue = convertArray(context, Arrays.asList((Object[]) value));
-        } else if (value instanceof List) {
-            result.type = Type.ARRAY;
-            result.arrayValue = convertArray(context, (List<?>) value);
-        } else if (value instanceof Map<?, ?>) {
-            result.type = Type.OBJECT;
-            result.objectValue = convertMap(context, (Map<?, ?>) value);
-        } else if (value == null) {
-            result.type = Type.NULL;
-            result.objectValue = null;
-        } else {
-            throw new IllegalArgumentException(String.format("TransitProxy doesn't support instances of `%s`", value.getClass().getName()));
-        }
-
-        return result;
     }
 
     public static final Pattern NATIVE_FUNCTION_PATTERN = Pattern.compile("^__TRANSIT_NATIVE_FUNCTION_(.+)$");
 
-    private static TransitProxy createFromString(AbstractTransitContext context, String value) {
+    private static TransitProxy createFromString(TransitContext context, String value) {
         Matcher nativeFunctionMatcher = NATIVE_FUNCTION_PATTERN.matcher(value);
 
         if (nativeFunctionMatcher.matches()) {
@@ -102,21 +58,21 @@ public class TransitProxy implements JavaScriptRepresentable {
         return result;
     }
 
-    public static Map<String, TransitProxy> convertMap(AbstractTransitContext context, Map<?, ?> input) {
+    public static Map<String, TransitProxy> convertMap(TransitContext context, Map<?, ?> input) {
         Map<String, TransitProxy> output = new HashMap<String, TransitProxy>();
 
         for (Object keyObject : input.keySet()) {
-            output.put(String.valueOf(keyObject), TransitProxy.withValue(context, input.get(keyObject)));
+            output.put(String.valueOf(keyObject), context.proxify(input.get(keyObject)));
         }
 
         return output;
     }
 
-    public static List<TransitProxy> convertArray(AbstractTransitContext context, Iterable<?> input) {
+    public static List<TransitProxy> convertArray(TransitContext context, Iterable<?> input) {
         List<TransitProxy> output = new LinkedList<TransitProxy>();
 
         for (Object o : input) {
-            output.add(TransitProxy.withValue(context, o));
+            output.add(context.proxify(o));
         }
 
         return output;
@@ -193,6 +149,49 @@ public class TransitProxy implements JavaScriptRepresentable {
     public String toString() {
         return String.format("[TransitProxy type:%s value:%s]", type, get());
     }
+    
+    public TransitProxy proxify(Object value) {
+        
+        if (value instanceof TransitProxy) {
+            TransitProxy other = (TransitProxy) value;
+
+            if (other.getRootContext() == this) {
+                return (TransitProxy) value;
+            } else {
+                value = other.get();
+            }
+        }
+        
+        if (value instanceof String) {
+            return createFromString(rootContext, (String) value);
+        }
+
+        TransitProxy result = new TransitProxy(rootContext);
+
+        if (value instanceof Boolean) {
+            result.type = Type.BOOLEAN;
+            result.booleanValue = (Boolean) value;
+        } else if (value instanceof Number) {
+            result.type = Type.NUMBER;
+            result.numberValue = (Number) value;
+        } else if (value instanceof Object[]) {
+            result.type = Type.ARRAY;
+            result.arrayValue = convertArray(rootContext, Arrays.asList((Object[]) value));
+        } else if (value instanceof List) {
+            result.type = Type.ARRAY;
+            result.arrayValue = convertArray(rootContext, (List<?>) value);
+        } else if (value instanceof Map<?, ?>) {
+            result.type = Type.OBJECT;
+            result.objectValue = convertMap(rootContext, (Map<?, ?>) value);
+        } else if (value == null) {
+            result.type = Type.NULL;
+            result.objectValue = null;
+        } else {
+            throw new IllegalArgumentException(String.format("TransitProxy doesn't support instances of `%s`", value.getClass().getName()));
+        }
+
+        return result;
+    }
 
     public TransitProxy eval(String stringToEvaluate) {
         return eval(stringToEvaluate, new Object[0]);
@@ -211,7 +210,7 @@ public class TransitProxy implements JavaScriptRepresentable {
         return rootContext.eval(stringToEvaluate, context, arguments);
     }
 
-    public static String jsExpressionFromCode(String stringToEvaluate,
+    public String jsExpressionFromCode(String stringToEvaluate,
             Object... arguments) {
         StringBuffer output = new StringBuffer();
         Pattern pattern = Pattern.compile("(.*?)@");
@@ -232,7 +231,7 @@ public class TransitProxy implements JavaScriptRepresentable {
             if (argument instanceof JavaScriptRepresentable) {
                 replacement = ((JavaScriptRepresentable) argument).getJavaScriptRepresentation();
             } else {
-                replacement = TransitProxy.withValue(null, argument).getJavaScriptRepresentation();
+                replacement = proxify(argument).getJavaScriptRepresentation();
             }
 
             matcher.appendReplacement(output, replacement);

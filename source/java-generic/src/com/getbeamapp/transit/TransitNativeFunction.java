@@ -8,7 +8,7 @@ public class TransitNativeFunction extends TransitFunction implements JavaScript
 
     private final TransitCallable implementation;
 
-    TransitNativeFunction(AbstractTransitContext rootContext, TransitCallable callable, String nativeId) {
+    TransitNativeFunction(TransitContext rootContext, TransitCallable callable, String nativeId) {
         super(rootContext);
         this.nativeId = nativeId;
         this.implementation = callable;
@@ -22,7 +22,7 @@ public class TransitNativeFunction extends TransitFunction implements JavaScript
     @Override
     public Object call(Object thisArg, Object... arguments) {
         TransitProxy[] convertedArguments = TransitProxy.convertArray(rootContext, Arrays.asList(arguments)).toArray(new TransitProxy[0]);
-        return call(TransitProxy.withValue(rootContext, thisArg), convertedArguments);
+        return call(rootContext.proxify(thisArg), convertedArguments);
     }
     
     public Object call(TransitProxy thisArg, TransitProxy... arguments) {

@@ -14,7 +14,7 @@ import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
 
-    public TransitContext transit;
+    public AndroidTransitContext transit;
     public WebView webView;
 
     @SuppressLint("SetJavaScriptEnabled")

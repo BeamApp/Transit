@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.getbeamapp.transit.JavaScriptRepresentable;
+import com.getbeamapp.transit.TransitContext;
 import com.getbeamapp.transit.TransitException;
 import com.getbeamapp.transit.TransitProxy;
 import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
@@ -20,11 +21,14 @@ class TransitEvalAction extends TransitAction {
 
     private TransitException exception;
 
-    private JavaScriptRepresentable thisArg;
+    private final JavaScriptRepresentable thisArg;
 
-    private JavaScriptRepresentable[] arguments;
+    private final JavaScriptRepresentable[] arguments;
 
-    public TransitEvalAction(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable[] arguments) {
+    private final TransitContext context;
+
+    public TransitEvalAction(TransitContext context, String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable[] arguments) {
+        this.context = context;
         this.stringToEvaluate = stringToEvaluate;
         this.thisArg = thisArg;
         this.arguments = arguments;
@@ -44,8 +48,7 @@ class TransitEvalAction extends TransitAction {
         } else if (result instanceof TransitProxy) {
             this.result = (TransitProxy) result;
         } else {
-            // TODO: set context
-            this.result = TransitProxy.withValue(null, result);
+            this.result = context.proxify(result);
         }
 
         lock.open();
@@ -95,7 +98,7 @@ class TransitEvalAction extends TransitAction {
         try {
             JSONObject result = new JSONObject();
             result.put("type", TransitResponse.EVAL);
-            result.put("script", TransitProxy.jsExpressionFromCode(stringToEvaluate, (Object[]) this.arguments));
+            result.put("script", context.jsExpressionFromCode(stringToEvaluate, (Object[]) this.arguments));
             result.put("thisArg", thisArg.getJavaScriptRepresentation());
 
             JSONArray serializedArguments = new JSONArray();
