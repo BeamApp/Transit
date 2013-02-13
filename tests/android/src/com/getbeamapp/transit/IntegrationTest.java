@@ -47,7 +47,9 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
     }
     
     public void testContext() {
-        assertEquals(1, getActivity().transit.evalWithContext("this", 1).getIntegerValue());
+        TransitContext transit = getActivity().transit;
+        assertEquals(1, transit.evalWithContext("this", 1).getIntegerValue());
+        // assertEquals(transit, transit.eval("this"));
     }
 
     public void testNativeFunction() {
