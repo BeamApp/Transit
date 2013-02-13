@@ -203,7 +203,9 @@
     TransitContext* context = TransitContext.new;
     
     NSString* marker = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, @"someId"];
-    id detected = [context recursivelyReplaceMarkersWithProxies:@[@1, @"two", @{@"three":@3, @4: marker}]];
+    
+    // recursivelyReplaceMarkersWithProxies expects mutable array/dictionary
+    id detected = [context recursivelyReplaceMarkersWithProxies:[NSMutableArray arrayWithArray:@[@1, @"two", [NSMutableDictionary dictionaryWithDictionary:@{@"three":@3, @4: marker}]]]];
     STAssertEqualObjects(@1, detected[0], @"one");
     STAssertEqualObjects(@"two", detected[1], @"two");
     STAssertEqualObjects(@3, detected[2][@"three"], @"three");

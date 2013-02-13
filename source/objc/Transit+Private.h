@@ -59,6 +59,8 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 -(NSString*)nextNativeFunctionId;
 
+-(id)_evalJsExpression:(NSString*)jsExpression jsThisArg:(NSString*)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet*)proxiesOnScope returnJSResult:(BOOL)returnJSResult;
+
 @end
 
 @interface TransitNativeFunction(Private)

@@ -517,6 +517,10 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return [func callWithProxifedThisArg:thisArg proxifiedArguments:arguments];
 }
 
+-(id)_evalJsExpression:(NSString*)jsExpression jsThisArg:(NSString*)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet*)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
+    @throw @"to be implemented by subclass";
+}
+
 
 @end
 
@@ -577,7 +581,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 }
 
 -(void)updateCodeInjected {
-    _codeInjected = [[self _eval:@"typeof transit"] isEqualToString:@"\"object\""];
+    _codeInjected = [[self _eval:@"typeof transit" returnJSONResult:NO] isEqualToString:@"object"];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -607,9 +611,13 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return [_parser objectWithString:json];
 }
 
--(NSString*)_eval:(NSString*)js {
-    _lastEvaluatedJSCode = [NSString stringWithFormat: @"JSON.stringify(%@)", js];
-    return [_webView stringByEvaluatingJavaScriptFromString: _lastEvaluatedJSCode];
+-(NSString*)_eval:(NSString*)js returnJSONResult:(BOOL)returnJSONResult{
+    if(returnJSONResult) {
+        _lastEvaluatedJSCode = [NSString stringWithFormat: @"JSON.stringify(%@)", js];
+        return [_webView stringByEvaluatingJavaScriptFromString: _lastEvaluatedJSCode];
+    } else {
+        return [_webView stringByEvaluatingJavaScriptFromString:js];
+    }
 }
 
 
@@ -654,7 +662,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         }
     }
     
-    NSString* jsonResult = [self _eval:jsWrappedApplyExpression];
+    NSString* jsonResult = [self _eval:jsWrappedApplyExpression returnJSONResult:returnJSResult];
     
     if(!returnJSResult)
         return nil;
@@ -858,28 +866,22 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if(self.disposed)
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"function already disposed" userInfo:nil];
     
-    // most frequent cases: zore or one argument, no specific this arg
-//    BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
-    
-    // TODO: re-enable shortcuts
-//    if(noSpecificThisArg && arguments.count == 0) {
-//        NSString* js = [NSString stringWithFormat:@"%@()", self.jsRepresentation];
-//        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
-//    }
-//    if(noSpecificThisArg && arguments.count == 1) {
-//        NSString* js = [NSString stringWithFormat:@"%@(%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]] ];
-//        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
-//    }
-//    if(noSpecificThisArg && arguments.count == 2) {
-//        NSString* js = [NSString stringWithFormat:@"%@(%@,%@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments[0]], [TransitProxy jsRepresentation:arguments[1]] ];
-//        return [self.rootContext eval:js thisArg:nil arguments:nil returnJSResult:returnResult];
-//    }
+    BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
 
-    // general case
-//    NSString* js = [[NSString stringWithFormat:@"%@.apply(this, %@)", self.jsRepresentation, [TransitProxy jsRepresentation:arguments]] stringAsJSExpression];
-//    return [self.rootContext eval:js thisArg:thisArg arguments:@[] returnJSResult:returnResult];
-    
-    return [self.rootContext eval:@"@.apply(this,@)" thisArg:thisArg arguments:@[self, (arguments?arguments:@[])] returnJSResult:returnResult];
+    if(noSpecificThisArg) {
+        // most frequent cases: zore or one argument, no specific this arg
+        NSMutableOrderedSet *proxiesOnScope = [NSMutableOrderedSet orderedSet];
+        NSString* jsFunc = [self _jsRepresentationCollectingProxiesOnScope:proxiesOnScope];
+        NSMutableArray* jsArgs = [NSMutableArray arrayWithCapacity:arguments.count];
+        for(id arg in arguments) {
+            [jsArgs addObject:[TransitProxy jsRepresentation:arg collectingProxiesOnScope:proxiesOnScope]];
+        }
+        NSString* jsCall = [NSString stringWithFormat:@"%@(%@)", jsFunc, [jsArgs componentsJoinedByString:@","]];
+        return [self.rootContext _evalJsExpression:jsCall jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:returnResult];
+    } else {
+        // general case
+        return [self.rootContext eval:@"@.apply(this,@)" thisArg:thisArg arguments:@[self, (arguments?arguments:@[])] returnJSResult:returnResult];
+    }
 }
 
 @end
