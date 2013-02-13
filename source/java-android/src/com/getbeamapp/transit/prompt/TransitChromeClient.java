@@ -18,6 +18,7 @@ import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
+import com.getbeamapp.transit.JavaScriptRepresentable;
 import com.getbeamapp.transit.JsonConverter;
 import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
@@ -191,11 +192,12 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         this.lock.open();
     }
 
-    // TODO: Make sure no "outside" evaluate-calls cause conflicts with active Transit threads
-    
-    public final TransitProxy evaluate(String stringToEvaluate) {
+    public final TransitProxy evaluate(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable... arguments) {
+        // TODO: Make sure no "outside" evaluate-calls cause conflicts with
+        // active Transit threads
+
         Log.d(TAG, String.format("Evaluate %s (active: %s)", stringToEvaluate, active));
-        TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
+        TransitEvalAction action = new TransitEvalAction(stringToEvaluate, thisArg, arguments);
         pushAction(action);
 
         if (!active) {
@@ -290,7 +292,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                     result.confirm();
                     return;
                 }
-                
+
                 TransitAction action = actions.pop();
 
                 if (action instanceof TransitEvalAction) {

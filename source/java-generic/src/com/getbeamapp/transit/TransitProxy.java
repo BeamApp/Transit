@@ -1,6 +1,5 @@
 package com.getbeamapp.transit;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -8,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.json.JSONObject;
 
 public class TransitProxy implements JavaScriptRepresentable {
     public enum Type {
@@ -198,14 +195,18 @@ public class TransitProxy implements JavaScriptRepresentable {
     }
 
     public TransitProxy eval(String stringToEvaluate) {
-        return eval(stringToEvaluate, this, new Object[0]);
+        return eval(stringToEvaluate, new Object[0]);
     }
 
     public TransitProxy eval(String stringToEvaluate, Object... arguments) {
-        return eval(stringToEvaluate, this, new Object[0]);
+        return evalWithContext(stringToEvaluate, this, arguments);
+    }
+    
+    public TransitProxy evalWithContext(String stringToEvaluate, Object context) {
+        return evalWithContext(stringToEvaluate, context, new Object[0]);
     }
 
-    public TransitProxy eval(String stringToEvaluate, TransitProxy context,
+    public TransitProxy evalWithContext(String stringToEvaluate, Object context,
             Object... arguments) {
         return rootContext.eval(stringToEvaluate, context, arguments);
     }

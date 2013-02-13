@@ -1,9 +1,13 @@
 package com.getbeamapp.transit.prompt;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.getbeamapp.transit.JavaScriptRepresentable;
 import com.getbeamapp.transit.TransitException;
 import com.getbeamapp.transit.TransitProxy;
+import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
 
 import android.os.ConditionVariable;
 
@@ -16,8 +20,14 @@ class TransitEvalAction extends TransitAction {
 
     private TransitException exception;
 
-    public TransitEvalAction(String stringToEvaluate) {
+    private JavaScriptRepresentable thisArg;
+
+    private JavaScriptRepresentable[] arguments;
+
+    public TransitEvalAction(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable[] arguments) {
         this.stringToEvaluate = stringToEvaluate;
+        this.thisArg = thisArg;
+        this.arguments = arguments;
     }
 
     public String getStringToEvaluate() {
@@ -82,7 +92,21 @@ class TransitEvalAction extends TransitAction {
 
     @Override
     public String getJavaScriptRepresentation() {
-        return "{ \"type\": \"EVAL\", \"data\": "
-                + JSONObject.quote(stringToEvaluate) + " }";
+        try {
+            JSONObject result = new JSONObject();
+            result.put("type", TransitResponse.EVAL);
+            result.put("script", TransitProxy.jsExpressionFromCode(stringToEvaluate, (Object[]) this.arguments));
+            result.put("thisArg", thisArg.getJavaScriptRepresentation());
+
+            JSONArray serializedArguments = new JSONArray();
+            for (JavaScriptRepresentable argument : this.arguments) {
+                serializedArguments.put(argument.getJavaScriptRepresentation());
+            }
+
+            result.put("arguments", serializedArguments.toString());
+            return result.toString();
+        } catch (JSONException e) {
+            throw new TransitException(e);
+        }
     }
 }

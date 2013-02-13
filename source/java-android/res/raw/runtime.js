@@ -27,7 +27,7 @@
     if (result.type === "EXCEPTION") {
       throw(result.data);
     } else if (result.type === "EVAL") {
-      returnValue = evaluateAndReturn(result.data);
+      returnValue = evaluateAndReturn(result.script, result.thisArg);
     } else if (result.type === "RETURN") {
       returnValue = eval(result.data);
     } else {
@@ -42,11 +42,15 @@
     return post("__TRANSIT_MAGIC_EXCEPTION", transit.proxify(e.toString()));
   }
 
-  function evaluateAndReturn(script) {
+  function evaluateAndReturn(script, thisArgJs) {
     var result;
+    var thisArg = eval(thisArgJs);
 
     try {
-      result = eval(script);
+      result = (function() {
+        __transit_args = arguments;
+        return eval(script);
+      }).apply(thisArg);
     } catch (e) {
       return postException(e);
     }

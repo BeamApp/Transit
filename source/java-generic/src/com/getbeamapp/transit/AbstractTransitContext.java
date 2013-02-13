@@ -11,7 +11,7 @@ public abstract class AbstractTransitContext extends TransitProxy {
     }
 
     @Override
-    public abstract TransitProxy eval(String stringToEvaluate, TransitProxy context, Object... arguments);
+    public abstract TransitProxy evalWithContext(String stringToEvaluate, Object context, Object... arguments);
 
     private final Map<String, TransitNativeFunction> callbacks = new HashMap<String, TransitNativeFunction>();
 
@@ -24,7 +24,7 @@ public abstract class AbstractTransitContext extends TransitProxy {
     public TransitNativeFunction getCallback(String string) {
         return callbacks.get(string);
     }
-    
+
     public TransitNativeFunction registerCallable(TransitCallable callable) {
         String nativeId = nextNativeId();
         TransitNativeFunction function = new TransitNativeFunction(this, callable, nativeId);

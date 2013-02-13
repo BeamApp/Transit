@@ -43,7 +43,11 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
     }
 
     public void testOperationAdd() {
-        assertEquals(4, (int) getActivity().transit.eval("2 + 2").getIntegerValue());
+        assertEquals(4, getActivity().transit.eval("2 + 2").getIntegerValue());
+    }
+    
+    public void testContext() {
+        assertEquals(1, getActivity().transit.evalWithContext("this", 1).getIntegerValue());
     }
 
     public void testNativeFunction() {
