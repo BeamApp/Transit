@@ -3,7 +3,9 @@
 (function(globalName){
     var transit = {
         retained:{},
-        lastRetainId: 0
+        lastRetainId: 0,
+        invocationQueue: [],
+        handleInvocationQueueIsScheduled: false
     };
 
     var PREFIX_MAGIC_FUNCTION = "__TRANSIT_JS_FUNCTION_";
@@ -14,6 +16,30 @@
 
     transit.doInvokeNative = function(invocationDescription){
         throw "must be replaced by native runtime " + invocationDescription;
+    };
+
+    // should be replaced by native runtime to support more efficient solution
+    // this behavior is expected:
+    //   1. if one call throws an exception, all others must still be executed
+    //   2. result is ignored
+    //   3. order is not relevant
+    transit.doHandleInvocationQueue = function(invocationDescriptions){
+        for(var i=0; i<invocationDescriptions.length; i++) {
+            var description = invocationDescriptions[i];
+            try {
+                transit.doInvokeNative(description);
+            } catch(e) {
+            }
+        }
+    };
+    transit.doHandleInvocationQueue.isFallback = true;
+
+    transit.asyncNativeFunction = function(nativeId) {
+        var f = function(){
+            transit.queueNative(nativeId, this, arguments);
+        };
+        f.transitNativeId = PREFIX_MAGIC_NATIVE_FUNCTION + nativeId;
+        return f;
     };
 
     transit.nativeFunction = function(nativeId){
@@ -69,7 +95,7 @@
         return elem;
     };
 
-    transit.invokeNative = function(nativeId, thisArg, args) {
+    transit.createInvocationDescription = function(nativeId, thisArg, args) {
         var invocationDescription = {
             nativeId: nativeId,
             thisArg: (thisArg === GLOBAL_OBJECT) ? null : transit.proxify(thisArg),
@@ -80,7 +106,25 @@
             invocationDescription.args.push(transit.proxify(args[i]));
         }
 
+        return invocationDescription;
+    };
+
+    transit.invokeNative = function(nativeId, thisArg, args) {
+        var invocationDescription = transit.createInvocationDescription(nativeId, thisArg, args);
         return transit.doInvokeNative(invocationDescription);
+    };
+
+    transit.queueNative = function(nativeId, thisArg, args) {
+        var invocationDescription = transit.createInvocationDescription(nativeId, thisArg, args);
+        transit.invocationQueue.push(invocationDescription);
+        if(!transit.handleInvocationQueueIsScheduled) {
+            transit.handleInvocationQueueIsScheduled = setTimeout(function(){
+                transit.handleInvocationQueueIsScheduled = false;
+                var copy = transit.invocationQueue;
+                transit.invocationQueue = [];
+                transit.doHandleInvocationQueue(copy);
+            }, 0);
+        }
     };
 
     transit.retainElement = function(element){

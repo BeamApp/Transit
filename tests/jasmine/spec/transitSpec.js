@@ -46,6 +46,38 @@ describe("Transit", function() {
         });
     });
 
+    describe("asyncNativeFunction", function(){
+        var _queueNative = transit.queueNative;
+
+        beforeEach(function(){
+            transit.queueNative = jasmine.createSpy("queueNative");
+        });
+        afterEach(function(){
+            transit.queueNative = _queueNative;
+        });
+
+        it("attaches native attribute", function(){
+            var f = transit.asyncNativeFunction("someId");
+            expect(typeof f).toEqual("function");
+            expect(f.transitNativeId).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
+        });
+
+        it("calls transit.queueNative", function(){
+            var f = transit.asyncNativeFunction("someId");
+            expect(transit.queueNative).not.toHaveBeenCalled();
+            f();
+            expect(transit.queueNative).toHaveBeenCalledWith("someId", window, []);
+
+            var obj = {func:f};
+            obj.func("foo");
+            expect(transit.queueNative).toHaveBeenCalledWith("someId", obj, ["foo"]);
+
+            obj.func([1,2], "bar");
+            expect(transit.queueNative).toHaveBeenCalledWith("someId", obj, [[1,2], "bar"]);
+        });
+
+    });
+
     describe("retained", function(){
         afterEach(function(){
             // cleanup after messy tests
@@ -202,19 +234,11 @@ describe("Transit", function() {
 
     });
 
-    describe("invokeNative", function(){
-        var _doInvokeNative = transit.doInvokeNative;
-        beforeEach(function(){
-            transit.doInvokeNative = jasmine.createSpy("doInvokeNative");
-        });
-        afterEach(function(){
-            transit.doInvokeNative = _doInvokeNative;
-        });
-
-        it("calls doInvokeNative", function(){
+    describe("createInvocationDescription", function(){
+        it("keeps simple thisArg", function(){
             var simpleObj = {a:"1"};
-            transit.invokeNative("someId", simpleObj, []);
-            expect(transit.doInvokeNative).toHaveBeenCalledWith({
+            var desc = transit.createInvocationDescription("someId", simpleObj, []);
+            expect(desc).toEqual({
                 nativeId:"someId",
                 thisArg:simpleObj,
                 args:[]
@@ -222,26 +246,123 @@ describe("Transit", function() {
         });
 
         it("treats global object as null for thisArg", function(){
-            transit.invokeNative("someId", window, []);
-            expect(transit.doInvokeNative).toHaveBeenCalledWith({
+            var desc = transit.createInvocationDescription("someId", window, []);
+            expect(desc).toEqual({
                 nativeId: "someId",
                 thisArg: null,
                 args: []
             });
         });
 
-        it("passes arguments and this as proxified", function(){
+        it("proxifies arguments and this if complex", function(){
             var simpleObj = {a:"1"};
             var complexObj = document;
-            transit.invokeNative("someId", complexObj, [1, simpleObj, complexObj]);
-            expect(transit.doInvokeNative).toHaveBeenCalledWith({
+            var desc = transit.createInvocationDescription("someId", complexObj, [1, simpleObj, complexObj]);
+            expect(desc).toEqual({
                 nativeId: "someId",
                 thisArg: jasmine.any(String),
                 args: [1, simpleObj, jasmine.any(String)]
             });
+        });
 
-            // logging expect(JSON.stringify(transit.doInvokeNative.mostRecentCall.args[0])).toEqual("findme");
+    });
 
+
+    describe("invokeNative and queueNative", function(){
+        var _doInvokeNative = transit.doInvokeNative;
+        var _createInvocationDescription = transit.createInvocationDescription;
+        var _doHandleInvocatenQueue = transit.doHandleInvocationQueue;
+        var _fakeInvocationDescription = "myDecription";
+
+        beforeEach(function(){
+            transit.doInvokeNative = jasmine.createSpy("doInvokeNative");
+            transit.createInvocationDescription = jasmine.createSpy("createInvocationDescription").andReturn(_fakeInvocationDescription);
+            transit.doHandleInvocationQueue = jasmine.createSpy("doHandleInvocationQueue");
+            transit.invocationQueue = [];
+        });
+        afterEach(function(){
+            transit.doInvokeNative = _doInvokeNative;
+            transit.createInvocationDescription = _createInvocationDescription;
+            transit.doHandleInvocationQueue = _doHandleInvocatenQueue;
+        });
+
+        describe("invokeNative", function(){
+            it("calls doInvokeNative with description from createInvocationDescription", function(){
+                transit.invokeNative(1,2,3);
+                expect(transit.createInvocationDescription).toHaveBeenCalledWith(1,2,3);
+                expect(transit.doInvokeNative).toHaveBeenCalledWith(_fakeInvocationDescription);
+
+                expect(transit.createInvocationDescription.callCount).toEqual(1);
+                expect(transit.doInvokeNative.callCount).toEqual(1);
+            });
+        });
+
+        describe("queueNative", function(){
+            it("calls createInvocationDescription and adds to queue", function(){
+                runs(function(){
+                    expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
+
+                    transit.queueNative(1,2,3);
+                    expect(transit.createInvocationDescription).toHaveBeenCalledWith(1,2,3);
+                    expect(transit.handleInvocationQueueIsScheduled).toBeTruthy();
+
+                    transit.queueNative(4,5,6);
+                    expect(transit.createInvocationDescription).toHaveBeenCalledWith(4,5,6);
+
+                    expect(transit.createInvocationDescription.callCount).toEqual(2);
+                    expect(transit.doInvokeNative.callCount).toEqual(0);
+                    expect(transit.invocationQueue).toEqual([_fakeInvocationDescription, _fakeInvocationDescription]);
+
+                    // handleInvocationQueue shoule be called asynchronous
+                    expect(transit.doHandleInvocationQueue.callCount).toEqual(0);
+                });
+                waitsFor(function(){
+                    return transit.doHandleInvocationQueue.callCount > 0;
+                });
+                runs(function(){
+                    expect(transit.doHandleInvocationQueue).toHaveBeenCalledWith([_fakeInvocationDescription, _fakeInvocationDescription]);
+                    expect(transit.invocationQueue).toEqual([]);
+                    expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
+                });
+            });
+        });
+
+    });
+
+    describe("doHandleInvocationQueue", function(){
+        // if test suite is running with replaced implementation, skip these tests
+        if(!transit.doHandleInvocationQueue.isFallback) {
+            return;
+        }
+
+        var _doInvokeNative = transit.doInvokeNative;
+
+        beforeEach(function(){
+            transit.doInvokeNative = jasmine.createSpy("doInvokeNative").andCallFake(function(a){
+                if(a === 3) {
+                    throw "exception from fake transit.doInvokeNative";
+                }
+            });
+        });
+
+        afterEach(function(){
+            transit.doInvokeNative = _doInvokeNative;
+        });
+
+        it("calls doInvokeNative", function(){
+            transit.doHandleInvocationQueue([1,2]);
+            expect(transit.doInvokeNative.callCount).toEqual(2);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith(1);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith(2);
+        });
+
+        it("calls recovers on exceptions", function(){
+            transit.doHandleInvocationQueue([1,2,3,4]);
+            expect(transit.doInvokeNative.callCount).toEqual(4);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith(1);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith(2);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith(3);
+            expect(transit.doInvokeNative).toHaveBeenCalledWith(4);
         });
 
     });

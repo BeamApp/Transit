@@ -199,7 +199,7 @@
     context.proxifyEval = NO;
     id actual = [context eval:@"window.transit"];
 
-    STAssertEqualObjects((@{@"lastRetainId":@0, @"retained":@{}}), actual, @"transit exists");
+    STAssertEqualObjects((@{@"lastRetainId":@0, @"retained":@{}, @"invocationQueue":@[], @"handleInvocationQueueIsScheduled":@NO}), actual, @"transit exists");
 }
 
 -(void)testTransitProxifiesFunction {
