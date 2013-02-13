@@ -10,6 +10,7 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+#import "OCMockObject+Reset.h"
 
 
 @interface FakeNativeProxyForTest : TransitProxy
@@ -263,5 +264,19 @@
     STAssertEqualObjects(@"2", [context nextNativeFunctionId], @"second native function");
 }
 
+-(void)testAsyncCallToJSFunctionFillsQueue {
+    @autoreleasepool {
+        id context = [OCMockObject mockForClass:TransitContext.class];
+        
+        TransitJSFunction *jsFunc = [TransitJSFunction.alloc initWithRootContext:context proxyId:@"someId"];
+        
+        [[context expect] queueAsyncCallToJSFunction:jsFunc thisArg:nil arguments:@[@1, @2]];
+        [jsFunc callAsyncWithArg:@1 arg:@2];
+
+        STAssertNoThrow([context verify], @"verify mock");
+        [jsFunc clearRootContextAndProxyId];
+    }
+    
+}
 
 @end

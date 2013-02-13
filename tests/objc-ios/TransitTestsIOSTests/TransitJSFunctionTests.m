@@ -10,6 +10,7 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+#import "OCMockObject+Reset.h"
 
 @interface TransitJSFunctionTests : SenTestCase
 
@@ -109,13 +110,53 @@
     id thisArg = @{@"one":@1};
     id arguments = @[@1,@"two", @YES];
     TransitFunction *func = [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:@"someJSRepresentation"];
-    [[[context stub] andReturn:@"someResult"] eval:@"@.apply(this,@)" thisArg:thisArg arguments:@[func, arguments] returnJSResult:YES];
+    [[[context stub] andReturn:@"someResult"] eval:@"@.apply(@,@)" thisArg:nil arguments:@[func, thisArg, arguments] returnJSResult:YES];
     
     id actual = [func callWithThisArg:thisArg arguments:arguments];
     STAssertEqualObjects(@"someResult", actual, @"result passed along");
     
     [context verify];
 }
+
+-(void)testQueuedCallWithTwoArguments {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    [[[context stub] andReturn:@"transit.r('proxyId')"] jsRepresentationToResolveProxyWithId:@"proxyId"];
+    [[[context stub] andReturn:@"__JSFUNC_proxyId"] jsRepresentationForProxyWithId:@"proxyId"];
+    
+    TransitJSFunction *func = [[TransitJSFunction alloc] initWithRootContext:context proxyId:@"proxyId"];
+    
+    TransitQueuedCallToJSFunction *queuedCall = [TransitQueuedCallToJSFunction.alloc initWithJSFunction:func thisArg:nil arguments:@[@1, @2]];
+    
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    NSString* js = [queuedCall jsRepresentationOfCallCollectingProxiesOnScope:proxiesOnScope];
+    
+    STAssertEqualObjects(@"__JSFUNC_proxyId(1,2);", js, @"js");
+    STAssertEqualObjects(@[func], proxiesOnScope.array, @"proxies");
+    STAssertNoThrow([context verify], @"verify mock");
+    
+    [func clearRootContextAndProxyId];
+}
+
+-(void)testQueuedCallWithThisAndArgument {
+    id context = [OCMockObject mockForClass:TransitContext.class];
+    [[[context stub] andReturn:@"transit.r('proxyId')"] jsRepresentationToResolveProxyWithId:@"proxyId"];
+    [[[context stub] andReturn:@"__JSFUNC_proxyId"] jsRepresentationForProxyWithId:@"proxyId"];
+    
+    TransitJSFunction *func = [[TransitJSFunction alloc] initWithRootContext:context proxyId:@"proxyId"];
+    
+    TransitQueuedCallToJSFunction *queuedCall = [TransitQueuedCallToJSFunction.alloc initWithJSFunction:func thisArg:@"someObj".stringAsJSExpression arguments:@[@1]];
+    
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    NSString* js = [queuedCall jsRepresentationOfCallCollectingProxiesOnScope:proxiesOnScope];
+    
+    STAssertEqualObjects(@"__JSFUNC_proxyId.apply(someObj,[1]);", js, @"js");
+    STAssertEqualObjects(@[func], proxiesOnScope.array, @"proxies");
+    STAssertNoThrow([context verify], @"verify mock");
+    
+    [func clearRootContextAndProxyId];
+}
+
+
 
 
 @end

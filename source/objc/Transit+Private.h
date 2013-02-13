@@ -34,12 +34,22 @@
 
 extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
-@interface TransitContext(Private)
+
+@protocol TransitEvaluator <NSObject>
+
+-(id)_evalJsExpression:(NSString*)jsExpression jsThisArg:(NSString*)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet*)proxiesOnScope returnJSResult:(BOOL)returnJSResult;
+-(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments returnJSResult:(BOOL)returnJSResult;
+
+@end
+
+@interface TransitContext(Private) <TransitEvaluator>
 
 @property (readonly) NSMutableDictionary* retainedNativeProxies;
 
 -(void)releaseJSProxyWithId:(NSString*)proxy;
 -(void)drainJSProxies;
+
+-(void)queueAsyncCallToJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments;
 
 -(void)retainNativeProxy:(TransitProxy*)proxy;
 -(void)releaseNativeProxy:(TransitProxy*)proxy;
@@ -71,6 +81,12 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 @end
 
+@interface TransitJSFunction(Private)
+
+-(id)onEvaluator:(id<TransitEvaluator>)evaluator callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult;
+
+@end
+
 typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,NSURLRequest*);
 @interface TransitUIWebViewContext(Private)
 
@@ -78,6 +94,13 @@ typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,N
 
 @property(copy) TransitUIWebViewContextRequestHandler handleRequestBlock;
 @property(assign) BOOL proxifyEval;
+
+@end
+
+@interface TransitQueuedCallToJSFunction : NSObject<TransitEvaluator>
+
+-(id)initWithJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments;
+-(NSString*)jsRepresentationOfCallCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
 
 @end
 

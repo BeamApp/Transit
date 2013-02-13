@@ -300,6 +300,7 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 
 NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD = 250;
+CGFloat _TRANSIT_ASYNC_CALL_DELAY = 0.01;
 NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_ = @"__TRANSIT_JS_FUNCTION_";
 NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_ = @"__TRANSIT_OBJECT_PROXY_";
 NSString* _TRANSIT_MARKER_GLOBAL_OBJECT = @"__TRANSIT_OBJECT_GLOBAL";
@@ -312,6 +313,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     int _lastNativeFunctionId;
     NSMutableArray* _jsProxiesToBeReleased;
     NSString* _transitGlobalVarJSExpression;
+    NSMutableArray* _queuedAsyncCallsToJSFunctions;
 }
 
 -(id)init {
@@ -321,6 +323,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         _retainedNativeProxies = [NSMutableDictionary dictionary];
         _jsProxiesToBeReleased = [NSMutableArray array];
         _transitGlobalVarJSExpression = @"transit".stringAsJSExpression;
+        _queuedAsyncCallsToJSFunctions = [NSMutableArray array];
     }
     return self;
 }
@@ -548,12 +551,81 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     @throw @"to be implemented by subclass";
 }
 
+-(void)handleQueuedAsyncCallsToJSFunctions{
+    if(_queuedAsyncCallsToJSFunctions.count <= 0)
+        return;
+    
+    NSMutableString* js = [NSMutableString stringWithString:@""];
+    NSMutableOrderedSet* proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    
+    for(TransitQueuedCallToJSFunction* queuedCall in _queuedAsyncCallsToJSFunctions) {
+        [js appendString:[queuedCall jsRepresentationOfCallCollectingProxiesOnScope:proxiesOnScope]];
+    }
+    [_queuedAsyncCallsToJSFunctions removeAllObjects];
+    
+    [self _evalJsExpression:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO];
+}
+
+-(void)queueAsyncCallToJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments {
+    [_queuedAsyncCallsToJSFunctions addObject:[TransitQueuedCallToJSFunction.alloc initWithJSFunction:jsFunc thisArg:thisArg arguments:arguments]];
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(handleQueuedAsyncCallsToJSFunctions) object:nil];
+    [self performSelector:@selector(handleQueuedAsyncCallsToJSFunctions) withObject:nil afterDelay:_TRANSIT_ASYNC_CALL_DELAY];
+}
 
 @end
 
 TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER = ^(TransitUIWebViewContext* ctx,NSURLRequest* request) {
     [ctx invokeNative];
 };
+
+@implementation TransitQueuedCallToJSFunction {
+    TransitJSFunction* _jsFunc;
+    id _thisArg;
+    NSArray* _arguments;
+    NSString* __js;
+    NSOrderedSet* __proxiesOnScope;
+}
+
+-(id)initWithJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments {
+    self = [self init];
+    if(self) {
+        _jsFunc = jsFunc;
+        _thisArg = thisArg;
+        _arguments = arguments;
+    }
+    return self;
+}
+
+-(NSString*)jsRepresentationOfCallCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
+    [_jsFunc onEvaluator:self callWithThisArg:_thisArg arguments:_arguments returnResult:NO];
+    [proxiesOnScope addObjectsFromArray:__proxiesOnScope.array];
+    return __js;
+}
+
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
+    NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
+    
+    NSString* jsExpression = [TransitProxy jsExpressionFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
+    id adjustedThisArg = thisArg == _jsFunc.rootContext ? nil : thisArg;
+    NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
+    
+    return [self _evalJsExpression:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult];
+}
+
+-(id)_evalJsExpression:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
+    __proxiesOnScope = proxiesOnScope;
+
+    if([@"null" isEqualToString:jsAdjustedThisArg]) {
+        __js = [NSString stringWithFormat:@"%@;", jsExpression];
+    } else {
+        __js = [NSString stringWithFormat:@"(function(){%@}).apply(%@);", jsExpression, jsAdjustedThisArg];
+    }
+    return nil;
+}
+
+@end
+
 
 @implementation TransitUIWebViewContext{
     TransitUIWebViewContextRequestHandler _handleRequestBlock;
@@ -643,6 +715,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         _lastEvaluatedJSCode = [NSString stringWithFormat: @"JSON.stringify(%@)", js];
         return [_webView stringByEvaluatingJavaScriptFromString: _lastEvaluatedJSCode];
     } else {
+//        NSLog(@"eval: %@", js);
         return [_webView stringByEvaluatingJavaScriptFromString:js];
     }
 }
@@ -900,12 +973,12 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 @implementation TransitJSFunction
 
--(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult {
+-(id)onEvaluator:(id<TransitEvaluator>)evaluator callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult {
     if(self.disposed)
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"function already disposed" userInfo:nil];
     
     BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
-
+    
     if(noSpecificThisArg) {
         // most frequent cases: zore or one argument, no specific this arg
         NSMutableOrderedSet *proxiesOnScope = [NSMutableOrderedSet orderedSet];
@@ -915,11 +988,20 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
             [jsArgs addObject:[TransitProxy jsRepresentation:arg collectingProxiesOnScope:proxiesOnScope]];
         }
         NSString* jsCall = [NSString stringWithFormat:@"%@(%@)", jsFunc, [jsArgs componentsJoinedByString:@","]];
-        return [self.rootContext _evalJsExpression:jsCall jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:returnResult];
+        return [evaluator _evalJsExpression:jsCall jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:returnResult];
     } else {
         // general case
-        return [self.rootContext eval:@"@.apply(this,@)" thisArg:thisArg arguments:@[self, (arguments?arguments:@[])] returnJSResult:returnResult];
+        return [evaluator eval:@"@.apply(@,@)" thisArg:nil  arguments:@[self, TransitNilSafe(thisArg), (arguments?arguments:@[])] returnJSResult:returnResult];
     }
+}
+
+-(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult {
+    return [self onEvaluator:self.rootContext callWithThisArg:thisArg arguments:arguments returnResult:returnResult];
+}
+
+// remove this method if you do not want to call async JS functions in bulk
+-(void)callAsyncWithThisArg:(id)thisArg arguments:(NSArray*)arguments {
+    [self.rootContext queueAsyncCallToJSFunction:self thisArg:thisArg arguments:arguments];
 }
 
 @end

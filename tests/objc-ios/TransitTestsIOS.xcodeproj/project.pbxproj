@@ -36,6 +36,7 @@
 		CB91AE9516C7FB7B00F46154 /* JasmineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */; };
 		CB91AE9616C7FB7B00F46154 /* JasmineViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */; };
 		CBE29FD816C671F4004AED2B /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
+		CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,8 @@
 		CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JasmineViewController.m; sourceTree = "<group>"; };
 		CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JasmineViewController.xib; sourceTree = "<group>"; };
 		CBE29FD716C671F4004AED2B /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testPage.html; sourceTree = "<group>"; };
+		CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCMockObject+Reset.h"; sourceTree = "<group>"; };
+		CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCMockObject+Reset.m"; sourceTree = "<group>"; };
 		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -194,6 +197,8 @@
 				CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */,
 				CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */,
 				CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */,
+				CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */,
+				CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */,
 			);
 			path = TransitTestsIOSTests;
 			sourceTree = "<group>";
@@ -397,6 +402,7 @@
 				CB18EF5316C58FC70051CC7C /* TransitProxyTests.m in Sources */,
 				CB18EF5716C595B50051CC7C /* TransitJSFunctionTests.m in Sources */,
 				CB18EF5916C5A04D0051CC7C /* TransitContextTest.m in Sources */,
+				CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
