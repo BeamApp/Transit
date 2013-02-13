@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import com.google.android.testing.mocking.AndroidMock;
 import com.google.android.testing.mocking.UsesMocks;
 
-@UsesMocks(value = TransitProxy.class)
+@UsesMocks(value = AndroidTransitContext.class)
 public class MockTest extends TestCase {
 
     private final TransitCallable noop;
@@ -23,7 +23,7 @@ public class MockTest extends TestCase {
 
             @Override
             public void initialize() {
-                return;
+                noop.evaluate(null);
             }
 
             @Override
@@ -34,8 +34,7 @@ public class MockTest extends TestCase {
     }
 
     public void testMockLibrary() {
-        TransitContext ctx = new AndroidTransitContext(noopAdapter);
-        TransitProxy proxy = AndroidMock.createMock(TransitProxy.class, ctx);
+        TransitProxy proxy = AndroidMock.createMock(AndroidTransitContext.class, noopAdapter);
         AndroidMock.expect(proxy.get()).andReturn(42);
         AndroidMock.expect(proxy.get()).andReturn(42);
         AndroidMock.replay(proxy);
