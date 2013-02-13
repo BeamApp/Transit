@@ -325,6 +325,29 @@ describe("Transit", function() {
                     expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
                 });
             });
+
+            it("works fine with explicit calls of handleInvocationQueue", function(){
+                expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
+
+                transit.queueNative(1,2,3);
+                expect(transit.createInvocationDescription).toHaveBeenCalledWith(1,2,3);
+                expect(transit.handleInvocationQueueIsScheduled).toBeTruthy();
+
+                transit.queueNative(4,5,6);
+                expect(transit.createInvocationDescription).toHaveBeenCalledWith(4,5,6);
+
+                expect(transit.createInvocationDescription.callCount).toEqual(2);
+                expect(transit.doInvokeNative.callCount).toEqual(0);
+                expect(transit.invocationQueue).toEqual([_fakeInvocationDescription, _fakeInvocationDescription]);
+
+                expect(transit.doHandleInvocationQueue.callCount).toEqual(0);
+
+                // now, call handleInvocationQueue synced!
+                transit.handleInvocationQueue();
+                expect(transit.doHandleInvocationQueue).toHaveBeenCalledWith([_fakeInvocationDescription, _fakeInvocationDescription]);
+                expect(transit.invocationQueue).toEqual([]);
+                expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
+            });
         });
 
     });

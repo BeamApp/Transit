@@ -549,8 +549,31 @@
     [[funcMock1 expect] callWithThisArg:OCMOCK_ANY arguments:@[nFunc2]];
     [context eval:@"@(@)" arg:nFunc1 arg:nFunc2];
     
-    [funcMock1 verify];
-    [funcMock2 verify];
+    STAssertNoThrow([funcMock1 verify], @"verify mock");
+    STAssertNoThrow([funcMock2 verify], @"verify mock");
+}
+
+-(void)testAsyncInvocationQueue {
+    TransitUIWebViewContext* context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    id funcMock1 = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
+    id funcMock2 = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
+    
+    TransitNativeFunction *nFunc1 = (TransitNativeFunction*)[context functionWithDelegate:funcMock1];
+    TransitNativeFunction *nFunc2 = (TransitNativeFunction*)[context functionWithDelegate:funcMock2];
+    nFunc1.async = YES;
+    nFunc2.async = YES;
+    
+    
+    [[funcMock1 expect] callWithThisArg:OCMOCK_ANY arguments:@[@1]];
+    [[funcMock2 expect] callWithThisArg:OCMOCK_ANY arguments:@[@2]];
+    
+    id string = [context eval:@"'a:'+@(1)+' b:'+@(2)" arg:nFunc1 arg:nFunc2];
+    STAssertEqualObjects(@"a:undefined b:undefined", string, @"functions return void");
+    
+    [context eval:@"transit.handleInvocationQueue()"];
+    
+    STAssertNoThrow([funcMock1 verify], @"verify mock");
+    STAssertNoThrow([funcMock2 verify], @"verify mock");
 }
 
 

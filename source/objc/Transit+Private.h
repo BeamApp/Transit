@@ -60,7 +60,7 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId;
 -(NSString*)jsRepresentationToResolveProxyWithId:(NSString*)proxyId;
 -(NSString*)jsRepresentationForNativeFunctionWithId:(NSString*)proxyId;
--(NSString*)jsRepresentationToResolveNativeFunctionWithId:(NSString*)proxyId;
+-(NSString*)jsRepresentationToResolveNativeFunctionWithId:(NSString*)proxyId async:(BOOL)async;
 
 -(id)invokeNativeDescription:(NSDictionary*)description;
 
@@ -78,6 +78,8 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 -(id)callWithProxifedThisArg:(TransitProxy*)thisArg proxifiedArguments:(NSArray*)arguments;
 -(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block;
+
+@property(nonatomic, assign) BOOL async;
 
 @end
 

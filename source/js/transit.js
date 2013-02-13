@@ -114,15 +114,24 @@
         return transit.doInvokeNative(invocationDescription);
     };
 
+    transit.handleInvocationQueue = function() {
+        if(transit.handleInvocationQueueIsScheduled) {
+            clearTimeout(transit.handleInvocationQueueIsScheduled);
+            transit.handleInvocationQueueIsScheduled = false;
+        }
+
+        var copy = transit.invocationQueue;
+        transit.invocationQueue = [];
+        transit.doHandleInvocationQueue(copy);
+    };
+
     transit.queueNative = function(nativeId, thisArg, args) {
         var invocationDescription = transit.createInvocationDescription(nativeId, thisArg, args);
         transit.invocationQueue.push(invocationDescription);
         if(!transit.handleInvocationQueueIsScheduled) {
             transit.handleInvocationQueueIsScheduled = setTimeout(function(){
                 transit.handleInvocationQueueIsScheduled = false;
-                var copy = transit.invocationQueue;
-                transit.invocationQueue = [];
-                transit.doHandleInvocationQueue(copy);
+                transit.handleInvocationQueue();
             }, 0);
         }
     };

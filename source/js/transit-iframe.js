@@ -7,7 +7,7 @@
         transit.nativeInvokeTransferObject = invocationDescription;
 
         var iFrame = document.createElement('iframe');
-        iFrame.setAttribute('src', 'transit:'+callCount);
+        iFrame.setAttribute('src', 'transit:/doInvokeNative?c='+callCount);
 
         /* this call blocks until native code returns */
         /* native ccde reads from and writes to transit.nativeInvokeTransferObject */
@@ -26,6 +26,19 @@
         } else {
             return result;
         }
+    };
+
+    transit.doHandleInvocationQueue = function(invocationDescriptions) {
+        callCount++;
+        transit.nativeInvokeTransferObject = invocationDescriptions;
+        var iFrame = document.createElement('iframe');
+        iFrame.setAttribute('src', 'transit:/doHandleInvocationQueue?c='+callCount);
+
+        document.documentElement.appendChild(iFrame);
+
+        iFrame.parentNode.removeChild(iFrame);
+        iFrame = null;
+        transit.nativeInvokeTransferObject = null;
     };
 
 })("transit");

@@ -44,9 +44,12 @@
 			
 			// Ping method
 			var ping = function (data, cb) {
-				forge.internal.ping(data, cb);
+				return forge.internal.ping(data, cb);
 				//window.plugins.ping.ping(data, cb)
 			}
+            var pingBlocked = function(data) {
+                return forge.internal.pingBlocked(data);
+            }
             var pass = function(data) {
                 return forge.internal.pass(data);
             }
@@ -68,7 +71,7 @@
             var rseq = function(total, len) {
 				var start = new Date().getTime();
                 for(var i=0;i<total;i++) {
-                    ping(data[len]);
+                    pingBlocked(data[len]);
                 }
                 document.body.innerHTML += '<p>'+total+' real sequential requests with '+len+' bytes of data: '+((new Date().getTime() - start)/1000)+' seconds</p>';
             }

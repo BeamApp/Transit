@@ -43,6 +43,7 @@ id TransitNilSafe(id valueOrNil);
 
 @end
 
+typedef void (^TransitVoidFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
 typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
 typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitProxy *thisArg, NSArray* arguments);
 
@@ -55,6 +56,8 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitProx
 -(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block;
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 -(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block;
+
+-(TransitFunction*)asyncFunctionWithBlock:(TransitVoidFunctionBlock)block;
 
 @end
 

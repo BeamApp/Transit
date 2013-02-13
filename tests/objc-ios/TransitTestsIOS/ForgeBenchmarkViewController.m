@@ -45,23 +45,28 @@
 -(void)setupTransit {
     self.transit = [[TransitUIWebViewContext alloc] initWithUIWebView:self.webView];
     
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithRootContext:self.transit nativeId:@"someId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *asyncFunc = [self.transit asyncFunctionWithBlock:^(TransitProxy *thisArg, NSArray *arguments) {
         NSString* data = arguments[0];
-
-        // no callback? just return value
-        if(arguments.count <= 1 || arguments[1] == NSNull.null)
-            return data;
+        TransitFunction *cb = arguments[1];
         
-        TransitJSFunction *cb = arguments[1];
-        // original API calls async, also this prevenst *very* deep recursion depths of up to 10,000!
-        [cb callAsyncWithArguments:@[data]];
-        
-        return nil;
+        // you could also use [cb callAsyncWithArg:data];
+        // but since you don't need the result this *async* call is faster
+        [cb callAsyncWithArg:data];
     }];
-    [self.transit retainNativeProxy:func];
+    
+    TransitFunction *blockingFunc = [self.transit functionWithBlock:^id(TransitProxy *thisArg, NSArray *arguments) {
+        NSString* data = arguments[0];
+        return data;
+    }];
     
     // fake forge API to make same benchmark work
-    [self.transit eval:@"window.forge = {internal:{ping:function(){return @.apply(null, arguments)}}}" arguments:@[func]];
+    // but: ensure thisArg is always null to avoid unneeded serialization and get better performance, hence the ugly .apply()-statements ;)
+    // TODO: 
+    [self.transit eval:@"window.forge = "
+     "{internal:{"
+        "ping: function(){return @.apply(null, arguments)},"
+        "pingBlocked: function(){return @.apply(null, arguments)},"
+     "}}" arguments:@[asyncFunc, blockingFunc]];
 }
 
 @end

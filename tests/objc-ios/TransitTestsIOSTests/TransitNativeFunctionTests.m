@@ -56,12 +56,21 @@
     STAssertEqualObjects(actual, @"__TRANSIT_NATIVE_FUNCTION_someId", @"just the id, corresponding variable will be put on scope");
 }
 
--(void)testJSRepresentationToResolveProxy {
+-(void)testJSRepresentationToResolveProxyBlocked {
     TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
     
     NSString* actual = [func jsRepresentationToResolveProxy];
     
     STAssertEqualObjects(actual, @"transit.nativeFunction(\"someId\")", @"actual function factory to create scoped variables on TransitContext-eval");
+}
+
+-(void)testJSRepresentationToResolveProxyAsync {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
+    func.async = YES;
+    
+    NSString* actual = [func jsRepresentationToResolveProxy];
+    
+    STAssertEqualObjects(actual, @"transit.asyncNativeFunction(\"someId\")", @"actual function factory to create scoped variables on TransitContext-eval");
 }
 
 -(void)testInExpression {
