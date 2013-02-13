@@ -84,4 +84,5 @@ typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,N
 extern NSString* _TRANSIT_JS_RUNTIME_CODE;
 extern NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_;
 extern NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_;
+extern NSString* _TRANSIT_MARKER_GLOBAL_OBJECT;
 extern NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD;

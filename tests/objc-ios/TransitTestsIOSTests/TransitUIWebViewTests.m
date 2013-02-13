@@ -43,6 +43,14 @@
     }
 }
 
+-(void)testProxifyOfGlobalObject {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    id actual = [context eval:@"window"];
+    STAssertEqualObjects(context, actual, @"just to get better output on failure");
+    STAssertTrue(context == actual, @"window is proxy again");
+    
+}
+
 -(void)testResultTypes {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     
@@ -327,7 +335,7 @@
     [context retainNativeProxy:func];
     // "this" will be a function -> proxy
     // arguments[0] is the window object -> proxy
-    id result = [context eval:@"@.call(function(){}, window)" arg:func];
+    id result = [context eval:@"@.call(function(){}, window.document)" arg:func];
     [func dispose];
     id lastProxyId = [context eval:@"transit.lastRetainId"];
     NSString* expectedProxyId = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, lastProxyId];
