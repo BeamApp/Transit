@@ -122,6 +122,11 @@ id TransitNilSafe(id valueOrNil) {
 
 @end
 
+NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
+    NSString *desc = exception.userInfo[NSLocalizedDescriptionKey] ? exception.userInfo[NSLocalizedDescriptionKey] : [NSString stringWithFormat:@"%@: %@", exception.name, exception.reason];
+    return [NSError errorWithDomain:@"transit" code:code userInfo:@{NSLocalizedDescriptionKey: desc}];
+}
+
 @implementation TransitProxy {
     NSString* _proxyId;
     __weak TransitContext* _rootContext;
@@ -337,7 +342,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 -(NSString*)jsRepresentationForNativeFunctionWithId:(NSString*)proxyId {
-    return proxyId;
+    return [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION, proxyId];
 }
 
 -(NSString*)jsRepresentationToResolveNativeFunctionWithId:(NSString*)proxyId {
@@ -367,7 +372,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 -(NSString*)nextNativeFunctionId {
-    return [NSString stringWithFormat:@"%@%d", _TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION, ++_lastNativeFunctionId];
+    return [NSString stringWithFormat:@"%d", ++_lastNativeFunctionId];
 }
 
 -(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block {
@@ -427,6 +432,17 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return _transitGlobalVarJSExpression;
 }
 
+-(TransitNativeFunction*)retainedNativeFunctionWithId:(id)nativeProxyId {
+    TransitNativeFunction* func = _retainedNativeProxies[nativeProxyId];
+    
+    if(!func) {
+        NSString* reason = [NSString stringWithFormat:@"No native function with id: %@. Could have been disposed.", nativeProxyId];
+        @throw [NSException exceptionWithName:@"TransitException" reason:reason userInfo:@{NSLocalizedDescriptionKey: reason}];
+    }
+    
+    return func;
+}
+
 +(NSRegularExpression*)regularExpressionForMarker:(NSString*)marker {
     static NSMutableDictionary* cache;
     if(!cache)cache = [NSMutableDictionary dictionary];
@@ -440,27 +456,29 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return result;
 }
 
-+(id)proxyIdFromString:(NSString*)string forMarker:(NSString*)marker {
++(id)proxyIdFromString:(NSString*)string atGroupIndex:(NSUInteger)idx forMarker:(NSString*)marker {
     NSRegularExpression* expression = [self regularExpressionForMarker:marker];
     NSTextCheckingResult *match = [expression firstMatchInString:string options:0 range:NSMakeRange(0, string.length)];
     if(match) {
-        return [string substringWithRange:[match rangeAtIndex:0]];
+        return [string substringWithRange:[match rangeAtIndex:idx]];
     }
     return nil;
 }
 
 -(id)recursivelyReplaceMarkersWithProxies:(id)unproxified {
-    // TODO: correctly parse native functions
-    
     if([unproxified isKindOfClass:NSString.class]) {
         if([unproxified length] >= _TRANSIT_MARKER_PREFIX_MIN_LEN && [unproxified characterAtIndex:0] == '_' && [unproxified characterAtIndex:1] == '_') {
-            id objectProxyId = [self.class proxyIdFromString:unproxified forMarker:_TRANSIT_MARKER_PREFIX_OBJECT_PROXY_];
+            id jsFunctionProxyId = [self.class proxyIdFromString:unproxified atGroupIndex:0 forMarker:_TRANSIT_MARKER_PREFIX_JS_FUNCTION_];
+            if(jsFunctionProxyId)
+                return [[TransitJSFunction alloc] initWithRootContext:self proxyId:jsFunctionProxyId];
+            
+            id objectProxyId = [self.class proxyIdFromString:unproxified atGroupIndex:0 forMarker:_TRANSIT_MARKER_PREFIX_OBJECT_PROXY_];
             if(objectProxyId)
                 return [[TransitProxy alloc] initWithRootContext:self proxyId:objectProxyId];
             
-            id functionProxyId = [self.class proxyIdFromString:unproxified forMarker:_TRANSIT_MARKER_PREFIX_JS_FUNCTION_];
-            if(functionProxyId)
-                return [[TransitJSFunction alloc] initWithRootContext:self proxyId:functionProxyId];
+            id nativeFunctionProxyId = [self.class proxyIdFromString:unproxified atGroupIndex:1 forMarker:_TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION];
+            if(nativeFunctionProxyId)
+                return [self retainedNativeFunctionWithId:nativeFunctionProxyId];
         }
     }
     if([unproxified isKindOfClass:NSDictionary.class]) {
@@ -486,10 +504,14 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 
 -(id)invokeNativeDescription:(NSDictionary*)description {
     id nativeProxyId = description[@"nativeId"];
-    TransitFunction *func = _retainedNativeProxies[nativeProxyId];
-    
-    if(!func)
-        return [NSError errorWithDomain:@"transit" code:1 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"no native function with id: %@", nativeProxyId]}];
+    TransitFunction* func;
+    @try {
+        func = [self retainedNativeFunctionWithId:nativeProxyId];
+    } @catch (NSException *exception) {
+        NSError* error = errorWithCodeFromException(5, exception);
+        NSLog(@"TRANSIT-BRIDGE-ERROR: %@ (while called from JavaScript)", error.userInfo[NSLocalizedDescriptionKey]);
+        return error;
+    }
     
     id thisArg = description[@"thisArg"];
     NSArray *arguments = description[@"args"];
@@ -498,9 +520,9 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         return result;
     }
     @catch (NSException *exception) {
-        NSString *desc = exception.userInfo[NSLocalizedDescriptionKey] ? exception.userInfo[NSLocalizedDescriptionKey] : [NSString stringWithFormat:@"%@: %@", exception.name, exception.reason];
-        NSLog(@"TRANSIT-NATIVE-ERROR: %@ while called from javascript with arguments %@", desc, arguments);
-        return [NSError errorWithDomain:@"transit" code:5 userInfo:@{NSLocalizedDescriptionKey: desc}];
+        NSError* error = errorWithCodeFromException(5, exception);
+        NSLog(@"TRANSIT-NATIVE-ERROR: %@ (while called from javascript with arguments %@)", error.userInfo[NSLocalizedDescriptionKey], arguments);
+        return error;
     }
     @finally {
 
@@ -704,12 +726,23 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)",self.transitGlobalVarJSExpression];
     NSString* jsonDescription = [self.webView stringByEvaluatingJavaScriptFromString:jsReadTransferObject];
     id parsedJSON = [self parseJSON:jsonDescription];
-    id callDescription = [self recursivelyReplaceMarkersWithProxies:parsedJSON];
     
-    // actually perform call
-    id result = [self invokeNativeDescription:callDescription];
+    // try to replace markers (could fail due to disposed native proxies)
+    id callDescription;
+    id result;
+    @try {
+       callDescription = [self recursivelyReplaceMarkersWithProxies:parsedJSON];
+    }
+    @catch (NSException *exception) {
+        result = errorWithCodeFromException(3, exception);
+        NSLog(@"TRANSIT-BRIDGE-ERROR: %@ (while called from JavaScript)", [result userInfo][NSLocalizedDescriptionKey]);
+    }
     
-    //[self eval:@"@.nativeInvokeTransferObject=@" thisArg:nil arguments:@[self.transitGlobalVarJSExpression,TransitNilSafe(result)] returnJSResult:NO];
+    // if there wasn't an error while replacing markers (e.g. due to disposed native function)...
+    if(!result) {
+        // actually perform call, will return NSError if an exception occured
+        result = [self invokeNativeDescription:callDescription];
+    }
     
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     NSString* jsResult = [self.class jsRepresentation:result collectingProxiesOnScope:proxiesOnScope];

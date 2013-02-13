@@ -53,7 +53,7 @@
     NSString* actual = [func _jsRepresentationCollectingProxiesOnScope:set];
     STAssertEqualObjects(@[func], set.array, @"proxy on scope");
     
-    STAssertEqualObjects(actual, @"someId", @"just the id, corresponding variable will be put on scope");
+    STAssertEqualObjects(actual, @"__TRANSIT_NATIVE_FUNCTION_someId", @"just the id, corresponding variable will be put on scope");
 }
 
 -(void)testJSRepresentationToResolveProxy {
@@ -68,7 +68,7 @@
     TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy* _this, NSArray* arguments){return (id)nil;}];
     
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
-    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func] collectingProxiesOnScope:proxiesOnScope], @"someId('foo')", @"just the id, corresponding variable will be put on scope");
+    STAssertEqualObjects([TransitProxy jsExpressionFromCode:@"@('foo')" arguments:@[func] collectingProxiesOnScope:proxiesOnScope], @"__TRANSIT_NATIVE_FUNCTION_someId('foo')", @"just the id, corresponding variable will be put on scope");
     STAssertEqualObjects(@[func], proxiesOnScope.array, @"");
 }
 

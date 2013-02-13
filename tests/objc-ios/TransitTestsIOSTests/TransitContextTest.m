@@ -214,10 +214,24 @@
     STAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
 }
 
+-(void)testRetainedNativeFunctionWithId {
+    @autoreleasepool {
+        TransitContext* context = TransitContext.new;
+        STAssertThrows([context retainedNativeFunctionWithId:@"someId"], @"no such function");
+        
+        TransitFunction* func = [context functionWithDelegate:nil];
+        STAssertTrue(func == [context retainedNativeFunctionWithId:func.proxyId], @"yes, function exists");
+        
+        [func dispose];
+        STAssertThrows([context retainedNativeFunctionWithId:func.proxyId], @"and disposed, again");
+    }
+}
+
 -(void)testInvokeNativeWithMissingFunction {
     TransitContext* context = TransitContext.new;
     id result = [context invokeNativeDescription:@{@"nativeId":@"missing"}];
     STAssertTrue([result isKindOfClass:NSError.class], @"missing native functions results in error");
+    STAssertEqualObjects(@"No native function with id: missing. Could have been disposed.", [result userInfo][NSLocalizedDescriptionKey], @"meaningful error message");
 }
 
 -(void)testInvokeNativeWithThisArgVariations {
@@ -245,8 +259,8 @@
 
 -(void)testNativeFunctionIdsMatchMagicMarker {
     TransitContext* context = TransitContext.alloc.init;
-    STAssertEqualObjects(@"__TRANSIT_NATIVE_FUNCTION_1", [context nextNativeFunctionId], @"first native function");
-    STAssertEqualObjects(@"__TRANSIT_NATIVE_FUNCTION_2", [context nextNativeFunctionId], @"second native function");
+    STAssertEqualObjects(@"1", [context nextNativeFunctionId], @"first native function");
+    STAssertEqualObjects(@"2", [context nextNativeFunctionId], @"second native function");
 }
 
 

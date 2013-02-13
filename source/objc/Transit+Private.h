@@ -43,6 +43,7 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 -(void)retainNativeProxy:(TransitProxy*)proxy;
 -(void)releaseNativeProxy:(TransitProxy*)proxy;
+-(TransitNativeFunction*)retainedNativeFunctionWithId:(id)nativeProxyId;
 
 -(id)recursivelyReplaceMarkersWithProxies:(id)unproxified;
 

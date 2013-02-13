@@ -272,12 +272,27 @@
 -(void)testInvokeNativeThatThrowsExceptionWithLocalizedReason {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
-        @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:@{NSLocalizedDescriptionKey: @"localized description"}];
+        @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:@{NSLocalizedDescriptionKey: @"my localized description"}];
     }];
     [context retainNativeProxy:func];
     id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
     [func dispose];
-    STAssertEqualObjects(@"localized description", result, @"exception should be passed along");
+    STAssertEqualObjects(@"my localized description", result, @"exception should be passed along");
+}
+
+-(void)testInvokeNativeWithNativeFunctionDisposedBeforeCall {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    
+    TransitFunction *disposedFunc = [context functionWithDelegate:nil];
+    TransitFunction *calledFunc = [context functionWithDelegate:nil];
+    TransitJSFunction *func = [context eval:@"function(){return @(@);}" arg:calledFunc arg: disposedFunc];
+    
+    [disposedFunc dispose];
+    id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
+
+    [func dispose];
+    [calledFunc dispose];
+    STAssertEqualObjects(@"No native function with id: 1. Could have been disposed.", result, @"exception should be passed along");
 }
 
 -(void)testNativeFunctionCanReturnVoid {
@@ -512,6 +527,22 @@
     [jsFunc2 callWithArg:@"No Crash"];
     
     STAssertNoThrow([funcMock verify], @"mock is fine");
+}
+
+-(void)testPassesBackNativeFunctionAsNativeFunction {
+    TransitUIWebViewContext* context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    
+    id funcMock1 = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
+    id funcMock2 = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
+    
+    TransitFunction *nFunc1 = [context functionWithDelegate:funcMock1];
+    TransitFunction *nFunc2 = [context functionWithDelegate:funcMock2];
+    
+    [[funcMock1 expect] callWithThisArg:OCMOCK_ANY arguments:@[nFunc2]];
+    [context eval:@"@(@)" arg:nFunc1 arg:nFunc2];
+    
+    [funcMock1 verify];
+    [funcMock2 verify];
 }
 
 
