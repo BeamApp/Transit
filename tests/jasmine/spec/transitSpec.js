@@ -272,6 +272,7 @@ describe("Transit", function() {
         var _doInvokeNative = transit.doInvokeNative;
         var _createInvocationDescription = transit.createInvocationDescription;
         var _doHandleInvocatenQueue = transit.doHandleInvocationQueue;
+        var _invocationQueueMaxLen = transit.invocationQueueMaxLen;
         var _fakeInvocationDescription = "myDecription";
 
         beforeEach(function(){
@@ -284,6 +285,7 @@ describe("Transit", function() {
             transit.doInvokeNative = _doInvokeNative;
             transit.createInvocationDescription = _createInvocationDescription;
             transit.doHandleInvocationQueue = _doHandleInvocatenQueue;
+            transit.invocationQueueMaxLen = _invocationQueueMaxLen;
         });
 
         describe("invokeNative", function(){
@@ -347,6 +349,33 @@ describe("Transit", function() {
                 expect(transit.doHandleInvocationQueue).toHaveBeenCalledWith([_fakeInvocationDescription, _fakeInvocationDescription]);
                 expect(transit.invocationQueue).toEqual([]);
                 expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
+            });
+
+            it("it respects invocationQueueMaxLen", function(){
+                transit.invocationQueueMaxLen = 2;
+                expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
+
+                transit.queueNative(1,1,1);
+                expect(transit.invocationQueue).toEqual([_fakeInvocationDescription]);
+                expect(transit.handleInvocationQueueIsScheduled).toBeTruthy();
+                expect(transit.doHandleInvocationQueue.callCount).toEqual(0);
+
+                transit.queueNative(2,2,2);
+                expect(transit.invocationQueue).toEqual([]);
+                expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
+                expect(transit.doHandleInvocationQueue.callCount).toEqual(1);
+                expect(transit.doHandleInvocationQueue).toHaveBeenCalledWith([_fakeInvocationDescription, _fakeInvocationDescription]);
+
+                transit.queueNative(3,3,3);
+                expect(transit.invocationQueue).toEqual([_fakeInvocationDescription]);
+                expect(transit.handleInvocationQueueIsScheduled).toBeTruthy();
+                expect(transit.doHandleInvocationQueue.callCount).toEqual(1);
+
+                transit.queueNative(4,4,4);
+                expect(transit.invocationQueue).toEqual([]);
+                expect(transit.handleInvocationQueueIsScheduled).toBeFalsy();
+                expect(transit.doHandleInvocationQueue.callCount).toEqual(2);
+                expect(transit.doHandleInvocationQueue).toHaveBeenCalledWith([_fakeInvocationDescription, _fakeInvocationDescription]);
             });
         });
 

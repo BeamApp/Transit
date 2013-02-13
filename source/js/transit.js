@@ -5,6 +5,7 @@
         retained:{},
         lastRetainId: 0,
         invocationQueue: [],
+        invocationQueueMaxLen: 1000,
         handleInvocationQueueIsScheduled: false
     };
 
@@ -128,11 +129,15 @@
     transit.queueNative = function(nativeId, thisArg, args) {
         var invocationDescription = transit.createInvocationDescription(nativeId, thisArg, args);
         transit.invocationQueue.push(invocationDescription);
-        if(!transit.handleInvocationQueueIsScheduled) {
-            transit.handleInvocationQueueIsScheduled = setTimeout(function(){
-                transit.handleInvocationQueueIsScheduled = false;
-                transit.handleInvocationQueue();
-            }, 0);
+        if(transit.invocationQueue.length >= transit.invocationQueueMaxLen) {
+            transit.handleInvocationQueue();
+        } else {
+            if(!transit.handleInvocationQueueIsScheduled) {
+                transit.handleInvocationQueueIsScheduled = setTimeout(function(){
+                    transit.handleInvocationQueueIsScheduled = false;
+                    transit.handleInvocationQueue();
+                }, 0);
+            }
         }
     };
 
