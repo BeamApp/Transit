@@ -9,7 +9,7 @@
     var PREFIX_MAGIC_FUNCTION = "__TRANSIT_JS_FUNCTION_";
     var PREFIX_MAGIC_NATIVE_FUNCTION = "__TRANSIT_NATIVE_FUNCTION_";
     var PREFIX_MAGIC_OBJECT = "__TRANSIT_OBJECT_PROXY_";
-
+    var MARKER_MAGIC_OBJECT_GLOBAL = "__TRANSIT_OBJECT_GLOBAL";
     var GLOBAL_OBJECT = window;
 
     transit.doInvokeNative = function(invocationDescription){
@@ -51,6 +51,9 @@
         if(typeof elem === "object") {
             if(elem instanceof Document || elem instanceof Element) {
                 return transit.retainElement(elem);
+            }
+            if(elem === GLOBAL_OBJECT) {
+                return MARKER_MAGIC_OBJECT_GLOBAL;
             }
 
             var copy;

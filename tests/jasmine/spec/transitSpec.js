@@ -192,6 +192,13 @@ describe("Transit", function() {
             expect(transit.proxify(document.body)).toEqual(jasmine.any(String));
         });
 
+        it("uses magic marker for global object", function(){
+            expect(transit.proxify(window)).toEqual("__TRANSIT_OBJECT_GLOBAL");
+        });
+
+        it("creates proxy if global object in nested properties", function(){
+            expect(transit.proxify([window, window])).toEqual(jasmine.any(String));
+        });
 
     });
 
