@@ -35,18 +35,18 @@
     };
     transit.doHandleInvocationQueue.isFallback = true;
 
-    transit.asyncNativeFunction = function(nativeId) {
-        var f = function(){
-            transit.queueNative(nativeId, this, arguments);
-        };
-        f.transitNativeId = PREFIX_MAGIC_NATIVE_FUNCTION + nativeId;
-        return f;
-    };
+    transit.nativeFunction = function(nativeId, options){
+        var f;
 
-    transit.nativeFunction = function(nativeId){
-        var f = function(){
-            return transit.invokeNative(nativeId, this, arguments);
-        };
+        if(options && options.async) {
+            f = function(){
+                transit.queueNative(nativeId, this, arguments);
+            };
+        } else {
+            f = function(){
+                return transit.invokeNative(nativeId, this, arguments);
+            };
+        }
         f.transitNativeId = PREFIX_MAGIC_NATIVE_FUNCTION + nativeId;
         return f;
     };

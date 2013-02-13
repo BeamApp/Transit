@@ -57,13 +57,13 @@ describe("Transit", function() {
         });
 
         it("attaches native attribute", function(){
-            var f = transit.asyncNativeFunction("someId");
+            var f = transit.nativeFunction("someId", {async:true});
             expect(typeof f).toEqual("function");
             expect(f.transitNativeId).toEqual("__TRANSIT_NATIVE_FUNCTION_someId");
         });
 
         it("calls transit.queueNative", function(){
-            var f = transit.asyncNativeFunction("someId");
+            var f = transit.nativeFunction("someId", {async:true});
             expect(transit.queueNative).not.toHaveBeenCalled();
             f();
             expect(transit.queueNative).toHaveBeenCalledWith("someId", window, []);
@@ -282,10 +282,13 @@ describe("Transit", function() {
             transit.invocationQueue = [];
         });
         afterEach(function(){
+            transit.invocationQueue = [];
+            transit.handleInvocationQueue();
             transit.doInvokeNative = _doInvokeNative;
             transit.createInvocationDescription = _createInvocationDescription;
             transit.doHandleInvocationQueue = _doHandleInvocatenQueue;
             transit.invocationQueueMaxLen = _invocationQueueMaxLen;
+
         });
 
         describe("invokeNative", function(){

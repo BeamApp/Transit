@@ -70,7 +70,7 @@
     
     NSString* actual = [func jsRepresentationToResolveProxy];
     
-    STAssertEqualObjects(actual, @"transit.asyncNativeFunction(\"someId\")", @"actual function factory to create scoped variables on TransitContext-eval");
+    STAssertEqualObjects(actual, @"transit.nativeFunction(\"someId\",{async:true})", @"actual function factory to create scoped variables on TransitContext-eval");
 }
 
 -(void)testInExpression {
