@@ -29,7 +29,7 @@ import com.getbeamapp.transit.TransitProxy;
 
 public class TransitChromeClient extends WebChromeClient implements TransitAdapter {
 
-    public enum TransitRequest {
+    enum TransitRequest {
         INVOKE("__TRANSIT_MAGIC_INVOKE"),
         POLL("__TRANSIT_MAGIC_POLL"),
         RETURN("__TRANSIT_MAGIC_RETURN"),
@@ -51,7 +51,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         }
     }
 
-    public enum TransitResponse {
+    enum TransitResponse {
         RETURN("RETURN"),
         EXCEPTION("EXCEPTION"),
         EVAL("EVAL");
