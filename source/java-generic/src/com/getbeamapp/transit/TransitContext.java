@@ -13,22 +13,25 @@ public abstract class TransitContext extends TransitProxy {
     @Override
     public abstract TransitProxy evalWithContext(String stringToEvaluate, Object context, Object... arguments);
 
-    private final Map<String, TransitNativeFunction> callbacks = new HashMap<String, TransitNativeFunction>();
+    private final Map<String, TransitNativeFunction> retrainedNativeFunctions = new HashMap<String, TransitNativeFunction>();
 
     private long _nextNativeId = 0;
 
-    public String nextNativeId() {
+    private String nextNativeId() {
         return String.valueOf(_nextNativeId++);
     }
 
     public TransitNativeFunction getCallback(String string) {
-        return callbacks.get(string);
+        return retrainedNativeFunctions.get(string);
+    }
+
+    protected void retainNativeFunction(TransitNativeFunction function) {
+        retrainedNativeFunctions.put(function.getNativeId(), function);
     }
 
     public TransitNativeFunction registerCallable(TransitCallable callable) {
-        String nativeId = nextNativeId();
-        TransitNativeFunction function = new TransitNativeFunction(this, callable, nativeId);
-        callbacks.put(nativeId, function);
+        TransitNativeFunction function = new TransitNativeFunction(this, callable, nextNativeId());
+        retainNativeFunction(function);
         return function;
     }
 
