@@ -135,7 +135,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         active = true;
 
         if (TransitRequest.INVOKE.equals(message)) {
-            invoke(unmarshal(defaultValue));
+            doInvokeNative(unmarshal(defaultValue));
             process(result);
         } else if (TransitRequest.RETURN.equals(message)) {
             if (waitingEvaluations.empty()) {
@@ -248,12 +248,12 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         return output.toString();
     }
 
-    private void invoke(final TransitProxy invokeDescriptor) {
+    private void doInvokeNative(final TransitProxy invocationDescription) {
         lock.close();
 
-        final String nativeId = invokeDescriptor.get("nativeId").getStringValue();
-        final TransitProxy thisArg = invokeDescriptor.get("thisArg");
-        final TransitProxy[] arguments = invokeDescriptor.get("args").getArrayValue().toArray(new TransitProxy[0]);
+        final String nativeId = invocationDescription.get("nativeId").getStringValue();
+        final TransitProxy thisArg = invocationDescription.get("thisArg");
+        final TransitProxy[] arguments = invocationDescription.get("args").getArrayValue().toArray(new TransitProxy[0]);
         Log.d(TAG, String.format("Invoking native function `%s`", nativeId));
 
         final TransitNativeFunction callback = context.getCallback(nativeId);
