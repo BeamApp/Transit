@@ -62,8 +62,8 @@
     // avoid unneeded passing of this == window.forge.internal object for each call on window.forge.internal.ping(...)
     asyncFunc.noThis = YES;
     blockingFunc.noThis = YES;
-    
-    [self.transit eval:@"window.forge = {internal:{ping: @, pingBlocked: @}}" arg:asyncFunc arg:blockingFunc];
+
+    [self.transit eval:@"window.forge = {internal:{ping: @, pingBlocked: @}}" val:asyncFunc val:blockingFunc];
 }
 
 @end

@@ -13,19 +13,19 @@
 
 @interface TransitProxy(Private)
 
--(id)initWithRootContext:(TransitContext*)rootContext;
--(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId;
--(id)initWithRootContext:(TransitContext*)rootContext value:(id)value;
--(id)initWithRootContext:(TransitContext *)rootContext jsRepresentation:(NSString*)jsRepresentation;
+-(id)initWithContext:(TransitContext*)context;
+-(id)initWithContext:(TransitContext *)context proxyId:(NSString*)proxyId;
+-(id)initWithContext:(TransitContext *)context value:(id)value;
+-(id)initWitContext:(TransitContext *)context jsRepresentation:(NSString*)jsRepresentation;
 
 -(void)dispose;
 -(BOOL)disposed;
 
 @property(readonly) NSString* proxyId;
 
--(void)clearRootContextAndProxyId;
+-(void)clearContextAndProxyId;
 
-+(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
++(NSString*)jsRepresentationFromCode:(NSString *)jsCode arguments:(NSArray *)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
 +(NSString*)jsRepresentation:(id)object collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
 -(NSString*)_jsRepresentationCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope;
 -(NSString*)jsRepresentationToResolveProxy;
@@ -37,8 +37,8 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 @protocol TransitEvaluator <NSObject>
 
--(id)_evalJsExpression:(NSString*)jsExpression jsThisArg:(NSString*)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet*)proxiesOnScope returnJSResult:(BOOL)returnJSResult;
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments returnJSResult:(BOOL)returnJSResult;
+-(id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult;
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult;
 
 @end
 
@@ -51,8 +51,8 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 -(void)queueAsyncCallToJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments;
 
--(void)retainNativeProxy:(TransitProxy*)proxy;
--(void)releaseNativeProxy:(TransitProxy*)proxy;
+-(void)retainNativeFunction:(TransitProxy*)proxy;
+-(void)releaseNativeFunction:(TransitProxy*)proxy;
 -(TransitNativeFunction*)retainedNativeFunctionWithId:(id)nativeProxyId;
 
 -(id)recursivelyReplaceMarkersWithProxies:(id)unproxified;
@@ -62,22 +62,22 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 -(NSString*)jsRepresentationForNativeFunctionWithId:(NSString*)proxyId;
 -(NSString*)jsRepresentationToResolveNativeFunctionWithId:(NSString*)proxyId async:(BOOL)async noThis:(BOOL)noThis;
 
--(id)invokeNativeDescription:(NSDictionary*)description;
+-(id)invokeNativeWithDescription:(NSDictionary*)description;
 
--(NSString*)transitGlobalVarJSExpression;
+-(NSString*)transitGlobalVarJSRepresentation;
 
 -(NSString*)lastEvaluatedJSCode;
 
 -(NSString*)nextNativeFunctionId;
 
--(id)_evalJsExpression:(NSString*)jsExpression jsThisArg:(NSString*)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet*)proxiesOnScope returnJSResult:(BOOL)returnJSResult;
+-(id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult;
 
 @end
 
 @interface TransitNativeFunction(Private)
 
 -(id)callWithProxifedThisArg:(TransitProxy*)thisArg proxifiedArguments:(NSArray*)arguments;
--(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block;
+-(id)initWithContext:(TransitContext *)context nativeId:(NSString *)nativeId block:(TransitFunctionBlock)block;
 
 @end
 
@@ -90,7 +90,7 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,NSURLRequest*);
 @interface TransitUIWebViewContext(Private)
 
--(void)invokeNative;
+-(void)doInvokeNative;
 
 @property(copy) TransitUIWebViewContextRequestHandler handleRequestBlock;
 @property(assign) BOOL proxifyEval;

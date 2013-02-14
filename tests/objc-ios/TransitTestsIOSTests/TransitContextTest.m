@@ -20,10 +20,10 @@
 @implementation FakeNativeProxyForTest
 
 -(void)dispose {
-    if(self.rootContext && self.proxyId) {
-        [self.rootContext releaseNativeProxy:self];
+    if(self.context && self.proxyId) {
+        [self.context releaseNativeFunction:self];
     }
-    [self clearRootContextAndProxyId];
+    [self clearContextAndProxyId];
 }
 @end
 
@@ -59,7 +59,7 @@
 
 -(TransitProxy*)stubWithContext:(TransitContext*)context proxyId:(NSString*)proxyId {
     id proxy = [OCMockObject mockForClass:TransitProxy.class];
-    [[[proxy stub] andReturn:context] rootContext];
+    [[[proxy stub] andReturn:context] context];
     [[[proxy stub] andReturn:proxyId] proxyId];
     return proxy;
 }
@@ -70,7 +70,7 @@
         TransitProxy *proxy = [self stubWithContext:context proxyId:@"someId"];
         
         STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
-        [context retainNativeProxy:proxy];
+        [context retainNativeFunction:proxy];
         STAssertEqualObjects(context.retainedNativeProxies, (@{@"someId":proxy}), @"correctly retained");
         
         // manually reset retained objects to get rid of mocks.
@@ -84,8 +84,8 @@
         TransitContext *context = TransitContext.new;
         TransitProxy *p1 = [self stubWithContext:context proxyId:@"id1"];
         TransitProxy *p2 = [self stubWithContext:context proxyId:@"id2"];
-        [context retainNativeProxy:p1];
-        [context retainNativeProxy:p2];
+        [context retainNativeFunction:p1];
+        [context retainNativeFunction:p2];
         STAssertEqualObjects(context.retainedNativeProxies, (@{@"id1":p1, @"id2":p2}), @"retains both");
         
         // manually reset retained objects to get rid of mocks.
@@ -98,10 +98,10 @@
     @autoreleasepool {
         TransitContext *context = TransitContext.new;
         TransitProxy *proxy = [self stubWithContext:context proxyId:@"someId"];
-        
-        [context retainNativeProxy:proxy];
+
+        [context retainNativeFunction:proxy];
         STAssertEquals((NSUInteger)1, context.retainedNativeProxies.count, @"retains one object");
-        [context retainNativeProxy:proxy];
+        [context retainNativeFunction:proxy];
         STAssertEquals((NSUInteger)1, context.retainedNativeProxies.count, @"still retains object");
         
         // manually reset retained objects to get rid of mocks.
@@ -116,9 +116,9 @@
         TransitProxy *proxy = [self stubWithContext:context proxyId:@"someId"];
         
         STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
-        [context retainNativeProxy:proxy];
+        [context retainNativeFunction:proxy];
         STAssertEqualObjects(context.retainedNativeProxies, (@{@"someId":proxy}), @"correctly retained");
-        [context releaseNativeProxy:proxy];
+        [context releaseNativeFunction:proxy];
         STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained anymore");
     }
 }
@@ -129,7 +129,7 @@
         TransitProxy *proxy =  [self stubWithContext:context proxyId:@"someId"];
         
         STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
-        [context releaseNativeProxy:proxy];
+        [context releaseNativeFunction:proxy];
         STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"still, nothing retained");
     }
 }
@@ -140,7 +140,7 @@
         TransitProxy *proxy = [self stubWithContext:context proxyId:@"someId"];
         
         [[(OCMockObject*)proxy expect] dispose];
-        [context retainNativeProxy:proxy];
+        [context retainNativeFunction:proxy];
         [context dispose];
         [(OCMockObject*)proxy verify];
         
@@ -156,11 +156,11 @@
     @autoreleasepool {
         TransitContext* context = TransitContext.new;
         STAssertEquals(1L, CFGetRetainCount((__bridge CFTypeRef)context), @"single ref");
-        proxy = [[FakeNativeProxyForTest alloc]initWithRootContext:context proxyId:@"someId"];
+        proxy = [[FakeNativeProxyForTest alloc] initWithContext:context proxyId:@"someId"];
         STAssertEquals(1L, CFGetRetainCount((__bridge CFTypeRef)context), @"still, single ref to context");
         STAssertEquals(1L, CFGetRetainCount((__bridge CFTypeRef)proxy), @"var keeps ref to proxy");
-        
-        [context retainNativeProxy:proxy];
+
+        [context retainNativeFunction:proxy];
     }
     STAssertEquals(1L, CFGetRetainCount((__bridge CFTypeRef)proxy), @"var keeps ref to proxy");
     
@@ -173,7 +173,7 @@
         proxy = [self createAndReleaseContextButReturnNativeProxy];
         
         STAssertTrue(proxy.disposed, @"proxy has been disposed");
-        STAssertNil(proxy.rootContext, @"hence, does not keep reference to context anymore");
+        STAssertNil(proxy.context, @"hence, does not keep reference to context anymore");
     }
     STAssertNil(proxy, @"proxy is free");
 }
@@ -230,7 +230,7 @@
 
 -(void)testInvokeNativeWithMissingFunction {
     TransitContext* context = TransitContext.new;
-    id result = [context invokeNativeDescription:@{@"nativeId":@"missing"}];
+    id result = [context invokeNativeWithDescription:@{@"nativeId" : @"missing"}];
     STAssertTrue([result isKindOfClass:NSError.class], @"missing native functions results in error");
     STAssertEqualObjects(@"No native function with id: missing. Could have been disposed.", [result userInfo][NSLocalizedDescriptionKey], @"meaningful error message");
 }
@@ -238,8 +238,8 @@
 -(void)testInvokeNativeWithThisArgVariations {
     @autoreleasepool {
         TransitContext* context = TransitContext.new;
-        TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"someId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
-            
+        TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+
             return thisArg;
         }];
         
@@ -268,13 +268,13 @@
     @autoreleasepool {
         id context = [OCMockObject mockForClass:TransitContext.class];
         
-        TransitJSFunction *jsFunc = [TransitJSFunction.alloc initWithRootContext:context proxyId:@"someId"];
+        TransitJSFunction *jsFunc = [TransitJSFunction.alloc initWithContext:context proxyId:@"someId"];
         
         [[context expect] queueAsyncCallToJSFunction:jsFunc thisArg:nil arguments:@[@1, @2]];
         [jsFunc callAsyncWithArg:@1 arg:@2];
 
         STAssertNoThrow([context verify], @"verify mock");
-        [jsFunc clearRootContextAndProxyId];
+        [jsFunc clearContextAndProxyId];
     }
     
 }

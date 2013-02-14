@@ -78,12 +78,12 @@
 
 -(void)testArguments {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    STAssertEqualObjects([context eval:@"@ + @" arg:@"2+2" arg:@4], @"2+24", @"'2+2' + 4 == '2+24'");
+    STAssertEqualObjects([context eval:@"@ + @" val:@"2+2" val:@4], @"2+24", @"'2+2' + 4 == '2+24'");
 }
 
 -(void)testThisArg {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    STAssertEqualObjects([context eval:@"this.a + @" thisArg:@{@"a":@"foo"} arg:@"bar"], @"foobar", @"this has been set");
+    STAssertEqualObjects([context eval:@"this.a + @" thisArg:@{@"a" : @"foo"} val:@"bar"], @"foobar", @"this has been set");
 }
 
 -(void)testInjectsCode {
@@ -153,7 +153,7 @@
             "iFrame = null;\n"
             "return window.globalTestVar;\n"
         "})";
-    return [[TransitJSFunction alloc] initWithRootContext:context jsRepresentation:js];
+    return [[TransitJSFunction alloc] initWitContext:context jsRepresentation:js];
 }
 
 -(void)testSimpleCallFromWebView{
@@ -188,7 +188,7 @@
                 STAssertEqualObjects(expected, [ctx eval:@"window.globalTestVar"], @"max depth reached, frame will not block if max depth is exceed");
             }
         }
-        [ctx eval:@"window.globalTestVar = @" arg:@(arg)];
+        [ctx eval:@"window.globalTestVar = @" val:@(arg)];
     };
     
     [func callWithArg:@1];
@@ -229,13 +229,13 @@
 
 -(void)testCallThroughJavaScript {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
         int a = [arguments[0] intValue];
         int b = [arguments[1] intValue];
-        return @(a+b);
+        return @(a + b);
     }];
-    [context retainNativeProxy:func];
-    id result = [context eval:@"@(2,3)" arg:func];
+    [context retainNativeFunction:func];
+    id result = [context eval:@"@(2,3)" val:func];
     [func dispose];
     
     STAssertEqualObjects(@5, [context eval:@"transit.nativeInvokeTransferObject"], @"has been evaluated");
@@ -253,14 +253,14 @@
     "return result;\n"
     "})()";
     
-    id result = [context eval:js arg:function];
+    id result = [context eval:js val:function];
     return result;
 }
 
 -(void)testInvokeNativeProducesJSExceptionIfNotHandledCorrectly {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     context.handleRequestBlock = nil;
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
         // do nothing
         return nil;
     }];
@@ -271,10 +271,10 @@
 
 -(void)testInvokeNativeThatThrowsExceptionWithoutLocalizedReason {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
         @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:nil];
     }];
-    [context retainNativeProxy:func];
+    [context retainNativeFunction:func];
     id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
     [func dispose];
     STAssertEqualObjects(@"ExceptionName: some reason", result, @"exception should be passed along");
@@ -282,10 +282,10 @@
 
 -(void)testInvokeNativeThatThrowsExceptionWithLocalizedReason {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
-        @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:@{NSLocalizedDescriptionKey: @"my localized description"}];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:@{NSLocalizedDescriptionKey : @"my localized description"}];
     }];
-    [context retainNativeProxy:func];
+    [context retainNativeFunction:func];
     id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
     [func dispose];
     STAssertEqualObjects(@"my localized description", result, @"exception should be passed along");
@@ -296,7 +296,7 @@
     
     TransitFunction *disposedFunc = [context functionWithDelegate:nil];
     TransitFunction *calledFunc = [context functionWithDelegate:nil];
-    TransitJSFunction *func = [context eval:@"function(){return @(@);}" arg:calledFunc arg: disposedFunc];
+    TransitJSFunction *func = [context eval:@"function(){return @(@);}" val:calledFunc val:disposedFunc];
     
     [disposedFunc dispose];
     id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
@@ -308,37 +308,37 @@
 
 -(void)testNativeFunctionCanReturnVoid {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
         return nil;
     }];
-    [context retainNativeProxy:func];
-    id result = [context eval:@"@()" arg:func];
+    [context retainNativeFunction:func];
+    id result = [context eval:@"@()" val:func];
     STAssertNil(result, @"objc:nil == js:void");
 }
 
 -(void)testNativeFunctionCanReturnNull {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
         return NSNull.null;
     }];
-    [context retainNativeProxy:func];
-    id result = [context eval:@"@()" arg:func];
+    [context retainNativeFunction:func];
+    id result = [context eval:@"@()" val:func];
     STAssertEqualObjects(NSNull.null, result, @"objc:NSNull == js:null");
 }
 
 
 -(void)testInvokeNativeWithJSProxies {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
         STAssertTrue([thisArg isKindOfClass:TransitJSFunction.class], @"this became js function proxy");
         STAssertTrue([arguments[0] isKindOfClass:TransitProxy.class], @"proxy");
-        
-        return [(TransitProxy*)arguments[0] proxyId];
+
+        return [(TransitProxy *) arguments[0] proxyId];
     }];
-    [context retainNativeProxy:func];
+    [context retainNativeFunction:func];
     // "this" will be a function -> proxy
     // arguments[0] is the window object -> proxy
-    id result = [context eval:@"@.call(function(){}, window.document)" arg:func];
+    id result = [context eval:@"@.call(function(){}, window.document)" val:func];
     [func dispose];
     id lastProxyId = [context eval:@"transit.lastRetainId"];
     NSString* expectedProxyId = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, lastProxyId];
@@ -394,7 +394,7 @@
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     [self.class waitForWebViewToBeLoaded:context.webView];
     TransitProxy* proxy = [context eval:@"window.document"];
-    NSString* result = [context eval:@"@.title" arg:proxy];
+    NSString* result = [context eval:@"@.title" val:proxy];
     STAssertEqualObjects(@"Empty Page", result, @"document.title");
 }
 
@@ -404,13 +404,13 @@
     NSString* longString = [@"" stringByPaddingToLength:len withString:@"c" startingAtIndex:0];
 
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *nativeFunc = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *nativeFunc = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
 
-        return [arguments[0] stringByAppendingFormat:@"%d", [arguments[1] intValue] ];
+        return [arguments[0] stringByAppendingFormat:@"%d", [arguments[1] intValue]];
     }];
-    [context retainNativeProxy:nativeFunc];
+    [context retainNativeFunction:nativeFunc];
     
-    TransitFunction* jsFunc = [context eval:@"function(a,b){return @(a,b);}" arg:nativeFunc];
+    TransitFunction* jsFunc = [context eval:@"function(a,b){return @(a,b);}" val:nativeFunc];
     
     NSDate *start = [NSDate date];
     for(int i=0;i<num;i++) {
@@ -435,21 +435,21 @@
     [context.webView loadRequest:[NSURLRequest requestWithURL:url]];
     
     __block BOOL finished = NO;
-    TransitFunction *onFinish = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"onFinish" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *onFinish = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onFinish" block:^id(TransitProxy *thisArg, NSArray *arguments) {
         id results = [thisArg eval:@"{failed:this.results().failedCount, passed:this.results().passedCount}" thisArg:arguments[0]];
         finished = YES;
         STAssertEqualObjects(@0, results[@"failed"], @"no test failed");
-        STAssertTrue([results[@"passed"] intValue]>=51, @"at the time of writing, 51 tests should have passed");
+        STAssertTrue([results[@"passed"] intValue] >= 51, @"at the time of writing, 51 tests should have passed");
         return @"finished :)";
     }];
     
-    TransitFunction *onLoad = [[TransitNativeFunction alloc] initWithRootContext:context nativeId:@"onLoad" block:^id(TransitProxy *thisArg, NSArray *arguments) {
-        [context eval:@"jasmineEnv.addReporter({reportRunnerResults: @})" arg:onFinish];
+    TransitFunction *onLoad = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onLoad" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        [context eval:@"jasmineEnv.addReporter({reportRunnerResults: @})" val:onFinish];
         return @"foo";
     }];
-    [context retainNativeProxy:onLoad];
-    [context retainNativeProxy:onFinish];
-    [context eval:@"window.onload=@" arg:onLoad];
+    [context retainNativeFunction:onLoad];
+    [context retainNativeFunction:onFinish];
+    [context eval:@"window.onload=@" val:onLoad];
     
     [self.class waitForWebViewToBeLoaded:context.webView];
     STAssertEqualObjects(@"Jasmine Spec Runner", [context eval:@"document.title"], @"page loaded");
@@ -510,8 +510,8 @@
     id funcMock = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
     
     TransitFunction *nFunc = [context functionWithDelegate:funcMock];
-    TransitFunction *jsFunc1 = [context eval:@"function(a){@('from1: '+a)}" arg:nFunc];
-    TransitFunction *jsFunc2 = [context eval:@"function(a){@('from2: '+a)}" arg:jsFunc1];
+    TransitFunction *jsFunc1 = [context eval:@"function(a){@('from1: '+a)}" val:nFunc];
+    TransitFunction *jsFunc2 = [context eval:@"function(a){@('from2: '+a)}" val:jsFunc1];
 
     [[funcMock expect] callWithThisArg:OCMOCK_ANY arguments:@[@"from1: Foo"]];
     [jsFunc1 callWithArg:@"Foo"];
@@ -550,7 +550,7 @@
     TransitFunction *nFunc2 = [context functionWithDelegate:funcMock2];
     
     [[funcMock1 expect] callWithThisArg:OCMOCK_ANY arguments:@[nFunc2]];
-    [context eval:@"@(@)" arg:nFunc1 arg:nFunc2];
+    [context eval:@"@(@)" val:nFunc1 val:nFunc2];
     
     STAssertNoThrow([funcMock1 verify], @"verify mock");
     STAssertNoThrow([funcMock2 verify], @"verify mock");
@@ -570,7 +570,7 @@
     [[funcMock1 expect] callWithThisArg:OCMOCK_ANY arguments:@[@1]];
     [[funcMock2 expect] callWithThisArg:OCMOCK_ANY arguments:@[@2]];
     
-    id string = [context eval:@"'a:'+@(1)+' b:'+@(2)" arg:nFunc1 arg:nFunc2];
+    id string = [context eval:@"'a:'+@(1)+' b:'+@(2)" val:nFunc1 val:nFunc2];
     STAssertEqualObjects(@"a:undefined b:undefined", string, @"functions return void");
     
     [context eval:@"transit.handleInvocationQueue()"];

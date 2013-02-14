@@ -129,34 +129,34 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 
 @implementation TransitProxy {
     NSString* _proxyId;
-    __weak TransitContext* _rootContext;
+    __weak TransitContext*_context;
 }
 
--(id)initWithRootContext:(TransitContext*)rootContext proxyId:(NSString*)proxyId {
+-(id)initWithContext:(TransitContext *)context proxyId:(NSString*)proxyId {
     self = [self init];
     if(self) {
-        _rootContext = rootContext;
+        _context = context;
         _proxyId = proxyId;
     }
     return self;
 }
 
--(id)initWithRootContext:(TransitContext*)rootContext value:(id)value {
+-(id)initWithContext:(TransitContext *)context value:(id)value {
     self = [self init];
     if(self){
-        _rootContext = rootContext;
+        _context = context;
         _value = value;
     }
     return self;
 }
 
--(id)initWithRootContext:(TransitContext *)rootContext jsRepresentation:(NSString*)jsRepresentation {
-    return [self initWithRootContext:rootContext value:jsRepresentation.stringAsJSExpression];
+-(id)initWitContext:(TransitContext *)context jsRepresentation:(NSString*)jsRepresentation {
+    return [self initWithContext:context value:jsRepresentation.stringAsJSExpression];
 }
 
 
--(id)initWithRootContext:(TransitContext*)rootContext {
-    return [self initWithRootContext:rootContext proxyId:nil];
+-(id)initWithContext:(TransitContext*)context {
+    return [self initWithContext:context proxyId:nil];
 }
 
 -(void)dealloc {
@@ -164,20 +164,20 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 }
 
 -(BOOL)disposed {
-    return _rootContext == nil;
+    return _context == nil;
 }
 
--(void)clearRootContextAndProxyId {
-    _rootContext = nil;
+-(void)clearContextAndProxyId {
+    _context = nil;
     _proxyId = nil;
 }
 
 -(void)dispose {
-    if(_rootContext) {
+    if(_context) {
         if(_proxyId){
-            [_rootContext releaseJSProxyWithId: _proxyId];
+            [_context releaseJSProxyWithId:_proxyId];
         }
-        [self clearRootContextAndProxyId];
+        [self clearContextAndProxyId];
     }
 }
 
@@ -185,61 +185,61 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
     return _proxyId;
 }
 
--(TransitContext*)rootContext{
-    return _rootContext;
+-(TransitContext*)context {
+    return _context;
 }
 
 -(id)eval:(NSString*)jsCode {
-    return [self eval:jsCode thisArg:self arguments:@[] returnJSResult:YES];
+    return [self eval:jsCode thisArg:self values:@[] returnJSResult:YES];
 }
 
--(id)eval:(NSString*)jsCode arg:(id)arg0 {
-    return [self eval:jsCode thisArg:self arguments:@[TransitNilSafe(arg0)] returnJSResult:YES];
+-(id)eval:(NSString *)jsCode val:(id)val0 {
+    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0)] returnJSResult:YES];
 }
 
--(id)eval:(NSString*)jsCode arg:(id)arg0 arg:(id)arg1 {
-    return [self eval:jsCode thisArg:self arguments:@[TransitNilSafe(arg0), TransitNilSafe(arg1)] returnJSResult:YES];
+-(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1 {
+    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0), TransitNilSafe(val1)] returnJSResult:YES];
 }
 
--(id)eval:(NSString*)jsCode arg:(id)arg0 arg:(id)arg1 arg:(id)arg2 {
-    return [self eval:jsCode thisArg:self arguments:@[TransitNilSafe(arg0), TransitNilSafe(arg1), TransitNilSafe(arg2)] returnJSResult:YES];
+-(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1 val:(id)val2 {
+    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0), TransitNilSafe(val1), TransitNilSafe(val2)] returnJSResult:YES];
 }
 
--(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments {
-    return [self eval:jsCode thisArg:self arguments:arguments returnJSResult:YES];
+-(id)eval:(NSString *)jsCode values:(NSArray*)values {
+    return [self eval:jsCode thisArg:self values:values returnJSResult:YES];
 }
 
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg {
-    return [self eval:jsCode thisArg:thisArg arguments:@[] returnJSResult:YES];
+    return [self eval:jsCode thisArg:thisArg values:@[] returnJSResult:YES];
 }
 
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg arg:(id)arg0 {
-    return [self eval:jsCode thisArg:thisArg arguments:@[TransitNilSafe(arg0)] returnJSResult:YES];
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0 {
+    return [self eval:jsCode thisArg:thisArg values:@[TransitNilSafe(val0)] returnJSResult:YES];
 }
 
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg arg:(id)arg0 arg:(id)arg1 {
-    return [self eval:jsCode thisArg:thisArg arguments:@[TransitNilSafe(arg0), TransitNilSafe(arg1)] returnJSResult:YES];
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0 val:(id)val1 {
+    return [self eval:jsCode thisArg:thisArg values:@[TransitNilSafe(val0), TransitNilSafe(val1)] returnJSResult:YES];
 }
 
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments {
-    return [self eval:jsCode thisArg:thisArg arguments:arguments returnJSResult:YES];
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray*)values {
+    return [self eval:jsCode thisArg:thisArg values:values returnJSResult:YES];
 }
 
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
-    return [_rootContext eval:jsCode thisArg:thisArg arguments:arguments returnJSResult:returnJSResult];
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)values returnJSResult:(BOOL)returnJSResult {
+    return [_context eval:jsCode thisArg:thisArg values:values returnJSResult:returnJSResult];
 }
 
 -(NSString*)jsRepresentationToResolveProxy {
-    if(_proxyId && _rootContext)
-        return [_rootContext jsRepresentationToResolveProxyWithId:_proxyId];
+    if(_proxyId && _context)
+        return [_context jsRepresentationToResolveProxyWithId:_proxyId];
     
     @throw [NSException exceptionWithName:@"TransitException" reason:@"Internal Error: Proxy cannot be resolved" userInfo:nil];
 }
 
 -(NSString*)_jsRepresentationCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
-    if(_proxyId && _rootContext) {
+    if(_proxyId && _context) {
         [proxiesOnScope addObject:self];
-        return [_rootContext jsRepresentationForProxyWithId:_proxyId];
+        return [_context jsRepresentationForProxyWithId:_proxyId];
     }
     
     if(_value) {
@@ -264,7 +264,7 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
     return [NSString.alloc initWithData:accumulator.data encoding:NSUTF8StringEncoding];
 }
 
-+(NSString*)jsExpressionFromCode:(NSString*)jsCode arguments:(NSArray*)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
++(NSString*)jsRepresentationFromCode:(NSString *)jsCode arguments:(NSArray *)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
     if(jsCode.isJSExpression) {
         if(arguments.count > 0)
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"jsExpression cannot take any additional arguments" userInfo:nil];
@@ -274,7 +274,7 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
     NSError* error;
     NSRegularExpression *regex = [NSRegularExpression
                                   regularExpressionWithPattern:@"@"
-                                  options:0
+                                  options:(NSRegularExpressionOptions) 0
                                   error:&error];
     
     NSMutableArray* mutableArguments = [arguments mutableCopy];
@@ -312,7 +312,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     NSMutableDictionary* _retainedNativeProxies;
     int _lastNativeFunctionId;
     NSMutableArray* _jsProxiesToBeReleased;
-    NSString* _transitGlobalVarJSExpression;
+    NSString* _transitGlobalVarJSRepresentation;
     NSMutableArray* _queuedAsyncCallsToJSFunctions;
 }
 
@@ -322,7 +322,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT++;
         _retainedNativeProxies = [NSMutableDictionary dictionary];
         _jsProxiesToBeReleased = [NSMutableArray array];
-        _transitGlobalVarJSExpression = @"transit".stringAsJSExpression;
+        _transitGlobalVarJSRepresentation = @"transit".stringAsJSExpression;
         _queuedAsyncCallsToJSFunctions = [NSMutableArray array];
     }
     return self;
@@ -343,7 +343,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 -(NSString*)jsRepresentationToResolveProxyWithId:(NSString*)proxyId {
-    return [[NSString stringWithFormat:@"%@.r(\"%@\")", self.transitGlobalVarJSExpression, proxyId] stringAsJSExpression];
+    return [[NSString stringWithFormat:@"%@.r(\"%@\")", self.transitGlobalVarJSRepresentation, proxyId] stringAsJSExpression];
 }
 
 -(NSString*)jsRepresentationForNativeFunctionWithId:(NSString*)proxyId {
@@ -351,7 +351,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 -(NSString*)jsRepresentationToResolveNativeFunctionWithId:(NSString*)proxyId async:(BOOL)async noThis:(BOOL)noThis {
-    NSMutableString * result = [NSMutableString stringWithString:self.transitGlobalVarJSExpression];
+    NSMutableString * result = [NSMutableString stringWithString:self.transitGlobalVarJSRepresentation];
     [result appendString:@".nativeFunction(\""];
     [result appendString:proxyId];
     [result appendString:@"\""];
@@ -368,7 +368,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     [result appendString:@")"];
     
     return result;
-//    return [[NSString stringWithFormat:@"%@.%@(\"%@\")", self.transitGlobalVarJSExpression, (async?@"asyncNativeFunction":@"nativeFunction"), proxyId] stringAsJSExpression];
+//    return [[NSString stringWithFormat:@"%@.%@(\"%@\")", self.transitGlobalVarJSRepresentation, (async?@"asyncNativeFunction":@"nativeFunction"), proxyId] stringAsJSExpression];
 }
 
 -(void)disposeAllNativeProxies {
@@ -378,10 +378,10 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 -(void)drainJSProxies {
-    [self eval:@"(function(ids){"
-     "for(var i=0;i<ids.length;i++)"
-        "@.releaseElementWithId(ids[i]);"
-     "})(@)" thisArg:nil arguments:@[_transitGlobalVarJSExpression, _jsProxiesToBeReleased] returnJSResult:NO];
+    [self              eval:@"(function(ids){"
+            "for(var i=0;i<ids.length;i++)"
+            "@.releaseElementWithId(ids[i]);"
+            "})(@)" thisArg:nil values:@[_transitGlobalVarJSRepresentation, _jsProxiesToBeReleased] returnJSResult:NO];
     [_jsProxiesToBeReleased removeAllObjects];
     
 }
@@ -398,8 +398,8 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 -(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block {
-    TransitNativeFunction* function = [[TransitNativeFunction alloc] initWithRootContext:self nativeId:[self nextNativeFunctionId] block:block];
-    [self retainNativeProxy:function];
+    TransitNativeFunction* function = [[TransitNativeFunction alloc] initWithContext:self nativeId:[self nextNativeFunctionId] block:block];
+    [self retainNativeFunction:function];
     return function;
 }
 
@@ -418,7 +418,6 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return func;
 }
 
-
 -(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block {
     TransitFunction *original = [self eval:path];
     if(!original)
@@ -427,15 +426,15 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     TransitFunction *function = [self functionWithBlock:^id(TransitProxy *thisArg, NSArray *arguments) {
         return block(original, thisArg, arguments);
     }];
-    
-    [self eval:@"@ = @" arguments:@[path.stringAsJSExpression, function]];
+
+    [self eval:@"@ = @" values:@[path.stringAsJSExpression, function]];
     
     return function;
 }
 
 
--(void)retainNativeProxy:(TransitProxy*)proxy {
-    NSParameterAssert(proxy.rootContext == self);
+-(void)retainNativeFunction:(TransitProxy*)proxy {
+    NSParameterAssert(proxy.context == self);
     NSParameterAssert(proxy.proxyId);
     
 //    if(_retainedNativeProxies[proxy.proxyId])
@@ -444,8 +443,8 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     _retainedNativeProxies[proxy.proxyId] = proxy;
 }
 
--(void)releaseNativeProxy:(TransitProxy *)proxy {
-    NSParameterAssert(proxy.rootContext == self);
+-(void)releaseNativeFunction:(TransitProxy *)proxy {
+    NSParameterAssert(proxy.context == self);
     NSParameterAssert(proxy.proxyId);
     
 //    id existing = _retainedNativeProxies[proxy.proxyId];
@@ -459,8 +458,8 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return _retainedNativeProxies;
 }
 
--(NSString*)transitGlobalVarJSExpression {
-    return _transitGlobalVarJSExpression;
+-(NSString*)transitGlobalVarJSRepresentation {
+    return _transitGlobalVarJSRepresentation;
 }
 
 -(TransitNativeFunction*)retainedNativeFunctionWithId:(id)nativeProxyId {
@@ -501,11 +500,11 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         if([unproxified length] >= _TRANSIT_MARKER_PREFIX_MIN_LEN && [unproxified characterAtIndex:0] == '_' && [unproxified characterAtIndex:1] == '_') {
             id jsFunctionProxyId = [self.class proxyIdFromString:unproxified atGroupIndex:0 forMarker:_TRANSIT_MARKER_PREFIX_JS_FUNCTION_];
             if(jsFunctionProxyId)
-                return [[TransitJSFunction alloc] initWithRootContext:self proxyId:jsFunctionProxyId];
+                return [[TransitJSFunction alloc] initWithContext:self proxyId:jsFunctionProxyId];
             
             id objectProxyId = [self.class proxyIdFromString:unproxified atGroupIndex:0 forMarker:_TRANSIT_MARKER_PREFIX_OBJECT_PROXY_];
             if(objectProxyId)
-                return [[TransitProxy alloc] initWithRootContext:self proxyId:objectProxyId];
+                return [[TransitProxy alloc] initWithContext:self proxyId:objectProxyId];
             
             id nativeFunctionProxyId = [self.class proxyIdFromString:unproxified atGroupIndex:1 forMarker:_TRANSIT_MARKER_PREFIX_NATIVE_FUNCTION];
             if(nativeFunctionProxyId)
@@ -536,7 +535,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return unproxified;
 }
 
--(id)invokeNativeDescription:(NSDictionary*)description {
+-(id)invokeNativeWithDescription:(NSDictionary*)description {
     id nativeProxyId = description[@"nativeId"];
     TransitFunction* func;
     @try {
@@ -568,12 +567,12 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         thisArg = self;
     } else
         if(![thisArg isKindOfClass:TransitProxy.class])
-            thisArg = [[TransitProxy alloc] initWithRootContext:self value:thisArg];
+            thisArg = [[TransitProxy alloc] initWithContext:self value:thisArg];
     
     return [func callWithProxifedThisArg:thisArg proxifiedArguments:arguments];
 }
 
--(id)_evalJsExpression:(NSString*)jsExpression jsThisArg:(NSString*)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet*)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
+-(id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
     @throw @"to be implemented by subclass";
 }
 
@@ -588,8 +587,8 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         [js appendString:[queuedCall jsRepresentationOfCallCollectingProxiesOnScope:proxiesOnScope]];
     }
     [_queuedAsyncCallsToJSFunctions removeAllObjects];
-    
-    [self _evalJsExpression:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO];
+
+    [self _eval:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO];
 }
 
 -(void)queueAsyncCallToJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments {
@@ -602,15 +601,15 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 @end
 
 TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER = ^(TransitUIWebViewContext* ctx,NSURLRequest* request) {
-    [ctx invokeNative];
+    [ctx doInvokeNative];
 };
 
 @implementation TransitQueuedCallToJSFunction {
     TransitJSFunction* _jsFunc;
     id _thisArg;
     NSArray* _arguments;
-    NSString* __js;
-    NSOrderedSet* __proxiesOnScope;
+    NSString*__collectedJS;
+    NSOrderedSet*__collectedProxiesOnScope;
 }
 
 -(id)initWithJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments {
@@ -625,27 +624,27 @@ TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER
 
 -(NSString*)jsRepresentationOfCallCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
     [_jsFunc onEvaluator:self callWithThisArg:_thisArg arguments:_arguments returnResult:NO];
-    [proxiesOnScope addObjectsFromArray:__proxiesOnScope.array];
-    return __js;
+    [proxiesOnScope addObjectsFromArray:__collectedProxiesOnScope.array];
+    return __collectedJS;
 }
 
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     
-    NSString* jsExpression = [TransitProxy jsExpressionFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
-    id adjustedThisArg = thisArg == _jsFunc.rootContext ? nil : thisArg;
+    NSString* jsExpression = [TransitProxy jsRepresentationFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
+    id adjustedThisArg = thisArg == _jsFunc.context ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
     
-    return [self _evalJsExpression:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult];
+    return [self _eval:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult];
 }
 
--(id)_evalJsExpression:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
-    __proxiesOnScope = proxiesOnScope;
+-(id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
+    __collectedProxiesOnScope = proxiesOnScope;
 
     if([@"null" isEqualToString:jsAdjustedThisArg]) {
-        __js = [NSString stringWithFormat:@"%@;", jsExpression];
+        __collectedJS = [NSString stringWithFormat:@"%@;", jsExpression];
     } else {
-        __js = [NSString stringWithFormat:@"(function(){%@}).apply(%@);", jsExpression, jsAdjustedThisArg];
+        __collectedJS = [NSString stringWithFormat:@"(function(){%@}).apply(%@);", jsExpression, jsAdjustedThisArg];
     }
     return nil;
 }
@@ -747,7 +746,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 }
 
 
--(id)_evalJsExpression:(NSString*)jsExpression jsThisArg:(NSString*)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet*)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
+-(id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
     
     NSMutableString* jsProxiesOnScope = [NSMutableString stringWithString:@""];
     if(proxiesOnScope.count>0) {
@@ -775,7 +774,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
                                         "return {e:e.message};"
                                         "}"
                                         "return {v:%@.proxify(result)};"
-                                        "})()", jsProxiesOnScope, jsApplyExpression, self.transitGlobalVarJSExpression];
+                                        "})()", jsProxiesOnScope, jsApplyExpression, self.transitGlobalVarJSRepresentation];
         } else {
             jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
                                         "try{"
@@ -815,19 +814,19 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return enhancedResult;
 }
 
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg arguments:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     
-    NSString* jsExpression = [self.class jsExpressionFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
+    NSString* jsExpression = [self.class jsRepresentationFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
     id adjustedThisArg = thisArg == self ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
     
-    return [self _evalJsExpression:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult];
+    return [self _eval:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult];
 }
 
--(void)invokeNative {
+-(void)doInvokeNative {
     // nativeInvokeTransferObject is safe to parse and contains proxy-ids
-    NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)",self.transitGlobalVarJSExpression];
+    NSString* jsReadTransferObject = [NSString stringWithFormat:@"JSON.stringify(%@.nativeInvokeTransferObject)",self.transitGlobalVarJSRepresentation];
     NSString* jsonDescription = [self.webView stringByEvaluatingJavaScriptFromString:jsReadTransferObject];
     id parsedJSON = [self parseJSON:jsonDescription];
     
@@ -851,21 +850,21 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         if([transferObject isKindOfClass:NSArray.class]) {
             NSLog(@"invoke async functions in bulk of %d elements", [transferObject count]);
             for(NSDictionary* singleCallDescription in transferObject) {
-                [self invokeNativeDescription:singleCallDescription];
+                [self invokeNativeWithDescription:singleCallDescription];
             }
             expectsResult = NO;
         } else {
             // transferObject is a single callDescription
             // will return NSError if an exception occured
-            result = [self invokeNativeDescription:transferObject];
+            result = [self invokeNativeWithDescription:transferObject];
         }
     }
     
     if(expectsResult) {
         NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
         NSString* jsResult = [self.class jsRepresentation:result collectingProxiesOnScope:proxiesOnScope];
-        NSString* js = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSExpression, jsResult];
-        [self _evalJsExpression:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO];
+        NSString* js = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSRepresentation, jsResult];
+        [self _eval:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO];
     }
 }
 
@@ -973,8 +972,8 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 @implementation TransitNativeFunction
 
--(id)initWithRootContext:(TransitContext *)rootContext nativeId:(NSString*)nativeId block:(TransitFunctionBlock)block {
-    self = [self initWithRootContext:rootContext proxyId:nativeId];
+-(id)initWithContext:(TransitContext *)context nativeId:(NSString *)nativeId block:(TransitFunctionBlock)block {
+    self = [self initWithContext:context proxyId:nativeId];
     if(self) {
         NSParameterAssert(nativeId);
         NSParameterAssert(block);
@@ -984,7 +983,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 }
 
 -(id)callWithThisArg:(id)thisArg arguments:(NSArray*)arguments returnResult:(BOOL)returnResult {
-    id result = [self.rootContext invokeNativeFunc:self thisArg:thisArg arguments:arguments];
+    id result = [self.context invokeNativeFunc:self thisArg:thisArg arguments:arguments];
     return returnResult ? result : nil;
 }
 
@@ -994,18 +993,18 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 -(NSString*)_jsRepresentationCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
     [proxiesOnScope addObject:self];
-    return [self.rootContext jsRepresentationForNativeFunctionWithId:self.proxyId];
+    return [self.context jsRepresentationForNativeFunctionWithId:self.proxyId];
 }
 
 -(NSString*)jsRepresentationToResolveProxy {
-    return [self.rootContext jsRepresentationToResolveNativeFunctionWithId:self.proxyId async:self.async noThis:self.noThis];
+    return [self.context jsRepresentationToResolveNativeFunctionWithId:self.proxyId async:self.async noThis:self.noThis];
 }
 
 -(void)dispose {
-    if(self.rootContext) {
+    if(self.context) {
         if(self.proxyId)
-            [self.rootContext releaseNativeProxy:self];
-        [self clearRootContextAndProxyId];
+            [self.context releaseNativeFunction:self];
+        [self clearContextAndProxyId];
     }
 }
 
@@ -1018,7 +1017,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if(self.disposed)
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"function already disposed" userInfo:nil];
     
-    BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.rootContext);
+    BOOL noSpecificThisArg = (thisArg == nil) || (thisArg == self.context);
     
     if(noSpecificThisArg) {
         // most frequent cases: zore or one argument, no specific this arg
@@ -1029,20 +1028,20 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
             [jsArgs addObject:[TransitProxy jsRepresentation:arg collectingProxiesOnScope:proxiesOnScope]];
         }
         NSString* jsCall = [NSString stringWithFormat:@"%@(%@)", jsFunc, [jsArgs componentsJoinedByString:@","]];
-        return [evaluator _evalJsExpression:jsCall jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:returnResult];
+        return [evaluator _eval:jsCall jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:returnResult];
     } else {
         // general case
-        return [evaluator eval:@"@.apply(@,@)" thisArg:nil  arguments:@[self, TransitNilSafe(thisArg), (arguments?arguments:@[])] returnJSResult:returnResult];
+        return [evaluator eval:@"@.apply(@,@)" thisArg:nil values:@[self, TransitNilSafe(thisArg), (arguments ? arguments : @[])] returnJSResult:returnResult];
     }
 }
 
 -(id)callWithThisArg:(id)thisArg arguments:(NSArray *)arguments returnResult:(BOOL)returnResult {
-    return [self onEvaluator:self.rootContext callWithThisArg:thisArg arguments:arguments returnResult:returnResult];
+    return [self onEvaluator:self.context callWithThisArg:thisArg arguments:arguments returnResult:returnResult];
 }
 
 // remove this method if you do not want to call async JS functions in bulk
 -(void)callAsyncWithThisArg:(id)thisArg arguments:(NSArray*)arguments {
-    [self.rootContext queueAsyncCallToJSFunction:self thisArg:thisArg arguments:arguments];
+    [self.context queueAsyncCallToJSFunction:self thisArg:thisArg arguments:arguments];
 }
 
 @end

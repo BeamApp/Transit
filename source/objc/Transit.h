@@ -23,23 +23,23 @@ id TransitNilSafe(id valueOrNil);
 
 @interface TransitProxy : NSObject
 
--(TransitContext*)rootContext;
+-(TransitContext*)context;
 
 @property(nonatomic, readonly) id value;
 
 -(id)eval:(NSString*)jsCode;
 
--(id)eval:(NSString*)jsCode arg:(id)arg0;
--(id)eval:(NSString*)jsCode arg:(id)arg0 arg:(id)arg1;
--(id)eval:(NSString*)jsCode arg:(id)arg0 arg:(id)arg1 arg:(id)arg2;
--(id)eval:(NSString*)jsCode arguments:(NSArray*)arguments;
+-(id)eval:(NSString *)jsCode val:(id)val0;
+-(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1;
+-(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1 val:(id)val2;
+-(id)eval:(NSString *)jsCode values:(NSArray*)values;
 
 -(id)eval:(NSString*)jsCode thisArg:(id)thisArg;
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg arg:(id)arg0;
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg arg:(id)arg0 arg:(id)arg1;
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments;
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0;
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0 val:(id)val1;
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray*)values;
 
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg arguments:(NSArray*)arguments returnJSResult:(BOOL)returnJSResult;
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)values returnJSResult:(BOOL)returnJSResult;
 
 @end
 
