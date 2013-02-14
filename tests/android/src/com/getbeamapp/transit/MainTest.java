@@ -79,8 +79,8 @@ public class MainTest extends TestCase {
     public void testProxify() {
         assertEquals(TransitProxy.class, transit.proxify(1).getClass());
         assertEquals(TransitProxy.class, transit.proxify("a").getClass());
-        assertEquals(TransitJavaScriptFunction.class, transit.proxify("__TRANSIT_JS_FUNCTION_1").getClass());
-        assertNull(transit.proxify("__TRANSIT_NATIVE_FUNCTION_1"));
+        assertEquals(TransitJavaScriptFunction.class, transit.proxify("__TRANSIT_JS_FUNCTION_1000").getClass());
+        assertNull(transit.proxify("__TRANSIT_NATIVE_FUNCTION_1000"));
     }
 
     public void testFunction() {

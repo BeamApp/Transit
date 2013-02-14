@@ -101,15 +101,15 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         final List<TransitProxy> calledWithArgs = new LinkedList<TransitProxy>();
 
         AndroidTransitContext transit = getActivity().transit;
-        TransitCallable callable = new TransitCallable() {
+
+        TransitNativeFunction function = transit.registerCallable(new TransitCallable() {
             @Override
             public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
                 calledWithArgs.addAll(Arrays.asList(arguments));
                 return null;
             }
-        };
-
-        TransitNativeFunction function = transit.registerCallable(callable);
+        });
+        
         transit.eval("@(@, @)", function, function, function);
 
         assertEquals(2, calledWithArgs.size());
