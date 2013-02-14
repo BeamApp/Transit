@@ -19,7 +19,7 @@ public class MockTest extends TestCase {
         }
 
         @Override
-        public TransitProxy evaluate(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable... arguments) {
+        public TransitProxy evaluate(String stringToEvaluate, JSRepresentable thisArg, JSRepresentable... arguments) {
             return null;
         }
 
@@ -46,7 +46,7 @@ public class MockTest extends TestCase {
             }
 
             @Override
-            public TransitProxy evaluate(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable... arguments) {
+            public TransitProxy evaluate(String stringToEvaluate, JSRepresentable thisArg, JSRepresentable... arguments) {
                 return null;
             }
 

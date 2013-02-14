@@ -42,7 +42,7 @@ public class AndroidTransitContext extends TransitContext {
     }
 
     @Override
-    public String getJavaScriptRepresentation() {
+    public String getJSRepresentation() {
         return "window";
     }
 }

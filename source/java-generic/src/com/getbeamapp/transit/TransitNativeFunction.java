@@ -2,7 +2,7 @@ package com.getbeamapp.transit;
 
 import java.util.Arrays;
 
-public class TransitNativeFunction extends TransitFunction implements JavaScriptRepresentable {
+public class TransitNativeFunction extends TransitFunction implements JSRepresentable {
 
     private final String nativeId;
 
@@ -34,7 +34,7 @@ public class TransitNativeFunction extends TransitFunction implements JavaScript
     }
 
     @Override
-    public String getJavaScriptRepresentation() {
+    public String getJSRepresentation() {
         return "transit.nativeFunction(\"" + nativeId + "\")";
     }
     

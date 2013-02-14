@@ -2,11 +2,11 @@ package com.getbeamapp.transit;
 
 import android.util.Log;
 
-public class TransitJavaScriptFunction extends TransitFunction {
+public class TransitJSFunction extends TransitFunction {
 
     private final String id;
 
-    public TransitJavaScriptFunction(TransitContext rootContext, String id) {
+    public TransitJSFunction(TransitContext rootContext, String id) {
         super(rootContext);
         this.id = id;
     }
@@ -24,7 +24,7 @@ public class TransitJavaScriptFunction extends TransitFunction {
     }
 
     @Override
-    public String getJavaScriptRepresentation() {
+    public String getJSRepresentation() {
         return String.format("transit.r(\"%s\")", id);
     }
 

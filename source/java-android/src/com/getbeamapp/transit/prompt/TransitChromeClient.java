@@ -18,7 +18,7 @@ import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import com.getbeamapp.transit.JavaScriptRepresentable;
+import com.getbeamapp.transit.JSRepresentable;
 import com.getbeamapp.transit.JsonConverter;
 import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
@@ -197,7 +197,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         webView.loadUrl(String.format("javascript:transit.releaseProxy(%s)", JSONObject.quote(proxyId)));
     }
 
-    public final TransitProxy evaluate(String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable... arguments) {
+    public final TransitProxy evaluate(String stringToEvaluate, JSRepresentable thisArg, JSRepresentable... arguments) {
         // TODO: Make sure no "outside" evaluate-calls cause conflicts with
         // active Transit threads
 
@@ -304,7 +304,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                     waitingEvaluations.push((TransitEvalAction) action);
                 }
 
-                String response = action.getJavaScriptRepresentation();
+                String response = action.getJSRepresentation();
                 Log.d(TAG, String.format("Returning %s", response));
                 result.confirm(response);
             }

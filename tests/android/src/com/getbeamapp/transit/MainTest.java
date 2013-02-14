@@ -56,10 +56,10 @@ public class MainTest extends TestCase {
     }
 
     public void testCustomRepresentation() {
-        JavaScriptRepresentable object = new JavaScriptRepresentable() {
+        JSRepresentable object = new JSRepresentable() {
 
             @Override
-            public String getJavaScriptRepresentation() {
+            public String getJSRepresentation() {
                 return "myRepresentation";
             }
         };
@@ -79,18 +79,18 @@ public class MainTest extends TestCase {
     public void testProxify() {
         assertEquals(TransitProxy.class, transit.proxify(1).getClass());
         assertEquals(TransitProxy.class, transit.proxify("a").getClass());
-        assertEquals(TransitJavaScriptFunction.class, transit.proxify("__TRANSIT_JS_FUNCTION_1000").getClass());
+        assertEquals(TransitJSFunction.class, transit.proxify("__TRANSIT_JS_FUNCTION_1000").getClass());
         assertNull(transit.proxify("__TRANSIT_NATIVE_FUNCTION_1000"));
     }
 
     public void testFunction() {
         TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id");
-        assertEquals("transit.nativeFunction(\"some-id\")", function.getJavaScriptRepresentation());
+        assertEquals("transit.nativeFunction(\"some-id\")", function.getJSRepresentation());
     }
     
     public void testJsFunction() {
-        TransitJavaScriptFunction function = new TransitJavaScriptFunction(null, "some-id");
-        assertEquals("transit.r(\"some-id\")", function.getJavaScriptRepresentation());
+        TransitJSFunction function = new TransitJSFunction(null, "some-id");
+        assertEquals("transit.r(\"some-id\")", function.getJSRepresentation());
     }
 
     public void testFunctionInExpression() {

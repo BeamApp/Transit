@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.getbeamapp.transit.JavaScriptRepresentable;
+import com.getbeamapp.transit.JSRepresentable;
 import com.getbeamapp.transit.TransitContext;
 import com.getbeamapp.transit.TransitException;
 import com.getbeamapp.transit.TransitProxy;
@@ -21,13 +21,13 @@ class TransitEvalAction extends TransitAction {
 
     private TransitException exception;
 
-    private final JavaScriptRepresentable thisArg;
+    private final JSRepresentable thisArg;
 
-    private final JavaScriptRepresentable[] arguments;
+    private final JSRepresentable[] arguments;
 
     private final TransitContext context;
 
-    public TransitEvalAction(TransitContext context, String stringToEvaluate, JavaScriptRepresentable thisArg, JavaScriptRepresentable[] arguments) {
+    public TransitEvalAction(TransitContext context, String stringToEvaluate, JSRepresentable thisArg, JSRepresentable[] arguments) {
         this.context = context;
         this.stringToEvaluate = stringToEvaluate;
         this.thisArg = thisArg;
@@ -94,16 +94,16 @@ class TransitEvalAction extends TransitAction {
     }
 
     @Override
-    public String getJavaScriptRepresentation() {
+    public String getJSRepresentation() {
         try {
             JSONObject result = new JSONObject();
             result.put("type", TransitResponse.EVAL);
             result.put("script", context.jsExpressionFromCode(stringToEvaluate, (Object[]) this.arguments));
-            result.put("thisArg", thisArg.getJavaScriptRepresentation());
+            result.put("thisArg", thisArg.getJSRepresentation());
 
             JSONArray serializedArguments = new JSONArray();
-            for (JavaScriptRepresentable argument : this.arguments) {
-                serializedArguments.put(argument.getJavaScriptRepresentation());
+            for (JSRepresentable argument : this.arguments) {
+                serializedArguments.put(argument.getJSRepresentation());
             }
 
             result.put("arguments", serializedArguments.toString());

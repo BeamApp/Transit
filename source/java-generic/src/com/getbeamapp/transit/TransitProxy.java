@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TransitProxy implements JavaScriptRepresentable {
+public class TransitProxy implements JSRepresentable {
     public enum Type {
         UNKNOWN,
         NULL,
@@ -57,7 +57,7 @@ public class TransitProxy implements JavaScriptRepresentable {
         Matcher jsFunctionMatcher = JS_FUNCTION_PATTERN.matcher(value);
 
         if (jsFunctionMatcher.matches()) {
-            return new TransitJavaScriptFunction(context, jsFunctionMatcher.group(1));
+            return new TransitJSFunction(context, jsFunctionMatcher.group(1));
         }
 
         TransitProxy result = new TransitProxy(context);
@@ -236,10 +236,10 @@ public class TransitProxy implements JavaScriptRepresentable {
 
             Object argument = arguments[index];
 
-            if (argument instanceof JavaScriptRepresentable) {
-                replacement = ((JavaScriptRepresentable) argument).getJavaScriptRepresentation();
+            if (argument instanceof JSRepresentable) {
+                replacement = ((JSRepresentable) argument).getJSRepresentation();
             } else {
-                replacement = proxify(argument).getJavaScriptRepresentation();
+                replacement = proxify(argument).getJSRepresentation();
             }
 
             matcher.appendReplacement(output, replacement);
@@ -251,7 +251,7 @@ public class TransitProxy implements JavaScriptRepresentable {
     }
 
     @Override
-    public String getJavaScriptRepresentation() {
+    public String getJSRepresentation() {
         switch (type) {
         case NULL:
             return "null";
@@ -273,7 +273,7 @@ public class TransitProxy implements JavaScriptRepresentable {
                     builder.append(", ");
                 }
 
-                builder.append(item.getJavaScriptRepresentation());
+                builder.append(item.getJSRepresentation());
             }
             builder.append("]");
             return builder.toString();

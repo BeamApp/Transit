@@ -2,13 +2,13 @@ package com.getbeamapp.transit.prompt;
 
 import org.json.JSONObject;
 
-import com.getbeamapp.transit.JavaScriptRepresentable;
+import com.getbeamapp.transit.JSRepresentable;
 import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
 
-public abstract class TransitAction implements JavaScriptRepresentable {
-    protected String createJavaScriptRepresentation(TransitResponse type, JavaScriptRepresentable javaScriptRepresentation) {
+public abstract class TransitAction implements JSRepresentable {
+    protected String createJavaScriptRepresentation(TransitResponse type, JSRepresentable javaScriptRepresentation) {
         if (javaScriptRepresentation != null) {
-            return createJavaScriptRepresentation(type, javaScriptRepresentation.getJavaScriptRepresentation());
+            return createJavaScriptRepresentation(type, javaScriptRepresentation.getJSRepresentation());
         } else {
             return createJavaScriptRepresentation(type, "null");
         }
