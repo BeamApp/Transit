@@ -229,7 +229,7 @@
 
 -(void)testCallThroughJavaScript {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(id thisArg, NSArray *arguments) {
         int a = [arguments[0] intValue];
         int b = [arguments[1] intValue];
         return @(a + b);
@@ -260,7 +260,7 @@
 -(void)testInvokeNativeProducesJSExceptionIfNotHandledCorrectly {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     context.handleRequestBlock = nil;
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(id thisArg, NSArray *arguments) {
         // do nothing
         return nil;
     }];
@@ -271,7 +271,7 @@
 
 -(void)testInvokeNativeThatThrowsExceptionWithoutLocalizedReason {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(id thisArg, NSArray *arguments) {
         @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:nil];
     }];
     [context retainNativeFunction:func];
@@ -282,7 +282,7 @@
 
 -(void)testInvokeNativeThatThrowsExceptionWithLocalizedReason {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(id thisArg, NSArray *arguments) {
         @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:@{NSLocalizedDescriptionKey : @"my localized description"}];
     }];
     [context retainNativeFunction:func];
@@ -308,7 +308,7 @@
 
 -(void)testNativeFunctionCanReturnVoid {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(id thisArg, NSArray *arguments) {
         return nil;
     }];
     [context retainNativeFunction:func];
@@ -318,7 +318,7 @@
 
 -(void)testNativeFunctionCanReturnNull {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(id thisArg, NSArray *arguments) {
         return NSNull.null;
     }];
     [context retainNativeFunction:func];
@@ -329,7 +329,7 @@
 
 -(void)testInvokeNativeWithJSProxies {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(id thisArg, NSArray *arguments) {
         STAssertTrue([thisArg isKindOfClass:TransitJSFunction.class], @"this became js function proxy");
         STAssertTrue([arguments[0] isKindOfClass:TransitProxy.class], @"proxy");
 
@@ -404,7 +404,7 @@
     NSString* longString = [@"" stringByPaddingToLength:len withString:@"c" startingAtIndex:0];
 
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *nativeFunc = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *nativeFunc = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(id thisArg, NSArray *arguments) {
 
         return [arguments[0] stringByAppendingFormat:@"%d", [arguments[1] intValue]];
     }];
@@ -435,15 +435,15 @@
     [context.webView loadRequest:[NSURLRequest requestWithURL:url]];
     
     __block BOOL finished = NO;
-    TransitFunction *onFinish = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onFinish" block:^id(TransitProxy *thisArg, NSArray *arguments) {
-        id results = [thisArg eval:@"{failed:this.results().failedCount, passed:this.results().passedCount}" thisArg:arguments[0]];
+    TransitFunction *onFinish = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onFinish" block:^id(id thisArg, NSArray *arguments) {
+        id results = [context eval:@"{failed:this.results().failedCount, passed:this.results().passedCount}" thisArg:arguments[0]];
         finished = YES;
         STAssertEqualObjects(@0, results[@"failed"], @"no test failed");
         STAssertTrue([results[@"passed"] intValue] >= 51, @"at the time of writing, 51 tests should have passed");
         return @"finished :)";
     }];
     
-    TransitFunction *onLoad = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onLoad" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitFunction *onLoad = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onLoad" block:^id(id thisArg, NSArray *arguments) {
         [context eval:@"jasmineEnv.addReporter({reportRunnerResults: @})" val:onFinish];
         return @"foo";
     }];

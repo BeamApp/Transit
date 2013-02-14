@@ -238,7 +238,7 @@
 -(void)testInvokeNativeWithThisArgVariations {
     @autoreleasepool {
         TransitContext* context = TransitContext.new;
-        TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" block:^id(TransitProxy *thisArg, NSArray *arguments) {
+        TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" block:^id(id thisArg, NSArray *arguments) {
 
             return thisArg;
         }];
@@ -253,8 +253,8 @@
         
         // js: this == "3", e.g. transit.nativeFunc("someId").apply("3");
         result = [func callWithThisArg:@"3"];
-        STAssertTrue([result isKindOfClass:TransitProxy.class], @"is proxy");
-        STAssertEqualObjects(@"3", [(TransitProxy*)result value], @"wraps '3'");
+        STAssertFalse([result isKindOfClass:TransitProxy.class], @"is not a proxy!");
+        STAssertEqualObjects(@"3", result, @"does not wrap '3'");
     }
 }
 

@@ -565,9 +565,8 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 -(id)invokeNativeFunc:(TransitNativeFunction*)func thisArg:(id)thisArg arguments:(NSArray*)arguments {
     if(thisArg == nil || thisArg == NSNull.null) {
         thisArg = self;
-    } else
-        if(![thisArg isKindOfClass:TransitProxy.class])
-            thisArg = [[TransitProxy alloc] initWithContext:self value:thisArg];
+    }
+    // TODO: throw exceptions in unsupported types
     
     return [func callWithProxifedThisArg:thisArg proxifiedArguments:arguments];
 }

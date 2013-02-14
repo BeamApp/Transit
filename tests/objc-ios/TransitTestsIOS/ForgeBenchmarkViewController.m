@@ -45,7 +45,7 @@
 -(void)setupTransit {
     self.transit = [[TransitUIWebViewContext alloc] initWithUIWebView:self.webView];
     
-    TransitNativeFunction *asyncFunc = (TransitNativeFunction*)[self.transit asyncFunctionWithBlock:^(TransitProxy *thisArg, NSArray *arguments) {
+    TransitNativeFunction *asyncFunc = (TransitNativeFunction*)[self.transit asyncFunctionWithBlock:^(id thisArg, NSArray *arguments) {
         NSString* data = arguments[0];
         TransitFunction *cb = arguments[1];
         
@@ -54,7 +54,7 @@
         [cb callAsyncWithArg:data];
     }];
     
-    TransitNativeFunction *blockingFunc = (TransitNativeFunction*)[self.transit functionWithBlock:^id(TransitProxy *thisArg, NSArray *arguments) {
+    TransitNativeFunction *blockingFunc = (TransitNativeFunction*)[self.transit functionWithBlock:^id(id thisArg, NSArray *arguments) {
         NSString* data = arguments[0];
         return data;
     }];

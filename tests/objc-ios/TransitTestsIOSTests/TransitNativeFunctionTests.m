@@ -35,7 +35,7 @@
     [[[mock stub] andReturn:returnValue] callWithThisArg:OCMOCK_ANY arguments:args];
     id actualResult = [func callWithThisArg:thisArg arguments:args];
     STAssertTrue(actualResult == returnValue, @"passes result");
-    STAssertTrue(receivedThis.value == thisArg, @"naked this arg has been wrapped");
+    STAssertTrue(receivedThis == thisArg, @"naked this arg stays naked");
     [mock verify];
 }
 
@@ -47,7 +47,7 @@
 }
 
 -(void)testJSRepresentation {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy *_this, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(id _this, NSArray *arguments) {
         return (id) nil;
     }];
     
@@ -59,7 +59,7 @@
 }
 
 -(void)testJSRepresentationToResolveProxyBlocked {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy *_this, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(id _this, NSArray *arguments) {
         return (id) nil;
     }];
     
@@ -69,7 +69,7 @@
 }
 
 -(void)testJSRepresentationToResolveProxyAsync {
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy *_this, NSArray *arguments) {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(id _this, NSArray *arguments) {
         return (id) nil;
     }];
     func.async = YES;
@@ -80,7 +80,7 @@
 }
 
 -(void)testJSRepresentationToResolveProxyNoThis {
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy *_this, NSArray *arguments) {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(id _this, NSArray *arguments) {
         return (id) nil;
     }];
     func.noThis = YES;
@@ -91,7 +91,7 @@
 }
 
 -(void)testJSRepresentationToResolveProxyAsyncAndNoThis {
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy *_this, NSArray *arguments) {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(id _this, NSArray *arguments) {
         return (id) nil;
     }];
     func.async = YES;
@@ -103,7 +103,7 @@
 }
 
 -(void)testInExpression {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitProxy *_this, NSArray *arguments) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(id _this, NSArray *arguments) {
         return (id) nil;
     }];
     
@@ -113,7 +113,7 @@
 }
 
 -(void)testDisposeOnNilContextDoesNotThrowException {
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:nil nativeId:@"someId" block:^(TransitProxy *_this, NSArray *arguments) {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:nil nativeId:@"someId" block:^(id _this, NSArray *arguments) {
         return (id) nil;
     }];
     [func dispose];

@@ -43,9 +43,9 @@ id TransitNilSafe(id valueOrNil);
 
 @end
 
-typedef void (^TransitVoidFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
-typedef id (^TransitFunctionBlock)(TransitProxy *thisArg, NSArray* arguments);
-typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitProxy *thisArg, NSArray* arguments);
+typedef void (^TransitVoidFunctionBlock)(id thisArg, NSArray* arguments);
+typedef id (^TransitFunctionBlock)(id thisArg, NSArray* arguments);
+typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, id thisArg, NSArray* arguments);
 
 @protocol TransitFunctionBodyProtocol <NSObject>
 -(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray *)arguments;
