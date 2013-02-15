@@ -137,7 +137,7 @@ public class TransitScriptBuilder {
             parse((Array) o);
         } else if (o instanceof Collection<?>) {
             parse((Collection<?>) o);
-        } else if (o instanceof TransitObject || o instanceof Map<?, ?>) {
+        } else if (o instanceof TransitJSObject || o instanceof Map<?, ?>) {
             parse((Map<?, ?>) o);
         } else if (o instanceof Number || o instanceof Boolean) {
             buffer.append(String.valueOf(o));

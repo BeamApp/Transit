@@ -1,7 +1,6 @@
 package com.getbeamapp.transit;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -44,8 +43,8 @@ public class TransitProxy {
         return value;
     }
 
-    public static TransitObject proxifyMap(TransitContext context, Map<?, ?> input) {
-        TransitObject output = new TransitObject();
+    public static TransitJSObject proxifyMap(TransitContext context, Map<?, ?> input) {
+        TransitJSObject output = new TransitJSObject();
 
         for (Object keyObject : input.keySet()) {
             output.put(String.valueOf(keyObject), context.proxify(input.get(keyObject)));
@@ -54,8 +53,8 @@ public class TransitProxy {
         return output;
     }
 
-    public static List<Object> proxifyArray(TransitContext context, Iterable<?> input) {
-        List<Object> output = new LinkedList<Object>();
+    public static TransitJSArray proxifyIterable(TransitContext context, Iterable<?> input) {
+        TransitJSArray output = new TransitJSArray();
 
         for (Object o : input) {
             output.add(context.proxify(o));
@@ -71,9 +70,9 @@ public class TransitProxy {
         } else if (value instanceof String) {
             return proxifyString(rootContext, (String) value);
         } else if (value instanceof Object[]) {
-            return proxifyArray(rootContext, Arrays.asList((Object[]) value));
-        } else if (value instanceof List) {
-            return proxifyArray(rootContext, (List<?>) value);
+            return proxifyIterable(rootContext, Arrays.asList((Object[]) value));
+        } else if (value instanceof List<?>) {
+            return proxifyIterable(rootContext, (List<?>) value);
         } else if (value instanceof Map<?, ?>) {
             return proxifyMap(rootContext, (Map<?, ?>) value);
         } else {

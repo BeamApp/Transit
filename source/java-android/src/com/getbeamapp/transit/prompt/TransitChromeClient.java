@@ -25,7 +25,7 @@ import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
 import com.getbeamapp.transit.TransitException;
 import com.getbeamapp.transit.TransitNativeFunction;
-import com.getbeamapp.transit.TransitObject;
+import com.getbeamapp.transit.TransitJSObject;
 
 public class TransitChromeClient extends WebChromeClient implements TransitAdapter {
 
@@ -251,7 +251,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     private void doInvokeNative(final Object _invocationDescription) {
         lock.close();
 
-        TransitObject invocationDescription = (TransitObject) _invocationDescription;
+        TransitJSObject invocationDescription = (TransitJSObject) _invocationDescription;
 
         final String nativeId = (String) invocationDescription.get("nativeId");
         final Object thisArg = (Object) invocationDescription.get("thisArg");
