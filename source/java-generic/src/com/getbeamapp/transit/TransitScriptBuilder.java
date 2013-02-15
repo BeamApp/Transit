@@ -32,7 +32,7 @@ public class TransitScriptBuilder {
         this.buffer = new StringBuffer();
     }
 
-    public void process(String stringToEvaluate, Object[] arguments) {
+    public void process(String stringToEvaluate, Object... values) {
         Pattern pattern = Pattern.compile("(.*?)@");
         Matcher matcher = pattern.matcher(stringToEvaluate);
 
@@ -41,11 +41,11 @@ public class TransitScriptBuilder {
         while (matcher.find()) {
             buffer.append(matcher.group(1));
 
-            if (index >= arguments.length) {
+            if (index >= values.length) {
                 matcher.appendReplacement(buffer, "@");
                 continue;
             } else {
-                parse(arguments[index]);
+                parse(values[index]);
                 matcher.appendReplacement(buffer, "");
             }
 
