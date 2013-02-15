@@ -15,7 +15,7 @@ public class TransitNativeFunction extends TransitFunction {
     }
 
     @Override
-    public Object call(Object thisArg, Object... arguments) {
+    public Object callWithThisArg(Object thisArg, Object... arguments) {
         if (thisArg == null) {
             thisArg = getContext();
         }

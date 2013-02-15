@@ -2,8 +2,8 @@ package com.getbeamapp.transit;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +13,22 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 public class TransitScriptBuilder {
+    private static class ArgumentList extends LinkedList<Object> {
+
+        private static final long serialVersionUID = -8245671519808766593L;
+
+    }
+
+    public static Iterable<Object> arguments(Object... items) {
+        ArgumentList result = new ArgumentList();
+
+        for (Object item : items) {
+            result.add(item);
+        }
+
+        return result;
+    }
+
     private StringBuffer buffer;
     private final StringBuffer vars = new StringBuffer();
     private final Set<String> definedVars = new HashSet<String>();
@@ -136,8 +152,8 @@ public class TransitScriptBuilder {
             buffer.append("null");
         } else if (o.getClass().isArray()) {
             parseArray(o);
-        } else if (o instanceof Collection<?>) {
-            parse((Collection<?>) o);
+        } else if (o instanceof Iterable<?>) {
+            parse((Iterable<?>) o);
         } else if (o instanceof TransitJSObject || o instanceof Map<?, ?>) {
             parse((Map<?, ?>) o);
         } else if (o instanceof Number || o instanceof Boolean) {
@@ -183,13 +199,24 @@ public class TransitScriptBuilder {
     }
 
     private void parse(Iterable<?> iterable) {
-        buffer.append("[");
+        if (!(iterable instanceof ArgumentList)) {
+            buffer.append("[");
+        }
 
+        boolean first = true;
         for (Object o : iterable) {
+            if (first) {
+                first = false;
+            } else {
+                buffer.append(", ");
+            }
+            
             parse(o);
         }
 
-        buffer.append("]");
+        if (!(iterable instanceof ArgumentList)) {
+            buffer.append("]");
+        }
     }
 
     private String getVariable(TransitProxy p) {

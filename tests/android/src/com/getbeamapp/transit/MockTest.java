@@ -1,5 +1,6 @@
 package com.getbeamapp.transit;
 
+import static com.getbeamapp.transit.Matchers.contains;
 import junit.framework.TestCase;
 
 import com.google.android.testing.mocking.AndroidMock;
@@ -51,6 +52,26 @@ public class MockTest extends TestCase {
         AndroidMock.verify(adapter);
         assertEquals("Untitled", title);
         assertEquals(true, alertResult);
+    }
+
+    public void testJSFunction() {
+        TransitAdapter adapter = AndroidMock.createMock(TransitAdapter.class);
+
+        AndroidMock.expect(adapter.evaluate(contains("__TRANSIT_JS_FUNCTION_1(1)"))).andReturn(11);
+        AndroidMock.expect(adapter.evaluate(contains("__TRANSIT_JS_FUNCTION_1(2, 0, 0)"))).andReturn(12);
+        AndroidMock.expect(adapter.evaluate(contains("__TRANSIT_JS_FUNCTION_1.apply(0, [3]);"))).andReturn(13);
+        AndroidMock.replay(adapter);
+
+        AndroidTransitContext ctx = new AndroidTransitContext(adapter);
+        TransitJSFunction f = new TransitJSFunction(ctx, "1");
+        Object f1 = f.call(1);
+        Object f2 = f.callWithThisArg(ctx, 2, 0, 0);
+        Object f3 = f.callWithThisArg(0, 3);
+
+        AndroidMock.verify(adapter);
+        assertEquals(11, f1);
+        assertEquals(12, f2);
+        assertEquals(13, f3);
     }
 
 }
