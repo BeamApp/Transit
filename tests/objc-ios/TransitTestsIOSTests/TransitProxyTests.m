@@ -47,12 +47,12 @@
 -(void)testDoNotReplaceArgumentsTwice {
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     
-    NSString* replaced = [TransitContext jsRepresentationFromCode:@"str: @" arguments:@[@"foo@bar"] collectingProxiesOnScope:proxiesOnScope];
+    NSString* replaced = [TransitProxy jsRepresentationFromCode:@"str: @" arguments:@[@"foo@bar"] collectingProxiesOnScope:proxiesOnScope];
     STAssertEqualObjects(@"str: \"foo@bar\"", replaced, @"first replacement");
     
-    STAssertNoThrow([TransitContext jsRepresentationFromCode:replaced arguments:@[] collectingProxiesOnScope:proxiesOnScope], @"does not try to replace a second time");
+    STAssertNoThrow([TransitProxy jsRepresentationFromCode:replaced arguments:@[] collectingProxiesOnScope:proxiesOnScope], @"does not try to replace a second time");
     
-    STAssertThrows([TransitContext jsRepresentationFromCode:replaced arguments:@[@"another argument"] collectingProxiesOnScope:proxiesOnScope], @"the @ in the string will not be recognized as placeholder. Hence, too many args");
+    STAssertThrows([TransitProxy jsRepresentationFromCode:replaced arguments:@[@"another argument"] collectingProxiesOnScope:proxiesOnScope], @"the @ in the string will not be recognized as placeholder. Hence, too many args");
     
     STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies needed for any of the above expressions");
 }
@@ -170,16 +170,6 @@
     NSString* actual = [proxy _jsRepresentationCollectingProxiesOnScope:set];
     STAssertEqualObjects(@[proxy], set.array, @"proxy on scope");
     STAssertEqualObjects(@"fancyJsRepresentation", actual, @"proxy representation from context");
-    [context verify];
-}
-
--(void)testDelegatesEvalToRootContext {
-    id context = [OCMockObject mockForClass:TransitContext.class];
-    TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:@"someId"];
-
-    [[[context stub] andReturn:@"4"] eval:@"2+2" thisArg:proxy values:@[] returnJSResult:YES];
-    NSString* actual = [proxy eval:@"2+2"];
-    STAssertEqualObjects(@"4", actual, @"passed through");
     [context verify];
 }
 

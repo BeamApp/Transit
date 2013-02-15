@@ -20,6 +20,7 @@ id TransitNilSafe(id valueOrNil);
 
 @class TransitContext;
 @class TransitFunction;
+@class TransitEvaluable;
 
 @interface TransitObject : NSObject
 
@@ -33,6 +34,18 @@ id TransitNilSafe(id valueOrNil);
 @interface TransitProxy : TransitObject
 
 @property(nonatomic, readonly) id value;
+
+@end
+
+typedef void (^TransitVoidFunctionBlock)(id thisArg, NSArray* arguments);
+typedef id (^TransitFunctionBlock)(id thisArg, NSArray* arguments);
+typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, id thisArg, NSArray* arguments);
+
+@protocol TransitFunctionBodyProtocol <NSObject>
+-(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray *)arguments;
+@end
+
+@interface TransitEvaluable : TransitObject
 
 -(id)eval:(NSString*)jsCode;
 
@@ -50,21 +63,16 @@ id TransitNilSafe(id valueOrNil);
 
 @end
 
-typedef void (^TransitVoidFunctionBlock)(id thisArg, NSArray* arguments);
-typedef id (^TransitFunctionBlock)(id thisArg, NSArray* arguments);
-typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, id thisArg, NSArray* arguments);
 
-@protocol TransitFunctionBodyProtocol <NSObject>
--(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray *)arguments;
-@end
-
-@interface TransitContext : TransitProxy
+@interface TransitContext : TransitEvaluable
 
 -(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block;
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 -(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block;
 
 -(TransitFunction*)asyncFunctionWithBlock:(TransitVoidFunctionBlock)block;
+
+-(void)dispose;
 
 @end
 
@@ -117,3 +125,4 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, id thisArg,
 @interface TransitJSFunction : TransitFunction
 
 @end
+

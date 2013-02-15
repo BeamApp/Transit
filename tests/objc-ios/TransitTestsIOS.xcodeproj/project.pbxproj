@@ -38,6 +38,7 @@
 		CBE29FD816C671F4004AED2B /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
 		CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */; };
 		F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B042BA5A1E209398767C6 /* TransitObjectTests.m */; };
+		F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,7 @@
 		CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCMockObject+Reset.h"; sourceTree = "<group>"; };
 		CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCMockObject+Reset.m"; sourceTree = "<group>"; };
 		F26B042BA5A1E209398767C6 /* TransitObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitObjectTests.m; sourceTree = "<group>"; };
+		F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitEvaluableTests.m; sourceTree = "<group>"; };
 		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -202,6 +204,7 @@
 				CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */,
 				CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */,
 				F26B042BA5A1E209398767C6 /* TransitObjectTests.m */,
+				F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */,
 			);
 			path = TransitTestsIOSTests;
 			sourceTree = "<group>";
@@ -407,6 +410,7 @@
 				CB18EF5916C5A04D0051CC7C /* TransitContextTest.m in Sources */,
 				CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */,
 				F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */,
+				F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

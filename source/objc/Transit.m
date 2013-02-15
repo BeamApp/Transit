@@ -212,46 +212,6 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
     return _proxyId;
 }
 
--(id)eval:(NSString*)jsCode {
-    return [self eval:jsCode thisArg:self values:@[] returnJSResult:YES];
-}
-
--(id)eval:(NSString *)jsCode val:(id)val0 {
-    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0)] returnJSResult:YES];
-}
-
--(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1 {
-    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0), TransitNilSafe(val1)] returnJSResult:YES];
-}
-
--(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1 val:(id)val2 {
-    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0), TransitNilSafe(val1), TransitNilSafe(val2)] returnJSResult:YES];
-}
-
--(id)eval:(NSString *)jsCode values:(NSArray*)values {
-    return [self eval:jsCode thisArg:self values:values returnJSResult:YES];
-}
-
--(id)eval:(NSString*)jsCode thisArg:(id)thisArg {
-    return [self eval:jsCode thisArg:thisArg values:@[] returnJSResult:YES];
-}
-
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0 {
-    return [self eval:jsCode thisArg:thisArg values:@[TransitNilSafe(val0)] returnJSResult:YES];
-}
-
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0 val:(id)val1 {
-    return [self eval:jsCode thisArg:thisArg values:@[TransitNilSafe(val0), TransitNilSafe(val1)] returnJSResult:YES];
-}
-
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray*)values {
-    return [self eval:jsCode thisArg:thisArg values:values returnJSResult:YES];
-}
-
--(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)values returnJSResult:(BOOL)returnJSResult {
-    return [self.context eval:jsCode thisArg:thisArg values:values returnJSResult:returnJSResult];
-}
-
 -(NSString*)jsRepresentationToResolveProxy {
     if(_proxyId && self.context)
         return [self.context jsRepresentationToResolveProxyWithId:_proxyId];
@@ -320,6 +280,51 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 }
 
 @end
+
+@implementation TransitEvaluable : TransitObject
+
+-(id)eval:(NSString*)jsCode {
+    return [self eval:jsCode thisArg:self values:@[] returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode val:(id)val0 {
+    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0)] returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1 {
+    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0), TransitNilSafe(val1)] returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1 val:(id)val2 {
+    return [self eval:jsCode thisArg:self values:@[TransitNilSafe(val0), TransitNilSafe(val1), TransitNilSafe(val2)] returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode values:(NSArray*)values {
+    return [self eval:jsCode thisArg:self values:values returnJSResult:YES];
+}
+
+-(id)eval:(NSString*)jsCode thisArg:(id)thisArg {
+    return [self eval:jsCode thisArg:thisArg values:@[] returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0 {
+    return [self eval:jsCode thisArg:thisArg values:@[TransitNilSafe(val0)] returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0 val:(id)val1 {
+    return [self eval:jsCode thisArg:thisArg values:@[TransitNilSafe(val0), TransitNilSafe(val1)] returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray*)values {
+    return [self eval:jsCode thisArg:thisArg values:values returnJSResult:YES];
+}
+
+-(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)values returnJSResult:(BOOL)returnJSResult {
+    return [self.context eval:jsCode thisArg:thisArg values:values returnJSResult:returnJSResult];
+}
+
+@end
+
 
 NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD = 250;
@@ -839,7 +844,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)arguments returnJSResult:(BOOL)returnJSResult {
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     
-    NSString* jsExpression = [self.class jsRepresentationFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
+    NSString* jsExpression = [TransitProxy jsRepresentationFromCode:jsCode arguments:arguments collectingProxiesOnScope:proxiesOnScope];
     id adjustedThisArg = thisArg == self ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
     
@@ -884,7 +889,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     
     if(expectsResult) {
         NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
-        NSString* jsResult = [self.class jsRepresentation:result collectingProxiesOnScope:proxiesOnScope];
+        NSString* jsResult = [TransitProxy jsRepresentation:result collectingProxiesOnScope:proxiesOnScope];
         NSString* js = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSRepresentation, jsResult];
         [self _eval:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO];
     }
