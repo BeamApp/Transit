@@ -9,8 +9,6 @@ import java.util.regex.Pattern;
 
 public abstract class TransitContext extends TransitEvaluatable {
 
-    public abstract Object evalWithContext(String stringToEvaluate, Object context, Object... arguments);
-    
     public abstract void releaseProxy(String id);
 
     private final Map<String, TransitNativeFunction> retrainedNativeFunctions = new HashMap<String, TransitNativeFunction>();
