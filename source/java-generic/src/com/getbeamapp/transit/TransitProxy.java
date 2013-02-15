@@ -4,19 +4,19 @@ package com.getbeamapp.transit;
 public class TransitProxy extends TransitObject {
 
     private final String proxyId;
-    private final TransitContext rootContext;
+    private final TransitContext context;
 
-    TransitProxy(TransitContext rootContext, String proxyId) {
-        assert rootContext != null;
+    TransitProxy(TransitContext context, String proxyId) {
+        assert context != null;
         assert proxyId != null;
         
-        this.rootContext = rootContext;
+        this.context = context;
         this.proxyId = proxyId;
     }
     
     @Override
-    public TransitContext getRootContext() {
-        return rootContext;
+    public TransitContext getContext() {
+        return context;
     }
 
     public Object eval(String stringToEvaluate) {
@@ -31,9 +31,9 @@ public class TransitProxy extends TransitObject {
         return evalWithContext(stringToEvaluate, context, new Object[0]);
     }
 
-    public Object evalWithContext(String stringToEvaluate, Object context,
+    public Object evalWithContext(String stringToEvaluate, Object thisArg,
             Object... arguments) {
-        return rootContext.evalWithContext(stringToEvaluate, context, arguments);
+        return context.evalWithContext(stringToEvaluate, thisArg, arguments);
     }
 
     public String getProxyId() {
@@ -45,8 +45,8 @@ public class TransitProxy extends TransitObject {
     @Override
     protected void finalize() throws Throwable {
         if (!finalized) {
-            if (this.rootContext != null && proxyId != null) {
-                this.rootContext.releaseProxy(proxyId);
+            if (this.context != null && proxyId != null) {
+                this.context.releaseProxy(proxyId);
             }
 
             finalized = true;

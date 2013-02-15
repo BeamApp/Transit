@@ -26,7 +26,7 @@ public abstract class TransitContext extends TransitEvaluatable {
     }
     
     @Override
-    public TransitContext getRootContext() {
+    public TransitContext getContext() {
         return this;
     }
 
@@ -102,7 +102,7 @@ public abstract class TransitContext extends TransitEvaluatable {
 
     public Object proxify(Object value) {
         if (value instanceof TransitProxy) {
-            assert ((TransitProxy) value).getRootContext() == this;
+            assert ((TransitProxy) value).getContext() == this;
             return value;
         } else if (value instanceof TransitContext) {
             assert ((TransitContext) value) == this;

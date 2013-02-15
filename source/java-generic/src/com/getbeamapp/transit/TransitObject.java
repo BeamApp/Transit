@@ -2,14 +2,14 @@ package com.getbeamapp.transit;
 
 public abstract class TransitObject {
     
-    public abstract TransitContext getRootContext();
+    public abstract TransitContext getContext();
     
     public Object get(String key) {
-        return getRootContext().eval("@[@]", this, key);
+        return getContext().eval("@[@]", this, key);
     }
 
     public Object callMember(String key, Object... arguments) {
-        return getRootContext().eval("@[@].apply(@, @)", this, key, this, arguments);
+        return getContext().eval("@[@].apply(@, @)", this, key, this, arguments);
     }
     
 }
