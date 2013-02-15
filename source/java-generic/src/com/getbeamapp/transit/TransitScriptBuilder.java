@@ -1,9 +1,10 @@
 package com.getbeamapp.transit;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -124,7 +125,7 @@ public class TransitScriptBuilder {
                 parseNative(o);
             }
         } else if (o instanceof TransitContext) {
-            addVariable("__TRANSIT_OBJECT_GLOBAL", "window");
+            buffer.append("window");
         } else {
             parseNative(o);
         }
@@ -134,7 +135,7 @@ public class TransitScriptBuilder {
         if (o == null) {
             buffer.append("null");
         } else if (o.getClass().isArray()) {
-            parse((Array) o);
+            parseArray(o);
         } else if (o instanceof Collection<?>) {
             parse((Collection<?>) o);
         } else if (o instanceof TransitJSObject || o instanceof Map<?, ?>) {
@@ -150,8 +151,15 @@ public class TransitScriptBuilder {
         }
     }
 
-    private void parse(Array array) {
-        parse(Arrays.asList(array));
+    private void parseArray(Object array) {
+        int l = Array.getLength(array);
+        List<Object> list = new ArrayList<Object>(l);
+
+        for (int i = 0; i < l; i++) {
+            list.add(Array.get(array, i));
+        }
+
+        parse(list);
     }
 
     private void parse(Map<?, ?> o) {
