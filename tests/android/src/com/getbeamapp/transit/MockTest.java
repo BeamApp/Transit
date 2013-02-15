@@ -22,7 +22,7 @@ public class MockTest extends TestCase {
             // WORKAROUND: EasyMock creates oddly formatted messages with
             // newlines and tabs - let's get rid of multiple whitespace chars.
             String msg = TestHelpers.reduceWhitespace(e.getMessage());
-            assertEquals("Expectation failure on verify: get(): expected: 2, actual: 1", msg);
+            assertEquals("Expectation failure on verify: get(\"answer\"): expected: 2, actual: 1", msg);
         }
     }
 

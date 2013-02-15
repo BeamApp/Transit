@@ -1,6 +1,6 @@
 <factorypath>
     <factorypathentry kind="WKSPJAR" id="/TransitAndroidTest/deps/AndroidMockGenerator.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="ANDROID_SDK" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/TransitAndroid/bin/transitandroid.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="TRANSIT_LIB" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="TRANSIT_TEST_APP" enabled="true" runInBatchMode="false"/>
 </factorypath>
