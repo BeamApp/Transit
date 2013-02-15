@@ -238,9 +238,8 @@
 -(void)testInvokeNativeWithThisArgVariations {
     @autoreleasepool {
         TransitContext* context = TransitContext.new;
-        TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" block:^id(id thisArg, NSArray *arguments) {
-
-            return thisArg;
+        TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" block:^id(TransitNativeFunctionCallScope *scope) {
+            return scope.thisArg;
         }];
         
         // js: this == undefined

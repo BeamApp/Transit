@@ -49,26 +49,26 @@
 
 -(void)setupTransit {
     // only sound on mobile version is explosion
-    [transit replaceFunctionAt:@"ig.Sound.prototype.play" withFunctionWithBlock:^id(TransitFunction *original, TransitProxy *thisArg, NSArray *arguments) {
+    [transit replaceFunctionAt:@"ig.Sound.prototype.play" withFunctionWithBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
         [self playSoundFromStart:soundExplode];
         return @YES;
     }];
 
-    [transit replaceFunctionAt:@"ig.Music.prototype.play" withFunctionWithBlock:^id(TransitFunction *original, TransitProxy *thisArg, NSArray *arguments) {
+    [transit replaceFunctionAt:@"ig.Music.prototype.play" withFunctionWithBlock:^id(TransitFunction *original,TransitNativeFunctionCallScope* scope) {
         [soundMusic play];
         return @YES;
     }];
 
     // shoot sound is disabled on mobile. Hook into shoot logic to start sound
-    [transit replaceFunctionAt:@"EntityPlayer.prototype.shoot" withFunctionWithBlock:^id(TransitFunction *original, TransitProxy *thisArg, NSArray *arguments) {
+    [transit replaceFunctionAt:@"EntityPlayer.prototype.shoot" withFunctionWithBlock:^id(TransitFunction *original,TransitNativeFunctionCallScope* scope) {
         [self playShootSound];
-        return [original callWithThisArg:thisArg arguments:arguments];
+        return [scope forwardToFunction:original];
     }];
     
     // vibrate
-    TransitReplaceFunctionBlock vibrate = ^id(TransitFunction *original, TransitProxy *thisArg, NSArray *arguments) {
+    TransitReplaceFunctionBlock vibrate = ^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
-        return [original callWithThisArg:thisArg arguments:arguments];
+        return [scope forwardToFunction:original];
     };
     
     [transit replaceFunctionAt:@"EntityEnemyHeart.prototype.kill" withFunctionWithBlock:vibrate];
@@ -82,11 +82,11 @@
     // best hook to patch XType is on first call of window.setTimeout. The game engine calls this once with
     // window.setTimeout(XType.startGame, 1);
     __block BOOL firstCall = YES;
-    [transit replaceFunctionAt:@"setTimeout" withFunctionWithBlock:^id(TransitFunction *original, TransitProxy *thisArg, NSArray *arguments) {
+    [transit replaceFunctionAt:@"setTimeout" withFunctionWithBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
         if(firstCall)
             [self setupTransit];
         firstCall = NO;
-        return [original callWithThisArg:thisArg arguments:arguments];
+        return [original callWithThisArg:scope.thisArg arguments:scope.arguments];
     }];
     
     // load unmodified game from web

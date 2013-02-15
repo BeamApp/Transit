@@ -83,7 +83,7 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 @interface TransitNativeFunction(Private)
 
--(id)callWithProxifedThisArg:(TransitProxy*)thisArg proxifiedArguments:(NSArray*)arguments;
+-(id)_callWithScope:(TransitNativeFunctionCallScope *)scope;
 -(id)initWithContext:(TransitContext *)context nativeId:(NSString *)nativeId block:(TransitFunctionBlock)block;
 
 @end

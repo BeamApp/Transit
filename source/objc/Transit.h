@@ -21,6 +21,10 @@ id TransitNilSafe(id valueOrNil);
 @class TransitContext;
 @class TransitFunction;
 @class TransitEvaluable;
+@class TransitNativeFunction;
+@class TransitNativeFunctionCallScope;
+@class TransitFunctionCallScope;
+@class TransitNativeFunctionCallScope;
 
 @interface TransitObject : NSObject
 
@@ -37,12 +41,12 @@ id TransitNilSafe(id valueOrNil);
 
 @end
 
-typedef void (^TransitVoidFunctionBlock)(id thisArg, NSArray* arguments);
-typedef id (^TransitFunctionBlock)(id thisArg, NSArray* arguments);
-typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, id thisArg, NSArray* arguments);
+typedef id (^TransitFunctionBlock)(TransitNativeFunctionCallScope *callScope);
+typedef void (^TransitVoidFunctionBlock)(TransitNativeFunctionCallScope *callScope);
+typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNativeFunctionCallScope *callScope);
 
 @protocol TransitFunctionBodyProtocol <NSObject>
--(id)callWithThisArg:(TransitProxy*)thisArg arguments:(NSArray *)arguments;
+- (id)callWithFunction:(TransitFunction *)function thisArg:(id)thisArg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult;
 @end
 
 @interface TransitEvaluable : TransitObject
@@ -126,3 +130,36 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, id thisArg,
 
 @end
 
+@interface TransitCallScope : TransitEvaluable
+
+@property (nonatomic, readonly) TransitCallScope *parentScope;
+@property (nonatomic, readonly) id thisArg;
+
+@end
+
+@interface TransitEvalCallScope : TransitCallScope
+
+@property (nonatomic, readonly) NSString* jsCode;
+@property (nonatomic, readonly) NSArray* values;
+
+@end
+
+@interface TransitFunctionCallScope : TransitCallScope
+
+@property (nonatomic, readonly) TransitFunction *function;
+@property (nonatomic, readonly) NSArray* arguments;
+@property(nonatomic, readonly) BOOL expectsResult;
+
+- (id)initWithContext:(TransitContext *)context function:(TransitNativeFunction *)function thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult;
+
+-(id)forwardToFunction:(TransitFunction *)function;
+-(id)forwardToDelegate:(id<TransitFunctionBodyProtocol>)delegate;
+
+@end
+
+@interface TransitJSFunctionCallScope : TransitFunctionCallScope
+@end
+
+@interface TransitNativeFunctionCallScope : TransitFunctionCallScope
+
+@end
