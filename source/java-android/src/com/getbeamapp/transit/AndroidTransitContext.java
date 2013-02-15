@@ -15,34 +15,18 @@ public class AndroidTransitContext extends TransitContext {
     }
 
     @Override
-    public TransitProxy evalWithContext(String stringToEvaluate, Object context,
+    public Object evalWithContext(String stringToEvaluate, Object thisArg,
             Object... arguments) {
-
-        if (context == null) {
-            context = this;
-        }
-
-        TransitProxy[] proxifiedArguments = new TransitProxy[arguments.length];
-
-        for (int i = 0; i < arguments.length; i++) {
-            proxifiedArguments[i] = proxify(arguments[i]);
-        }
-
-        return adapter.evaluate(stringToEvaluate, proxify(context), proxifiedArguments);
+        String expression = jsExpressionFromCodeWithThis(stringToEvaluate, thisArg, arguments);
+        return adapter.evaluate(expression);
     }
 
-    public static AndroidTransitContext forWebView(WebView webView,
-            TransitAdapter adapter) {
+    public static AndroidTransitContext forWebView(WebView webView, TransitAdapter adapter) {
         return new AndroidTransitContext(adapter);
     }
-    
+
     @Override
     public void releaseProxy(String id) {
         adapter.releaseProxy(id);
-    }
-
-    @Override
-    public String getJSRepresentation() {
-        return "window";
     }
 }

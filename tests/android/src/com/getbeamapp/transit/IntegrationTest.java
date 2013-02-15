@@ -29,8 +29,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
     }
 
     public void testTransitInjected() {
-        TransitProxy transitExists = getActivity().transit.eval("window.transit != null");
-        assertEquals(true, (boolean) transitExists.getBooleanValue());
+        assertEquals(true, (boolean) (Boolean) getActivity().transit.eval("window.transit != null"));
     }
 
     public void testException() {
@@ -43,12 +42,12 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
     }
 
     public void testOperationAdd() {
-        assertEquals(4, getActivity().transit.eval("2 + 2").getIntegerValue());
+        assertEquals(4, getActivity().transit.eval("2 + 2"));
     }
-    
+
     public void testContext() {
         AndroidTransitContext transit = getActivity().transit;
-        assertEquals(1, transit.evalWithContext("this", 1).getIntegerValue());
+        assertEquals(1, transit.evalWithContext("this", 1));
         // assertEquals(transit, transit.eval("this"));
     }
 
@@ -58,28 +57,28 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         AndroidTransitContext transit = getActivity().transit;
         TransitCallable callable = new TransitCallable() {
             @Override
-            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
+            public Object evaluate(Object thisArg, Object... arguments) {
                 called[0] = true;
                 return 42;
             }
         };
 
         TransitNativeFunction function = transit.registerCallable(callable);
-        TransitProxy result = transit.eval("@()", function);
+        Integer result = (Integer) transit.eval("@()", function);
 
         assertTrue("Native function not called.", called[0]);
         assertNotNull(result);
-        assertEquals(42, (int) result.getIntegerValue());
+        assertEquals(42, (int) result);
     }
 
     public void testNativeArguments() {
-        final TransitProxy[] calledWithThis = new TransitProxy[] { null };
-        final List<TransitProxy> calledWithArgs = new LinkedList<TransitProxy>();
+        final Object[] calledWithThis = new Object[] { null };
+        final List<Object> calledWithArgs = new LinkedList<Object>();
 
         AndroidTransitContext transit = getActivity().transit;
         TransitCallable callable = new TransitCallable() {
             @Override
-            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
+            public Object evaluate(Object thisArg, Object... arguments) {
                 calledWithThis[0] = thisArg;
                 calledWithArgs.addAll(Arrays.asList(arguments));
                 return null;
@@ -92,24 +91,24 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         assertNotNull(calledWithThis[0]);
         assertEquals(2, calledWithArgs.size());
 
-        assertEquals(0, calledWithThis[0].getIntegerValue());
-        assertEquals(1, calledWithArgs.get(0).getIntegerValue());
-        assertEquals(2, calledWithArgs.get(1).getIntegerValue());
+        assertEquals(0, calledWithThis[0]);
+        assertEquals(1, calledWithArgs.get(0));
+        assertEquals(2, calledWithArgs.get(1));
     }
 
     public void testNativeIdentity() {
-        final List<TransitProxy> calledWithArgs = new LinkedList<TransitProxy>();
+        final List<Object> calledWithArgs = new LinkedList<Object>();
 
         AndroidTransitContext transit = getActivity().transit;
 
         TransitNativeFunction function = transit.registerCallable(new TransitCallable() {
             @Override
-            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
+            public Object evaluate(Object thisArg, Object... arguments) {
                 calledWithArgs.addAll(Arrays.asList(arguments));
                 return null;
             }
         });
-        
+
         transit.eval("@(@, @)", function, function, function);
 
         assertEquals(2, calledWithArgs.size());
@@ -124,11 +123,11 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         final AndroidTransitContext transit = getActivity().transit;
         final TransitCallable callable = new TransitCallable() {
             @Override
-            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
-                int v = arguments[0].getIntegerValue();
+            public Object evaluate(Object thisArg, Object... arguments) {
+                int v = (Integer) arguments[0];
 
                 if (v < calls) {
-                    return thisArg.eval(transit.jsExpressionFromCode("f(@ + 1)", v));
+                    return transit.eval(transit.jsExpressionFromCode("f(@ + 1)", v));
                 } else {
                     return v;
                 }
@@ -136,6 +135,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         };
 
         final TransitNativeFunction function = transit.registerCallable(callable);
-        assertEquals(calls, transit.eval("window.f = @; f(0)", function).getIntegerValue());
+        transit.eval("window.f = @", function);
+        assertEquals(calls, transit.eval("f(0)"));
     }
 }

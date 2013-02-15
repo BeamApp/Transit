@@ -1,37 +1,21 @@
 package com.getbeamapp.transit.prompt;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.getbeamapp.transit.JSRepresentable;
-import com.getbeamapp.transit.TransitContext;
-import com.getbeamapp.transit.TransitException;
-import com.getbeamapp.transit.TransitProxy;
-import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
-
 import android.os.ConditionVariable;
+
+import com.getbeamapp.transit.TransitException;
+import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
 
 class TransitEvalAction extends TransitAction {
     private final String stringToEvaluate;
 
     private final ConditionVariable lock = new ConditionVariable();
 
-    private TransitProxy result;
+    private Object result;
 
     private TransitException exception;
 
-    private final JSRepresentable thisArg;
-
-    private final JSRepresentable[] arguments;
-
-    private final TransitContext context;
-
-    public TransitEvalAction(TransitContext context, String stringToEvaluate, JSRepresentable thisArg, JSRepresentable[] arguments) {
-        this.context = context;
+    public TransitEvalAction(String stringToEvaluate) {
         this.stringToEvaluate = stringToEvaluate;
-        this.thisArg = thisArg;
-        this.arguments = arguments;
     }
 
     public String getStringToEvaluate() {
@@ -43,14 +27,7 @@ class TransitEvalAction extends TransitAction {
     }
 
     public void resolveWith(Object result) {
-        if (result == null) {
-            this.result = null;
-        } else if (result instanceof TransitProxy) {
-            this.result = (TransitProxy) result;
-        } else {
-            this.result = context.proxify(result);
-        }
-
+        this.result = result;
         lock.open();
     }
 
@@ -72,20 +49,12 @@ class TransitEvalAction extends TransitAction {
         lock.open();
     }
 
-    public TransitProxy block() {
+    public Object block() {
         lock.block();
         return afterBlock();
     }
 
-    public TransitProxy block(long timeout) {
-        if (lock.block(timeout)) {
-            return afterBlock();
-        } else {
-            throw new TransitException("Timeout");
-        }
-    }
-
-    private TransitProxy afterBlock() {
+    private Object afterBlock() {
         if (exception != null) {
             throw exception;
         } else {
@@ -95,21 +64,6 @@ class TransitEvalAction extends TransitAction {
 
     @Override
     public String getJSRepresentation() {
-        try {
-            JSONObject result = new JSONObject();
-            result.put("type", TransitResponse.EVAL);
-            result.put("script", context.jsExpressionFromCode(stringToEvaluate, (Object[]) this.arguments));
-            result.put("thisArg", thisArg.getJSRepresentation());
-
-            JSONArray serializedArguments = new JSONArray();
-            for (JSRepresentable argument : this.arguments) {
-                serializedArguments.put(argument.getJSRepresentation());
-            }
-
-            result.put("arguments", serializedArguments.toString());
-            return result.toString();
-        } catch (JSONException e) {
-            throw new TransitException(e);
-        }
+        return createJavaScriptRepresentation(TransitResponse.EVAL, stringToEvaluate);
     }
 }

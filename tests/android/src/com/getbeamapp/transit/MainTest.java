@@ -3,13 +3,12 @@ package com.getbeamapp.transit;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.getbeamapp.transit.prompt.TransitChromeClient;
-
-import junit.framework.TestCase;
 import android.os.ConditionVariable;
 
 public class MainTest extends TestCase {
@@ -20,7 +19,7 @@ public class MainTest extends TestCase {
     public MainTest() {
         this.noop = new TransitCallable() {
             @Override
-            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
+            public Object evaluate(Object thisArg, Object... arguments) {
                 return null;
             }
         };
@@ -48,11 +47,17 @@ public class MainTest extends TestCase {
         assertEquals("string: \"foobar\"", transit.jsExpressionFromCode("string: @", "foobar"));
         assertEquals("\"foo\" + \"bar\"", transit.jsExpressionFromCode("@ + @", "foo", "bar"));
         assertEquals("'baz' + \"bam\" + 23", transit.jsExpressionFromCode("'baz' + @ + @", "bam", 23));
+        assertEquals("(function() { return this; }).call(2)", TestHelpers.reduceWhitespace(transit.jsExpressionFromCodeWithThis("this", 2)));
     }
 
     public void testWrongArgumentCount() {
         assertEquals("arg: @", transit.jsExpressionFromCode("arg: @"));
         assertEquals("arg: 1", transit.jsExpressionFromCode("arg: @", 1, 2));
+    }
+    
+    public void testExrepssionFromProxy() {
+        TransitNativeFunction f = transit.registerCallable(noop);
+        assertEquals("(function() { var __TRANSIT_NATIVE_FUNCTION_0 = transit.nativeFunction(\"0\"); return setTimeout(__TRANSIT_NATIVE_FUNCTION_0, 1000); })()", TestHelpers.reduceWhitespace(transit.jsExpressionFromCode("setTimeout(@, 1000)", f)));
     }
 
     public void testCustomRepresentation() {
@@ -77,25 +82,10 @@ public class MainTest extends TestCase {
     }
     
     public void testProxify() {
-        assertEquals(TransitProxy.class, transit.proxify(1).getClass());
-        assertEquals(TransitProxy.class, transit.proxify("a").getClass());
+        assertEquals(Integer.class, transit.proxify(1).getClass());
+        assertEquals(String.class, transit.proxify("a").getClass());
         assertEquals(TransitJSFunction.class, transit.proxify("__TRANSIT_JS_FUNCTION_1000").getClass());
         assertNull(transit.proxify("__TRANSIT_NATIVE_FUNCTION_1000"));
-    }
-
-    public void testFunction() {
-        TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id");
-        assertEquals("transit.nativeFunction(\"some-id\")", function.getJSRepresentation());
-    }
-    
-    public void testJsFunction() {
-        TransitJSFunction function = new TransitJSFunction(null, "some-id");
-        assertEquals("transit.r(\"some-id\")", function.getJSRepresentation());
-    }
-
-    public void testFunctionInExpression() {
-        TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id");
-        assertEquals("transit.nativeFunction(\"some-id\")('foo')", transit.jsExpressionFromCode("@('foo')", function));
     }
     
     @SuppressWarnings("unchecked")

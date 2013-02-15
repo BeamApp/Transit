@@ -19,7 +19,7 @@ public class MockTest extends TestCase {
         }
 
         @Override
-        public TransitProxy evaluate(String stringToEvaluate, JSRepresentable thisArg, JSRepresentable... arguments) {
+        public TransitProxy evaluate(String stringToEvaluate) {
             return null;
         }
 
@@ -33,7 +33,7 @@ public class MockTest extends TestCase {
     public MockTest() {
         this.noop = new TransitCallable() {
             @Override
-            public Object evaluate(TransitProxy thisArg, TransitProxy... arguments) {
+            public Object evaluate(Object arg0, Object... arg1) {
                 return null;
             }
         };
@@ -46,7 +46,7 @@ public class MockTest extends TestCase {
             }
 
             @Override
-            public TransitProxy evaluate(String stringToEvaluate, JSRepresentable thisArg, JSRepresentable... arguments) {
+            public Object evaluate(String stringToEvaluate) {
                 return null;
             }
 
@@ -60,10 +60,10 @@ public class MockTest extends TestCase {
 
     public void testMockLibrary() {
         TransitProxy proxy = AndroidMock.createMock(AndroidTransitContext.class, noopAdapter);
-        AndroidMock.expect(proxy.get()).andReturn(42);
-        AndroidMock.expect(proxy.get()).andReturn(42);
+        AndroidMock.expect(proxy.getProxyId()).andReturn("42");
+        AndroidMock.expect(proxy.getProxyId()).andReturn("42");
         AndroidMock.replay(proxy);
-        assertEquals(42, proxy.get());
+        assertEquals("42", proxy.getProxyId());
 
         try {
             AndroidMock.verify(proxy);
@@ -71,8 +71,8 @@ public class MockTest extends TestCase {
         } catch (AssertionError e) {
             // WORKAROUND: EasyMock creates oddly formatted messages with
             // newlines and tabs - let's get rid of multiple whitespace chars.
-            String msg = e.getMessage().trim().replaceAll("[\\r\\n\\s\\t]+", " ");
-            assertEquals("Expectation failure on verify: get(): expected: 2, actual: 1", msg);
+            String msg = TestHelpers.reduceWhitespace(e.getMessage());
+            assertEquals("Expectation failure on verify: getProxyId(): expected: 2, actual: 1", msg);
         }
     }
 
@@ -82,7 +82,7 @@ public class MockTest extends TestCase {
         AndroidMock.replay(adapter);
 
         AndroidTransitContext ctx = new AndroidTransitContext(adapter);
-        
+
         ctx.proxify("__TRANSIT_JS_FUNCTION_1");
         System.gc();
         AndroidMock.verify(adapter);

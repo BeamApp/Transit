@@ -3,6 +3,7 @@ package com.getbeamapp.transit.prompt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.Executors;
 
@@ -18,14 +19,13 @@ import android.webkit.JsPromptResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import com.getbeamapp.transit.JSRepresentable;
+import com.getbeamapp.transit.AndroidTransitContext;
 import com.getbeamapp.transit.JsonConverter;
 import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
-import com.getbeamapp.transit.AndroidTransitContext;
 import com.getbeamapp.transit.TransitException;
 import com.getbeamapp.transit.TransitNativeFunction;
-import com.getbeamapp.transit.TransitProxy;
+import com.getbeamapp.transit.TransitObject;
 
 public class TransitChromeClient extends WebChromeClient implements TransitAdapter {
 
@@ -104,13 +104,13 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         return adapter.context;
     }
 
-    private final TransitProxy unmarshal(String dataAsJsonString) {
+    private final Object unmarshal(String dataAsJsonString) {
         Object o = unmarshalJson(dataAsJsonString);
 
         if (o == null) {
             return null;
         } else {
-            return context.proxify(JsonConverter.toNative(o));
+            return JsonConverter.toNative(o);
         }
     }
 
@@ -135,7 +135,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         active = true;
 
         if (TransitRequest.INVOKE.equals(message)) {
-            doInvokeNative(unmarshal(defaultValue));
+            doInvokeNative(context.proxify(unmarshal(defaultValue)));
             process(result);
         } else if (TransitRequest.RETURN.equals(message)) {
             if (waitingEvaluations.empty()) {
@@ -191,18 +191,18 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         this.actions.push(action);
         this.lock.open();
     }
-    
+
     @Override
     public void releaseProxy(String proxyId) {
         webView.loadUrl(String.format("javascript:transit.releaseProxy(%s)", JSONObject.quote(proxyId)));
     }
 
-    public final TransitProxy evaluate(String stringToEvaluate, JSRepresentable thisArg, JSRepresentable... arguments) {
+    public final Object evaluate(String stringToEvaluate) {
         // TODO: Make sure no "outside" evaluate-calls cause conflicts with
         // active Transit threads
 
         Log.d(TAG, String.format("Evaluate %s (active: %s)", stringToEvaluate, active));
-        TransitEvalAction action = new TransitEvalAction(context, stringToEvaluate, thisArg, arguments);
+        TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
         pushAction(action);
 
         if (!active) {
@@ -248,12 +248,17 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         return output.toString();
     }
 
-    private void doInvokeNative(final TransitProxy invocationDescription) {
+    private void doInvokeNative(final Object _invocationDescription) {
         lock.close();
 
-        final String nativeId = invocationDescription.get("nativeId").getStringValue();
-        final TransitProxy thisArg = invocationDescription.get("thisArg");
-        final TransitProxy[] arguments = invocationDescription.get("args").getArrayValue().toArray(new TransitProxy[0]);
+        TransitObject invocationDescription = (TransitObject) _invocationDescription;
+
+        final String nativeId = (String) invocationDescription.get("nativeId");
+        final Object thisArg = (Object) invocationDescription.get("thisArg");
+
+        @SuppressWarnings("unchecked")
+        final Object[] arguments = ((List<Object>) invocationDescription.get("args")).toArray(new Object[0]);
+
         Log.d(TAG, String.format("Invoking native function `%s`", nativeId));
 
         final TransitNativeFunction callback = context.getCallback(nativeId);
@@ -268,7 +273,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
                     try {
                         Object resultObject = callback.call(thisArg, arguments);
-                        TransitProxy result = context.proxify(resultObject);
+                        String result = context.convertObjectToExpression(resultObject);
                         action = new TransitReturnResultAction(result);
                         Log.d(TAG, String.format("Invoked native function `%s` with result `%s`", nativeId, resultObject));
                     } catch (Exception e) {

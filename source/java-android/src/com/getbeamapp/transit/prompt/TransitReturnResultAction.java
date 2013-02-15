@@ -4,14 +4,14 @@ import com.getbeamapp.transit.JSRepresentable;
 import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
 
 class TransitReturnResultAction extends TransitAction {
-    private JSRepresentable object;
+    private JSRepresentable expr;
 
-    public TransitReturnResultAction(JSRepresentable o) {
-        this.object = o;
+    public TransitReturnResultAction(String s) {
+        this.expr = new JSRepresentable.Expression(s);
     }
-    
+
     @Override
     public String getJSRepresentation() {
-        return createJavaScriptRepresentation(TransitResponse.RETURN, object);
+        return createJavaScriptRepresentation(TransitResponse.RETURN, expr);
     }
 }

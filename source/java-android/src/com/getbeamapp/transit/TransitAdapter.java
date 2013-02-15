@@ -3,7 +3,7 @@ package com.getbeamapp.transit;
 public interface TransitAdapter {
     void initialize();
 
-    TransitProxy evaluate(String stringToEvaluate, JSRepresentable thisArg, JSRepresentable... arguments);
+    Object evaluate(String stringToEvaluate);
     
     void releaseProxy(String proxyId);
 }
