@@ -291,6 +291,16 @@
     STAssertEqualObjects(@"my localized description", result, @"exception should be passed along");
 }
 
+-(void)testInvokeNativeThatReturnsIncompatibleResultCausesJSException {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+        // object that cannnot be represented as JS
+        return self;
+    }];
+
+    STAssertThrows([context eval:@"@()" val:func], @"exception");
+}
+
 -(void)testInvokeNativeWithNativeFunctionDisposedBeforeCall {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     
@@ -579,5 +589,24 @@
     STAssertNoThrow([funcMock2 verify], @"verify mock");
 }
 
+-(void)testCallScopeCallNativeFuncFromEval {
+    @autoreleasepool {
+        TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+
+        id thisArg = @"thisValue";
+        NSArray *arguments = @[@1, @2, @3];
+
+        TransitFunction *function = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            return @{@"function": callScope.function, @"thisArg":thisArg, @"arguments": arguments};
+        }];
+
+        NSDictionary* scope = [context eval:@"@.apply(@, @)" values:@[function, thisArg, arguments]];
+        [function dispose];
+
+        NSDictionary *expected = @{@"function":function, @"thisArg":thisArg, @"arguments":arguments};
+        STAssertEqualObjects(scope, expected, @"scope");
+    }
+}
 
 @end

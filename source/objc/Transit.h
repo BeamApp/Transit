@@ -22,6 +22,7 @@ id TransitNilSafe(id valueOrNil);
 @class TransitFunction;
 @class TransitEvaluable;
 @class TransitNativeFunction;
+@class TransitCallScope;
 @class TransitNativeFunctionCallScope;
 @class TransitFunctionCallScope;
 @class TransitNativeFunctionCallScope;
@@ -75,6 +76,8 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 -(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block;
 
 -(TransitFunction*)asyncFunctionWithBlock:(TransitVoidFunctionBlock)block;
+
+@property(nonatomic, readonly) TransitCallScope* currentCallScope;
 
 -(void)dispose;
 

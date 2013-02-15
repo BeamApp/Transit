@@ -275,7 +275,40 @@
         STAssertNoThrow([context verify], @"verify mock");
         [jsFunc clearContextAndProxyId];
     }
-    
 }
+
+-(void)testEmptyCallScope {
+    TransitContext *context = TransitContext.new;
+    TransitCallScope *actual = context.currentCallScope;
+    STAssertNil(actual, @"nil if not inside a function");
+}
+
+-(void)testCallScopeCallNativeFuncDirectly {
+    @autoreleasepool {
+        TransitContext *context = TransitContext.new;
+
+        id thisArg = @"thisValue";
+        NSArray *arguments = @[@1, @2, @3];
+        BOOL expectsResult = YES;
+
+        TransitFunction *function = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            return callScope;
+        }];
+
+        TransitNativeFunctionCallScope * scope = [function callWithThisArg:thisArg arguments:arguments returnResult:expectsResult];
+        [function dispose];
+
+        STAssertNil(context.currentCallScope, @"currentCallScope nil again");
+        STAssertTrue(context == scope.context, @"context prop");
+        STAssertTrue(function == scope.function, @"function");
+        STAssertTrue(thisArg == scope.thisArg, @"thisArg");
+        STAssertTrue(arguments == scope.arguments, @"arguments");
+        STAssertTrue(expectsResult == scope.expectsResult, @"expectsResult");
+        STAssertNil(scope.parentScope, @"parentScope");
+    }
+}
+
+
 
 @end

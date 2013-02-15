@@ -596,8 +596,13 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     }
 
     TransitNativeFunctionCallScope *scope = [[TransitNativeFunctionCallScope alloc] initWithContext:self function:func thisArg:thisArg arguments:arguments expectsResult:expectsResult];
-
-    return [func _callWithScope:scope];
+    _currentCallScope = scope;
+    @try {
+        return [func _callWithScope:scope];
+    }
+    @finally {
+        _currentCallScope = nil;
+    }
 }
 
 -(id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult {
