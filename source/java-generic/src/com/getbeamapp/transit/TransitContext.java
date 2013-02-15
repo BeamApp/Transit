@@ -22,7 +22,7 @@ public abstract class TransitContext extends TransitEvaluatable {
     private String nextNativeId() {
         return String.valueOf(_nextNativeId++);
     }
-    
+
     @Override
     public TransitContext getContext() {
         return this;
@@ -51,7 +51,7 @@ public abstract class TransitContext extends TransitEvaluatable {
     public Object eval(String stringToEvaluate, Object... values) {
         return evalWithThisArg(stringToEvaluate, null, values);
     }
-    
+
     String jsExpressionFromCode(String stringToEvaluate, Object... values) {
         return jsExpressionFromCodeWithThis(stringToEvaluate, null, values);
     }
@@ -122,6 +122,35 @@ public abstract class TransitContext extends TransitEvaluatable {
         } else {
             return value;
         }
+    }
+
+    public Object invoke(TransitJSObject invocationDescription) {
+        return prepareInvoke(invocationDescription).invoke();
+    }
+
+    public PreparedInvocation prepareInvoke(TransitJSObject invocationDescription) {
+        final String nativeId = invocationDescription.get("nativeId").toString();
+        final Object thisArg = invocationDescription.get("thisArg");
+        final Object[] arguments = invocationDescription.getArray("args").toArray(new Object[0]);
+        final TransitNativeFunction callback = getCallback(nativeId);
+
+        return new PreparedInvocation() {
+            @Override
+            public Object invoke() {
+                return callback.callWithThisArg(thisArg, arguments);
+            }
+
+            @Override
+            public TransitFunction getFunction() {
+                return callback;
+            }
+        };
+    }
+
+    public interface PreparedInvocation {
+        Object invoke();
+
+        TransitFunction getFunction();
     }
 
 }

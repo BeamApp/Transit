@@ -3,7 +3,6 @@ package com.getbeamapp.transit.prompt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.Executors;
 
@@ -23,8 +22,8 @@ import com.getbeamapp.transit.AndroidTransitContext;
 import com.getbeamapp.transit.JsonConverter;
 import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
+import com.getbeamapp.transit.TransitContext.PreparedInvocation;
 import com.getbeamapp.transit.TransitException;
-import com.getbeamapp.transit.TransitNativeFunction;
 import com.getbeamapp.transit.TransitJSObject;
 
 public class TransitChromeClient extends WebChromeClient implements TransitAdapter {
@@ -253,40 +252,34 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
         TransitJSObject invocationDescription = (TransitJSObject) _invocationDescription;
 
-        final String nativeId = (String) invocationDescription.get("nativeId");
-        final Object thisArg = (Object) invocationDescription.get("thisArg");
+        final PreparedInvocation preparedInvocation;
+        try {
+            preparedInvocation = context.prepareInvoke(invocationDescription);
+        } catch (Exception e) {
+            pushAction(new TransitExceptionAction(e));
+            return;
+        }
 
-        @SuppressWarnings("unchecked")
-        final Object[] arguments = ((List<Object>) invocationDescription.get("args")).toArray(new Object[0]);
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                TransitAction action = null;
 
-        Log.d(TAG, String.format("Invoking native function `%s`", nativeId));
-
-        final TransitNativeFunction callback = context.getCallback(nativeId);
-
-        if (callback == null) {
-            pushAction(new TransitExceptionAction(String.format("Can't find native function for native ID `%s`", nativeId)));
-        } else {
-            Executors.newSingleThreadExecutor().execute(new Runnable() {
-                @Override
-                public void run() {
-                    TransitAction action = null;
-
-                    try {
-                        Object resultObject = callback.callWithThisArg(thisArg, arguments);
-                        String result = context.convertObjectToExpression(resultObject);
-                        action = new TransitReturnResultAction(result);
-                        Log.d(TAG, String.format("Invoked native function `%s` with result `%s`", nativeId, resultObject));
-                    } catch (Exception e) {
-                        Log.e(TAG, String.format("Exception invoking native function `%s`", nativeId), e);
-                        action = new TransitExceptionAction(e);
-                    } finally {
-                        if (action != null) {
-                            pushAction(action);
-                        }
+                try {
+                    Object resultObject = preparedInvocation.invoke();
+                    String result = context.convertObjectToExpression(resultObject);
+                    action = new TransitReturnResultAction(result);
+                    Log.d(TAG, String.format("%s returned `%s`", preparedInvocation.getFunction(), resultObject));
+                } catch (Exception e) {
+                    Log.e(TAG, String.format("%s threw an exception", preparedInvocation.getFunction()), e);
+                    action = new TransitExceptionAction(e);
+                } finally {
+                    if (action != null) {
+                        pushAction(action);
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     private final Stack<TransitEvalAction> waitingEvaluations = new Stack<TransitEvalAction>();

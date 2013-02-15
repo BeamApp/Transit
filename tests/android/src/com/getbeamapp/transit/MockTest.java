@@ -36,6 +36,7 @@ public class MockTest extends TestCase {
 
         ctx.proxify("__TRANSIT_JS_FUNCTION_1");
         System.gc();
+        Thread.yield();
         AndroidMock.verify(adapter);
     }
 
