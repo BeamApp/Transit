@@ -272,7 +272,7 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                     TransitAction action = null;
 
                     try {
-                        Object resultObject = callback.call(thisArg, arguments);
+                        Object resultObject = callback.callWithThisArg(thisArg, arguments);
                         String result = context.convertObjectToExpression(resultObject);
                         action = new TransitReturnResultAction(result);
                         Log.d(TAG, String.format("Invoked native function `%s` with result `%s`", nativeId, resultObject));
