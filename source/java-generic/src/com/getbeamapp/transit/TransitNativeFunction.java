@@ -1,6 +1,5 @@
 package com.getbeamapp.transit;
 
-
 public class TransitNativeFunction extends TransitFunction {
 
     private final TransitCallable implementation;
@@ -10,18 +9,18 @@ public class TransitNativeFunction extends TransitFunction {
         this.implementation = callable;
         assert (nativeId != null);
     }
-    
+
     public String getNativeId() {
         return getProxyId();
     }
 
     @Override
     public Object call(Object thisArg, Object... arguments) {
-        if(thisArg == null) {
-            thisArg = rootContext;
+        if (thisArg == null) {
+            thisArg = getRootContext();
         }
-        
+
         return implementation.evaluate(thisArg, arguments);
     }
-    
+
 }

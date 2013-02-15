@@ -118,13 +118,13 @@ public class TransitScriptBuilder {
             if (p instanceof TransitNativeFunction) {
                 TransitNativeFunction f = (TransitNativeFunction) p;
                 addVariable(getVariable(f), "transit.nativeFunction(", QUOTE, f.getNativeId(), QUOTE, ")");
-            } else if (p instanceof TransitContext) {
-                addVariable(getVariable(p), "window");
             } else if (p.getProxyId() != null) {
                 addVariable(getVariable(p), "transit.r(", QUOTE, p.getProxyId(), QUOTE, ")");
             } else {
                 parseNative(o);
             }
+        } else if (o instanceof TransitContext) {
+            addVariable("__TRANSIT_OBJECT_GLOBAL", "window");
         } else {
             parseNative(o);
         }
@@ -190,10 +190,8 @@ public class TransitScriptBuilder {
             return "__TRANSIT_NATIVE_FUNCTION_" + f.getNativeId();
         } else if (p instanceof TransitJSFunction) {
             return "__TRANSIT_JS_FUNCTION_" + p.getProxyId();
-        } else if (p instanceof TransitContext) {
-            return "__TRANSIT_OBJECT_GLOBAL";
+        } else {
+            return "__TRANSIT_OBJECT_PROXY_" + p.getProxyId();
         }
-
-        return "__TRANSIT_OBJECT_PROXY" + p.getProxyId();
     }
 }
