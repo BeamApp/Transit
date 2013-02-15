@@ -43,7 +43,7 @@ public abstract class TransitContext extends TransitEvaluatable {
     }
 
     public Object eval(String stringToEvaluate, Object... arguments) {
-        return evalWithContext(stringToEvaluate, null, arguments);
+        return evalWithThisArg(stringToEvaluate, null, arguments);
     }
     
     String jsExpressionFromCode(String stringToEvaluate, Object... arguments) {

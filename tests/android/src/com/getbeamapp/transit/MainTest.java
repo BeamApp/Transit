@@ -27,7 +27,7 @@ public class MainTest extends TestCase {
         this.transit = new TransitContext() {
             
             @Override
-            public TransitProxy evalWithContext(String arg0, Object arg1, Object... arg2) {
+            public TransitProxy evalWithThisArg(String arg0, Object arg1, Object... arg2) {
                 return null;
             }
             

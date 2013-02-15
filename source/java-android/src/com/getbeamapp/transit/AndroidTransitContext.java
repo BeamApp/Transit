@@ -15,7 +15,7 @@ public class AndroidTransitContext extends TransitContext {
     }
 
     @Override
-    public Object evalWithContext(String stringToEvaluate, Object thisArg,
+    public Object evalWithThisArg(String stringToEvaluate, Object thisArg,
             Object... arguments) {
         String expression = jsExpressionFromCodeWithThis(stringToEvaluate, thisArg, arguments);
         return adapter.evaluate(expression);
