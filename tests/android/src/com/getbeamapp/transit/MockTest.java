@@ -38,4 +38,19 @@ public class MockTest extends TestCase {
         AndroidMock.verify(adapter);
     }
 
+    public void testTransitObject() {
+        TransitAdapter adapter = AndroidMock.createMock(TransitAdapter.class);
+        AndroidMock.expect(adapter.evaluate("window[\"title\"]")).andReturn("Untitled");
+        AndroidMock.expect(adapter.evaluate("window[\"alert\"].apply(window, [42])")).andReturn(true);
+        AndroidMock.replay(adapter);
+
+        AndroidTransitContext ctx = new AndroidTransitContext(adapter);
+        Object title = ctx.get("title");
+        Object alertResult = ctx.callMember("alert", 42);
+
+        AndroidMock.verify(adapter);
+        assertEquals("Untitled", title);
+        assertEquals(true, alertResult);
+    }
+
 }
