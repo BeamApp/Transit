@@ -28,8 +28,14 @@ public abstract class TransitContext extends TransitEvaluatable {
         return this;
     }
 
-    public TransitNativeFunction getCallback(String string) {
-        return retrainedNativeFunctions.get(string);
+    public TransitNativeFunction getCallback(String nativeId) {
+        TransitNativeFunction f = retrainedNativeFunctions.get(nativeId);
+
+        if (f == null) {
+            throw new IllegalArgumentException(String.format("No function found for native ID `%s`", nativeId));
+        }
+
+        return f;
     }
 
     protected void retainNativeFunction(TransitNativeFunction function) {
