@@ -48,7 +48,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
     public void testContext() {
         AndroidTransitContext transit = getActivity().transit;
         assertEquals(1, transit.evalWithThisArg("this", 1));
-        // assertEquals(transit, transit.eval("this"));
+        assertEquals(transit, transit.eval("this"));
     }
 
     public void testNativeFunction() {
