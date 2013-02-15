@@ -10,6 +10,13 @@
 
 #import "Transit.h"
 
+@interface TransitObject(Private)
+
+-(id)initWithContext:(TransitContext*)context;
+-(void)clearContext;
+
+@end
+
 
 @interface TransitProxy(Private)
 

@@ -127,24 +127,51 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
     return [NSError errorWithDomain:@"transit" code:code userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
-@implementation TransitProxy {
-    NSString* _proxyId;
+@implementation TransitObject{
     __weak TransitContext*_context;
 }
 
--(id)initWithContext:(TransitContext *)context proxyId:(NSString*)proxyId {
+-(id)initWithContext:(TransitContext*)context {
     self = [self init];
     if(self) {
         _context = context;
+    }
+    return self;
+}
+
+-(TransitContext*)context {
+    return _context;
+}
+
+- (void)clearContext {
+    _context = nil;
+}
+
+- (id)objectForKey:(NSString *)string {
+    @throw [NSException exceptionWithName:@"TransitException" reason:@"not supported" userInfo:nil];
+}
+
+- (BOOL)callMember:(NSString *)string arguments:(NSArray *)arguments {
+    @throw [NSException exceptionWithName:@"TransitException" reason:@"not supported" userInfo:nil];
+}
+
+@end
+
+@implementation TransitProxy {
+    NSString* _proxyId;
+}
+
+-(id)initWithContext:(TransitContext *)context proxyId:(NSString*)proxyId {
+    self = [super initWithContext:context];
+    if(self) {
         _proxyId = proxyId;
     }
     return self;
 }
 
 -(id)initWithContext:(TransitContext *)context value:(id)value {
-    self = [self init];
+    self = [super initWithContext:context];
     if(self){
-        _context = context;
         _value = value;
     }
     return self;
@@ -164,18 +191,18 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 }
 
 -(BOOL)disposed {
-    return _context == nil;
+    return self.context == nil;
 }
 
 -(void)clearContextAndProxyId {
-    _context = nil;
+    [self clearContext];
     _proxyId = nil;
 }
 
 -(void)dispose {
-    if(_context) {
+    if(self.context) {
         if(_proxyId){
-            [_context releaseJSProxyWithId:_proxyId];
+            [self.context releaseJSProxyWithId:_proxyId];
         }
         [self clearContextAndProxyId];
     }
@@ -183,10 +210,6 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 
 -(NSString*)proxyId {
     return _proxyId;
-}
-
--(TransitContext*)context {
-    return _context;
 }
 
 -(id)eval:(NSString*)jsCode {
@@ -226,20 +249,20 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 }
 
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)values returnJSResult:(BOOL)returnJSResult {
-    return [_context eval:jsCode thisArg:thisArg values:values returnJSResult:returnJSResult];
+    return [self.context eval:jsCode thisArg:thisArg values:values returnJSResult:returnJSResult];
 }
 
 -(NSString*)jsRepresentationToResolveProxy {
-    if(_proxyId && _context)
-        return [_context jsRepresentationToResolveProxyWithId:_proxyId];
+    if(_proxyId && self.context)
+        return [self.context jsRepresentationToResolveProxyWithId:_proxyId];
     
     @throw [NSException exceptionWithName:@"TransitException" reason:@"Internal Error: Proxy cannot be resolved" userInfo:nil];
 }
 
 -(NSString*)_jsRepresentationCollectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
-    if(_proxyId && _context) {
+    if(_proxyId && self.context) {
         [proxiesOnScope addObject:self];
-        return [_context jsRepresentationForProxyWithId:_proxyId];
+        return [self.context jsRepresentationForProxyWithId:_proxyId];
     }
     
     if(_value) {

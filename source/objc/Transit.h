@@ -21,9 +21,16 @@ id TransitNilSafe(id valueOrNil);
 @class TransitContext;
 @class TransitFunction;
 
-@interface TransitProxy : NSObject
+@interface TransitObject : NSObject
 
 -(TransitContext*)context;
+
+- (id)objectForKey:(NSString *)string;
+
+- (BOOL)callMember:(NSString *)string arguments:(NSArray *)arguments;
+@end
+
+@interface TransitProxy : TransitObject
 
 @property(nonatomic, readonly) id value;
 
