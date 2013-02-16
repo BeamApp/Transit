@@ -142,17 +142,17 @@
         }
     };
 
-    transit.retainElement = function(element){
+    transit.retainElement = function(element) {
         transit.lastRetainId++;
         var id = "" + transit.lastRetainId;
-        if(typeof element === "object") {
+        transit.retained[id] = element;
+
+        if (typeof element === "object") {
             id = PREFIX_MAGIC_OBJECT + id;
-        }
-        if(typeof element === "function") {
+        } else if (typeof element === "function") {
             id = PREFIX_MAGIC_FUNCTION + id;
         }
 
-        transit.retained[id] = element;
         return id;
     };
 
