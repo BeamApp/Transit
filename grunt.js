@@ -3,11 +3,12 @@
 module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-jasmine-task');
+    grunt.loadNpmTasks('grunt-text-replace');
 
     grunt.initConfig({
         lint: {
             // js/js.* only contains coffee files
-            files: ['source/js/*.js', 'tests/jasmine/spec/*.js']
+            files: ['grunt.js', 'source/js/*.js', 'tests/jasmine/spec/*.js']
         },
         jasmine: {
             all: {
@@ -15,9 +16,30 @@ module.exports = function(grunt) {
                 errorReporting: true
             }
         },
+        replace: {
+            embedTransitIntoObjC: {
+                src: "source/objc/Transit.m",
+                overwrite: true,
+                replacements:[{
+                    from: /\/\/ _TRANSIT_JS_RUNTIME_CODE_START[\s\S]*\/\/ _TRANSIT_JS_RUNTIME_CODE_END/,
+                    to:function(){
+                        var js = "(function(){";
+                        js += grunt.file.read("source/js/transit.js");
+                        js += grunt.file.read("source/js/transit-iframe.js");
+                        js += "})()";
 
+
+                        var replacement = "// _TRANSIT_JS_RUNTIME_CODE_START\n    ";
+                        replacement += JSON.stringify(js);
+                        replacement += "\n    // _TRANSIT_JS_RUNTIME_CODE_END";
+                        return replacement;
+                    }
+                }]
+            }
+
+        },
         watch: {
-            files: ['source/**/*.js', 'tests/**/*.js', 'tests/**/*.html'],
+            files: ['grunt.js', 'source/**/*.js', 'tests/**/*.js', 'tests/**/*.html'],
             tasks: ['continuous']
         },
         jshint: {
@@ -42,5 +64,6 @@ module.exports = function(grunt) {
 
 // Default task.
     grunt.registerTask('default', 'continuous watch');
-    grunt.registerTask('continuous', 'lint jasmine');
+    grunt.registerTask('travis', 'lint jasmine');
+    grunt.registerTask('continuous', 'lint jasmine replace');
 };

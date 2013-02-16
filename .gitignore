@@ -1,2 +1,6 @@
 node_modules
+xcuserdata
 .metadata
+benchmark/trigger.io/development/ios/simulator-ios.app
+benchmark/trigger.io/development/ios/device-ios.app
+benchmark/trigger.io/release/ios

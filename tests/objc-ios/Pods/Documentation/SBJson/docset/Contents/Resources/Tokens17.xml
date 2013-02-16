@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBJsonStreamWriter.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBJsonStreamWriter</TokenIdentifier>
+			<Abstract type="html">The Stream Writer class.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>
+			
+			<NodeRef refid="17"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/setState:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, unsafe_unretained) SBJsonStreamWriterState *state</Declaration>
+			
+			
+			<Anchor>//api/name/state</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamWriter/state</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, unsafe_unretained) SBJsonStreamWriterState *state</Declaration>
+			
+			
+			<Anchor>//api/name/state</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/setStateStack:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSMutableArray *stateStack</Declaration>
+			
+			
+			<Anchor>//api/name/stateStack</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamWriter/stateStack</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic, readonly, strong) NSMutableArray *stateStack</Declaration>
+			
+			
+			<Anchor>//api/name/stateStack</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/setDelegate:</TokenIdentifier>
+			<Abstract type="html">delegate to receive JSON output
+Delegate that will receive messages with output.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (unsafe_unretained) id&lt;&gt; delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamWriter/delegate</TokenIdentifier>
+			<Abstract type="html">delegate to receive JSON output
+Delegate that will receive messages with output.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (unsafe_unretained) id&lt;&gt; delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/setMaxDepth:</TokenIdentifier>
+			<Abstract type="html">The maximum recursing depth.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger maxDepth</Declaration>
+			
+			
+			<Anchor>//api/name/maxDepth</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamWriter/maxDepth</TokenIdentifier>
+			<Abstract type="html">The maximum recursing depth.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property NSUInteger maxDepth</Declaration>
+			
+			
+			<Anchor>//api/name/maxDepth</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/setHumanReadable:</TokenIdentifier>
+			<Abstract type="html">Whether we are generating human-readable (multiline) JSON.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL humanReadable</Declaration>
+			
+			
+			<Anchor>//api/name/humanReadable</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamWriter/humanReadable</TokenIdentifier>
+			<Abstract type="html">Whether we are generating human-readable (multiline) JSON.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL humanReadable</Declaration>
+			
+			
+			<Anchor>//api/name/humanReadable</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/setSortKeys:</TokenIdentifier>
+			<Abstract type="html">Whether or not to sort the dictionary keys in the output.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL sortKeys</Declaration>
+			
+			
+			<Anchor>//api/name/sortKeys</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamWriter/sortKeys</TokenIdentifier>
+			<Abstract type="html">Whether or not to sort the dictionary keys in the output.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL sortKeys</Declaration>
+			
+			
+			<Anchor>//api/name/sortKeys</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/setSortKeysComparator:</TokenIdentifier>
+			<Abstract type="html">An optional comparator to be used if sortKeys is YES.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSComparator sortKeysComparator</Declaration>
+			
+			
+			<Anchor>//api/name/sortKeysComparator</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamWriter/sortKeysComparator</TokenIdentifier>
+			<Abstract type="html">An optional comparator to be used if sortKeys is YES.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSComparator sortKeysComparator</Declaration>
+			
+			
+			<Anchor>//api/name/sortKeysComparator</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/setError:</TokenIdentifier>
+			<Abstract type="html">Contains the error description after an error has occured.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSString *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonStreamWriter/error</TokenIdentifier>
+			<Abstract type="html">Contains the error description after an error has occured.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>@property (copy) NSString *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeObject:</TokenIdentifier>
+			<Abstract type="html">Write an NSDictionary to the JSON stream.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeObject:(NSDictionary *)dict</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeObject:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeArray:</TokenIdentifier>
+			<Abstract type="html">Write an NSArray to the JSON stream.</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeArray:(NSArray *)array</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeArray:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeObjectOpen</TokenIdentifier>
+			<Abstract type="html">Start writing an Object to the stream</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeObjectOpen</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeObjectOpen</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeObjectClose</TokenIdentifier>
+			<Abstract type="html">Close the current object being written</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeObjectClose</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeObjectClose</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeArrayOpen</TokenIdentifier>
+			<Abstract type="html">Start writing an Array to the stream</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeArrayOpen</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeArrayOpen</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeArrayClose</TokenIdentifier>
+			<Abstract type="html">Close the current Array being written</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeArrayClose</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeArrayClose</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeNull</TokenIdentifier>
+			<Abstract type="html">Write a null to the stream</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeNull</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeNull</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeBool:</TokenIdentifier>
+			<Abstract type="html">Write a boolean to the stream</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeBool:(BOOL)x</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeBool:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeNumber:</TokenIdentifier>
+			<Abstract type="html">Write a Number to the stream</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeNumber:(NSNumber *)n</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeNumber:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeString:</TokenIdentifier>
+			<Abstract type="html">Write a String to the stream</Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeString:(NSString *)s</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if successful, or NO on failure</Abstract></ReturnValue>
+			<Anchor>//api/name/writeString:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/writeValue:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)writeValue:(id)v</Declaration>
+			
+			
+			<Anchor>//api/name/writeValue:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonStreamWriter/appendBytes:length:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamWriter.h</DeclaredIn>			
+			
+			<Declaration>- (void)appendBytes:(const void *)bytes length:(NSUInteger)length</Declaration>
+			
+			
+			<Anchor>//api/name/appendBytes:length:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

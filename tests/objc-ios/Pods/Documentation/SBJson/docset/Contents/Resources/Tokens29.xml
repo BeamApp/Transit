@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBJsonUTF8Stream.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBJsonUTF8Stream</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>
+			
+			<NodeRef refid="29"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/setIndex:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>@property (assign) NSUInteger index</Declaration>
+			
+			
+			<Anchor>//api/name/index</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SBJsonUTF8Stream/index</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>@property (assign) NSUInteger index</Declaration>
+			
+			
+			<Anchor>//api/name/index</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/appendData:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (void)appendData:(NSData *)data_</Declaration>
+			
+			
+			<Anchor>//api/name/appendData:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/haveRemainingCharacters:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)haveRemainingCharacters:(NSUInteger)chars</Declaration>
+			
+			
+			<Anchor>//api/name/haveRemainingCharacters:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/skip</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (void)skip</Declaration>
+			
+			
+			<Anchor>//api/name/skip</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/skipWhitespace</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (void)skipWhitespace</Declaration>
+			
+			
+			<Anchor>//api/name/skipWhitespace</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/skipCharacters:length:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)skipCharacters:(const char *)chars length:(NSUInteger)len</Declaration>
+			
+			
+			<Anchor>//api/name/skipCharacters:length:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/getUnichar:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)getUnichar:(unichar *)ch</Declaration>
+			
+			
+			<Anchor>//api/name/getUnichar:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/getNextUnichar:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)getNextUnichar:(unichar *)ch</Declaration>
+			
+			
+			<Anchor>//api/name/getNextUnichar:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/getStringFragment:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (BOOL)getStringFragment:(NSString **)string</Declaration>
+			
+			
+			<Anchor>//api/name/getStringFragment:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBJsonUTF8Stream/stringWithRange:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonUTF8Stream.h</DeclaredIn>			
+			
+			<Declaration>- (NSString *)stringWithRange:(NSRange)range</Declaration>
+			
+			
+			<Anchor>//api/name/stringWithRange:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

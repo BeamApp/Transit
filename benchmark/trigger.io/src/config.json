@@ -1,0 +1,23 @@
+{
+	"config_version": "2",
+	"name": "Trigger.io Benchmark",
+	"author": "mail@HeikoBehrens.net",
+	"version": "0.1",
+	"platform_version": "v1.4",
+	"description": "An empty app created by default",
+	"modules": {
+		"logging": {
+			"level": "DEBUG"
+		},
+		"contact": true,
+		"file": true,
+		"is": true,
+		"media": true,
+		"prefs": true,
+		"request": {
+			"permissions": ["http://*/*", "https://*/*"]
+		},
+		"tools": true,
+		"reload": true
+	}
+}

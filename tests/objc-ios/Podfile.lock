@@ -1,0 +1,14 @@
+
+COCOAPODS: 0.16.2
+
+SPEC CHECKSUMS: 
+  SBJson: 4971016670e7b3fa04a36d4e72ab0fb1ad3a9f69
+  OCMock: 77a9c4c57af6bf258a537d34cf09abf422affede
+
+DEPENDENCIES: 
+- OCMock
+- SBJson
+
+PODS: 
+- OCMock (2.0.1)
+- SBJson (3.2)
