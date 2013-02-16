@@ -595,13 +595,13 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         thisArg = self;
     }
 
-    TransitNativeFunctionCallScope *scope = [[TransitNativeFunctionCallScope alloc] initWithContext:self function:func thisArg:thisArg arguments:arguments expectsResult:expectsResult];
+    TransitNativeFunctionCallScope *scope = [[TransitNativeFunctionCallScope alloc] initWithContext:self parentScope:_currentCallScope thisArg:thisArg arguments:arguments expectsResult:expectsResult function:func];
     _currentCallScope = scope;
     @try {
         return [func _callWithScope:scope];
     }
     @finally {
-        _currentCallScope = nil;
+        _currentCallScope = _currentCallScope.parentScope;
     }
 }
 
@@ -1010,7 +1010,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if(self) {
         NSParameterAssert(nativeId);
         NSParameterAssert(block);
-        _block = block;
+        _block = [block copy];
     }
     return self;
 }
@@ -1081,9 +1081,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 @implementation TransitCallScope
 
--(id)initWithContext:(TransitContext *)context thisArg:(id)thisArg {
+- (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)thisArg {
     self = [self initWithContext:context];
     if(self) {
+        _parentScope = parentScope;
         _thisArg = thisArg;
     }
     return self;
@@ -1096,8 +1097,8 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 @implementation TransitFunctionCallScope : TransitCallScope
 
-- (id)initWithContext:(TransitContext *)context function:(TransitNativeFunction *)function thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult {
-    self = [self initWithContext:context thisArg:arg];
+- (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult function:(TransitNativeFunction *)function {
+    self = [self initWithContext:context parentScope:parentScope thisArg:arg];
     if(self) {
         _function = function;
         _arguments = arguments;

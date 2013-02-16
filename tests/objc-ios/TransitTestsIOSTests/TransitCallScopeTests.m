@@ -22,9 +22,11 @@
     TransitNativeFunction *function = [OCMockObject mockForClass:TransitNativeFunction.class];
     id thisArg = @"thisValue";
     NSArray *arguments = @[@1, @2, @3];
-    TransitFunctionCallScope *scope = [TransitFunctionCallScope.alloc initWithContext:context function:function thisArg:thisArg arguments:arguments expectsResult:NO];
+    TransitCallScope *parentScope = [TransitCallScope.alloc initWithContext:context];
+    TransitFunctionCallScope *scope = [TransitFunctionCallScope.alloc initWithContext:context parentScope:parentScope thisArg:thisArg arguments:arguments expectsResult:NO function:function];
 
     STAssertTrue(context == scope.context, @"context prop");
+    STAssertTrue(parentScope == scope.parentScope, @"parentScope");
     STAssertTrue(function == scope.function, @"function");
     STAssertTrue(thisArg == scope.thisArg, @"thisArg");
     STAssertTrue(arguments == scope.arguments, @"arguments");
@@ -37,7 +39,7 @@
     id thisArg = @"thisValue";
     NSArray *arguments = @[@1, @2, @3];
     BOOL expectsResult = YES;
-    TransitFunctionCallScope *scope = [TransitFunctionCallScope.alloc initWithContext:context function:function thisArg:thisArg arguments:arguments expectsResult:expectsResult];
+    TransitFunctionCallScope *scope = [TransitFunctionCallScope.alloc initWithContext:context parentScope:nil thisArg:thisArg arguments:arguments expectsResult:expectsResult function:function];
 
     [[[function2 stub] andReturn:@"someResult"] callWithThisArg:thisArg arguments:arguments returnResult:expectsResult];
     id actual = [scope forwardToFunction:function2];
@@ -51,7 +53,7 @@
     id thisArg = @"thisValue";
     NSArray *arguments = @[@1, @2, @3];
     BOOL expectsResult = YES;
-    TransitFunctionCallScope *scope = [TransitFunctionCallScope.alloc initWithContext:context function:function thisArg:thisArg arguments:arguments expectsResult:expectsResult];
+    TransitFunctionCallScope *scope = [TransitFunctionCallScope.alloc initWithContext:context parentScope:nil thisArg:thisArg arguments:arguments expectsResult:expectsResult function:function];
 
     [[[delegate stub] andReturn:@"someResult"] callWithFunction:function thisArg:thisArg arguments:arguments expectsResult:expectsResult];
     id actual = [scope forwardToDelegate:delegate];

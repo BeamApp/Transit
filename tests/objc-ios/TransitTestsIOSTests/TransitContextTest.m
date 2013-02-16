@@ -291,21 +291,79 @@
         NSArray *arguments = @[@1, @2, @3];
         BOOL expectsResult = YES;
 
-        TransitFunction *function = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        __block TransitFunction *function = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
-            return callScope;
+
+            BOOL callScopeIsBoundToCurrentFunction = callScope.function == function;
+            STAssertTrue(callScopeIsBoundToCurrentFunction, @"current function");
+            STAssertNil(callScope.parentScope, @"parent scope");
+            return @{@"function": callScope.function, @"thisArg": callScope.thisArg, @"arguments": callScope.arguments, @"expectsResult":@(callScope.expectsResult)};
         }];
 
-        TransitNativeFunctionCallScope * scope = [function callWithThisArg:thisArg arguments:arguments returnResult:expectsResult];
-        [function dispose];
+        NSDictionary* scope = [function callWithThisArg:thisArg arguments:arguments returnResult:expectsResult];
 
-        STAssertNil(context.currentCallScope, @"currentCallScope nil again");
-        STAssertTrue(context == scope.context, @"context prop");
-        STAssertTrue(function == scope.function, @"function");
-        STAssertTrue(thisArg == scope.thisArg, @"thisArg");
-        STAssertTrue(arguments == scope.arguments, @"arguments");
-        STAssertTrue(expectsResult == scope.expectsResult, @"expectsResult");
-        STAssertNil(scope.parentScope, @"parentScope");
+        NSDictionary *expected = @{@"function": function, @"thisArg":thisArg, @"arguments":arguments, @"expectsResult": @(expectsResult)};
+        STAssertEqualObjects(scope, expected, @"scope");
+
+        [function dispose];
+        function = nil;
+    }
+}
+
+-(void)testCallScopeCallTwoNativeFunctionsDirectly {
+    @autoreleasepool {
+        TransitContext *context = TransitContext.new;
+
+        id thisArg1 = @"thisValue";
+        NSArray *arguments1 = @[@1, @2, @3];
+        BOOL expectsResult1 = YES;
+
+        id thisArg2 = @"thisValue2";
+        NSArray *arguments2 = @[@2, @3, @4];
+        BOOL expectsResult2 = YES;
+
+        __block TransitFunctionCallScope *scope1;
+        __block TransitFunctionCallScope *scope2;
+
+         __block TransitFunction *function1 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            scope1 = callScope;
+
+            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+
+            return nil;
+        }];
+
+        __block TransitFunction *function2 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            scope2 = callScope;
+
+            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            [function1 callWithThisArg:thisArg1 arguments:arguments1 returnResult:expectsResult1];
+            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope after call");
+
+            return nil;
+        }];
+
+        [function2 callWithThisArg:thisArg2 arguments:arguments2 returnResult:expectsResult2];
+
+        STAssertTrue(function1 == scope1.function, @"function");
+        STAssertEqualObjects(thisArg1, scope1.thisArg, @"thisArg");
+        STAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
+        STAssertEquals(expectsResult1, scope1.expectsResult, @"expectsResult");
+        STAssertTrue(scope2 == scope1.parentScope, @"parentScope");
+
+        STAssertTrue(function2 == scope2.function, @"function");
+        STAssertEqualObjects(thisArg2, scope2.thisArg, @"thisArg");
+        STAssertEqualObjects(arguments2, scope2.arguments, @"arguments");
+        STAssertEquals(expectsResult2, scope2.expectsResult, @"expectsResult");
+        STAssertNil(scope2.parentScope, @"parentScope");
+
+        scope1 = nil;
+        scope2 = nil;
+
+        [function1 dispose];
+        [function2 dispose];
+        function1 = nil;
+        function2 = nil;
     }
 }
 

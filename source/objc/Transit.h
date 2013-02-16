@@ -153,7 +153,7 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 @property (nonatomic, readonly) NSArray* arguments;
 @property(nonatomic, readonly) BOOL expectsResult;
 
-- (id)initWithContext:(TransitContext *)context function:(TransitNativeFunction *)function thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult;
+- (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult function:(TransitNativeFunction *)function;
 
 -(id)forwardToFunction:(TransitFunction *)function;
 -(id)forwardToDelegate:(id<TransitFunctionBodyProtocol>)delegate;
