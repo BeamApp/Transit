@@ -10,7 +10,7 @@
 
 #import "MasterViewController.h"
 
-#import "DetailViewController.h"
+#import "XTypeViewController.h"
 
 @implementation AppDelegate
 
@@ -26,7 +26,7 @@
         MasterViewController *masterViewController = [[MasterViewController alloc] initWithNibName:@"MasterViewController_iPad" bundle:nil];
         UINavigationController *masterNavigationController = [[UINavigationController alloc] initWithRootViewController:masterViewController];
         
-        DetailViewController *detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController_iPad" bundle:nil];
+        XTypeViewController *detailViewController = [[XTypeViewController alloc] initWithNibName:@"DetailViewController_iPad" bundle:nil];
         UINavigationController *detailNavigationController = [[UINavigationController alloc] initWithRootViewController:detailViewController];
     	
     	masterViewController.detailViewController = detailViewController;
