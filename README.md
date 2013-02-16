@@ -13,17 +13,17 @@ This example creates a transit context from a webview and binds a native callbac
 ```
 TransitContext transit = [TransitContext transitContextWithWebView:someWebView];
 
-TransitNativeFunc* callback = [transit nativeFuncWithBlock:^(TransitContext* _this, NSArray* arguments){
+TransitNativeFunc* callback = [transit nativeFuncWithBlock:^(id thisArg, NSArray* arguments){
     // _this points to document as it has been called by jQuery
     // you can easily access properties from _this 
-	NSLog(@"page %@ has been loaded", _this[@"title"]);
+    NSLog(@"page %@ has been loaded", [thisArg objectForKey:@"title"]);
 	
-    call any javascript with received proxies, again
-    [transit eval:@"alert(@.title)" val:_this] 
+    // use javascript proxies inside javascript, again!
+    NSString* url = [transit eval:@"@.location.href" val:thisArg];
+    NSLog(@"page url: %@", url);
 }];
 
-// returns TransitContext as Proxy
-arr = [transit eval:@"jQuery(document).ready(@)" val:callback];
+[transit eval:@"jQuery(document).ready(@)" val:callback];
 ```
 
 TBD: Another Example with button.onclick
