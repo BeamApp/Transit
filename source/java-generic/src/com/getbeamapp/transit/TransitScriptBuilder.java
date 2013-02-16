@@ -136,7 +136,7 @@ public class TransitScriptBuilder {
                 TransitNativeFunction f = (TransitNativeFunction) p;
                 addVariable(getVariable(f), "transit.nativeFunction(", QUOTE, f.getNativeId(), QUOTE, ")");
             } else if (p.getProxyId() != null) {
-                addVariable(getVariable(p), "transit.r(", QUOTE, p.getProxyId(), QUOTE, ")");
+                addVariable(getVariable(p), "transit.retained[", QUOTE, p.getProxyId(), QUOTE, "]");
             } else {
                 parseNative(o);
             }

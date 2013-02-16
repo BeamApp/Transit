@@ -27,6 +27,8 @@ public class AndroidTransitContext extends TransitContext {
 
     @Override
     public void releaseProxy(String id) {
-        adapter.releaseProxy(id);
+        if(adapter != null) {
+            adapter.releaseProxy(id);
+        }
     }
 }

@@ -28,8 +28,12 @@ public class TransitProxy extends TransitObject {
     @Override
     protected void finalize() throws Throwable {
         if (!finalized) {
-            if (this.context != null && proxyId != null) {
-                this.context.releaseProxy(proxyId);
+            try {
+                if (this.context != null && proxyId != null) {
+                    this.context.releaseProxy(proxyId);
+                }
+            } catch (Exception e) {
+                // ignore
             }
 
             finalized = true;

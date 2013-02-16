@@ -193,7 +193,9 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
     @Override
     public void releaseProxy(String proxyId) {
-        webView.loadUrl(String.format("javascript:transit.releaseProxy(%s)", JSONObject.quote(proxyId)));
+        if (this.webView != null) {
+            webView.loadUrl(String.format("javascript:transit.releaseProxy(%s)", JSONObject.quote(proxyId)));
+        }
     }
 
     public final Object evaluate(String stringToEvaluate) {
@@ -218,9 +220,8 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         return action.block();
     }
 
-    public void readResource(int id, ByteArrayOutputStream output) {
+    public static void readResource(Resources res, int id, ByteArrayOutputStream output) {
         try {
-            Resources res = webView.getResources();
             InputStream inputStream = res.openRawResource(id);
 
             byte[] readBuffer = new byte[4 * 1024];
@@ -242,8 +243,9 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
     public String getScript() {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        readResource(R.raw.transit, output);
-        readResource(R.raw.runtime, output);
+        Resources res = webView.getResources();
+        readResource(res, R.raw.transit, output);
+        readResource(res, R.raw.runtime, output);
         return output.toString();
     }
 
