@@ -137,6 +137,8 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 
 @property (nonatomic, readonly) TransitCallScope *parentScope;
 @property (nonatomic, readonly) id thisArg;
+@property (nonatomic, readonly) BOOL expectsResult;
+@property (nonatomic, readonly) NSUInteger level;
 
 @end
 
@@ -145,15 +147,18 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 @property (nonatomic, readonly) NSString* jsCode;
 @property (nonatomic, readonly) NSArray* values;
 
+- (id)initWithContext:(TransitContext *)parentScope parentScope:(TransitCallScope *)scope thisArg:(id)thisArg jsCode:(NSString *)jsCode values:(NSArray *)values expectsResult:(BOOL)expectsResult;
+@end
+
+@interface TransitAsyncCallScope : TransitCallScope
 @end
 
 @interface TransitFunctionCallScope : TransitCallScope
 
 @property (nonatomic, readonly) TransitFunction *function;
 @property (nonatomic, readonly) NSArray* arguments;
-@property(nonatomic, readonly) BOOL expectsResult;
 
-- (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult function:(TransitNativeFunction *)function;
+- (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult function:(TransitFunction *)function;
 
 -(id)forwardToFunction:(TransitFunction *)function;
 -(id)forwardToDelegate:(id<TransitFunctionBodyProtocol>)delegate;

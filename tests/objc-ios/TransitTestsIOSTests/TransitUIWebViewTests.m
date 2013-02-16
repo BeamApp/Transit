@@ -593,19 +593,116 @@
     @autoreleasepool {
         TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
 
-        id thisArg = @"thisValue";
-        NSArray *arguments = @[@1, @2, @3];
+        id thisArg1 = @"thisValue";
+        NSArray *arguments1 = @[@1, @2, @3];
+        BOOL expectsResult1 = YES;
 
-        TransitFunction *function = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        __block TransitNativeFunctionCallScope* scope1;
+
+        TransitFunction *function1 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            scope1 = callScope;
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
-            return @{@"function": callScope.function, @"thisArg":thisArg, @"arguments": arguments};
+
+            return nil;
         }];
 
-        NSDictionary* scope = [context eval:@"@.apply(@, @)" values:@[function, thisArg, arguments]];
-        [function dispose];
+        NSArray *values2 = @[function1, thisArg1, arguments1];
+        [context eval:@"@.apply(@, @)" values:values2];
 
-        NSDictionary *expected = @{@"function":function, @"thisArg":thisArg, @"arguments":arguments};
-        STAssertEqualObjects(scope, expected, @"scope");
+        STAssertTrue(function1 == scope1.function, @"function");
+        STAssertEqualObjects(thisArg1, scope1.thisArg, @"thisArg");
+        STAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
+        STAssertEquals(expectsResult1, scope1.expectsResult, @"expectsResult");
+        STAssertNotNil(scope1.parentScope, @"parentScope");
+        STAssertTrue(([scope1.parentScope isKindOfClass:TransitEvalCallScope.class]), @"eval call scope");
+
+        STAssertTrue(context == scope1.parentScope.thisArg, @"thisArg is global object");
+
+        NSArray* actualValues = [((TransitEvalCallScope *)scope1.parentScope) values];
+        STAssertEqualObjects(values2, actualValues, @"values");
+        STAssertEquals(expectsResult1, scope1.parentScope.expectsResult, @"expectsResult");
+
+        [function1 dispose];
+    }
+}
+
+-(void)testCallScopeCallNativeFuncFromJSFunc {
+    @autoreleasepool {
+        TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+
+        NSArray *arguments1 = @[@1, @2, @3];
+        BOOL expectsResult1 = YES;
+
+        __block TransitNativeFunctionCallScope* scope1;
+
+        TransitFunction *function1 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            scope1 = callScope;
+            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+
+            return nil;
+        }];
+
+        TransitFunction *function2 = [context eval:@"function(otherFunc){otherFunc(1,2,3)}"];
+
+        [function2 callWithArg:function1];
+
+        STAssertTrue(function1 == scope1.function, @"function");
+        STAssertEqualObjects(context, scope1.thisArg, @"thisArg");
+        STAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
+        STAssertEquals(expectsResult1, scope1.expectsResult, @"expectsResult");
+        STAssertNotNil(scope1.parentScope, @"parentScope");
+        STAssertTrue(([scope1.parentScope isKindOfClass:TransitJSFunctionCallScope.class]), @"JSFuncCall scope");
+
+        TransitJSFunctionCallScope *parentScope = (TransitJSFunctionCallScope *) scope1.parentScope;
+
+        STAssertTrue(context == parentScope.thisArg, @"thisArg is global object");
+        id expectedArgs = @[function1];
+        STAssertEqualObjects(expectedArgs, parentScope.arguments, @"arguments");
+        STAssertEqualObjects(function2, parentScope.function, @"function");
+        STAssertTrue(parentScope.expectsResult, @"expects result");
+
+        [function1 dispose];
+    }
+}
+
+-(void)testCallScopeCallNativeFuncFromJSFuncWithThisArg {
+    @autoreleasepool {
+        TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+
+        NSArray *arguments1 = @[@1, @2, @3];
+        BOOL expectsResult1 = YES;
+
+        __block TransitNativeFunctionCallScope* scope1;
+
+        TransitFunction *function1 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            scope1 = callScope;
+            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+
+            return nil;
+        }];
+
+        TransitFunction *function2 = [context eval:@"function(otherFunc){otherFunc(1,2,3)}"];
+
+        [function2 callWithThisArg:@42 arg:function1];
+
+        STAssertTrue(function1 == scope1.function, @"function");
+        STAssertEqualObjects(context, scope1.thisArg, @"thisArg");
+        STAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
+        STAssertEquals(expectsResult1, scope1.expectsResult, @"expectsResult");
+        STAssertNotNil(scope1.parentScope, @"parentScope");
+        STAssertEquals((NSUInteger)2,scope1.level, @"level");
+        STAssertTrue(([scope1.parentScope isKindOfClass:TransitJSFunctionCallScope.class]), @"JSFuncCall scope");
+
+        TransitJSFunctionCallScope *parentScope = (TransitJSFunctionCallScope *) scope1.parentScope;
+
+        STAssertEqualObjects(@42, parentScope.thisArg, @"thisArg");
+        id expectedArgs = @[function1];
+        STAssertEqualObjects(expectedArgs, parentScope.arguments, @"arguments");
+        STAssertEqualObjects(function2, parentScope.function, @"function");
+        STAssertTrue(parentScope.expectsResult, @"expects result");
+        STAssertEquals((NSUInteger)1,parentScope.level, @"level");
+
+        [function1 dispose];
     }
 }
 
