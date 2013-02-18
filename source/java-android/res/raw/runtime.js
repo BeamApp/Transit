@@ -1,1 +1,1 @@
-source/js/transit-prompt.js
+../../../js/transit-prompt.js

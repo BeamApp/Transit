@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -82,9 +83,12 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     private boolean polling = false;
 
+    private final ExecutorService pool;
+
     public TransitPromptAdapter(WebView forWebView) {
         this.webView = forWebView;
         this.context = new AndroidTransitContext(this);
+        this.pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     public final void initialize() {
@@ -127,6 +131,19 @@ public class TransitPromptAdapter implements TransitAdapter {
             }
         }
     }
+    
+    public Runnable wrapInvocation(final Object invocation) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    doInvokeNativeAsync((TransitJSObject) context.proxify(invocation));
+                } catch (Exception e) {
+                    Log.e(TAG, String.format("[%s] Invocation of `%s` failed", TransitRequest.BATCH_INVOKE, invocation));
+                }
+            }
+        };
+    }
 
     public boolean onJSCall(String requestType, String payload, TransitFuture<String> result) {
 
@@ -148,6 +165,10 @@ public class TransitPromptAdapter implements TransitAdapter {
             Object invocationsObject = unmarshal(payload);
             final List<?> invocations = (List<?>)invocationsObject;
             result.resolve();
+            
+            for (Object invocation : invocations) {
+                pool.submit(wrapInvocation(invocation));
+            }
             
             runOnNonUiThread(new Runnable() {
                 @Override
