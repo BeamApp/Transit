@@ -706,4 +706,13 @@
     }
 }
 
+-(void)testCanEvalOnGlobalScope {
+    TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+
+    [context evalOnGlobalScope:@"var TEST=123"];
+
+    id result = [context eval:@"window.TEST"];
+    STAssertEqualObjects(@123, result, @"variable put on global object");
+}
+
 @end

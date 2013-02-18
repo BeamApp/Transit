@@ -605,7 +605,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     }
 }
 
-- (id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult useAndRestoreCallScope:(TransitCallScope *)callScope {
+- (id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult onGlobalScope:(BOOL)globalScope useAndRestoreCallScope:(TransitCallScope *)callScope {
     @throw @"to be implemented by subclass";
 }
 
@@ -626,7 +626,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     [_queuedAsyncCallsToJSFunctions removeAllObjects];
 
     TransitCallScope *callScope = [TransitAsyncCallScope.alloc initWithContext:self parentScope:_currentCallScope thisArg:nil expectsResult:NO];
-    [self _eval:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO useAndRestoreCallScope:callScope];
+    [self _eval:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO onGlobalScope:NO useAndRestoreCallScope:callScope];
 }
 
 -(void)queueAsyncCallToJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments {
@@ -646,14 +646,16 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     _currentCallScope = _currentCallScope.parentScope;
 }
 
-- (id)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error {
+- (void)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error {
     NSString* jsCode = [NSString stringWithContentsOfFile:path encoding:encoding error:error];
-   if(!jsCode)
-       return nil;
-
-    return [self eval:@"function(){@\n}" val:jsCode.stringAsJSExpression];
+    if(jsCode)
+        [self evalOnGlobalScope:jsCode];
 }
 
+- (void)evalOnGlobalScope:(NSString *)jsCode {
+    TransitCallScope *callScope = [TransitEvalCallScope.alloc initWithContext:self parentScope:_currentCallScope thisArg:self jsCode:jsCode values:@[] expectsResult:NO];
+    [self _eval:jsCode jsThisArg:@"null" collectedProxiesOnScope:nil returnJSResult:NO onGlobalScope:YES useAndRestoreCallScope:callScope];
+}
 @end
 
 TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER = ^(TransitUIWebViewContext* ctx,NSURLRequest* request) {
@@ -684,7 +686,7 @@ TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER
     return __collectedJS;
 }
 
-- (id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult useAndRestoreCallScope:(TransitCallScope *)callScope {
+- (id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult onGlobalScope:(BOOL)globalScope useAndRestoreCallScope:(TransitCallScope *)callScope {
     __collectedProxiesOnScope = proxiesOnScope;
 
     if([@"null" isEqualToString:jsAdjustedThisArg]) {
@@ -702,7 +704,7 @@ TransitUIWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER
     id adjustedThisArg = thisArg == _jsFunc.context ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
 
-    return [self _eval:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult useAndRestoreCallScope:callScope];
+    return [self _eval:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult onGlobalScope:NO useAndRestoreCallScope:callScope];
 }
 
 
@@ -802,48 +804,57 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     }
 }
 
-- (id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult useAndRestoreCallScope:(TransitCallScope *)callScope {
+- (id)_eval:(NSString *)jsExpression jsThisArg:(NSString *)jsAdjustedThisArg collectedProxiesOnScope:(NSOrderedSet *)proxiesOnScope returnJSResult:(BOOL)returnJSResult onGlobalScope:(BOOL)globalScope useAndRestoreCallScope:(TransitCallScope *)callScope {
     @try {
         if(callScope) {
             [self pushCallScope:callScope];
         }
 
-        NSMutableString* jsProxiesOnScope = [NSMutableString stringWithString:@""];
-        if(proxiesOnScope.count>0) {
-            for(TransitProxy* p in proxiesOnScope) {
-                [jsProxiesOnScope appendFormat:@"var %@=%@;", [p _jsRepresentationCollectingProxiesOnScope:nil], p.jsRepresentationToResolveProxy];
-            }
-        }
-
-        NSString* jsApplyExpression = [@"null" isEqualToString:jsAdjustedThisArg] ? jsExpression : [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg];
-
+        NSString* jsApplyExpression;
         NSString* jsWrappedApplyExpression;
-        if(!returnJSResult) {
-            jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
-                                                                          "%@"
-                                                                          "%@"
-                                                                          "})()", jsProxiesOnScope, jsApplyExpression];
+
+        if(globalScope) {
+            NSParameterAssert([jsAdjustedThisArg isEqualToString:@"null"]);
+            NSParameterAssert(proxiesOnScope.count == 0);
+            NSParameterAssert(returnJSResult == NO);
+            jsWrappedApplyExpression = jsExpression;
         } else {
-            if(_proxifiedEval && _codeInjected) {
+            NSMutableString* jsProxiesOnScope = [NSMutableString stringWithString:@""];
+            if(proxiesOnScope.count>0) {
+                for(TransitProxy* p in proxiesOnScope) {
+                    [jsProxiesOnScope appendFormat:@"var %@=%@;", [p _jsRepresentationCollectingProxiesOnScope:nil], p.jsRepresentationToResolveProxy];
+                }
+            }
+
+            jsApplyExpression = [@"null" isEqualToString:jsAdjustedThisArg] ? jsExpression : [NSString stringWithFormat:@"function(){return %@;}.call(%@)", jsExpression, jsAdjustedThisArg];
+
+            if(!returnJSResult) {
                 jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
-                                                                              "var result;"
-                                                                              "try{"
                                                                               "%@"
-                                                                              "result = %@;"
-                                                                              "}catch(e){"
-                                                                              "return {e:e.message};"
-                                                                              "}"
-                                                                              "return {v:%@.proxify(result)};"
-                                                                              "})()", jsProxiesOnScope, jsApplyExpression, self.transitGlobalVarJSRepresentation];
-            } else {
-                jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
-                                                                              "try{"
                                                                               "%@"
-                                                                              "return {v:%@};"
-                                                                              "}catch(e){"
-                                                                              "return {e:e.message};"
-                                                                              "}"
                                                                               "})()", jsProxiesOnScope, jsApplyExpression];
+            } else {
+                if(_proxifiedEval && _codeInjected) {
+                    jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
+                                                                                  "var result;"
+                                                                                  "try{"
+                                                                                  "%@"
+                                                                                  "result = %@;"
+                                                                                  "}catch(e){"
+                                                                                  "return {e:e.message};"
+                                                                                  "}"
+                                                                                  "return {v:%@.proxify(result)};"
+                                                                                  "})()", jsProxiesOnScope, jsApplyExpression, self.transitGlobalVarJSRepresentation];
+                } else {
+                    jsWrappedApplyExpression = [NSString stringWithFormat:@"(function(){"
+                                                                                  "try{"
+                                                                                  "%@"
+                                                                                  "return {v:%@};"
+                                                                                  "}catch(e){"
+                                                                                  "return {e:e.message};"
+                                                                                  "}"
+                                                                                  "})()", jsProxiesOnScope, jsApplyExpression];
+                }
             }
         }
 
@@ -887,7 +898,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     id adjustedThisArg = thisArg == self ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";
 
-    return [self _eval:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult useAndRestoreCallScope:callScope];
+    return [self _eval:jsExpression jsThisArg:jsAdjustedThisArg collectedProxiesOnScope:proxiesOnScope returnJSResult:returnJSResult onGlobalScope:NO useAndRestoreCallScope:callScope];
 }
 
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)values returnJSResult:(BOOL)returnJSResult {
@@ -935,7 +946,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
         NSString* jsResult = [TransitProxy jsRepresentation:result collectingProxiesOnScope:proxiesOnScope];
         NSString* js = [NSString stringWithFormat:@"%@.nativeInvokeTransferObject=%@", self.transitGlobalVarJSRepresentation, jsResult];
-        [self _eval:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO useAndRestoreCallScope:nil];
+        [self _eval:js jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:NO onGlobalScope:NO useAndRestoreCallScope:nil];
     }
 }
 
@@ -1105,7 +1116,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         }
         NSString* jsCall = [NSString stringWithFormat:@"%@(%@)", jsFunc, [jsArgs componentsJoinedByString:@","]];
 
-        return [evaluator _eval:jsCall jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:returnResult useAndRestoreCallScope:callScope];
+        return [evaluator _eval:jsCall jsThisArg:@"null" collectedProxiesOnScope:proxiesOnScope returnJSResult:returnResult onGlobalScope:NO useAndRestoreCallScope:callScope];
     } else {
         // general case
         return [evaluator _eval:@"@.apply(@,@)" thisArg:nil values:@[self, TransitNilSafe(thisArg), (arguments ? arguments : @[])] returnJSResult:returnResult useAndRestoreCallScope:callScope];

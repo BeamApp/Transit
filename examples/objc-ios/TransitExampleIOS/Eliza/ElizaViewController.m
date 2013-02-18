@@ -34,8 +34,8 @@
 @end
 
 @implementation ElizaViewController {
-    TransitContext *transit;
-    id elizaBot;
+    TransitContext *_transit;
+    id _elizaBot;
 }
 
 - (NSArray *)staticBubbleData
@@ -73,26 +73,17 @@
 }
 
 - (void)wireTransit {
-    transit = [TransitUIWebViewContext contextWithUIWebView:UIWebView.new];
+    _transit = [TransitUIWebViewContext contextWithUIWebView:UIWebView.new];
 
     NSString* path1 = [NSBundle.mainBundle pathForResource:@"elizadata" ofType:@"js"];
     NSString* path2 = [NSBundle.mainBundle pathForResource:@"elizabot" ofType:@"js"];
 
-    NSString *js1 = [NSString stringWithContentsOfFile:path1 encoding:NSUTF8StringEncoding error:nil];
-    [transit eval:@"(function(){@\n"
-                  "window.elizaInitials=elizaInitials;window.elizaFinals=elizaFinals;window.elizaQuits=elizaQuits;window.elizaPres=elizaPres;window.elizaPosts=elizaPosts;window.elizaSynons=elizaSynons;window.elizaKeywords=elizaKeywords;window.elizaPostTransforms=elizaPostTransforms;"
-              "\n})()" val:js1.stringAsJSExpression];
+    [_transit evalContentsOfFileOnGlobalScope:path1 encoding:NSUTF8StringEncoding error:nil];
+    [_transit evalContentsOfFileOnGlobalScope:path2 encoding:NSUTF8StringEncoding error:nil];
 
+    _elizaBot = [_transit eval:@"new ElizaBot();"];
 
-    NSString *js2 = [NSString stringWithContentsOfFile:path2 encoding:NSUTF8StringEncoding error:nil];
-    elizaBot = [transit eval:@"(function(){@\n"
-            "window.ElizaBot=ElizaBot;"
-            "return window.elizaBot=new ElizaBot();"
-            "\n})()" val:js2.stringAsJSExpression];
-
-    NSLog(@"bot: %@", elizaBot);
-
-    id initial = [transit eval:@"@.getInitial()" val:elizaBot];
+    id initial = [_transit eval:@"@.getInitial()" val:_elizaBot];
     [self pushElizaAnswer: initial];
 }
 
@@ -210,13 +201,14 @@
 
 - (IBAction)sayPressed:(id)sender
 {
-    [self.bubbleTable hideTypingBubble];
+    if([self.textField.text isEqualToString:@""])
+        return;
 
     SGBubbleData *sayBubble = [SGBubbleData dataWithText:self.textField.text date:[NSDate dateWithTimeIntervalSinceNow:0] direction:SGBubbleDirectionRight];
     [self.bubbleData addObject:sayBubble];
     [self.bubbleTable reloadData];
 
-    NSString* answer = [transit eval:@"@.transform(@)" val:elizaBot val:self.textField.text];
+    NSString* answer = [_transit eval:@"@.transform(@)" val:_elizaBot val:self.textField.text];
     self.textField.text = @"";
 
     [self pushElizaAnswer:answer];
