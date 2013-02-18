@@ -131,7 +131,7 @@ public class TransitPromptAdapter implements TransitAdapter {
             }
         }
     }
-    
+
     public Runnable wrapInvocation(final Object invocation) {
         return new Runnable() {
             @Override
@@ -163,26 +163,13 @@ public class TransitPromptAdapter implements TransitAdapter {
         case BATCH_INVOKE:
             assert !isActive();
             Object invocationsObject = unmarshal(payload);
-            final List<?> invocations = (List<?>)invocationsObject;
+            final List<?> invocations = (List<?>) invocationsObject;
             result.resolve();
-            
+
             for (Object invocation : invocations) {
                 pool.submit(wrapInvocation(invocation));
             }
-            
-            runOnNonUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    for(Object invocation : invocations) {
-                        try {
-                            doInvokeNativeAsync((TransitJSObject) context.proxify(invocation));
-                        } catch (Exception e) {
-                            Log.e(TAG, String.format("[%s] Invocation of `%s` failed", request, invocation));
-                        }
-                    }
-                }
-            });
-            
+
             return true;
         case INVOKE:
             begin();
@@ -237,12 +224,9 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     @Override
     public void releaseProxy(String proxyId) {
-        if (this.webView != null) {
-            Log.d(TAG, String.format("Releasing proxy with id `%s`", proxyId));
-            webView.loadUrl("javascript:transit.releaseElementWithId(\"" + proxyId + "\")");
-        }
+        evaluateAsync("transit.releaseElementWithId(\"" + proxyId + "\")");
     }
-    
+
     @Override
     public final void evaluateAsync(final String stringToEvaluate) {
         runOnUiThread(new Runnable() {
@@ -329,8 +313,9 @@ public class TransitPromptAdapter implements TransitAdapter {
         readResource(res, R.raw.runtime, output);
         return output.toString();
     }
-    
+
     protected void doInvokeNativeAsync(final TransitJSObject invocationDescription) {
+        Log.d(TAG, String.format("Invoke native function with id: `%s`", invocationDescription.get("nativeId")));
         context.invoke(invocationDescription);
     }
 

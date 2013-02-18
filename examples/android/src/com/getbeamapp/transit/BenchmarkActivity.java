@@ -33,7 +33,19 @@ public class BenchmarkActivity extends Activity {
         this.transit = TransitPromptAdapter.createContext(webView, new TransitChromeClient() {
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                Log.d("Console", consoleMessage.message());
+                switch(consoleMessage.messageLevel()) {
+                case DEBUG:
+                    Log.d("Console", consoleMessage.message());
+                    break;
+                case ERROR:
+                    Log.e("Console", consoleMessage.message());
+                    break;
+                case WARNING:
+                    Log.w("Console", consoleMessage.message());
+                    break;
+                default:
+                    Log.i("Console", consoleMessage.message());
+                }
                 return true;
             }
         });
