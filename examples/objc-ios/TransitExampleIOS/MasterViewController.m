@@ -8,7 +8,9 @@
 
 #import "MasterViewController.h"
 
-#import "DetailViewController.h"
+#import "XTypeViewController.h"
+#import "ElizaViewController.h"
+#import "DetailsViewController.h"
 
 @interface MasterViewController () {
 }
@@ -30,7 +32,7 @@
     int64_t delayInSeconds = 0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self tableView:self.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        [self tableView:self.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
     });
     
     return self;
@@ -51,7 +53,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return 2;
 }
 
 // Customize the appearance of table view cells.
@@ -67,8 +69,11 @@
         }
     }
 
+    if(indexPath.row == 0)
+        cell.textLabel.text = @"X-Type";
+    if(indexPath.row == 1)
+        cell.textLabel.text = @"Eliza";
 
-    cell.textLabel.text = @"X-Type";
     return cell;
 }
 
@@ -80,9 +85,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        self.detailViewController = nil;
 	    if (!self.detailViewController) {
-	        self.detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil];
+            if(indexPath.row == 0)
+	            self.detailViewController = [[XTypeViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil];
+            if(indexPath.row == 1)
+                self.detailViewController = [[ElizaViewController alloc] initWithNibName:@"ElizaViewController" bundle:nil];
 	    }
         [self.navigationController pushViewController:self.detailViewController animated:YES];
     } else {

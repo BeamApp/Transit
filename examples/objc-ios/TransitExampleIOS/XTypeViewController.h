@@ -1,5 +1,5 @@
 //
-//  DetailViewController.h
+//  XTypeViewController.h
 //  TransitExampleIOS
 //
 //  Created by Heiko Behrens on 11.02.13.
@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DetailsViewController.h"
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
-
-@property (strong, nonatomic) id detailItem;
+@interface XTypeViewController : DetailsViewController <UISplitViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
+
+- (void)configureView;
 @end

@@ -24,7 +24,7 @@
     TransitFunction *func = [[TransitJSFunction alloc] initWithContext:context proxyId:@"proxyId"];
     [[[context stub] andReturn:@"someJSRepresentation"] jsRepresentationForProxyWithId:@"proxyId"];
 
-    [[[context stub] andReturn:@"someResult"] _eval:@"someJSRepresentation()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSetWithObject:func] returnJSResult:YES useAndRestoreCallScope:OCMOCK_ANY];
+    [[[context stub] andReturn:@"someResult"] _eval:@"someJSRepresentation()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSetWithObject:func] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
     [[context stub] currentCallScope];
 
     id actual = [func call];
@@ -41,7 +41,7 @@
     id context = [OCMockObject mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
-    [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES useAndRestoreCallScope:OCMOCK_ANY];
+    [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
     [[context stub] currentCallScope];
 
     [func call];
@@ -52,7 +52,7 @@
     id context = [OCMockObject mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
-    [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES useAndRestoreCallScope:OCMOCK_ANY];
+    [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
     [[context stub] currentCallScope];
 
     [func callWithArguments:@[]];
@@ -63,7 +63,7 @@
     id context = [OCMockObject mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
-    [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES useAndRestoreCallScope:OCMOCK_ANY];
+    [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
     [[context stub] currentCallScope];
 
     [func callWithArguments:nil];
@@ -74,7 +74,7 @@
     id context = [OCMockObject mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
-    [[context expect] _eval:@"func(1)" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES useAndRestoreCallScope:OCMOCK_ANY];
+    [[context expect] _eval:@"func(1)" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
     [[context stub] currentCallScope];
 
     [func callWithArguments:@[@1]];
@@ -86,7 +86,7 @@
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
     [[context expect] currentCallScope];
-    [[context expect] _eval:@"func(1,2)" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES useAndRestoreCallScope:OCMOCK_ANY];
+    [[context expect] _eval:@"func(1,2)" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
     
     [func callWithArguments:@[@1, @2]];
     [context verify];
@@ -101,7 +101,7 @@
     [[[context stub] andReturn:@"__p1"] jsRepresentationForProxyWithId:@"p1"];
     [[[context stub] andReturn:@"__p2"] jsRepresentationForProxyWithId:@"p2"];
     [[context expect] currentCallScope];
-    [[context expect] _eval:@"func(__p1,__p2)" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSetWithArray:@[p1, p2]] returnJSResult:YES useAndRestoreCallScope:OCMOCK_ANY];
+    [[context expect] _eval:@"func(__p1,__p2)" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSetWithArray:@[p1, p2]] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
     
     [func callWithArguments:@[p1, p2]];
     [context verify];

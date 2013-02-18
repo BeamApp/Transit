@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+	<TITLE>Eliza Test</TITLE>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="elizabot.js"></SCRIPT>
+	<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="elizadata.js"></SCRIPT>
+
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+
+// initialize with argument 'true': no random choices
+var eliza = new ElizaBot(true);
+
+var exampleLines= [
+"Men are all alike.",
+"They're always bugging us about something or other.",
+"Well, my boyfriend made me come here.",
+"He says I'm depressed much of the time.",
+"It's true. I am unhappy.",
+"I need some help, that much seems certain.",
+"Perhaps I could learn to get along with my mother.",
+"My mother takes care of me.",
+"My father.",
+"You are like my father in some ways.",
+"You are not very aggressive but I think you don't want me to notice that.",
+"You don't argue with me.",
+"You are afraid of me.",
+"My father is afraid of everybody.",
+"Bullies."
+];
+
+var exampleCursor=0;
+
+function elizaReset() {
+	eliza.reset();
+	exampleCursor=0;
+}
+
+function elizaNext() {
+	if (exampleCursor >= exampleLines.length) {
+		alert('Last entry reached.\nClick "Reset" to start over again.');
+		return;
+	}
+	var userinput = exampleLines[exampleCursor++];
+	document.forms.eform.edisplay.value += 'USER:  ' + userinput + '\n';
+	document.forms.eform.edisplay.value += 'ELIZA: ' + eliza.transform(userinput) + '\n';
+}
+
+//-->
+</SCRIPT>
+</HEAD>
+
+<BODY TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" MARGINHEIGHT="0" MARGINWIDTH="0" STYLE="border:0"><A NAME="top"></A>
+
+<CENTER>
+<P>&nbsp;</P>
+<H3>Eliza Test</H3>
+<TABLE BORDER="0" CELLSPACING="10" CELLPADDING="0">
+<FORM NAME="eform" onsubmit="return false">
+<TR VALIGN="top">
+<TD><TEXTAREA NAME="edisplay" COLS="80" ROWS="32"></TEXTAREA></TD>
+<TD ALIGN="center"><INPUT TYPE="button" VALUE="Next step" onclick="elizaNext()"><BR><BR><INPUT TYPE="reset" VALUE="Reset" onclick="elizaReset(); return true"></TD>
+</TR>
+</FORM>
+</TABLE>
+</CENTER>
+
+<P>&nbsp;</P>
+<TABLE BORDER="0" CELLSPACING="12" CELLPADDDING="0">
+<TR>
+<TD COLSPAN="2">
+This is a test application for the <A HREF="index.html">JavaScript library &quot;elizabot.js&quot;</A> (Norbert Landsteiner 2005; &lt;http://www.masswerk.at&gt;).<BR>
+The test application should produce the original example given by Joseph Weizenbaum in his article on ELIZA from Jannuary 1966 <A HREF="#ELIZA">[1]</A>.<BR> Click &quot;Next step&quot; to see the next input und and Eliza's answer. Click &quot;Reset&quot; to reset Eliza and the display form.</TD>
+</TR>
+<TR><TD COLSPAN="2">&nbsp;</TD></TR>
+<TR><TD COLSPAN="2">This is the &quot;typical conversation&quot; as described by Joseph Weizenbaum:</TD></TR>
+<TR>
+<TD>&nbsp;</TD>
+<TD>
+Men are all alike.<BR><BR>
+IN WHAT WAY?<BR><BR>
+They're always bugging us about something or other.<BR><BR>
+CAN YOU THINK OF A SPECIFIC EXAMPLE?<BR><BR>
+Well, my boyfriend made me come here.<BR><BR>
+YOUR BOYFRIEND MADE YOU COME HERE?<BR><BR>
+He says I'm depressed much of the time.<BR><BR>
+I AM SORRY TO HEAR YOU ARE DEPRESSED.<BR><BR>
+It's true.<BR>
+I am unhappy.<BR><BR>
+DO YOU THINK COMING HERE WILL HELP YOU NOT TO BE UNHAPPY.<BR><BR>
+I need some help, that much seems certain.<BR><BR>
+WHAT WOULD IT MEAN TO YOU IF YOU GOT SOME HELP?<BR><BR>
+Perhaps I could learn to get along with my mother.<BR><BR>
+TELL ME MORE ABOUT YOUR FAMILY.<BR><BR>
+My mother takes care of me.<BR><BR>
+WHO ELSE IN YOUR FAMILY TAKES CARE OF YOU?<BR><BR>
+My father.<BR><BR>
+YOUR FATHER?<BR><BR>
+You are like my father in some ways.<BR><BR>
+WHAT RESEMBLANCE DO YOU SEE?<BR><BR>
+You are not very aggressive<BR>
+but I think you don't want me to notice that.<BR><BR>
+WHAT MAKES YOU THINK I AM NOT VERY AGGRESSIVE?<BR><BR>
+You don't argue with me.<BR><BR>
+WHY DO YOU THINK I DON'T ARGUE WITH YOU?<BR><BR>
+You are afraid of me.<BR><BR>
+DOES IT PLEASE YOU TO BELIEVE I AM AFRAID OF YOU?<BR><BR>
+My father is afraid of everybody.<BR><BR>
+WHAT ELSE COMES TO YOUR MIND WHEN YOU THINK OF YOUR FATHER?<BR><BR>
+Bullies.<BR><BR>
+DOES THAT HAVE ANYTHING TO DO WITH THE FACT<BR>
+THAT YOUR BOYFRIEND MADE YOU COME HERE?<BR>
+&nbsp;
+</TD>
+</TR>
+<TR><TD COLSPAN="2">(The capitalized lines are the machine responses.)</TD></TR>
+<TR><TD COLSPAN="2">&nbsp;</TD></TR>
+<TR><TD COLSPAN="2">References:</TD></TR>
+<TR VALIGN="top">
+<TD><A NAME="ELIZA"></A>[1]</TD>
+<TD>
+    Weizenbaum, Joseph &quot;ELIZA &#150; A Computer Program For the Study of Natural Language
+    Communication Between Man and Machine&quot;<BR>
+    in: Communications of the ACM; Volume 9 , Issue 1 (January 1966): p 36-45.
+</TD>
+</TR>
+<TR><TD COLSPAN="2">&nbsp;</TD></TR>
+<TR><TD COLSPAN="2"><SMALL>&gt; <A HREF="#top">top of page</A></SMALL></TD></TR>
+<TR><TD COLSPAN="2">&nbsp;</TD></TR>
+<TR><TD COLSPAN="2" STYLE="font-family: arial,helvetica,sans-serif; font-size: 12px;">N. Landsteiner 2005; &lt;<A HREF="http://www.masswerk.at/" TARGET="_blank">http://www.masswerk.at</A>&gt;</SMALL></TD></TR>
+<TR><TD COLSPAN="2">&nbsp;</TD></TR>
+</TABLE>
+
+</BODY>
+</HTML>

@@ -77,11 +77,12 @@
         }
 
         if(typeof elem === "object") {
-            if(elem instanceof Document || elem instanceof Element) {
-                return transit.retainElement(elem);
-            }
             if(elem === GLOBAL_OBJECT) {
                 return MARKER_MAGIC_OBJECT_GLOBAL;
+            }
+            // when called from native code, typeof ('string') might return 'object'
+            if(elem != null && [Object, Array, String, Boolean, Number].indexOf(elem.constructor)<0) {
+                return transit.retainElement(elem);
             }
 
             var copy;

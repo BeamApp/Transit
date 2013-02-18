@@ -1,28 +1,26 @@
 //
-//  DetailViewController.m
+//  XTypeViewController.m
 //  TransitExampleIOS
 //
 //  Created by Heiko Behrens on 11.02.13.
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import "DetailViewController.h"
+#import "XTypeViewController.h"
 #import "Transit.h"
 #import <AudioToolbox/AudioServices.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface DetailViewController (){
+@interface XTypeViewController (){
     TransitUIWebViewContext *transit;
     AVAudioPlayer* soundExplode;
     AVAudioPlayer* soundShoot;
     AVAudioPlayer* soundMusic;
 }
 
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
-- (void)configureView;
 @end
 
-@implementation DetailViewController
+@implementation XTypeViewController
 
 #pragma mark - Managing the detail item
 
@@ -75,25 +73,6 @@
     [transit replaceFunctionAt:@"EntityPlayer.prototype.kill" withFunctionWithBlock:vibrate];
 }
 
-- (void)configureView
-{
-    transit = [TransitUIWebViewContext contextWithUIWebView:self.webView];
-    
-    // best hook to patch XType is on first call of window.setTimeout. The game engine calls this once with
-    // window.setTimeout(XType.startGame, 1);
-    __block BOOL firstCall = YES;
-    [transit replaceFunctionAt:@"setTimeout" withFunctionWithBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
-        if(firstCall)
-            [self setupTransit];
-        firstCall = NO;
-        return [original callWithThisArg:scope.thisArg arguments:scope.arguments];
-    }];
-    
-    // load unmodified game from web
-    NSURL *url = [NSURL URLWithString:@"http://phoboslab.org/xtype/"];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
-}
-
 -(AVAudioPlayer*)loadSound:(NSString*)name {
     NSURL *url = [NSBundle.mainBundle URLForResource:name withExtension:@"mp3"];
     AVAudioPlayer* result = [AVAudioPlayer.alloc initWithContentsOfURL:url error:nil];
@@ -117,25 +96,29 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Detail", @"Detail");
+        self.title = @"X-Type";
     }
     return self;
 }
 							
 #pragma mark - Split view
 
-- (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
+- (void)configureView
 {
-    barButtonItem.title = NSLocalizedString(@"Master", @"Master");
-    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-    self.masterPopoverController = popoverController;
-}
+    transit = [TransitUIWebViewContext contextWithUIWebView:self.webView];
 
-- (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
-{
-    // Called when the view is shown again in the split view, invalidating the button and popover controller.
-    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
-    self.masterPopoverController = nil;
-}
+    // best hook to patch XType is on first call of window.setTimeout. The game engine calls this once with
+    // window.setTimeout(XType.startGame, 1);
+    __block BOOL firstCall = YES;
+    [transit replaceFunctionAt:@"setTimeout" withFunctionWithBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
+        if(firstCall)
+            [self setupTransit];
+        firstCall = NO;
+        return [original callWithThisArg:scope.thisArg arguments:scope.arguments];
+    }];
 
+    // load unmodified game from web
+    NSURL *url = [NSURL URLWithString:@"http://phoboslab.org/xtype/"];
+    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+}
 @end
