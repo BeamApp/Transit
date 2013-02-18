@@ -80,7 +80,8 @@
             if(elem === GLOBAL_OBJECT) {
                 return MARKER_MAGIC_OBJECT_GLOBAL;
             }
-            if(elem.constructor !== Object && elem.constructor !== Array) {
+            // when called from native code, typeof ('string') might return 'object'
+            if(elem != null && [Object, Array, String, Boolean, Number].indexOf(elem.constructor)<0) {
                 return transit.retainElement(elem);
             }
 
