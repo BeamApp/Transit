@@ -55,6 +55,20 @@ public class TransitNativeFunction extends TransitFunction {
         }
     }
     
+    @Override
+    public void callWithThisArgAsync(final Object thisArg, final Object... arguments) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    callWithThisArg(thisArg, arguments);
+                } catch (Exception e) {
+                    // REVIEW: is it okay to just ignore?
+                }
+            }
+        }).run();
+    }
+    
     public long getCallCount() {
         return callCount;
     }

@@ -16,9 +16,15 @@ public class AndroidTransitContext extends TransitContext {
 
     @Override
     public Object evalWithThisArg(String stringToEvaluate, Object thisArg,
-            Object... arguments) {
-        String expression = jsExpressionFromCodeWithThis(stringToEvaluate, thisArg, arguments);
+            Object... values) {
+        String expression = jsExpressionFromCodeWithThis(stringToEvaluate, thisArg, values);
         return adapter.evaluate(expression);
+    }
+    
+    @Override
+    public void evalWithThisArgAsync(String stringToEvaluate, Object thisArg, Object... values) {
+        String expression = jsExpressionFromCodeWithThis(stringToEvaluate, thisArg, values);
+        adapter.evaluateAsync(expression);
     }
 
     public static AndroidTransitContext forWebView(WebView webView, TransitAdapter adapter) {

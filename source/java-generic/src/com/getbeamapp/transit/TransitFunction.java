@@ -9,6 +9,12 @@ public abstract class TransitFunction extends TransitProxy {
     public final Object call(Object... arguments) {
         return callWithThisArg(null, arguments);
     }
+    
+    public final void callAsync(Object... arguments) {
+        callWithThisArgAsync(null, arguments);
+    }
 
     public abstract Object callWithThisArg(Object thisArg, Object... arguments);
+    
+    public abstract void callWithThisArgAsync(Object thisArg, Object... arguments);
 }

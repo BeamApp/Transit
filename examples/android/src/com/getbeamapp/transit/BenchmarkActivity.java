@@ -46,16 +46,16 @@ public class BenchmarkActivity extends Activity {
             public Object evaluate(Object thisArg, Object... arguments) {
                 return null;
             }
-        });
+        }, EnumSet.of(Flags.NO_THIS));
 
         final TransitNativeFunction ping = transit.registerCallable(new TransitCallable() {
             @Override
             public Object evaluate(Object thisArg, Object... arguments) {
                 TransitJSFunction cb = (TransitJSFunction) arguments[1];
-                cb.call();
+                cb.callAsync();
                 return null;
             }
-        }, EnumSet.of(Flags.ASYNC));
+        }, EnumSet.of(Flags.ASYNC, Flags.NO_THIS));
 
         ByteArrayOutputStream htmlDocument = new ByteArrayOutputStream();
         TransitPromptAdapter.readResource(getResources(), R.raw.benchmark, htmlDocument);

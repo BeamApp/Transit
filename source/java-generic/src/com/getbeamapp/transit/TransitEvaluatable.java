@@ -8,4 +8,5 @@ public abstract class TransitEvaluatable extends TransitObject {
 
     public abstract Object evalWithThisArg(String stringToEvaluate, Object thisArg, Object... values);
     
+    public abstract void evalWithThisArgAsync(String stringToEvaluate, Object thisArg, Object... values);
 }

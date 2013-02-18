@@ -221,6 +221,11 @@ public class TransitPromptAdapter implements TransitAdapter {
             webView.loadUrl("javascript:transit.releaseElementWithId(\"" + proxyId + "\")");
         }
     }
+    
+    @Override
+    public final void evaluateAsync(String stringToEvaluate) {
+        webView.loadUrl("javascript:" + stringToEvaluate);
+    }
 
     public final Object evaluate(String stringToEvaluate) {
         // TODO: Make sure no "outside" evaluate-calls cause conflicts with
