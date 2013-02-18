@@ -64,11 +64,10 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         };
 
         TransitNativeFunction function = transit.registerCallable(callable);
-        Integer result = (Integer) transit.eval("@()", function);
+        Object result = transit.eval("@()", function);
 
         assertTrue("Native function not called.", called[0]);
-        assertNotNull(result);
-        assertEquals(42, (int) result);
+        assertEquals(42, result);
     }
 
     public void testNativeArguments() {
