@@ -1,5 +1,6 @@
 package com.getbeamapp.transit;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.getbeamapp.transit.TransitCallable.Flags;
+
 import android.os.ConditionVariable;
+
+import static com.getbeamapp.transit.TestHelpers.assertContains;
 
 public class MainTest extends TestCase {
 
@@ -58,6 +63,17 @@ public class MainTest extends TestCase {
     public void testExrepssionFromProxy() {
         TransitNativeFunction f = transit.registerCallable(noop);
         assertEquals("(function() { var __TRANSIT_NATIVE_FUNCTION_0 = transit.nativeFunction(\"0\"); return setTimeout(__TRANSIT_NATIVE_FUNCTION_0, 1000); })()", TestHelpers.reduceWhitespace(transit.jsExpressionFromCode("setTimeout(@, 1000)", f)));
+    }
+    
+    public void testNativeFunctionOptions() {
+        TransitNativeFunction fNoThis = transit.registerCallable(noop, EnumSet.of(Flags.NO_THIS));
+        assertContains("transit.nativeFunction(\"0\", {\"noThis\": true})", transit.jsExpressionFromCode("@", fNoThis));
+        
+        TransitNativeFunction fAsync = transit.registerCallable(noop, EnumSet.of(Flags.ASYNC));
+        assertContains("transit.nativeFunction(\"1\", {\"async\": true})", transit.jsExpressionFromCode("@", fAsync));
+        
+        TransitNativeFunction fDefault = transit.registerCallable(noop);
+        assertContains("transit.nativeFunction(\"2\")", transit.jsExpressionFromCode("@", fDefault));
     }
 
     public void testCustomRepresentation() {
@@ -121,7 +137,7 @@ public class MainTest extends TestCase {
         final ConditionVariable lock = new ConditionVariable();
 
         @SuppressWarnings("unused")
-        TransitNativeFunction function = new TransitNativeFunction(null, noop, "some-id") {
+        TransitNativeFunction function = new TransitNativeFunction(null, noop, EnumSet.noneOf(Flags.class), "some-id") {
             @Override
             protected void finalize() throws Throwable {
                 super.finalize();

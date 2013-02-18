@@ -3,6 +3,7 @@ package com.getbeamapp.transit.prompt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.Executors;
@@ -31,7 +32,8 @@ public class TransitPromptAdapter implements TransitAdapter {
         INVOKE("__TRANSIT_MAGIC_INVOKE"),
         POLL("__TRANSIT_MAGIC_POLL"),
         RETURN("__TRANSIT_MAGIC_RETURN"),
-        EXCEPTION("__TRANSIT_MAGIC_EXCEPTION");
+        EXCEPTION("__TRANSIT_MAGIC_EXCEPTION"),
+        BATCH_INVOKE("__TRANSIT_MAGIC_BATCH_INVOKE");
 
         private String string;
 
@@ -128,8 +130,8 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     public boolean onJSCall(String requestType, String payload, TransitFuture<String> result) {
 
-        Log.d(TAG, String.format("%s --- %s", requestType, payload));
-        TransitRequest request = TransitRequest.fromString(requestType);
+        Log.d(TAG, String.format("type: %s\npayload: %s", requestType, payload));
+        final TransitRequest request = TransitRequest.fromString(requestType);
 
         if (request == null) {
             return false;
@@ -141,11 +143,29 @@ public class TransitPromptAdapter implements TransitAdapter {
             begin(true);
             process(result);
             break;
+        case BATCH_INVOKE:
+            assert !isActive();
+            Object invocationsObject = unmarshal(payload);
+            final List<?> invocations = (List<?>)invocationsObject;
+            result.resolve();
+            
+            runOnNonUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    for(Object invocation : invocations) {
+                        try {
+                            doInvokeNativeAsync((TransitJSObject) context.proxify(invocation));
+                        } catch (Exception e) {
+                            Log.e(TAG, String.format("[%s] Invocation of `%s` failed", request, invocation));
+                        }
+                    }
+                }
+            });
+            
+            return true;
         case INVOKE:
-            if (!isActive()) {
-                begin();
-            }
-            doInvokeNative(context.proxify(unmarshal(payload)));
+            begin();
+            doInvokeNative((TransitJSObject) context.proxify(unmarshal(payload)));
             process(result);
             break;
         case RETURN:
@@ -153,7 +173,7 @@ public class TransitPromptAdapter implements TransitAdapter {
             TransitEvalAction actionToResolve = waitingEvaluations.pop();
             Object returnValue = context.proxify(unmarshal(payload));
             actionToResolve.resolveWith(returnValue);
-            Log.d(TAG, String.format("%s -> %s", actionToResolve.getStringToEvaluate(), returnValue));
+            Log.d(TAG, String.format("[%s] %s -> %s", request, actionToResolve.getStringToEvaluate(), returnValue));
             process(result);
             break;
         case EXCEPTION:
@@ -161,7 +181,7 @@ public class TransitPromptAdapter implements TransitAdapter {
             TransitEvalAction actionToReject = waitingEvaluations.pop();
             String error = String.valueOf(unmarshalJson(payload));
             actionToReject.rejectWith(error);
-            Log.d(TAG, String.format("Rejected `%s` with `%s`", actionToReject.getStringToEvaluate(), error));
+            Log.d(TAG, String.format("[%s] Rejected `%s` with `%s`", request, actionToReject.getStringToEvaluate(), error));
             process(result);
             break;
         }
@@ -278,10 +298,12 @@ public class TransitPromptAdapter implements TransitAdapter {
         readResource(res, R.raw.runtime, output);
         return output.toString();
     }
+    
+    protected void doInvokeNativeAsync(final TransitJSObject invocationDescription) {
+        context.invoke(invocationDescription);
+    }
 
-    private void doInvokeNative(final Object _invocationDescription) {
-        TransitJSObject invocationDescription = (TransitJSObject) _invocationDescription;
-
+    private void doInvokeNative(final TransitJSObject invocationDescription) {
         final PreparedInvocation preparedInvocation;
         try {
             preparedInvocation = context.prepareInvoke(invocationDescription);

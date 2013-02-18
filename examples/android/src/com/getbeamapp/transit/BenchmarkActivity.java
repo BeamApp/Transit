@@ -2,6 +2,7 @@ package com.getbeamapp.transit;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.EnumSet;
 import java.util.concurrent.Executors;
 
 import android.annotation.SuppressLint;
@@ -12,6 +13,7 @@ import android.webkit.ConsoleMessage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.getbeamapp.transit.TransitCallable.Flags;
 import com.getbeamapp.transit.prompt.TransitChromeClient;
 import com.getbeamapp.transit.prompt.TransitPromptAdapter;
 
@@ -53,7 +55,7 @@ public class BenchmarkActivity extends Activity {
                 cb.call();
                 return null;
             }
-        });
+        }, EnumSet.of(Flags.ASYNC));
 
         ByteArrayOutputStream htmlDocument = new ByteArrayOutputStream();
         TransitPromptAdapter.readResource(getResources(), R.raw.benchmark, htmlDocument);

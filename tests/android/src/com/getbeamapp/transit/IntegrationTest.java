@@ -1,11 +1,13 @@
 package com.getbeamapp.transit;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.getbeamapp.transit.TransitCallable.Flags;
 import com.getbeamapp.transit.prompt.TransitPromptAdapter;
 
 public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -30,6 +32,16 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
 
     public void testTransitInjected() {
         assertEquals(true, (boolean) (Boolean) getActivity().transit.eval("window.transit != null"));
+    }
+    
+    public void testAsyncInvocation() {
+        TransitContext transit = getActivity().transit;
+        MockCallable callable = new MockCallable();
+        TransitNativeFunction f = transit.registerCallable(callable, EnumSet.of(Flags.ASYNC));
+        transit.eval("@()", f);
+        assertEquals(0, callable.getCallCount()); // setTimeout for batch-processing won't have fired yet
+        callable.block();
+        assertEquals(1, callable.getCallCount());
     }
 
     public void testException() {

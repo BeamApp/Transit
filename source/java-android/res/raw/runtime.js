@@ -1,6 +1,7 @@
 (function(globalName){
   var transit = window[globalName];
   var polling = false;
+  var batch = false;
 
   function log() {
     console.log.apply(console, arguments);
@@ -23,8 +24,11 @@
       if (polling) {
         log("Poll completed.");
         return;
+      } else if (batch) {
+        log("Batch completed.");
+        return;
       } else {
-        throw("Got 'null' (only valid on POLL) but expected Object.");
+        throw("Transit returned 'null', but didn't perform POLL or BATCH");
       }
     }
 
@@ -62,9 +66,18 @@
     return post("__TRANSIT_MAGIC_INVOKE", invocationDescription);
   };
 
+  transit.doHandleInvocationQueue = function(invocationDescriptions) {
+    batch = true;
+
+    try {
+      return post("__TRANSIT_MAGIC_BATCH_INVOKE", invocationDescriptions);
+    } finally {
+      batch = false;
+    }
+  };
+
   transit.poll = function() {
     polling = true;
-    var result = null;
 
     try {
       return post("__TRANSIT_MAGIC_POLL");

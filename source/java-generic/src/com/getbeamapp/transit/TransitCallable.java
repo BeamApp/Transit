@@ -9,4 +9,15 @@ public interface TransitCallable {
             return null;
         }
     };
+    
+    public static final TransitCallable FAULTY = new TransitCallable() {
+        @Override
+        public Object evaluate(Object thisArg, Object... arguments) {
+            throw new TransitException("TransitCallable.FAULTY");
+        }
+    };
+    
+    public enum Flags {
+        ASYNC, NO_THIS
+    }
 }

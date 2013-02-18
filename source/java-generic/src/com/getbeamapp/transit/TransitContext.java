@@ -1,6 +1,7 @@
 package com.getbeamapp.transit;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,11 @@ public abstract class TransitContext extends TransitEvaluatable {
     }
 
     public TransitNativeFunction registerCallable(TransitCallable callable) {
-        TransitNativeFunction function = new TransitNativeFunction(this, callable, nextNativeId());
+        return registerCallable(callable, EnumSet.noneOf(TransitCallable.Flags.class));
+    }
+    
+    public TransitNativeFunction registerCallable(TransitCallable callable, EnumSet<TransitCallable.Flags> flags) {
+        TransitNativeFunction function = new TransitNativeFunction(this, callable, flags, nextNativeId());
         retainNativeFunction(function);
         return function;
     }

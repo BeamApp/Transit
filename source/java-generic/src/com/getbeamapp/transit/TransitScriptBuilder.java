@@ -19,6 +19,14 @@ public class TransitScriptBuilder {
 
     }
 
+    private static class RawExpression {
+        public final String string;
+
+        public RawExpression(String s) {
+            this.string = s;
+        }
+    }
+
     public static Iterable<Object> arguments(Object... items) {
         ArgumentList result = new ArgumentList();
 
@@ -29,10 +37,13 @@ public class TransitScriptBuilder {
         return result;
     }
 
+    public static Object raw(String s) {
+        return new RawExpression(s);
+    }
+
     private StringBuffer buffer;
     private final StringBuffer vars = new StringBuffer();
     private final Set<String> definedVars = new HashSet<String>();
-    private final String QUOTE = "\"";
     private String result = null;
     private final String thisArgExpression;
 
@@ -105,7 +116,7 @@ public class TransitScriptBuilder {
         return result;
     }
 
-    private void addVariable(String variableName, String... strings) {
+    private void addVariable(String variableName, Object... fragments) {
         if (!definedVars.contains(variableName)) {
             if (definedVars.size() == 0) {
                 vars.append("var ");
@@ -118,8 +129,15 @@ public class TransitScriptBuilder {
             vars.append(variableName);
             vars.append(" = ");
 
-            for (String string : strings) {
-                vars.append(string);
+            StringBuffer _buffer = buffer;
+            buffer = vars;
+
+            try {
+                for (Object fragment : fragments) {
+                    parse(fragment);
+                }
+            } finally {
+                buffer = _buffer;
             }
         }
 
@@ -134,9 +152,16 @@ public class TransitScriptBuilder {
 
             if (p instanceof TransitNativeFunction) {
                 TransitNativeFunction f = (TransitNativeFunction) p;
-                addVariable(getVariable(f), "transit.nativeFunction(", QUOTE, f.getNativeId(), QUOTE, ")");
+                Object options = f.getJSOptions();
+
+                if (options != null) {
+                    addVariable(getVariable(f), raw("transit.nativeFunction("), arguments(f.getProxyId(), options), raw(")"));
+                } else {
+                    addVariable(getVariable(f), raw("transit.nativeFunction("), f.getProxyId(), raw(")"));
+                }
+
             } else if (p.getProxyId() != null) {
-                addVariable(getVariable(p), "transit.r(", QUOTE, p.getProxyId(), QUOTE, ")");
+                addVariable(getVariable(p), raw("transit.r("), p.getProxyId(), raw(")"));
             } else {
                 parseNative(o);
             }
@@ -150,6 +175,8 @@ public class TransitScriptBuilder {
     private void parseNative(Object o) {
         if (o == null) {
             buffer.append("null");
+        } else if (o instanceof RawExpression) {
+            buffer.append(((RawExpression) o).string);
         } else if (o.getClass().isArray()) {
             parseArray(o);
         } else if (o instanceof Iterable<?>) {
@@ -210,7 +237,7 @@ public class TransitScriptBuilder {
             } else {
                 buffer.append(", ");
             }
-            
+
             parse(o);
         }
 
