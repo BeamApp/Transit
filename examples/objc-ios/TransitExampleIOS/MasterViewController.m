@@ -9,7 +9,7 @@
 #import "MasterViewController.h"
 
 #import "XTypeViewController.h"
-#import "ViewController.h"
+#import "ElizaViewController.h"
 #import "DetailsViewController.h"
 
 @interface MasterViewController () {
@@ -92,7 +92,7 @@
             if(indexPath.row == 0)
 	            self.detailViewController = [[XTypeViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil];
             if(indexPath.row == 1)
-                self.detailViewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
+                self.detailViewController = [[ElizaViewController alloc] initWithNibName:@"ElizaViewController" bundle:nil];
 	    }
         [self.navigationController pushViewController:self.detailViewController animated:YES];
     } else {

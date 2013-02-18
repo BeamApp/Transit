@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  ElizaViewController.h
 //
 //  Created by Alex Barinov
 //  Project home page: http://alexbarinov.github.com/UIBubbleTableView/
@@ -11,6 +11,6 @@
 #import <UIKit/UIKit.h>
 #import "SGBubbleTableViewDataSource.h"
 
-@interface ViewController : UIViewController <UITableViewDelegate, SGBubbleTableViewDataSource>
+@interface ElizaViewController : DetailsViewController <UITableViewDelegate, SGBubbleTableViewDataSource>
 
 @end

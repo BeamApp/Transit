@@ -81,6 +81,7 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 
 -(void)dispose;
 
+- (id)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error;
 @end
 
 @interface TransitUIWebViewContext : TransitContext<UIWebViewDelegate>

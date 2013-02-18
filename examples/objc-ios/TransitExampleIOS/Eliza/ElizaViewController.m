@@ -1,5 +1,5 @@
 //
-//  ViewController.m
+//  ElizaViewController.m
 //
 //  Created by Alex Barinov
 //  Project home page: http://alexbarinov.github.com/UIBubbleTableView/
@@ -14,12 +14,14 @@
 // http://www.publicdomainpictures.net/view-image.php?image=1358
 //
 
-#import "ViewController.h"
+#import "DetailsViewController.h"
+#import "ElizaViewController.h"
 #import "SGBubbleTableView.h"
 #import "SGBubbleTableViewDataSource.h"
 #import "SGBubbleData.h"
+#import "Transit.h"
 
-@interface ViewController ()
+@interface ElizaViewController ()
 
 @property (nonatomic, weak) IBOutlet SGBubbleTableView *bubbleTable;
 @property (nonatomic, weak) IBOutlet UIView *textInputView;
@@ -31,7 +33,10 @@
 
 @end
 
-@implementation ViewController
+@implementation ElizaViewController {
+    TransitContext *transit;
+    id elizaBot;
+}
 
 - (NSArray *)staticBubbleData
 {
@@ -43,8 +48,7 @@
     SGBubbleData *replyBubble = [SGBubbleData dataWithText:replyBubbleText
                                                       date:[NSDate date]
                                                  direction:SGBubbleDirectionRight];
-    replyBubble.avatarImage = nil;
-    
+
     return @[heyBubble, replyBubble];
 }
 
@@ -55,18 +59,60 @@
     [super viewDidLoad];
     self.title = @"Eliza";
 
-    self.bubbleData = [[self staticBubbleData] mutableCopy];
+    self.bubbleData = [@[] mutableCopy];
 
     self.bubbleTable.bubbleDataSource = self;
     self.bubbleTable.snapInterval = 120;
     self.bubbleTable.showAvatars = NO;
-    [self.bubbleTable showTypingBubbleWithDirection:SGBubbleDirectionLeft];
 
-    [self.bubbleTable reloadData];
-    
     // Keyboard events
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+    [self wireTransit];
+}
+
+- (void)wireTransit {
+    transit = [TransitUIWebViewContext contextWithUIWebView:UIWebView.new];
+
+    NSString* path1 = [NSBundle.mainBundle pathForResource:@"elizadata" ofType:@"js"];
+    NSString* path2 = [NSBundle.mainBundle pathForResource:@"elizabot" ofType:@"js"];
+
+    NSString *js1 = [NSString stringWithContentsOfFile:path1 encoding:NSUTF8StringEncoding error:nil];
+    [transit eval:@"(function(){@\n"
+                  "window.elizaInitials=elizaInitials;window.elizaFinals=elizaFinals;window.elizaQuits=elizaQuits;window.elizaPres=elizaPres;window.elizaPosts=elizaPosts;window.elizaSynons=elizaSynons;window.elizaKeywords=elizaKeywords;window.elizaPostTransforms=elizaPostTransforms;"
+              "\n})()" val:js1.stringAsJSExpression];
+
+
+    NSString *js2 = [NSString stringWithContentsOfFile:path2 encoding:NSUTF8StringEncoding error:nil];
+    elizaBot = [transit eval:@"(function(){@\n"
+            "window.ElizaBot=ElizaBot;"
+            "return window.elizaBot=new ElizaBot();"
+            "\n})()" val:js2.stringAsJSExpression];
+
+    NSLog(@"bot: %@", elizaBot);
+
+    id initial = [transit eval:@"@.getInitial()" val:elizaBot];
+    [self pushElizaAnswer: initial];
+}
+
+- (void)pushElizaAnswer:(NSString *)answer {
+    [self.bubbleTable showTypingBubbleWithDirection:SGBubbleDirectionLeft];
+
+    [self.bubbleTable reloadData];
+    [self scrollToLastBubbleAnimated:YES];
+
+    SGBubbleData *bubble = [SGBubbleData dataWithText:answer
+                                                 date:[NSDate date]
+                                            direction:SGBubbleDirectionLeft];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [self.bubbleData addObject:bubble];
+        [self.bubbleTable hideTypingBubble];
+        [self.bubbleTable reloadData];
+        [self scrollToLastBubbleAnimated:YES];
+    });
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -133,7 +179,9 @@
         frame.size.height -= keyboardHeight;
 //        frame.origin.y -= keyboardHeight;
         self.bubbleTable.frame = frame;
-    } completion:nil];
+    } completion:^(BOOL finished) {
+        [self scrollToLastBubbleAnimated:YES];
+    }];
 }
 
 - (void)keyboardWillHide:(NSNotification*)aNotification
@@ -168,8 +216,11 @@
     [self.bubbleData addObject:sayBubble];
     [self.bubbleTable reloadData];
 
+    NSString* answer = [transit eval:@"@.transform(@)" val:elizaBot val:self.textField.text];
     self.textField.text = @"";
-    [self scrollToLastBubbleAnimated:YES];
+
+    [self pushElizaAnswer:answer];
+
     if(sender) {
         [self.textField resignFirstResponder];
     }

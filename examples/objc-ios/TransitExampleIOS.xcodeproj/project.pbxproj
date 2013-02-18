@@ -24,6 +24,8 @@
 		CB32E2BB16CFD0900094BCCE /* SGBubbleTableViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CB32E2B116CFD0900094BCCE /* SGBubbleTableViewHeaderCell.m */; };
 		CB32E2BC16CFD0900094BCCE /* SGBubbleTableViewTypingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CB32E2B316CFD0900094BCCE /* SGBubbleTableViewTypingCell.m */; };
 		CB32E2BD16CFD0900094BCCE /* SGBubbleTableViewAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = CB32E2B616CFD0900094BCCE /* SGBubbleTableViewAdapter.m */; };
+		CB32E30E16CFDFEF0094BCCE /* elizabot.js in Resources */ = {isa = PBXBuildFile; fileRef = F26B0AA3515DC52DC0E397E3 /* elizabot.js */; };
+		CB32E30F16CFDFEF0094BCCE /* elizadata.js in Resources */ = {isa = PBXBuildFile; fileRef = F26B054C1BCDE60B42B0550C /* elizadata.js */; };
 		CB4AE16116C9557B0083D29F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB4AE16016C9557B0083D29F /* UIKit.framework */; };
 		CB4AE16316C9557B0083D29F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB4AE16216C9557B0083D29F /* Foundation.framework */; };
 		CB4AE16516C9557B0083D29F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB4AE16416C9557B0083D29F /* CoreGraphics.framework */; };
@@ -45,8 +47,10 @@
 		CB6711C616C98894004B1893 /* xtype.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CB6711C316C98894004B1893 /* xtype.mp3 */; };
 		CB6711C816C98978004B1893 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB6711C716C98978004B1893 /* AVFoundation.framework */; };
 		CBCE188E16C9570900C2D816 /* Transit.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE188D16C9570900C2D816 /* Transit.m */; };
-		F26B0243324CFADDF325187C /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F26B0971D441B3C6207B3B6D /* ViewController.xib */; };
-		F26B0798FBDD82E972F1AE78 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0F93E1712FCD42114F69 /* ViewController.m */; };
+		F26B0243324CFADDF325187C /* ElizaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F26B0971D441B3C6207B3B6D /* ElizaViewController.xib */; };
+		F26B048F484A125D105A64B7 /* elizadata.js in Sources */ = {isa = PBXBuildFile; fileRef = F26B054C1BCDE60B42B0550C /* elizadata.js */; };
+		F26B05AF4DBA2C9B51CDDFDB /* elizabot.js in Sources */ = {isa = PBXBuildFile; fileRef = F26B0AA3515DC52DC0E397E3 /* elizabot.js */; };
+		F26B0798FBDD82E972F1AE78 /* ElizaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0F93E1712FCD42114F69 /* ElizaViewController.m */; };
 		F26B0A116C974F7405AF9D09 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B04C7CD1DC2FD7467E1BE /* DetailsViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -105,11 +109,13 @@
 		CB6711C716C98978004B1893 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CBCE188C16C9570900C2D816 /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
 		CBCE188D16C9570900C2D816 /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
-		F26B004AFDA53E08393BB2DE /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		F26B004AFDA53E08393BB2DE /* ElizaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElizaViewController.h; sourceTree = "<group>"; };
 		F26B04C7CD1DC2FD7467E1BE /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
-		F26B0971D441B3C6207B3B6D /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		F26B054C1BCDE60B42B0550C /* elizadata.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = elizadata.js; path = elizabot/elizadata.js; sourceTree = "<group>"; };
+		F26B0971D441B3C6207B3B6D /* ElizaViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ElizaViewController.xib; sourceTree = "<group>"; };
+		F26B0AA3515DC52DC0E397E3 /* elizabot.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = elizabot.js; path = elizabot/elizabot.js; sourceTree = "<group>"; };
 		F26B0B3A5D55C8C534D4359F /* DetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
-		F26B0F93E1712FCD42114F69 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F26B0F93E1712FCD42114F69 /* ElizaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElizaViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,9 +197,10 @@
 		CB32E2C016CFD0EF0094BCCE /* Eliza */ = {
 			isa = PBXGroup;
 			children = (
-				F26B004AFDA53E08393BB2DE /* ViewController.h */,
-				F26B0F93E1712FCD42114F69 /* ViewController.m */,
-				F26B0971D441B3C6207B3B6D /* ViewController.xib */,
+				F26B004AFDA53E08393BB2DE /* ElizaViewController.h */,
+				F26B0F93E1712FCD42114F69 /* ElizaViewController.m */,
+				F26B0971D441B3C6207B3B6D /* ElizaViewController.xib */,
+				F26B0F478B5250B299D7D544 /* Elizabot */,
 			);
 			path = Eliza;
 			sourceTree = "<group>";
@@ -285,6 +292,15 @@
 			path = ../../source/objc;
 			sourceTree = "<group>";
 		};
+		F26B0F478B5250B299D7D544 /* Elizabot */ = {
+			isa = PBXGroup;
+			children = (
+				F26B0AA3515DC52DC0E397E3 /* elizabot.js */,
+				F26B054C1BCDE60B42B0550C /* elizadata.js */,
+			);
+			name = Elizabot;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -337,6 +353,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB32E30E16CFDFEF0094BCCE /* elizabot.js in Resources */,
+				CB32E30F16CFDFEF0094BCCE /* elizadata.js in Resources */,
 				CB4AE16B16C9557B0083D29F /* InfoPlist.strings in Resources */,
 				CB4AE17316C9557B0083D29F /* Default.png in Resources */,
 				CB4AE17516C9557B0083D29F /* Default@2x.png in Resources */,
@@ -358,7 +376,7 @@
 				CB32E2A616CFD0770094BCCE /* typingMine@2x.png in Resources */,
 				CB32E2A716CFD0770094BCCE /* typingSomeone.png in Resources */,
 				CB32E2A816CFD0770094BCCE /* typingSomeone@2x.png in Resources */,
-				F26B0243324CFADDF325187C /* ViewController.xib in Resources */,
+				F26B0243324CFADDF325187C /* ElizaViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,7 +416,9 @@
 				CB32E2BC16CFD0900094BCCE /* SGBubbleTableViewTypingCell.m in Sources */,
 				CB32E2BD16CFD0900094BCCE /* SGBubbleTableViewAdapter.m in Sources */,
 				F26B0A116C974F7405AF9D09 /* DetailsViewController.m in Sources */,
-				F26B0798FBDD82E972F1AE78 /* ViewController.m in Sources */,
+				F26B0798FBDD82E972F1AE78 /* ElizaViewController.m in Sources */,
+				F26B05AF4DBA2C9B51CDDFDB /* elizabot.js in Sources */,
+				F26B048F484A125D105A64B7 /* elizadata.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
