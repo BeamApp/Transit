@@ -1,6 +1,6 @@
 (function(globalName){
   var transit = window[globalName];
-  var returnValue = null;
+  var polling = false;
 
   function log() {
     console.log.apply(console, arguments);
@@ -20,21 +20,23 @@
     }
 
     if (result == null) {
-      log("Poll completed.");
-      return;
+      if (polling) {
+        log("Poll completed.");
+        return;
+      } else {
+        throw("Got 'null' (only valid on POLL) but expected Object.");
+      }
     }
 
     if (result.type === "EXCEPTION") {
       throw(result.data);
     } else if (result.type === "EVAL") {
-      returnValue = evaluateAndReturn(result.data);
+      return evaluateAndReturn(result.data);
     } else if (result.type === "RETURN") {
-      returnValue = eval(result.data);
+      return eval(result.data);
     } else {
       throw("Unknown result type: " + result.type)
     }
-
-    return returnValue;
   }
 
   function postException(e) {
@@ -44,20 +46,15 @@
 
   function evaluateAndReturn(script) {
     var result;
-    returnValue = null;
 
     try {
+      console.log("Evaluating " + script.replace(/\s+/, " "));
       result = eval(script)
     } catch (e) {
       return postException(e);
     }
 
-    // Eval seems to return `undefined` if prompt is called
-    // so we look into the cached returnValue
-    if ( typeof result === "undefined" ) {
-      result = returnValue;
-    }
-
+    console.log("Evaluating " + script.replace(/\s+/, " ") + " returned " + result);
     return post("__TRANSIT_MAGIC_RETURN", transit.proxify(result));
   }
 
@@ -66,7 +63,14 @@
   };
 
   transit.poll = function() {
-    return post("__TRANSIT_MAGIC_POLL");
+    polling = true;
+    var result = null;
+
+    try {
+      return post("__TRANSIT_MAGIC_POLL");
+    } finally {
+      polling = false;
+    }
   };
 
 })(

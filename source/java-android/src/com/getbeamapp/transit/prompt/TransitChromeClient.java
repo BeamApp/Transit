@@ -4,13 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Stack;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.res.Resources;
-import android.os.ConditionVariable;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -73,14 +74,14 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
     public static final String TAG = "TransitAdapter";
 
-    private final Stack<TransitAction> actions = new Stack<TransitAction>();
-
-    private final ConditionVariable lock = new ConditionVariable(true);
+    private final BlockingDeque<TransitAction> actions = new LinkedBlockingDeque<TransitAction>();
 
     final WebView webView;
     private AndroidTransitContext context;
 
     private boolean active = false;
+
+    private boolean polling = false;
 
     public TransitChromeClient(WebView forWebView) {
         super();
@@ -90,6 +91,8 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
 
     public final void initialize() {
         Log.d(TAG, "Injecting script...");
+        this.active = false;
+        this.polling = false;
         webView.loadUrl("javascript:" + getScript());
     }
 
@@ -131,33 +134,34 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
             String defaultValue, JsPromptResult result) {
 
         Log.d(TAG, String.format("%s --- %s", message, defaultValue));
-        active = true;
 
         if (TransitRequest.INVOKE.equals(message)) {
+            if (!isActive()) {
+                begin();
+            }
             doInvokeNative(context.proxify(unmarshal(defaultValue)));
             process(result);
         } else if (TransitRequest.RETURN.equals(message)) {
-            if (waitingEvaluations.empty()) {
-                // TODO: raise NotExpected exception
-            } else {
-                TransitEvalAction action = waitingEvaluations.pop();
-                Object returnValue = unmarshal(defaultValue);
-                action.resolveWith(returnValue);
-                Log.i(TAG, String.format("Resolved `%s` with `%s`", action.getStringToEvaluate(), returnValue));
-                process(result);
-            }
-        } else if (TransitRequest.EXCEPTION.equals(message)) {
-            if (waitingEvaluations.empty()) {
-                Log.d(TAG, String.format("Got exception from JavaScript: %s", defaultValue));
-            } else {
-                TransitEvalAction action = waitingEvaluations.pop();
-                String error = String.valueOf(unmarshalJson(defaultValue));
-                action.rejectWith(error);
-                Log.i(TAG, String.format("Rejected `%s` with `%s`", action.getStringToEvaluate(), error));
-            }
+            assert isActive();
+            assert !waitingEvaluations.empty();
 
+            TransitEvalAction action = waitingEvaluations.pop();
+            Object returnValue = context.proxify(unmarshal(defaultValue));
+            action.resolveWith(returnValue);
+            Log.d(TAG, String.format("%s -> %s", action.getStringToEvaluate(), returnValue));
+            process(result);
+        } else if (TransitRequest.EXCEPTION.equals(message)) {
+            assert isActive();
+            assert !waitingEvaluations.empty();
+
+            TransitEvalAction action = waitingEvaluations.pop();
+            String error = String.valueOf(unmarshalJson(defaultValue));
+            action.rejectWith(error);
+            Log.i(TAG, String.format("Rejected `%s` with `%s`", action.getStringToEvaluate(), error));
             process(result);
         } else if (TransitRequest.POLL.equals(message)) {
+            assert !isActive();
+            begin(true);
             process(result);
         } else {
             return super.onJsPrompt(view, url, message, defaultValue, result);
@@ -187,14 +191,15 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     }
 
     private void pushAction(TransitAction action) {
-        this.actions.push(action);
-        this.lock.open();
+        assert action != null;
+        this.actions.offerFirst(action);
     }
 
     @Override
     public void releaseProxy(String proxyId) {
         if (this.webView != null) {
-            webView.loadUrl(String.format("javascript:transit.releaseProxy(%s)", JSONObject.quote(proxyId)));
+            Log.d(TAG, String.format("Releasing proxy with id `%s`", proxyId));
+            webView.loadUrl("javascript:transit.releaseElementWithId(\"" + proxyId + "\")");
         }
     }
 
@@ -202,22 +207,48 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         // TODO: Make sure no "outside" evaluate-calls cause conflicts with
         // active Transit threads
 
-        Log.d(TAG, String.format("Evaluate %s (active: %s)", stringToEvaluate, active));
+        boolean mustInitPoll = !isActive();
+
         TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
         pushAction(action);
 
-        if (!active) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG, "transit.poll()");
-                    webView.loadUrl("javascript:transit.poll()");
-                }
-            });
+        if (mustInitPoll) {
+            pollBegin();
         }
 
-        Log.i(TAG, String.format("Waiting for `%s`", stringToEvaluate));
-        return action.block();
+        Log.i(TAG, String.format("%s -> ...", stringToEvaluate));
+
+        try {
+            Object result = action.block();
+            Log.i(TAG, String.format("%s -> %s", stringToEvaluate, result));
+            return result;
+        } finally {
+            if (mustInitPoll) {
+                pollComplete();
+            }
+        }
+    }
+
+    private void pollBegin() {
+        assert !isActive();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "pollBegin()");
+                webView.loadUrl("javascript:transit.poll()");
+            }
+        });
+    }
+
+    private void pollComplete() {
+        assert isActive();
+        assert isPolling();
+
+        Log.i(TAG, "pollComplete()");
+        TransitPollCompleteAction action = new TransitPollCompleteAction();
+        pushAction(action);
+        action.block();
     }
 
     public static void readResource(Resources res, int id, ByteArrayOutputStream output) {
@@ -250,8 +281,6 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
     }
 
     private void doInvokeNative(final Object _invocationDescription) {
-        lock.close();
-
         TransitJSObject invocationDescription = (TransitJSObject) _invocationDescription;
 
         final PreparedInvocation preparedInvocation;
@@ -268,17 +297,16 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
                 TransitAction action = null;
 
                 try {
+                    Log.d(TAG, String.format("Invoking native function `%s`", preparedInvocation.getFunction().getProxyId()));
                     Object resultObject = preparedInvocation.invoke();
                     String result = context.convertObjectToExpression(resultObject);
                     action = new TransitReturnResultAction(result);
-                    Log.d(TAG, String.format("%s returned `%s`", preparedInvocation.getFunction(), resultObject));
+                    Log.d(TAG, String.format("Native function `%s` returned `%s`", preparedInvocation.getFunction().getProxyId(), resultObject));
                 } catch (Exception e) {
                     Log.e(TAG, String.format("%s threw an exception", preparedInvocation.getFunction()), e);
                     action = new TransitExceptionAction(e);
                 } finally {
-                    if (action != null) {
-                        pushAction(action);
-                    }
+                    pushAction(action);
                 }
             }
         });
@@ -290,24 +318,62 @@ public class TransitChromeClient extends WebChromeClient implements TransitAdapt
         runOnNonUiThread(new Runnable() {
             @Override
             public void run() {
-                lock.block();
+                try {
+                    TransitAction action = actions.takeFirst();
 
-                if (actions.empty()) {
-                    active = false;
-                    result.confirm();
-                    return;
+                    Log.d(TAG, String.format("Took %s from stack", action.getClass().getSimpleName()));
+
+                    if (action instanceof TransitPollCompleteAction) {
+                        assert isPolling();
+                        
+                        try {
+                            end();
+                            result.confirm();
+                        } finally {
+                            ((TransitPollCompleteAction) action).open();
+                        }
+                    } else if (action instanceof TransitReturnResultAction || action instanceof TransitExceptionAction) {
+                        end();
+                    } else if (action instanceof TransitEvalAction) {
+                        waitingEvaluations.push((TransitEvalAction) action);
+                    }
+
+                    result.confirm(action.getJSRepresentation());
+                } catch (InterruptedException e) {
+                    panic(e);
                 }
-
-                TransitAction action = actions.pop();
-
-                if (action instanceof TransitEvalAction) {
-                    waitingEvaluations.push((TransitEvalAction) action);
-                }
-
-                String response = action.getJSRepresentation();
-                Log.d(TAG, String.format("Returning %s", response));
-                result.confirm(response);
             }
         });
+    }
+
+    private void panic(Throwable e) {
+        // TODO
+    }
+
+    private void begin() {
+        begin(false);
+    }
+
+    private void begin(boolean polling) {
+        if (!isActive()) {
+            Log.i(TAG, String.format("begin(polling=%s)", polling));
+            active = true;
+        }
+    }
+
+    private void end() {
+        if (isActive()) {
+            Log.i(TAG, "end()");
+            active = false;
+            polling = false;
+        }
+    }
+
+    private boolean isActive() {
+        return active;
+    }
+
+    private boolean isPolling() {
+        return polling;
     }
 }
