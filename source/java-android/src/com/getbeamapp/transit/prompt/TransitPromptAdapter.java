@@ -223,8 +223,13 @@ public class TransitPromptAdapter implements TransitAdapter {
     }
     
     @Override
-    public final void evaluateAsync(String stringToEvaluate) {
-        webView.loadUrl("javascript:" + stringToEvaluate);
+    public final void evaluateAsync(final String stringToEvaluate) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                webView.loadUrl("javascript:" + stringToEvaluate);
+            }
+        });
     }
 
     public final Object evaluate(String stringToEvaluate) {
