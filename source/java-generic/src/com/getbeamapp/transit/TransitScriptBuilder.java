@@ -192,7 +192,7 @@ public class TransitScriptBuilder {
             buffer.append(JSONObject.quote(key.toString()));
             buffer.append(": ");
 
-            parse(o);
+            parse(o.get(key));
         }
 
         buffer.append("}");
