@@ -11,6 +11,7 @@
 #import "XTypeViewController.h"
 #import "ElizaViewController.h"
 #import "DetailsViewController.h"
+#import "ShareJSViewController.h"
 
 @interface MasterViewController () {
 }
@@ -32,7 +33,7 @@
     int64_t delayInSeconds = 0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self tableView:self.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:0]];
+        [self tableView:self.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
     });
     
     return self;
@@ -73,6 +74,8 @@
         cell.textLabel.text = @"X-Type";
     if(indexPath.row == 1)
         cell.textLabel.text = @"Eliza";
+    if(indexPath.row == 2)
+        cell.textLabel.text = @"ShareJS";
 
     return cell;
 }
@@ -93,6 +96,8 @@
 	            self.detailViewController = [[XTypeViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil];
             if(indexPath.row == 1)
                 self.detailViewController = [[ElizaViewController alloc] initWithNibName:@"ElizaViewController" bundle:nil];
+            if(indexPath.row == 2)
+                self.detailViewController = [[ShareJSViewController alloc] initWithNibName:@"ShareJSViewController" bundle:nil];
 	    }
         [self.navigationController pushViewController:self.detailViewController animated:YES];
     } else {

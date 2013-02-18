@@ -81,6 +81,8 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 
 -(void)dispose;
 
+@property(nonatomic, copy) void (^readyHandler)(TransitContext *);
+
 - (void)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error;
 - (void)evalOnGlobalScope:(NSString *)string;
 

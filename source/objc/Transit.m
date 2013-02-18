@@ -976,6 +976,8 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     
     if([_originalDelegate respondsToSelector:_cmd])
         return [_originalDelegate webViewDidFinishLoad:webView];
+    if(self.readyHandler)
+        self.readyHandler(self);
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
