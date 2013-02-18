@@ -13,10 +13,11 @@
 
 @interface XTypeViewController (){
     TransitUIWebViewContext *transit;
-    AVAudioPlayer* soundExplode;
-    AVAudioPlayer* soundShoot;
-    AVAudioPlayer* soundMusic;
 }
+
+@property (nonatomic, readonly) AVAudioPlayer* soundShoot;
+@property (nonatomic, readonly) AVAudioPlayer* soundExplode;
+@property (nonatomic, readonly) AVAudioPlayer* soundMusic;
 
 @end
 
@@ -25,13 +26,13 @@
 #pragma mark - Managing the detail item
 
 -(void)stopShootSound {
-    [soundShoot stop];
+    [_soundShoot stop];
 }
 
 -(void)playShootSound {
-    if(!soundShoot.playing) {
-        soundShoot.currentTime = 0;
-        [soundShoot play];
+    if(!_soundShoot.playing) {
+        _soundShoot.currentTime = 0;
+        [_soundShoot play];
     }
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(stopShootSound) object:nil];
     [self performSelector:@selector(stopShootSound) withObject:nil afterDelay:0.1];
@@ -46,20 +47,23 @@
 }
 
 -(void)setupTransit {
+
+    __weak XTypeViewController* _self = self;
+
     // only sound on mobile version is explosion
     [transit replaceFunctionAt:@"ig.Sound.prototype.play" withFunctionWithBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
-        [self playSoundFromStart:soundExplode];
+        [_self playSoundFromStart:_self.soundExplode];
         return @YES;
     }];
 
     [transit replaceFunctionAt:@"ig.Music.prototype.play" withFunctionWithBlock:^id(TransitFunction *original,TransitNativeFunctionCallScope* scope) {
-        [soundMusic play];
+        [_self.soundMusic play];
         return @YES;
     }];
 
     // shoot sound is disabled on mobile. Hook into shoot logic to start sound
     [transit replaceFunctionAt:@"EntityPlayer.prototype.shoot" withFunctionWithBlock:^id(TransitFunction *original,TransitNativeFunctionCallScope* scope) {
-        [self playShootSound];
+        [_self playShootSound];
         return [scope forwardToFunction:original];
     }];
     
@@ -83,12 +87,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    soundExplode = [self loadSound:@"explosion"];
-    soundShoot = [self loadSound:@"plasma-burst"];
-    soundMusic = [self loadSound:@"xtype"];
-    soundMusic.volume = 0.4;
-    soundMusic.numberOfLoops = -1;
-    
+    _soundShoot = [self loadSound:@"plasma-burst"];
+    _soundExplode = [self loadSound:@"explosion"];
+    _soundMusic = [self loadSound:@"xtype"];
+    _soundMusic.volume = 0.4;
+    _soundMusic.numberOfLoops = -1;
+
+
     [self configureView];
 }
 
@@ -110,9 +115,10 @@
     // best hook to patch XType is on first call of window.setTimeout. The game engine calls this once with
     // window.setTimeout(XType.startGame, 1);
     __block BOOL firstCall = YES;
+    __weak id _self = self;
     [transit replaceFunctionAt:@"setTimeout" withFunctionWithBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
         if(firstCall)
-            [self setupTransit];
+            [_self setupTransit];
         firstCall = NO;
         return [original callWithThisArg:scope.thisArg arguments:scope.arguments];
     }];

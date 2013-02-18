@@ -14,6 +14,7 @@
 // http://www.publicdomainpictures.net/view-image.php?image=1358
 //
 
+#import <CoreGraphics/CoreGraphics.h>
 #import "DetailsViewController.h"
 #import "ElizaViewController.h"
 #import "SGBubbleTableView.h"
@@ -144,7 +145,14 @@
 - (void)keyboardWillShow:(NSNotification*)aNotification
 {
     NSDictionary* info = [aNotification userInfo];
-    CGFloat keyboardHeight = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height;
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    NSLog(@"keyboardSize: %@", NSStringFromCGSize(keyboardSize));
+    CGFloat keyboardHeight;
+    if(UIInterfaceOrientationIsPortrait(UIApplication.sharedApplication.statusBarOrientation)) {
+        keyboardHeight = keyboardSize.height;
+    } else {
+        keyboardHeight = keyboardSize.width;
+    }
     double duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     NSInteger animationCurve = [[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
     NSInteger options = UIViewAnimationOptionBeginFromCurrentState | animationCurve;

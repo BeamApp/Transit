@@ -34,7 +34,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc: %@", self);
+    NSLog(@"DetailsViewController(%@).dealloc", self.class);
 }
 
 @end

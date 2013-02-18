@@ -68,7 +68,7 @@
 						<array class="NSMutableArray" key="NSSubviews">
 							<object class="IBUITextField" id="117433678">
 								<reference key="NSNextResponder" ref="416510560"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">290</int>
 								<string key="NSFrame">{{2, 3}, {235, 30}}</string>
 								<reference key="NSSuperview" ref="416510560"/>
 								<reference key="NSWindow"/>
@@ -102,11 +102,10 @@
 							</object>
 							<object class="IBUIButton" id="163443158">
 								<reference key="NSNextResponder" ref="416510560"/>
-								<int key="NSvFlags">292</int>
+								<int key="NSvFlags">289</int>
 								<string key="NSFrame">{{245, 2}, {73, 32}}</string>
 								<reference key="NSSuperview" ref="416510560"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -293,16 +292,27 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
-					<string key="className">SGBubbleTableView</string>
-					<string key="superclassName">UITableView</string>
+					<string key="className">DetailsViewController</string>
+					<string key="superclassName">UIViewController</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/SGBubbleTableView.h</string>
+						<string key="minorKey">./Classes/DetailsViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">ViewController</string>
-					<string key="superclassName">UIViewController</string>
+					<string key="className">ElizaViewController</string>
+					<string key="superclassName">DetailsViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">sayPressed:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">sayPressed:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">sayPressed:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="bubbleTable">SGBubbleTableView</string>
 						<string key="textField">UITextField</string>
@@ -324,7 +334,15 @@
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/ViewController.h</string>
+						<string key="minorKey">./Classes/ElizaViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SGBubbleTableView</string>
+					<string key="superclassName">UITableView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/SGBubbleTableView.h</string>
 					</object>
 				</object>
 			</array>
