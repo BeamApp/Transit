@@ -98,8 +98,8 @@
 		CB4AE17616C9557B0083D29F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CB4AE17816C9557B0083D29F /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		CB4AE17916C9557B0083D29F /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
-		CB4AE17B16C9557B0083D29F /* XTypeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XTypeViewController.h; sourceTree = "<group>"; };
-		CB4AE17C16C9557B0083D29F /* XTypeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XTypeViewController.m; sourceTree = "<group>"; };
+		CB4AE17B16C9557B0083D29F /* XTypeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XTypeViewController.h; path = XType/XTypeViewController.h; sourceTree = "<group>"; };
+		CB4AE17C16C9557B0083D29F /* XTypeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XTypeViewController.m; path = XType/XTypeViewController.m; sourceTree = "<group>"; };
 		CB4AE17F16C9557B0083D29F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController_iPhone.xib; sourceTree = "<group>"; };
 		CB4AE18216C9557B0083D29F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController_iPad.xib; sourceTree = "<group>"; };
 		CB4AE18516C9557B0083D29F /* XTypeViewController_iPhone.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = XTypeViewController_iPhone.xib; path = en.lproj/XTypeViewController_iPhone.xib; sourceTree = "<group>"; };
@@ -191,6 +191,7 @@
 		CB32E2BF16CFD0E00094BCCE /* Xtype */ = {
 			isa = PBXGroup;
 			children = (
+				CB6711C016C98894004B1893 /* Resources */,
 				CB4AE17B16C9557B0083D29F /* XTypeViewController.h */,
 				CB4AE17C16C9557B0083D29F /* XTypeViewController.m */,
 				CB4AE18416C9557B0083D29F /* XTypeViewController_iPhone.xib */,
@@ -210,6 +211,18 @@
 			path = Eliza;
 			sourceTree = "<group>";
 		};
+		CB33E80C16D284EE003FED5B /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+				F26B0B3A5D55C8C534D4359F /* DetailsViewController.h */,
+				F26B04C7CD1DC2FD7467E1BE /* DetailsViewController.m */,
+				CB32E2C016CFD0EF0094BCCE /* Eliza */,
+				CB32E2BF16CFD0E00094BCCE /* Xtype */,
+				F26B059D2BC9D2044E06AD5F /* ShareJS */,
+			);
+			name = Examples;
+			sourceTree = "<group>";
+		};
 		CB4AE15116C9557A0083D29F = {
 			isa = PBXGroup;
 			children = (
@@ -217,7 +230,6 @@
 				CBCE188A16C956E300C2D816 /* Transit */,
 				CB4AE16616C9557B0083D29F /* TransitExampleIOS */,
 				CB4AE15F16C9557A0083D29F /* Frameworks */,
-				CB6711C016C98894004B1893 /* Resources */,
 				CB4AE15D16C9557A0083D29F /* Products */,
 				164917E47F234124B248231A /* Pods.xcconfig */,
 			);
@@ -247,8 +259,7 @@
 		CB4AE16616C9557B0083D29F /* TransitExampleIOS */ = {
 			isa = PBXGroup;
 			children = (
-				CB32E2C016CFD0EF0094BCCE /* Eliza */,
-				CB32E2BF16CFD0E00094BCCE /* Xtype */,
+				CB33E80C16D284EE003FED5B /* Examples */,
 				CB4AE16F16C9557B0083D29F /* AppDelegate.h */,
 				CB4AE17016C9557B0083D29F /* AppDelegate.m */,
 				CB4AE17816C9557B0083D29F /* MasterViewController.h */,
@@ -256,9 +267,6 @@
 				CB4AE17E16C9557B0083D29F /* MasterViewController_iPhone.xib */,
 				CB4AE18116C9557B0083D29F /* MasterViewController_iPad.xib */,
 				CB4AE16716C9557B0083D29F /* Supporting Files */,
-				F26B0B3A5D55C8C534D4359F /* DetailsViewController.h */,
-				F26B04C7CD1DC2FD7467E1BE /* DetailsViewController.m */,
-				F26B059D2BC9D2044E06AD5F /* ShareJS */,
 			);
 			path = TransitExampleIOS;
 			sourceTree = "<group>";
@@ -285,7 +293,7 @@
 				CB6711C316C98894004B1893 /* xtype.mp3 */,
 			);
 			name = Resources;
-			path = TransitExampleIOS/Resources;
+			path = XType/Resources;
 			sourceTree = "<group>";
 		};
 		CBCE188A16C956E300C2D816 /* Transit */ = {
