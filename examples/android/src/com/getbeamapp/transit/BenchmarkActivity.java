@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.getbeamapp.transit.prompt.TransitChromeClient;
+import com.getbeamapp.transit.prompt.TransitPromptAdapter;
 
 public class BenchmarkActivity extends Activity {
 
@@ -27,7 +28,7 @@ public class BenchmarkActivity extends Activity {
         webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        this.transit = TransitChromeClient.createContext(webView, new TransitChromeClient(webView) {
+        this.transit = TransitPromptAdapter.createContext(webView, new TransitChromeClient() {
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
                 Log.d("Console", consoleMessage.message());
@@ -55,7 +56,7 @@ public class BenchmarkActivity extends Activity {
         });
 
         ByteArrayOutputStream htmlDocument = new ByteArrayOutputStream();
-        TransitChromeClient.readResource(getResources(), R.raw.benchmark, htmlDocument);
+        TransitPromptAdapter.readResource(getResources(), R.raw.benchmark, htmlDocument);
         try {
             String document = htmlDocument.toString("utf-8");
             webView.loadDataWithBaseURL(null, document, "text/html", "utf-8", null);

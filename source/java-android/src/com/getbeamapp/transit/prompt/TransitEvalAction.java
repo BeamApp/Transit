@@ -3,7 +3,7 @@ package com.getbeamapp.transit.prompt;
 import android.os.ConditionVariable;
 
 import com.getbeamapp.transit.TransitException;
-import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
+import com.getbeamapp.transit.prompt.TransitPromptAdapter.TransitResponse;
 
 class TransitEvalAction extends TransitAction {
     private final String stringToEvaluate;

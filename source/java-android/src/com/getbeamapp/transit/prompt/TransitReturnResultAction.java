@@ -1,7 +1,7 @@
 package com.getbeamapp.transit.prompt;
 
 import com.getbeamapp.transit.JSRepresentable;
-import com.getbeamapp.transit.prompt.TransitChromeClient.TransitResponse;
+import com.getbeamapp.transit.prompt.TransitPromptAdapter.TransitResponse;
 
 class TransitReturnResultAction extends TransitAction {
     private JSRepresentable expr;

@@ -6,7 +6,7 @@ import java.util.List;
 
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.getbeamapp.transit.prompt.TransitChromeClient;
+import com.getbeamapp.transit.prompt.TransitPromptAdapter;
 
 public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -24,7 +24,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         assertNotNull(transit);
         assertNotNull(transit.getAdapter());
 
-        TransitChromeClient adapter = (TransitChromeClient) transit.getAdapter();
+        TransitPromptAdapter adapter = (TransitPromptAdapter) transit.getAdapter();
         assertNotNull(adapter.getScript());
     }
 
