@@ -128,35 +128,35 @@ public class TransitPromptAdapter implements TransitAdapter {
         }
     }
 
-    public boolean onJSCall(String message, String defaultValue, TransitFuture<String> result) {
+    public boolean onJSCall(String requestType, String payload, TransitFuture<String> result) {
 
-        Log.d(TAG, String.format("%s --- %s", message, defaultValue));
+        Log.d(TAG, String.format("%s --- %s", requestType, payload));
 
-        if (TransitRequest.INVOKE.equals(message)) {
+        if (TransitRequest.INVOKE.equals(requestType)) {
             if (!isActive()) {
                 begin();
             }
-            doInvokeNative(context.proxify(unmarshal(defaultValue)));
+            doInvokeNative(context.proxify(unmarshal(payload)));
             process(result);
-        } else if (TransitRequest.RETURN.equals(message)) {
+        } else if (TransitRequest.RETURN.equals(requestType)) {
             assert isActive();
             assert !waitingEvaluations.empty();
 
             TransitEvalAction action = waitingEvaluations.pop();
-            Object returnValue = context.proxify(unmarshal(defaultValue));
+            Object returnValue = context.proxify(unmarshal(payload));
             action.resolveWith(returnValue);
             Log.d(TAG, String.format("%s -> %s", action.getStringToEvaluate(), returnValue));
             process(result);
-        } else if (TransitRequest.EXCEPTION.equals(message)) {
+        } else if (TransitRequest.EXCEPTION.equals(requestType)) {
             assert isActive();
             assert !waitingEvaluations.empty();
 
             TransitEvalAction action = waitingEvaluations.pop();
-            String error = String.valueOf(unmarshalJson(defaultValue));
+            String error = String.valueOf(unmarshalJson(payload));
             action.rejectWith(error);
             Log.i(TAG, String.format("Rejected `%s` with `%s`", action.getStringToEvaluate(), error));
             process(result);
-        } else if (TransitRequest.POLL.equals(message)) {
+        } else if (TransitRequest.POLL.equals(requestType)) {
             assert !isActive();
             begin(true);
             process(result);
