@@ -14,7 +14,7 @@ import com.getbeamapp.transit.prompt.TransitPromptAdapter;
 public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     public final long TIMEOUT = 1000L;
-    public final long BENCHMARK_TIMES = 100L;
+    public final long BENCHMARK_TIMES = 1000L;
 
     public IntegrationTest() {
         super(MainActivity.class);
@@ -171,7 +171,7 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         callable.block();
 
         long end = System.nanoTime();
-        Log.d("BENCHMARK", String.format("%d sequential calls needed %d", BENCHMARK_TIMES, (end - start) / 1000000));
+        Log.d("BENCHMARK", String.format("%d sequential calls needed %dms", BENCHMARK_TIMES, (end - start) / 1000000));
     }
 
     public void testNativeToJsBenchmarkAsync() {
@@ -191,6 +191,6 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         callable.block();
 
         long end = System.nanoTime();
-        Log.d("BENCHMARK", String.format("%d async calls needed %d", BENCHMARK_TIMES, (end - start) / 1000000));
+        Log.d("BENCHMARK", String.format("%d async calls needed %dms", BENCHMARK_TIMES, (end - start) / 1000000));
     }
 }
