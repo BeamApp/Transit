@@ -4,7 +4,14 @@
 		<title>Bench</title>
 		<style>
 			body {
-				font-size: 1.5em;
+				font-size: 10px;
+				line-height: 16px;
+			}
+			
+			p {
+				font-size: 10px;
+				line-height: 16px;
+			    margin: 0;
 			}
 		</style>
 	</head>
@@ -80,10 +87,10 @@
 				var count = 0;
 				var start = new Date().getTime();
 				var response = function () {
-					count++;
-					if (count == total) {
-						document.body.innerHTML += '<p>'+total+' concurrent requests with '+len+' bytes of data: '+((new Date().getTime() - start)/1000)+' seconds</p>';
-					}
+							count++;
+							if (count == total) {
+								document.body.innerHTML += '<p>'+total+' concurrent requests with '+len+' bytes of data: '+((new Date().getTime() - start)/1000)+' seconds</p>';
+							}
 				}
 				for (i = 0; i < total; i++) {
 					ping(data[len], response)
