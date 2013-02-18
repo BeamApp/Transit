@@ -67,6 +67,11 @@ public abstract class TransitContext extends TransitEvaluatable {
     }
 
     private Object proxifyString(String value) {
+        
+        if ("__TRANSIT_OBJECT_GLOBAL".equals(value)) {
+            return this;
+        }
+        
         Matcher nativeFunctionMatcher = NATIVE_FUNCTION_PATTERN.matcher(value);
 
         if (nativeFunctionMatcher.matches()) {
