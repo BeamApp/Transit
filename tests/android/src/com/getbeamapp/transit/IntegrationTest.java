@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 
 import com.getbeamapp.transit.TransitCallable.Flags;
 import com.getbeamapp.transit.prompt.TransitPromptAdapter;
@@ -13,6 +14,7 @@ import com.getbeamapp.transit.prompt.TransitPromptAdapter;
 public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     public final long TIMEOUT = 1000L;
+    public final long BENCHMARK_TIMES = 100L;
 
     public IntegrationTest() {
         super(MainActivity.class);
@@ -33,13 +35,15 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
     public void testTransitInjected() {
         assertEquals(true, (boolean) (Boolean) getActivity().transit.eval("window.transit != null"));
     }
-    
+
     public void testAsyncInvocation() {
         TransitContext transit = getActivity().transit;
         MockCallable callable = new MockCallable();
         TransitNativeFunction f = transit.registerCallable(callable, EnumSet.of(Flags.ASYNC));
         transit.eval("@()", f);
-        assertEquals(0, callable.getCallCount()); // setTimeout for batch-processing won't have fired yet
+        assertEquals(0, callable.getCallCount()); // setTimeout for
+                                                  // batch-processing won't have
+                                                  // fired yet
         callable.block();
         assertEquals(1, callable.getCallCount());
     }
@@ -148,5 +152,45 @@ public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivi
         final TransitNativeFunction function = transit.registerCallable(callable);
         transit.eval("window.f = @", function);
         assertEquals(calls, transit.eval("f(0)"));
+    }
+
+    public void testNativeToJsBenchmarkSync() {
+        final AndroidTransitContext transit = getActivity().transit;
+        MockCallable callable = new MockCallable();
+
+        transit.eval("window.c = @", transit.registerCallable(callable, EnumSet.allOf(TransitCallable.Flags.class)));
+        transit.eval("window.i = 0");
+        transit.eval("window.f = function() { window.i++; if(window.i == @) { window.c() } } ", BENCHMARK_TIMES);
+
+        long start = System.nanoTime();
+
+        for (int i = 0; i < BENCHMARK_TIMES; i++) {
+            transit.eval("window.f()");
+        }
+
+        callable.block();
+
+        long end = System.nanoTime();
+        Log.d("BENCHMARK", String.format("%d sequential calls needed %d", BENCHMARK_TIMES, (end - start) / 1000000));
+    }
+
+    public void testNativeToJsBenchmarkAsync() {
+        final AndroidTransitContext transit = getActivity().transit;
+        MockCallable callable = new MockCallable();
+
+        transit.eval("window.c = @", transit.registerCallable(callable, EnumSet.allOf(TransitCallable.Flags.class)));
+        transit.eval("window.i = 0");
+        transit.eval("window.f = function() { window.i++; if(window.i == @) { window.c() } } ", BENCHMARK_TIMES);
+
+        long start = System.nanoTime();
+
+        for (int i = 0; i < BENCHMARK_TIMES; i++) {
+            transit.evalAsync("window.f()");
+        }
+
+        callable.block();
+
+        long end = System.nanoTime();
+        Log.d("BENCHMARK", String.format("%d async calls needed %d", BENCHMARK_TIMES, (end - start) / 1000000));
     }
 }
