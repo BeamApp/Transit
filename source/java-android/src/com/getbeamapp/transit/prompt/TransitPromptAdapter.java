@@ -232,9 +232,19 @@ public class TransitPromptAdapter implements TransitAdapter {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                webView.loadUrl("javascript:" + stringToEvaluate);
+                if (webView != null && !finalized) {
+                    webView.loadUrl("javascript:" + stringToEvaluate);
+                }
             }
         });
+    }
+    
+    private boolean finalized = false;
+    
+    @Override
+    protected void finalize() throws Throwable {
+        this.finalized = true;
+        super.finalize();
     }
 
     public final Object evaluate(String stringToEvaluate) {
@@ -392,10 +402,11 @@ public class TransitPromptAdapter implements TransitAdapter {
         begin(false);
     }
 
-    private void begin(boolean polling) {
+    private void begin(boolean _polling) {
         if (!isActive()) {
-            Log.i(TAG, String.format("begin(polling=%s)", polling));
-            active = true;
+            this.active = true;
+            this.polling = _polling;
+            Log.i(TAG, String.format("begin(polling=%s)", this.polling));
         }
     }
 
