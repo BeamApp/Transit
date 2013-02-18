@@ -77,11 +77,11 @@
         }
 
         if(typeof elem === "object") {
-            if(elem instanceof Document || elem instanceof Element) {
-                return transit.retainElement(elem);
-            }
             if(elem === GLOBAL_OBJECT) {
                 return MARKER_MAGIC_OBJECT_GLOBAL;
+            }
+            if(elem.constructor !== Object && elem.constructor !== Array) {
+                return transit.retainElement(elem);
             }
 
             var copy;

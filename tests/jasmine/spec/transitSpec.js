@@ -256,6 +256,13 @@ describe("Transit", function() {
             expect(transit.proxify([window, window])).toEqual(jasmine.any(String));
         });
 
+        it("creates a proxy if it is not a direct object", function(){
+            function Test() {}
+
+            var object = new Test();
+            expect(transit.proxify(object)).toEqual(jasmine.any(String));
+        });
+
     });
 
     describe("createInvocationDescription", function(){
