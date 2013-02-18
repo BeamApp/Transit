@@ -40,12 +40,14 @@ public class TransitPromptAdapter implements TransitAdapter {
             this.string = string;
         }
 
-        public String getString() {
-            return string;
-        }
+        public static TransitRequest fromString(String s) {
+            for (TransitRequest r : TransitRequest.values()) {
+                if (r.string.equals(s)) {
+                    return r;
+                }
+            }
 
-        public boolean equals(String string) {
-            return this.string.equals(string);
+            return null;
         }
     }
 
@@ -64,10 +66,6 @@ public class TransitPromptAdapter implements TransitAdapter {
         public String getString() {
             return string;
         }
-
-        public boolean equals(String string) {
-            return this.string.equals(string);
-        }
     }
 
     public static final String TAG = "TransitAdapter";
@@ -75,7 +73,7 @@ public class TransitPromptAdapter implements TransitAdapter {
     private final BlockingDeque<TransitAction> actions = new LinkedBlockingDeque<TransitAction>();
 
     final WebView webView;
-    
+
     private AndroidTransitContext context;
 
     private boolean active = false;
@@ -131,37 +129,41 @@ public class TransitPromptAdapter implements TransitAdapter {
     public boolean onJSCall(String requestType, String payload, TransitFuture<String> result) {
 
         Log.d(TAG, String.format("%s --- %s", requestType, payload));
+        TransitRequest request = TransitRequest.fromString(requestType);
 
-        if (TransitRequest.INVOKE.equals(requestType)) {
+        if (request == null) {
+            return false;
+        }
+
+        switch (request) {
+        case POLL:
+            assert !isActive();
+            begin(true);
+            process(result);
+            break;
+        case INVOKE:
             if (!isActive()) {
                 begin();
             }
             doInvokeNative(context.proxify(unmarshal(payload)));
             process(result);
-        } else if (TransitRequest.RETURN.equals(requestType)) {
+            break;
+        case RETURN:
             assert isActive();
-            assert !waitingEvaluations.empty();
-
-            TransitEvalAction action = waitingEvaluations.pop();
+            TransitEvalAction actionToResolve = waitingEvaluations.pop();
             Object returnValue = context.proxify(unmarshal(payload));
-            action.resolveWith(returnValue);
-            Log.d(TAG, String.format("%s -> %s", action.getStringToEvaluate(), returnValue));
+            actionToResolve.resolveWith(returnValue);
+            Log.d(TAG, String.format("%s -> %s", actionToResolve.getStringToEvaluate(), returnValue));
             process(result);
-        } else if (TransitRequest.EXCEPTION.equals(requestType)) {
+            break;
+        case EXCEPTION:
             assert isActive();
-            assert !waitingEvaluations.empty();
-
-            TransitEvalAction action = waitingEvaluations.pop();
+            TransitEvalAction actionToReject = waitingEvaluations.pop();
             String error = String.valueOf(unmarshalJson(payload));
-            action.rejectWith(error);
-            Log.i(TAG, String.format("Rejected `%s` with `%s`", action.getStringToEvaluate(), error));
+            actionToReject.rejectWith(error);
+            Log.d(TAG, String.format("Rejected `%s` with `%s`", actionToReject.getStringToEvaluate(), error));
             process(result);
-        } else if (TransitRequest.POLL.equals(requestType)) {
-            assert !isActive();
-            begin(true);
-            process(result);
-        } else {
-            return false;
+            break;
         }
 
         return true;
@@ -284,6 +286,7 @@ public class TransitPromptAdapter implements TransitAdapter {
         try {
             preparedInvocation = context.prepareInvoke(invocationDescription);
         } catch (Exception e) {
+            Log.e(TAG, "Failed to prepare invocation.", e);
             pushAction(new TransitExceptionAction(e));
             return;
         }
@@ -373,7 +376,7 @@ public class TransitPromptAdapter implements TransitAdapter {
     private boolean isPolling() {
         return polling;
     }
-    
+
     public AndroidTransitContext getContext() {
         return context;
     }
