@@ -58,4 +58,10 @@ public class MockCallable implements TransitCallable {
     public long getCallCount() {
         return callCount;
     }
+
+    public void reset() {
+        callCount = 0;
+        lock.close();
+        arguments.clear();
+    }
 }
