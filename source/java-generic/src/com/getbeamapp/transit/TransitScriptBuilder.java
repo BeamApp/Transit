@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
@@ -61,26 +59,26 @@ public class TransitScriptBuilder {
     }
 
     public void process(String stringToEvaluate, Object... values) {
-        Pattern pattern = Pattern.compile("(.*?)@");
-        Matcher matcher = pattern.matcher(stringToEvaluate);
-
+        int start = 0;
         int index = 0;
+        int length = stringToEvaluate.length();
+        int valueIndex = 0;
 
-        while (matcher.find()) {
-            buffer.append(matcher.group(1));
-
-            if (index >= values.length) {
-                matcher.appendReplacement(buffer, "@");
-                continue;
-            } else {
-                parse(values[index]);
-                matcher.appendReplacement(buffer, "");
+        while ((index = stringToEvaluate.indexOf('@', start)) >= 0) {
+            if (index - start > 0) {
+                buffer.append(stringToEvaluate.substring(start, index));
             }
 
-            index++;
+            if (valueIndex < values.length) {
+                parse(values[valueIndex++]);
+            }
+
+            start = index + 1;
         }
 
-        matcher.appendTail(buffer);
+        if (start < length) {
+            buffer.append(stringToEvaluate.substring(start, length));
+        }
     }
 
     public String toScript() {

@@ -18,6 +18,8 @@ public abstract class TransitContext extends TransitEvaluatable {
 
     private static final String JS_FUNCTION_PREFIX = "__TRANSIT_JS_FUNCTION_";
 
+    private static final String GLOBAL_OBJECT = "__TRANSIT_OBJECT_GLOBAL";
+
     private String nextNativeId() {
         return String.valueOf(_nextNativeId++);
     }
@@ -44,7 +46,7 @@ public abstract class TransitContext extends TransitEvaluatable {
     public TransitNativeFunction registerCallable(TransitCallable callable) {
         return registerCallable(callable, EnumSet.noneOf(TransitCallable.Flags.class));
     }
-    
+
     public TransitNativeFunction registerCallable(TransitCallable callable, EnumSet<TransitCallable.Flags> flags) {
         TransitNativeFunction function = new TransitNativeFunction(this, callable, flags, nextNativeId());
         retainNativeFunction(function);
@@ -54,7 +56,7 @@ public abstract class TransitContext extends TransitEvaluatable {
     public Object eval(String stringToEvaluate, Object... values) {
         return evalWithThisArg(stringToEvaluate, null, values);
     }
-    
+
     public void evalAsync(String stringToEvaluate, Object... values) {
         evalWithThisArgAsync(stringToEvaluate, null, values);
     }
@@ -76,12 +78,10 @@ public abstract class TransitContext extends TransitEvaluatable {
     Object proxifyString(String value) {
         if (value == null || !value.startsWith("__T")) {
             return value;
-        } else if ("__TRANSIT_OBJECT_GLOBAL".equals(value)) {
+        } else if (value.equals(GLOBAL_OBJECT)) {
             return this;
         } else if (value.startsWith(NATIVE_FUNCTION_PREFIX)) {
-            TransitNativeFunction callback = getCallback(value.substring(NATIVE_FUNCTION_PREFIX.length()));
-            assert (callback != null);
-            return callback;
+            return getCallback(value.substring(NATIVE_FUNCTION_PREFIX.length()));
         } else if (value.startsWith(JS_FUNCTION_PREFIX)) {
             return new TransitJSFunction(this, value.substring(JS_FUNCTION_PREFIX.length()));
         } else {
