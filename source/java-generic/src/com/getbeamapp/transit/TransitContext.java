@@ -77,6 +77,11 @@ public abstract class TransitContext extends TransitEvaluatable {
 
     private Object proxifyString(String value) {
         
+        // Better performance by avoiding regular expression matching
+        if (value == null || !value.startsWith("__T")) {
+            return value;
+        }
+        
         if ("__TRANSIT_OBJECT_GLOBAL".equals(value)) {
             return this;
         }
