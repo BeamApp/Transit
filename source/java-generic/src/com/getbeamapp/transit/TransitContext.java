@@ -5,8 +5,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public abstract class TransitContext extends TransitEvaluatable {
 
@@ -16,9 +14,9 @@ public abstract class TransitContext extends TransitEvaluatable {
 
     private long _nextNativeId = 0;
 
-    private static final Pattern NATIVE_FUNCTION_PATTERN = Pattern.compile("^__TRANSIT_NATIVE_FUNCTION_(.+)$");
+    private static final String NATIVE_FUNCTION_PREFIX = "__TRANSIT_NATIVE_FUNCTION_";
 
-    private static final Pattern JS_FUNCTION_PATTERN = Pattern.compile("^__TRANSIT_JS_FUNCTION_(.+)$");
+    private static final String JS_FUNCTION_PREFIX = "__TRANSIT_JS_FUNCTION_";
 
     private String nextNativeId() {
         return String.valueOf(_nextNativeId++);
@@ -75,32 +73,20 @@ public abstract class TransitContext extends TransitEvaluatable {
         return jsExpressionFromCode("@", o);
     }
 
-    private Object proxifyString(String value) {
-        
-        // Better performance by avoiding regular expression matching
+    Object proxifyString(String value) {
         if (value == null || !value.startsWith("__T")) {
             return value;
-        }
-        
-        if ("__TRANSIT_OBJECT_GLOBAL".equals(value)) {
+        } else if ("__TRANSIT_OBJECT_GLOBAL".equals(value)) {
             return this;
-        }
-        
-        Matcher nativeFunctionMatcher = NATIVE_FUNCTION_PATTERN.matcher(value);
-
-        if (nativeFunctionMatcher.matches()) {
-            TransitNativeFunction callback = getCallback(nativeFunctionMatcher.group(1));
+        } else if (value.startsWith(NATIVE_FUNCTION_PREFIX)) {
+            TransitNativeFunction callback = getCallback(value.substring(NATIVE_FUNCTION_PREFIX.length()));
             assert (callback != null);
             return callback;
+        } else if (value.startsWith(JS_FUNCTION_PREFIX)) {
+            return new TransitJSFunction(this, value.substring(JS_FUNCTION_PREFIX.length()));
+        } else {
+            return value;
         }
-
-        Matcher jsFunctionMatcher = JS_FUNCTION_PATTERN.matcher(value);
-
-        if (jsFunctionMatcher.matches()) {
-            return new TransitJSFunction(this, jsFunctionMatcher.group(1));
-        }
-
-        return value;
     }
 
     private TransitJSObject proxifyMap(Map<?, ?> input) {
