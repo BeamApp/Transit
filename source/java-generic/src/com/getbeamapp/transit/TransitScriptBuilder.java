@@ -2,8 +2,9 @@ package com.getbeamapp.transit;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,9 +12,18 @@ import java.util.Set;
 import org.json.JSONObject;
 
 public class TransitScriptBuilder {
-    private static class ArgumentList extends LinkedList<Object> {
+    private static class ArgumentList implements Iterable<Object> {
 
-        private static final long serialVersionUID = -8245671519808766593L;
+        private final Iterable<Object> iterable;
+
+        public ArgumentList(Iterable<Object> i) {
+            this.iterable = i;
+        }
+
+        @Override
+        public Iterator<Object> iterator() {
+            return iterable.iterator();
+        }
 
     }
 
@@ -26,27 +36,21 @@ public class TransitScriptBuilder {
     }
 
     public static Iterable<Object> arguments(Object... items) {
-        ArgumentList result = new ArgumentList();
-
-        for (Object item : items) {
-            result.add(item);
-        }
-
-        return result;
+        return new ArgumentList(Arrays.asList(items));
     }
 
     public static Object raw(String s) {
         return new RawExpression(s);
     }
 
-    private StringBuffer buffer;
-    private final StringBuffer vars = new StringBuffer();
+    private StringBuilder buffer;
+    private final StringBuilder vars = new StringBuilder();
     private final Set<String> definedVars = new HashSet<String>();
     private String result = null;
     private final String thisArgExpression;
 
     public TransitScriptBuilder(String transitVariable, Object thisArg) {
-        buffer = new StringBuffer();
+        buffer = new StringBuilder();
 
         if (thisArg == null || thisArg instanceof TransitContext) {
             this.thisArgExpression = null;
@@ -55,7 +59,7 @@ public class TransitScriptBuilder {
             this.thisArgExpression = buffer.toString();
         }
 
-        this.buffer = new StringBuffer();
+        this.buffer = new StringBuilder();
     }
 
     public void process(String stringToEvaluate, Object... values) {
@@ -86,7 +90,7 @@ public class TransitScriptBuilder {
             return result;
         }
 
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
         boolean hasVars = !definedVars.isEmpty();
 
         if (hasVars) {
@@ -127,7 +131,7 @@ public class TransitScriptBuilder {
             vars.append(variableName);
             vars.append(" = ");
 
-            StringBuffer _buffer = buffer;
+            StringBuilder _buffer = buffer;
             buffer = vars;
 
             try {
