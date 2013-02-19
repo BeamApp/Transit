@@ -85,6 +85,8 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     private final ExecutorService pool;
 
+    private boolean finalized = false;
+
     public TransitPromptAdapter(WebView forWebView) {
         this.webView = forWebView;
         this.context = new AndroidTransitContext(this);
@@ -238,9 +240,7 @@ public class TransitPromptAdapter implements TransitAdapter {
             }
         });
     }
-    
-    private boolean finalized = false;
-    
+
     @Override
     protected void finalize() throws Throwable {
         this.finalized = true;
@@ -275,14 +275,7 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     private void pollBegin() {
         assert !isActive();
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG, "pollBegin()");
-                webView.loadUrl("javascript:transit.poll()");
-            }
-        });
+        evaluateAsync("transit.poll()");
     }
 
     private void pollComplete() {
