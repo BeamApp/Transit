@@ -83,14 +83,17 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     private boolean polling = false;
 
-    private final ExecutorService pool;
+    private final ExecutorService asyncThreadPool;
+
+    private final ExecutorService genericThreadPool;
 
     private boolean finalized = false;
 
     public TransitPromptAdapter(WebView forWebView) {
         this.webView = forWebView;
         this.context = new AndroidTransitContext(this);
-        this.pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        this.asyncThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        this.genericThreadPool = Executors.newCachedThreadPool();
     }
 
     public final void initialize() {
@@ -169,7 +172,7 @@ public class TransitPromptAdapter implements TransitAdapter {
             result.resolve();
 
             for (Object invocation : invocations) {
-                pool.submit(wrapInvocation(invocation));
+                asyncThreadPool.submit(wrapInvocation(invocation));
             }
 
             return true;
@@ -203,7 +206,7 @@ public class TransitPromptAdapter implements TransitAdapter {
         return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 
-    private void runOnUiThread(Runnable runnable) {
+    protected void ensureOnUiThread(Runnable runnable) {
         if (isUiThread()) {
             runnable.run();
         } else {
@@ -211,9 +214,9 @@ public class TransitPromptAdapter implements TransitAdapter {
         }
     }
 
-    public void runOnNonUiThread(Runnable runnable) {
+    protected void ensureOnNonUiThread(Runnable runnable) {
         if (isUiThread()) {
-            Executors.newSingleThreadExecutor().execute(runnable);
+            genericThreadPool.submit(runnable);
         } else {
             runnable.run();
         }
@@ -231,7 +234,7 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     @Override
     public final void evaluateAsync(final String stringToEvaluate) {
-        runOnUiThread(new Runnable() {
+        ensureOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (webView != null && !finalized) {
@@ -332,7 +335,7 @@ public class TransitPromptAdapter implements TransitAdapter {
             return;
         }
 
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
+        genericThreadPool.submit(new Runnable() {
             @Override
             public void run() {
                 TransitAction action = null;
@@ -356,7 +359,7 @@ public class TransitPromptAdapter implements TransitAdapter {
     private final Stack<TransitEvalAction> waitingEvaluations = new Stack<TransitEvalAction>();
 
     private void process(final TransitFuture<String> result) {
-        runOnNonUiThread(new Runnable() {
+        genericThreadPool.submit(new Runnable() {
             @Override
             public void run() {
                 try {
