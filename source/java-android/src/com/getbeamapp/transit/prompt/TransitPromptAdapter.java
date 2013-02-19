@@ -4,8 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -87,6 +89,16 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     private final ExecutorService genericThreadPool;
 
+    private final Handler handler;
+
+    private Queue<String> asyncEvaluations = new ConcurrentLinkedQueue<String>();
+
+    private final Runnable consumeAsyncEvaluations;
+
+    private Object notifiedUiThreadLock = new Object();
+
+    private boolean notifiedUiThread = false;
+
     private boolean finalized = false;
 
     public TransitPromptAdapter(WebView forWebView) {
@@ -94,6 +106,38 @@ public class TransitPromptAdapter implements TransitAdapter {
         this.context = new AndroidTransitContext(this);
         this.asyncThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         this.genericThreadPool = Executors.newCachedThreadPool();
+        this.handler = new Handler(Looper.getMainLooper());
+        this.consumeAsyncEvaluations = new Runnable() {
+
+            @Override
+            public void run() {
+                if (webView == null || finalized) {
+                    return;
+                }
+
+                synchronized (notifiedUiThreadLock) {
+                    notifiedUiThread = false;
+                }
+
+                StringBuilder script = new StringBuilder();
+                script.append("javascript:");
+
+                boolean hasScripts = false;
+                String current = null;
+
+                while ((current = asyncEvaluations.poll()) != null) {
+                    hasScripts = true;
+                    script.append("try{");
+                    script.append(current);
+                    script.append("}catch(e){console.error(e)};");
+                }
+
+                if (hasScripts) {
+                    webView.loadUrl(script.toString());
+                }
+            }
+
+        };
     }
 
     public final void initialize() {
@@ -210,7 +254,7 @@ public class TransitPromptAdapter implements TransitAdapter {
         if (isUiThread()) {
             runnable.run();
         } else {
-            new Handler(Looper.getMainLooper()).post(runnable);
+            handler.postDelayed(runnable, 1L);
         }
     }
 
@@ -234,14 +278,20 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     @Override
     public final void evaluateAsync(final String stringToEvaluate) {
-        ensureOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (webView != null && !finalized) {
-                    webView.loadUrl("javascript:" + stringToEvaluate);
-                }
+        asyncEvaluations.add(stringToEvaluate);
+
+        boolean mustNotify = false;
+        synchronized (notifiedUiThreadLock) {
+            mustNotify = !notifiedUiThread;
+
+            if (!notifiedUiThread) {
+                notifiedUiThread = true;
             }
-        });
+        }
+
+        if (mustNotify) {
+            ensureOnUiThread(consumeAsyncEvaluations);
+        }
     }
 
     @Override
