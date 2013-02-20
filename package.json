@@ -7,7 +7,7 @@
       {"name": "Marcel Jackwerth"}
   ],
   "scripts": {
-    "test": "grunt travis --verbose",
+    "test": "grunt travis --verbose --no-color",
     "start": "echo \"Error: nothing to start\" && exit 1"
   },
   "repository": {
