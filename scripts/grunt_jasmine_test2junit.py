@@ -33,7 +33,7 @@ for line in fileinput.input():
     if scanning:
         match = re_test.match(line)
         if match:
-            out += "  <testcase classname='%s' name='%s'>" % (match.group(1), match.group(2))
+            out += "  <testcase classname='Jasmine.%s' name='%s'>" % (match.group(1), match.group(2))
             if match.group(3) != "OK":
                 failed += 1
                 out += "<failure></failure>"
