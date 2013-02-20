@@ -13,28 +13,35 @@ die () {
 [ "$#" -ge 1  ] || die "$0 BUILD_NUMBER"
 
 
-PROJECT_NAME="TransitTestsIOS"
-PROJECT_ROOT="`cd ../tests/objc-ios; pwd`"
-SYMROOT="$PROJECT_ROOT/build"
-DIST_DIR="$PROJECT_ROOT/dist"
+TESTS_PROJECT_NAME="TransitTestsIOS"
+TESTS_PROJECT_ROOT="`cd ../tests/objc-ios; pwd`"
 
-
-echo "### CREATE DIST DIRECTORY"
-echo "rm -rf $SYMROOT"
-rm -rf "$SYMROOT"
-echo "rm -rf $DIST_DIR"
-rm -rf "$DIST_DIR"
-echo "mkdir -p $DIST_DIR"
-mkdir -p "$DIST_DIR"
-ls -laF
+EXAMPLES_PROJECT_NAME="TransitExampleIOS"
+EXAMPLES_PROJECT_ROOT="`cd ../examples/objc-ios; pwd`"
 
 
 build_and_package()
 {
-	OLD_DIR=`pwd`
     CONFIGURATION=$1
+    PROJECT_NAME=$2
+    PROJECT_ROOT=$3
+
+	pushd `pwd`
+
+    SYMROOT="$PROJECT_ROOT/build"
+    DIST_DIR="$PROJECT_ROOT/dist"
+
     PACKAGENAME=`echo $CONFIGURATION | sed 's%/%-%g' | tr '[A-Z]' '[a-z]'`
     BUILD_DIR="$SYMROOT/$PACKAGENAME-iphoneos"
+
+    echo "### CREATE DIST DIRECTORY"
+    echo "rm -rf $SYMROOT"
+    rm -rf "$SYMROOT"
+    echo "rm -rf $DIST_DIR"
+    rm -rf "$DIST_DIR"
+    echo "mkdir -p $DIST_DIR"
+    mkdir -p "$DIST_DIR"
+    ls -laF
 
     if [ "$MODIFYCONFIG" = "YES" ]; then
         replace_infoplist $CONFIGURATION
@@ -70,7 +77,7 @@ build_and_package()
         echo "PACKAGING FAILED : CONFIGURATION[$CONFIGURATION]"
         exit 1
     fi
-	cd "$OLD_DIR"
+	popd
 }
 
 
@@ -81,24 +88,14 @@ kill_simulator()
     fi
 }
 
-
-run_integration_tests()
-{
-    echo "### RUN INTEGRATION TESTS"
-    BUILD_DIR="$SYMROOT/Debug-iphonesimulator"
-    xcodebuild -workspace "$PROJECT_NAME".xcworkspace -scheme "Integration Tests" -configuration Debug -sdk iphonesimulator -xcconfig="Pods/Pods-integration.xcconfig" CONFIGURATION_BUILD_DIR="$BUILD_DIR" SYMROOT="$SYMROOT" clean build
-
-    kill_simulator
-
-    OUTPUT_FILE="$DIST_DIR/kif_results_$BUILD_NUMBER.txt"
-    ios-sim launch "$BUILD_DIR/""$PROJECT_NAME"" (Integration Tests).app" --stdout "$OUTPUT_FILE" --stderr "$OUTPUT_FILE"
-    cat "$OUTPUT_FILE"
-    grep -q "TESTING FINISHED: 0 failures" "$OUTPUT_FILE"
-}
-
-
 run_unit_tests()
 {
+    PROJECT_NAME=$1
+    PROJECT_ROOT=$2
+
+    DIST_DIR="$PROJECT_ROOT/dist"
+
+
     OUTPUT_FILE="$DIST_DIR/unittest_results_$BUILD_NUMBER.txt"
 
     echo "### RUN UNIT TESTS"
@@ -108,7 +105,8 @@ run_unit_tests()
 }
 
 
-build_and_package Debug
-build_and_package Release
-#run_integration_tests
-run_unit_tests
+build_and_package Debug $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
+build_and_package Release $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
+run_unit_tests $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
+
+build_and_package Debug $EXAMPLES_PROJECT_NAME $EXAMPLES_PROJECT_ROOT
