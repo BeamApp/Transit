@@ -60,7 +60,8 @@ public class MockTest extends TestCase {
 
         AndroidMock.expect(adapter.evaluate(contains("__TRANSIT_JS_FUNCTION_1(1)"))).andReturn(11);
         AndroidMock.expect(adapter.evaluate(contains("__TRANSIT_JS_FUNCTION_1(2, 0, 0)"))).andReturn(12);
-        AndroidMock.expect(adapter.evaluate(contains("__TRANSIT_JS_FUNCTION_1.call(0, 3);"))).andReturn(13);
+        AndroidMock.expect(adapter.evaluate(contains("__TRANSIT_JS_FUNCTION_1.call(0, 3)"))).andReturn(13);
+        AndroidMock.expect(adapter.evaluate("transit.r(\"1\")()")).andReturn(14);
         AndroidMock.replay(adapter);
 
         AndroidTransitContext ctx = new AndroidTransitContext(adapter);
@@ -68,11 +69,13 @@ public class MockTest extends TestCase {
         Object f1 = f.call(1);
         Object f2 = f.callWithThisArg(ctx, 2, 0, 0);
         Object f3 = f.callWithThisArg(0, 3);
+        Object f4 = f.call();
 
         AndroidMock.verify(adapter);
         assertEquals(11, f1);
         assertEquals(12, f2);
         assertEquals(13, f3);
+        assertEquals(14, f4);
     }
 
 }

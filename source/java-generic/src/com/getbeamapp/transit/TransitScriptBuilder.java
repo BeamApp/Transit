@@ -48,6 +48,7 @@ public class TransitScriptBuilder {
     private final Set<String> definedVars = new HashSet<String>();
     private String result = null;
     private final String thisArgExpression;
+    private boolean noVars = false;
 
     public TransitScriptBuilder(String transitVariable, Object thisArg) {
         buffer = new StringBuilder();
@@ -63,6 +64,14 @@ public class TransitScriptBuilder {
     }
 
     public void process(String stringToEvaluate, Object... values) {
+
+        if (stringToEvaluate == "@()" && values.length > 0) {
+            noVars = true;
+            parse(values[0]);
+            buffer.append("()");
+            return;
+        }
+
         int start = 0;
         int index = 0;
         int length = stringToEvaluate.length();
@@ -121,6 +130,14 @@ public class TransitScriptBuilder {
     }
 
     private void addVariable(String variableName, Object... fragments) {
+        if (noVars) {
+            for (Object fragment : fragments) {
+                parse(fragment);
+            }
+
+            return;
+        }
+
         if (!definedVars.contains(variableName)) {
             if (definedVars.size() == 0) {
                 vars.append("var ");
