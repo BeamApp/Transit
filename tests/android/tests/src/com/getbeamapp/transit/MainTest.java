@@ -103,12 +103,12 @@ public class MainTest extends TestCase {
     }
     
     public void testProxify() {
-        assertEquals(Integer.class, transit.proxify(1).getClass());
-        assertEquals(String.class, transit.proxify("a").getClass());
-        assertEquals(TransitJSFunction.class, transit.proxify("__TRANSIT_JS_FUNCTION_1000").getClass());
+        assertEquals(Integer.class, transit.parse("1").getClass());
+        assertEquals(String.class, transit.parse("\"a\"").getClass());
+        assertEquals(TransitJSFunction.class, transit.parse("\"__TRANSIT_JS_FUNCTION_1000\"").getClass());
         
         try {
-            transit.proxify("__TRANSIT_NATIVE_FUNCTION_1000");
+            transit.parse("\"__TRANSIT_NATIVE_FUNCTION_1000\"");
             fail();
         } catch (IllegalArgumentException e) {
             // ok

@@ -34,7 +34,7 @@ public class MockTest extends TestCase {
 
         AndroidTransitContext ctx = new AndroidTransitContext(adapter);
 
-        ctx.proxify("__TRANSIT_JS_FUNCTION_1");
+        ctx.parse("\"__TRANSIT_JS_FUNCTION_1\"");
         System.gc();
         Thread.yield();
         AndroidMock.verify(adapter);

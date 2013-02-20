@@ -12,9 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,7 +19,6 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import com.getbeamapp.transit.AndroidTransitContext;
-import com.getbeamapp.transit.JsonConverter;
 import com.getbeamapp.transit.R;
 import com.getbeamapp.transit.TransitAdapter;
 import com.getbeamapp.transit.TransitContext.PreparedInvocation;
@@ -158,35 +154,12 @@ public class TransitPromptAdapter implements TransitAdapter {
         return adapter.getContext();
     }
 
-    private final Object unmarshal(String dataAsJsonString) {
-        Object o = unmarshalJson(dataAsJsonString);
-
-        if (o == null) {
-            return null;
-        } else {
-            return JsonConverter.toNative(o);
-        }
-    }
-
-    private final Object unmarshalJson(String dataAsJsonString) {
-        if (dataAsJsonString == null) {
-            return null;
-        } else {
-            try {
-                JSONObject object = new JSONObject(dataAsJsonString);
-                return object.get("data");
-            } catch (JSONException e) {
-                throw new TransitException("Failed to parse JSON payload", e);
-            }
-        }
-    }
-
     public Runnable wrapInvocation(final Object invocation) {
         return new Runnable() {
             @Override
             public void run() {
                 try {
-                    doInvokeNativeAsync((TransitJSObject) context.proxify(invocation));
+                    doInvokeNativeAsync((TransitJSObject) invocation);
                 } catch (Exception e) {
                     Log.e(TAG, String.format("[%s] Invocation of `%s` failed", TransitRequest.BATCH_INVOKE, invocation));
                 }
@@ -211,7 +184,7 @@ public class TransitPromptAdapter implements TransitAdapter {
             break;
         case BATCH_INVOKE:
             assert !isActive();
-            Object invocationsObject = unmarshal(payload);
+            Object invocationsObject = context.parse(payload);
             final List<?> invocations = (List<?>) invocationsObject;
             result.resolve();
 
@@ -222,13 +195,13 @@ public class TransitPromptAdapter implements TransitAdapter {
             return true;
         case INVOKE:
             begin();
-            doInvokeNative((TransitJSObject) context.proxify(unmarshal(payload)));
+            doInvokeNative((TransitJSObject) context.parse(payload));
             process(result);
             break;
         case RETURN:
             assert isActive();
             TransitEvalAction actionToResolve = waitingEvaluations.pop();
-            Object returnValue = context.proxify(unmarshal(payload));
+            Object returnValue = context.parse(payload);
             actionToResolve.resolveWith(returnValue);
             Log.d(TAG, String.format("[%s] %s -> %s", request, actionToResolve.getStringToEvaluate(), returnValue));
             process(result);
@@ -236,7 +209,7 @@ public class TransitPromptAdapter implements TransitAdapter {
         case EXCEPTION:
             assert isActive();
             TransitEvalAction actionToReject = waitingEvaluations.pop();
-            String error = String.valueOf(unmarshalJson(payload));
+            String error = String.valueOf(context.parse(payload));
             actionToReject.rejectWith(error);
             Log.d(TAG, String.format("[%s] Rejected `%s` with `%s`", request, actionToReject.getStringToEvaluate(), error));
             process(result);

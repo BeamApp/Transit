@@ -9,7 +9,7 @@
 
   function post(type, data) {
     if (data != null) {
-      data = JSON.stringify({ data: data });
+      data = JSON.stringify(data);
     }
 
     var result = prompt(type, data);

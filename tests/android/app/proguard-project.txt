@@ -24,3 +24,8 @@
     public static *** d(...);
     public static *** v(...);
 }
+
+# Fix for "local variable type mismatch: attempt to set or access a value
+# of type java.lang.Object using a local variable of type boolean." caused by Dex
+# when using -dontobfuscate
+-optimizations !field/removal/writeonly,!field/marking/private,!class/merging/*,!code/allocation/variable

@@ -1,10 +1,14 @@
 package com.getbeamapp.transit;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 
 public abstract class TransitContext extends TransitEvaluatable {
 
@@ -14,11 +18,17 @@ public abstract class TransitContext extends TransitEvaluatable {
 
     private long _nextNativeId = 0;
 
+    private final JsonFactory jsonFactory;
+
     private static final String NATIVE_FUNCTION_PREFIX = "__TRANSIT_NATIVE_FUNCTION_";
 
     private static final String JS_FUNCTION_PREFIX = "__TRANSIT_JS_FUNCTION_";
 
     private static final String GLOBAL_OBJECT = "__TRANSIT_OBJECT_GLOBAL";
+
+    public TransitContext() {
+        this.jsonFactory = new JsonFactory();
+    }
 
     private String nextNativeId() {
         return String.valueOf(_nextNativeId++);
@@ -75,7 +85,7 @@ public abstract class TransitContext extends TransitEvaluatable {
         return jsExpressionFromCode("@", o);
     }
 
-    Object proxifyString(String value) {
+    private Object proxifyString(String value) {
         if (value == null || !value.startsWith("__T")) {
             return value;
         } else if (value.equals(GLOBAL_OBJECT)) {
@@ -84,46 +94,6 @@ public abstract class TransitContext extends TransitEvaluatable {
             return getCallback(value.substring(NATIVE_FUNCTION_PREFIX.length()));
         } else if (value.startsWith(JS_FUNCTION_PREFIX)) {
             return new TransitJSFunction(this, value.substring(JS_FUNCTION_PREFIX.length()));
-        } else {
-            return value;
-        }
-    }
-
-    private TransitJSObject proxifyMap(Map<?, ?> input) {
-        TransitJSObject output = new TransitJSObject();
-
-        for (Object keyObject : input.keySet()) {
-            output.put(String.valueOf(keyObject), proxify(input.get(keyObject)));
-        }
-
-        return output;
-    }
-
-    private TransitJSArray proxifyIterable(Iterable<?> input) {
-        TransitJSArray output = new TransitJSArray();
-
-        for (Object o : input) {
-            output.add(proxify(o));
-        }
-
-        return output;
-    }
-
-    public Object proxify(Object value) {
-        if (value instanceof TransitProxy) {
-            assert ((TransitProxy) value).getContext() == this;
-            return value;
-        } else if (value instanceof TransitContext) {
-            assert ((TransitContext) value) == this;
-            return value;
-        } else if (value instanceof String) {
-            return proxifyString((String) value);
-        } else if (value instanceof Object[]) {
-            return proxifyIterable(Arrays.asList((Object[]) value));
-        } else if (value instanceof List<?>) {
-            return proxifyIterable((List<?>) value);
-        } else if (value instanceof Map<?, ?>) {
-            return proxifyMap((Map<?, ?>) value);
         } else {
             return value;
         }
@@ -156,6 +126,68 @@ public abstract class TransitContext extends TransitEvaluatable {
         Object invoke();
 
         TransitFunction getFunction();
+    }
+
+    public Object parse(String json) {
+        try {
+            JsonParser parser = jsonFactory.createParser(json);
+            return unmarshal(parser, parser.nextToken());
+        } catch (JsonParseException e) {
+            throw new TransitException(json);
+        } catch (IOException e) {
+            throw new TransitException(json);
+        }
+    }
+
+    private final Object unmarshal(JsonParser parser, JsonToken token)
+            throws JsonParseException, IOException {
+        switch (token) {
+        case START_ARRAY:
+            return unmarshalArray(parser, new TransitJSArray());
+        case START_OBJECT:
+            return unmarshalObject(parser, new TransitJSObject());
+        case VALUE_FALSE:
+            return Boolean.FALSE;
+        case VALUE_TRUE:
+            return Boolean.TRUE;
+        case VALUE_NULL:
+            return null;
+        case VALUE_STRING:
+            return proxifyString(parser.getText());
+        case VALUE_NUMBER_FLOAT:
+            return parser.getFloatValue();
+        case VALUE_NUMBER_INT:
+            return parser.getIntValue();
+        default:
+            throw new JsonParseException("Unexpected token", parser.getTokenLocation());
+        }
+    }
+
+    private Object unmarshalObject(JsonParser parser, TransitJSObject object)
+            throws JsonParseException, IOException {
+        JsonToken token = parser.nextToken();
+
+        while (token != JsonToken.END_OBJECT) {
+            assert token == JsonToken.FIELD_NAME;
+            String key = parser.getCurrentName();
+            Object value = unmarshal(parser, parser.nextToken());
+            object.put(key, value);
+            token = parser.nextToken();
+        }
+
+        return object;
+    }
+
+    private Object unmarshalArray(JsonParser parser, TransitJSArray array)
+            throws JsonParseException, IOException {
+        JsonToken token = parser.nextToken();
+
+        while (token != JsonToken.END_ARRAY) {
+            array.add(unmarshal(parser, token));
+            token = parser.nextToken();
+        }
+
+        return array;
     }
 
 }
