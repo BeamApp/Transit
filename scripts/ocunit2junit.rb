@@ -21,6 +21,7 @@
 # Where to put the XML-files from your unit tests
 TEST_REPORTS_FOLDER = "../tests/reports/objc-ios"
 SUPPORT_KIWI = true
+TEST_GROUP = "ObjectiveC"
 #
 #
 # Don't edit below this line
@@ -122,7 +123,7 @@ class ReportParser
       @tests_results.each do |t|
         test_case = string_to_xml t[0]
         duration = @tests_results[test_case]
-        current_file << "<testcase classname='#{test_name}' name='#{test_case}' time='#{duration.to_s}'"
+        current_file << "<testcase classname='#{TEST_GROUP}.#{test_name}' name='#{test_case}' time='#{duration.to_s}'"
         unless @errors[test_case].nil?
           # uh oh we got a failure
           puts "tests_errors[0]"
