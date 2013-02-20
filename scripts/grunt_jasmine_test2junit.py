@@ -42,7 +42,7 @@ for line in fileinput.input():
             out += "</testcase>\n"
 
 out = """<?xml version='1.0' encoding='UTF-8' ?>
-<testsuite errors="0" failures="%d" name="JasmineTests" tests="%d" time="%.3f">
+<testsuite errors="0" failures="%d" package="Jasmine" name="JasmineTests" tests="%d" time="%.3f">
 """ % (failed, failed+passed, timeInSeconds) + out + "</testsuite>"
 
 if not os.path.exists(output_path):
