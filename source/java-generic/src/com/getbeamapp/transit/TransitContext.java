@@ -130,6 +130,10 @@ public abstract class TransitContext extends TransitEvaluatable {
     }
 
     public Object parse(String json) {
+        if (json == null) {
+            return null;
+        }
+
         try {
             JsonParser parser = jsonFactory.createParser(json);
             return unmarshal(parser, parser.nextToken());
@@ -146,17 +150,17 @@ public abstract class TransitContext extends TransitEvaluatable {
             public Iterator<Object> iterator() {
                 try {
                     final JsonParser parser = jsonFactory.createParser(json);
-                    
+
                     JsonToken arrayStartToken = parser.nextToken();
                     assert arrayStartToken == JsonToken.START_ARRAY;
-                    
+
                     final JsonToken firstToken = parser.nextToken();
-                    
+
                     return new Iterator<Object>() {
-                        
+
                         private JsonToken token = firstToken;
                         private boolean hasNext = (firstToken != JsonToken.END_ARRAY);
-                        
+
                         @Override
                         public void remove() {
                             // unsupported
