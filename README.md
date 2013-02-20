@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/BeamApp/Transit.png)](https://travis-ci.org/BeamApp/Transit)
+[![Build Status](https://beamapp.ci.cloudbees.com/job/Transit/badge/icon)](https://beamapp.ci.cloudbees.com/job/Transit/)
 
 # Transit
 
