@@ -49,6 +49,7 @@ public class TransitScriptBuilder {
     private String result = null;
     private final String thisArgExpression;
     private boolean noVars = false;
+    private static final String SIMPLE_CALL = "@()";
 
     public TransitScriptBuilder(String transitVariable, Object thisArg) {
         buffer = new StringBuilder();
@@ -65,7 +66,7 @@ public class TransitScriptBuilder {
 
     public void process(String stringToEvaluate, Object... values) {
 
-        if (stringToEvaluate == "@()" && values.length > 0) {
+        if (SIMPLE_CALL.equals(stringToEvaluate) && values.length > 0) {
             noVars = true;
             parse(values[0]);
             buffer.append("()");
