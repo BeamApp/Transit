@@ -104,6 +104,7 @@ run_unit_tests()
     echo "### RUN UNIT TESTS"
     kill_simulator
     xcodebuild -workspace "$PROJECT_ROOT/$PROJECT_NAME".xcworkspace/ -scheme "Jenkins Unit Tests" -sdk iphonesimulator TEST_AFTER_BUILD=YES ONLY_ACTIVE_ARCH=NO clean build RUN_UNIT_TEST_WITH_IOS_SIM=YES 2>&1 | ./ocunit2junit.rb
+	kill_simulator
 }
 
 
