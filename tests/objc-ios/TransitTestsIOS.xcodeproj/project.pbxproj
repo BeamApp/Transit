@@ -277,8 +277,8 @@
 				CB18EEDF16C549050051CC7C /* Sources */,
 				CB18EEE016C549050051CC7C /* Frameworks */,
 				CB18EEE116C549050051CC7C /* Resources */,
-				CB18EEE216C549050051CC7C /* ShellScript */,
 				E49A120A96154540AA0B2F01 /* Copy Pods Resources */,
+				CB18EEE216C549050051CC7C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -370,7 +370,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+			shellScript = "if [ \"$RUN_UNIT_TEST_WITH_IOS_SIM\" = \"YES\" ]; then\ntest_bundle_path=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION\"\nios-sim launch \"$(dirname \"$TEST_HOST\")\" --setenv DYLD_INSERT_LIBRARIES=/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection --setenv XCInjectBundle=\"$test_bundle_path\" --setenv XCInjectBundleInto=\"$TEST_HOST\" --args -SenTest All \"$test_bundle_path\"\necho \"Finished running tests with ios-sim\"\nelse\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\nfi";
+			showEnvVarsInLog = 0;
 		};
 		E49A120A96154540AA0B2F01 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
