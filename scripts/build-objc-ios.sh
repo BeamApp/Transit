@@ -80,6 +80,22 @@ build_and_package()
 	popd
 }
 
+build_for_simulator()
+{
+    pushd `pwd`
+
+    PROJECT_NAME=$1
+    PROJECT_ROOT=$2
+    DIST_DIR="$PROJECT_ROOT/dist"
+
+    echo "### EXECUTING BUILD COMMAND : CONFIGURATION[$CONFIGURATION]"
+	echo "current dir `pwd`"
+    echo "    xcodebuild -workspace $PROJECT_ROOT/$PROJECT_NAME.xcworkspace -scheme $PROJECT_NAME -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO clean build"
+    xcodebuild -workspace $PROJECT_ROOT/$PROJECT_NAME.xcworkspace -scheme $PROJECT_NAME -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO clean build
+
+    popd
+}
+
 
 kill_simulator()
 {
@@ -104,9 +120,10 @@ run_unit_tests()
 	kill_simulator
 }
 
+#build_and_package Debug $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
+#build_and_package Release $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
 
-build_and_package Debug $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
-build_and_package Release $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
+build_for_simulator $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
 run_unit_tests $TESTS_PROJECT_NAME $TESTS_PROJECT_ROOT
 
-build_and_package Debug $EXAMPLES_PROJECT_NAME $EXAMPLES_PROJECT_ROOT
+build_for_simulator $EXAMPLES_PROJECT_NAME $EXAMPLES_PROJECT_ROOT
