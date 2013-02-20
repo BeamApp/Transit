@@ -61,8 +61,14 @@ public class MainTest extends TestCase {
     }
 
     public void testWrongArgumentCount() {
-        assertEquals("arg: @", transit.jsExpressionFromCode("arg: @"));
         assertEquals("arg: 1", transit.jsExpressionFromCode("arg: @", 1, 2));
+        
+        try {
+            transit.jsExpressionFromCode("arg: @");
+            fail();
+        } catch (IllegalArgumentException e) {
+            // ok
+        }
     }
     
     public void testExrepssionFromProxy() {

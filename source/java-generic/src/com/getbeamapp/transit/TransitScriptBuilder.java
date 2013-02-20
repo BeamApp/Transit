@@ -75,6 +75,8 @@ public class TransitScriptBuilder {
 
             if (valueIndex < values.length) {
                 parse(values[valueIndex++]);
+            } else {
+                throw new IllegalArgumentException(String.format("Found at least %d @-markers but only had %d values.", valueIndex + 1, values.length));
             }
 
             start = index + 1;
