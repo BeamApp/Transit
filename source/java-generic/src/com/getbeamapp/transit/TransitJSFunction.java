@@ -11,7 +11,7 @@ public class TransitJSFunction extends TransitFunction {
         if (thisArg == null || thisArg == getContext()) {
             return getContext().eval("@(@)", this, TransitScriptBuilder.arguments(arguments));
         } else {
-            return getContext().eval("@.apply(@, @)", this, thisArg, arguments);
+            return getContext().eval("@.call(@, @)", this, thisArg, TransitScriptBuilder.arguments(arguments));
         }
     }
     
@@ -20,7 +20,7 @@ public class TransitJSFunction extends TransitFunction {
         if (thisArg == null || thisArg == getContext()) {
             getContext().evalAsync("@(@)", this, TransitScriptBuilder.arguments(arguments));
         } else {
-            getContext().evalAsync("@.apply(@, @)", this, thisArg, arguments);
+            getContext().evalAsync("@.call(@, @)", this, thisArg, TransitScriptBuilder.arguments(arguments));
         }
     }
 
