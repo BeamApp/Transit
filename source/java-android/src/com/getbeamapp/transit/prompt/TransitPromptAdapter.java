@@ -3,7 +3,6 @@ package com.getbeamapp.transit.prompt;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.concurrent.BlockingDeque;
@@ -154,12 +153,12 @@ public class TransitPromptAdapter implements TransitAdapter {
         return adapter.getContext();
     }
 
-    public Runnable wrapInvocation(final Object invocation) {
+    public Runnable wrapInvocation(final TransitJSObject invocation) {
         return new Runnable() {
             @Override
             public void run() {
                 try {
-                    doInvokeNativeAsync((TransitJSObject) invocation);
+                    doInvokeNativeAsync(invocation);
                 } catch (Exception e) {
                     Log.e(TAG, String.format("[%s] Invocation of `%s` failed", TransitRequest.BATCH_INVOKE, invocation));
                 }
@@ -167,7 +166,23 @@ public class TransitPromptAdapter implements TransitAdapter {
         };
     }
 
-    public boolean onJSCall(String requestType, String payload, TransitFuture<String> result) {
+    private void doBatchInvoke(final String payload) {
+        genericThreadPool.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    for (Object invocation : context.lazyParse(payload)) {
+                        assert invocation instanceof TransitJSObject;
+                        asyncThreadPool.submit(wrapInvocation((TransitJSObject) invocation));
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "[%s] Batch invocation failed", e);
+                }
+            }
+        });
+    }
+
+    public boolean onJSCall(final String requestType, final String payload, final TransitFuture<String> result) {
 
         Log.d(TAG, String.format("type: %s\npayload: %s", requestType, payload));
         final TransitRequest request = TransitRequest.fromString(requestType);
@@ -184,14 +199,9 @@ public class TransitPromptAdapter implements TransitAdapter {
             break;
         case BATCH_INVOKE:
             assert !isActive();
-            Object invocationsObject = context.parse(payload);
-            final List<?> invocations = (List<?>) invocationsObject;
+            assert payload.charAt(0) == '[';
+            doBatchInvoke(payload);
             result.resolve();
-
-            for (Object invocation : invocations) {
-                asyncThreadPool.submit(wrapInvocation(invocation));
-            }
-
             return true;
         case INVOKE:
             begin();

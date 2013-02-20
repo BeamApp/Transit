@@ -3,6 +3,7 @@ package com.getbeamapp.transit;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -137,6 +138,53 @@ public abstract class TransitContext extends TransitEvaluatable {
         } catch (IOException e) {
             throw new TransitException(json);
         }
+    }
+
+    public Iterable<Object> lazyParse(final String json) {
+        return new Iterable<Object>() {
+            @Override
+            public Iterator<Object> iterator() {
+                try {
+                    final JsonParser parser = jsonFactory.createParser(json);
+                    
+                    JsonToken arrayStartToken = parser.nextToken();
+                    assert arrayStartToken == JsonToken.START_ARRAY;
+                    
+                    final JsonToken firstToken = parser.nextToken();
+                    
+                    return new Iterator<Object>() {
+                        
+                        private JsonToken token = firstToken;
+                        private boolean hasNext = (firstToken != JsonToken.END_ARRAY);
+                        
+                        @Override
+                        public void remove() {
+                            // unsupported
+                        }
+
+                        @Override
+                        public Object next() {
+                            try {
+                                Object result = unmarshal(parser, token);
+                                token = parser.nextToken();
+                                this.hasNext = (token != JsonToken.END_ARRAY);
+                                return result;
+                            } catch (IOException e) {
+                                throw new TransitException(e);
+                            }
+                        }
+
+                        @Override
+                        public boolean hasNext() {
+                            return hasNext;
+                        }
+
+                    };
+                } catch (IOException e) {
+                    throw new TransitException(e);
+                }
+            }
+        };
     }
 
     private final Object unmarshal(JsonParser parser, JsonToken token)
