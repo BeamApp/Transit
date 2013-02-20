@@ -1,4 +1,4 @@
-#!/opt/local/bin/python
+#!/usr/bin/env python
 import re, os, fileinput, sys
 
 # script expects to be run from root of repo
