@@ -14,7 +14,7 @@ import com.getbeamapp.transit.prompt.TransitPromptAdapter;
 public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     public final long TIMEOUT = 1000L;
-    public final long BENCHMARK_TIMES = 1000L;
+    public final long BENCHMARK_TIMES = 10L;
 
     public IntegrationTest() {
         super(MainActivity.class);
