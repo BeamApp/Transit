@@ -4,6 +4,6 @@ xcuserdata
 benchmark/trigger.io/development/ios/simulator-ios.app
 benchmark/trigger.io/development/ios/device-ios.app
 benchmark/trigger.io/release/ios
-scripts/test-reports
 tests/objc-ios/build
 tests/objc-ios/dist
+tests/reports
