@@ -8,3 +8,4 @@ tests/objc-ios/build
 tests/objc-ios/dist
 tests/reports
 examples/objc-ios/build
+examples/objc-ios/dist
