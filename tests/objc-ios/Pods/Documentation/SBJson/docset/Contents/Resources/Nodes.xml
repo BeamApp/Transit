@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DocSetNodes version="1.0">
+    <TOC>
+        <Node type="folder">
+            <Name>SBJson 3.2</Name>
+            <Path>index.html</Path>
+			<Subnodes>
+                
+				
+				<Node type="folder">
+					<Name>Classes</Name>
+					<Path>index.html</Path>
+					<Subnodes>
+						<NodeRef refid="1"/>
+						<NodeRef refid="2"/>
+						<NodeRef refid="3"/>
+						<NodeRef refid="4"/>
+						<NodeRef refid="5"/>
+						<NodeRef refid="6"/>
+						<NodeRef refid="7"/>
+						<NodeRef refid="8"/>
+						<NodeRef refid="9"/>
+						<NodeRef refid="10"/>
+						<NodeRef refid="11"/>
+						<NodeRef refid="12"/>
+						<NodeRef refid="13"/>
+						<NodeRef refid="14"/>
+						<NodeRef refid="15"/>
+						<NodeRef refid="16"/>
+						<NodeRef refid="17"/>
+						<NodeRef refid="18"/>
+						<NodeRef refid="19"/>
+						<NodeRef refid="20"/>
+						<NodeRef refid="21"/>
+						<NodeRef refid="22"/>
+						<NodeRef refid="23"/>
+						<NodeRef refid="24"/>
+						<NodeRef refid="25"/>
+						<NodeRef refid="26"/>
+						<NodeRef refid="27"/>
+						<NodeRef refid="28"/>
+						<NodeRef refid="29"/>
+						<NodeRef refid="30"/>
+						
+					</Subnodes>
+				</Node>
+				
+				
+				<Node type="folder">
+					<Name>Categories</Name>
+					<Path>index.html</Path>
+					<Subnodes>
+						<NodeRef refid="31"/>
+						<NodeRef refid="32"/>
+						<NodeRef refid="33"/>
+						<NodeRef refid="34"/>
+						
+					</Subnodes>
+				</Node>
+				
+				
+				<Node type="folder">
+					<Name>Protocols</Name>
+					<Path>index.html</Path>
+					<Subnodes>
+						<NodeRef refid="35"/>
+						<NodeRef refid="36"/>
+						<NodeRef refid="37"/>
+						
+					</Subnodes>
+				</Node>
+				
+			</Subnodes>
+        </Node>
+    </TOC>
+	<Library>
+		
+		<Node id="1">
+			<Name>SBJsonParser</Name>
+			<Path>Classes/SBJsonParser.html</Path>
+		</Node>
+		<Node id="2">
+			<Name>SBJsonStreamParser</Name>
+			<Path>Classes/SBJsonStreamParser.html</Path>
+		</Node>
+		<Node id="3">
+			<Name>SBJsonStreamParserAccumulator</Name>
+			<Path>Classes/SBJsonStreamParserAccumulator.html</Path>
+		</Node>
+		<Node id="4">
+			<Name>SBJsonStreamParserAdapter</Name>
+			<Path>Classes/SBJsonStreamParserAdapter.html</Path>
+		</Node>
+		<Node id="5">
+			<Name>SBJsonStreamParserState</Name>
+			<Path>Classes/SBJsonStreamParserState.html</Path>
+		</Node>
+		<Node id="6">
+			<Name>SBJsonStreamParserStateArrayGotValue</Name>
+			<Path>Classes/SBJsonStreamParserStateArrayGotValue.html</Path>
+		</Node>
+		<Node id="7">
+			<Name>SBJsonStreamParserStateArrayNeedValue</Name>
+			<Path>Classes/SBJsonStreamParserStateArrayNeedValue.html</Path>
+		</Node>
+		<Node id="8">
+			<Name>SBJsonStreamParserStateArrayStart</Name>
+			<Path>Classes/SBJsonStreamParserStateArrayStart.html</Path>
+		</Node>
+		<Node id="9">
+			<Name>SBJsonStreamParserStateComplete</Name>
+			<Path>Classes/SBJsonStreamParserStateComplete.html</Path>
+		</Node>
+		<Node id="10">
+			<Name>SBJsonStreamParserStateError</Name>
+			<Path>Classes/SBJsonStreamParserStateError.html</Path>
+		</Node>
+		<Node id="11">
+			<Name>SBJsonStreamParserStateObjectGotKey</Name>
+			<Path>Classes/SBJsonStreamParserStateObjectGotKey.html</Path>
+		</Node>
+		<Node id="12">
+			<Name>SBJsonStreamParserStateObjectGotValue</Name>
+			<Path>Classes/SBJsonStreamParserStateObjectGotValue.html</Path>
+		</Node>
+		<Node id="13">
+			<Name>SBJsonStreamParserStateObjectNeedKey</Name>
+			<Path>Classes/SBJsonStreamParserStateObjectNeedKey.html</Path>
+		</Node>
+		<Node id="14">
+			<Name>SBJsonStreamParserStateObjectSeparator</Name>
+			<Path>Classes/SBJsonStreamParserStateObjectSeparator.html</Path>
+		</Node>
+		<Node id="15">
+			<Name>SBJsonStreamParserStateObjectStart</Name>
+			<Path>Classes/SBJsonStreamParserStateObjectStart.html</Path>
+		</Node>
+		<Node id="16">
+			<Name>SBJsonStreamParserStateStart</Name>
+			<Path>Classes/SBJsonStreamParserStateStart.html</Path>
+		</Node>
+		<Node id="17">
+			<Name>SBJsonStreamWriter</Name>
+			<Path>Classes/SBJsonStreamWriter.html</Path>
+		</Node>
+		<Node id="18">
+			<Name>SBJsonStreamWriterAccumulator</Name>
+			<Path>Classes/SBJsonStreamWriterAccumulator.html</Path>
+		</Node>
+		<Node id="19">
+			<Name>SBJsonStreamWriterState</Name>
+			<Path>Classes/SBJsonStreamWriterState.html</Path>
+		</Node>
+		<Node id="20">
+			<Name>SBJsonStreamWriterStateArrayStart</Name>
+			<Path>Classes/SBJsonStreamWriterStateArrayStart.html</Path>
+		</Node>
+		<Node id="21">
+			<Name>SBJsonStreamWriterStateArrayValue</Name>
+			<Path>Classes/SBJsonStreamWriterStateArrayValue.html</Path>
+		</Node>
+		<Node id="22">
+			<Name>SBJsonStreamWriterStateComplete</Name>
+			<Path>Classes/SBJsonStreamWriterStateComplete.html</Path>
+		</Node>
+		<Node id="23">
+			<Name>SBJsonStreamWriterStateError</Name>
+			<Path>Classes/SBJsonStreamWriterStateError.html</Path>
+		</Node>
+		<Node id="24">
+			<Name>SBJsonStreamWriterStateObjectKey</Name>
+			<Path>Classes/SBJsonStreamWriterStateObjectKey.html</Path>
+		</Node>
+		<Node id="25">
+			<Name>SBJsonStreamWriterStateObjectStart</Name>
+			<Path>Classes/SBJsonStreamWriterStateObjectStart.html</Path>
+		</Node>
+		<Node id="26">
+			<Name>SBJsonStreamWriterStateObjectValue</Name>
+			<Path>Classes/SBJsonStreamWriterStateObjectValue.html</Path>
+		</Node>
+		<Node id="27">
+			<Name>SBJsonStreamWriterStateStart</Name>
+			<Path>Classes/SBJsonStreamWriterStateStart.html</Path>
+		</Node>
+		<Node id="28">
+			<Name>SBJsonTokeniser</Name>
+			<Path>Classes/SBJsonTokeniser.html</Path>
+		</Node>
+		<Node id="29">
+			<Name>SBJsonUTF8Stream</Name>
+			<Path>Classes/SBJsonUTF8Stream.html</Path>
+		</Node>
+		<Node id="30">
+			<Name>SBJsonWriter</Name>
+			<Path>Classes/SBJsonWriter.html</Path>
+		</Node>
+		
+		<Node id="31">
+			<Name>NSData(NSData_SBJsonParsing)</Name>
+			<Path>Categories/NSData+NSData_SBJsonParsing.html</Path>
+		</Node>
+		<Node id="32">
+			<Name>NSObject(NSObject_SBJsonWriting)</Name>
+			<Path>Categories/NSObject+NSObject_SBJsonWriting.html</Path>
+		</Node>
+		<Node id="33">
+			<Name>NSObject(SBProxyForJson)</Name>
+			<Path>Categories/NSObject+SBProxyForJson.html</Path>
+		</Node>
+		<Node id="34">
+			<Name>NSString(NSString_SBJsonParsing)</Name>
+			<Path>Categories/NSString+NSString_SBJsonParsing.html</Path>
+		</Node>
+		
+		<Node id="35">
+			<Name>SBJsonStreamParserAdapterDelegate</Name>
+			<Path>Protocols/SBJsonStreamParserAdapterDelegate.html</Path>
+		</Node>
+		<Node id="36">
+			<Name>SBJsonStreamParserDelegate</Name>
+			<Path>Protocols/SBJsonStreamParserDelegate.html</Path>
+		</Node>
+		<Node id="37">
+			<Name>SBJsonStreamWriterDelegate</Name>
+			<Path>Protocols/SBJsonStreamWriterDelegate.html</Path>
+		</Node>
+		
+	</Library>
+</DocSetNodes>

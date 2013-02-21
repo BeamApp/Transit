@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBJsonStreamWriterStateError.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBJsonStreamWriterStateError</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBJsonStreamWriterState.h</DeclaredIn>
+			
+			<NodeRef refid="23"/>
+		</Token>
+		
+		
+	</File>
+</Tokens>

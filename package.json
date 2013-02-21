@@ -2,15 +2,23 @@
   "name": "Transit",
   "version": "0.0.1",
   "description": "Library to Bridge between JavaScript and iOS, OSX, Android",
+  "contributors": [
+      {"name": "Heiko Behrens"},
+      {"name": "Marcel Jackwerth"}
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "statify -d dist"
+    "test": "grunt travis --verbose --no-color",
+    "start": "echo \"Error: nothing to start\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/BeamApp/Transit.git"
   },
   "dependencies": {
-    "grunt-jasmine-task": "0.2.3"
+    "grunt-jasmine-task": "0.2.3",
+    "grunt-text-replace": "0.2.10"
+  },
+  "devDependencies": {
+    "grunt": "~0.3.17"
   }
 }

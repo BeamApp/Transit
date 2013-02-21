@@ -1,0 +1,597 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4C9AC81874F4481C80F5C1D0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F9A734C099141A682749BE3 /* libPods.a */; };
+		9275CFBEC36B45DEA60B61CA /* libPods-TransitTestsIOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */; };
+		CB18EEC816C549050051CC7C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEC716C549050051CC7C /* UIKit.framework */; };
+		CB18EECA16C549050051CC7C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEC916C549050051CC7C /* Foundation.framework */; };
+		CB18EECC16C549050051CC7C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EECB16C549050051CC7C /* CoreGraphics.framework */; };
+		CB18EED216C549050051CC7C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB18EED016C549050051CC7C /* InfoPlist.strings */; };
+		CB18EED416C549050051CC7C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EED316C549050051CC7C /* main.m */; };
+		CB18EED816C549050051CC7C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EED716C549050051CC7C /* AppDelegate.m */; };
+		CB18EEDA16C549050051CC7C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CB18EED916C549050051CC7C /* Default.png */; };
+		CB18EEDC16C549050051CC7C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB18EEDB16C549050051CC7C /* Default@2x.png */; };
+		CB18EEDE16C549050051CC7C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB18EEDD16C549050051CC7C /* Default-568h@2x.png */; };
+		CB18EEE616C549050051CC7C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEE516C549050051CC7C /* SenTestingKit.framework */; };
+		CB18EEE716C549050051CC7C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEC716C549050051CC7C /* UIKit.framework */; };
+		CB18EEE816C549050051CC7C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEC916C549050051CC7C /* Foundation.framework */; };
+		CB18EEF016C549050051CC7C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB18EEEE16C549050051CC7C /* InfoPlist.strings */; };
+		CB18EEF316C549050051CC7C /* TransitTestsIOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */; };
+		CB18EEFF16C549E50051CC7C /* Transit.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EEFE16C549E50051CC7C /* Transit.m */; };
+		CB18EF0216C54B830051CC7C /* TransitUIWebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */; };
+		CB18EF2E16C57BD90051CC7C /* TransitNativeFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */; };
+		CB18EF5316C58FC70051CC7C /* TransitProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */; };
+		CB18EF5716C595B50051CC7C /* TransitJSFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */; };
+		CB18EF5916C5A04D0051CC7C /* TransitContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */; };
+		CB2751F816C7C364004E957A /* forge_benchmark.html in Resources */ = {isa = PBXBuildFile; fileRef = CB2751F716C7C364004E957A /* forge_benchmark.html */; };
+		CB27520116C7C3EA004E957A /* ForgeBenchmarkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB2751FF16C7C3EA004E957A /* ForgeBenchmarkViewController.m */; };
+		CB27520216C7C3EA004E957A /* ForgeBenchmarkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB27520016C7C3EA004E957A /* ForgeBenchmarkViewController.xib */; };
+		CB91AE9016C7FB5100F46154 /* jasmine in Resources */ = {isa = PBXBuildFile; fileRef = CB91AE8F16C7FB5100F46154 /* jasmine */; };
+		CB91AE9516C7FB7B00F46154 /* JasmineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */; };
+		CB91AE9616C7FB7B00F46154 /* JasmineViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */; };
+		CBE29FD816C671F4004AED2B /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
+		CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */; };
+		F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B042BA5A1E209398767C6 /* TransitObjectTests.m */; };
+		F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */; };
+		F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CB18EEE916C549050051CC7C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB18EEBA16C549050051CC7C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB18EEC216C549050051CC7C;
+			remoteInfo = TransitTestsIOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2B050F32C5EC48FAB41053D2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		3F9A734C099141A682749BE3 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		81602410D054446ABF9036AE /* Pods-TransitTestsIOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TransitTestsIOSTests.xcconfig"; path = "Pods/Pods-TransitTestsIOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		CB18EEC316C549050051CC7C /* TransitTestsIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransitTestsIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB18EEC716C549050051CC7C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		CB18EEC916C549050051CC7C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CB18EECB16C549050051CC7C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CB18EECF16C549050051CC7C /* TransitTestsIOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TransitTestsIOS-Info.plist"; sourceTree = "<group>"; };
+		CB18EED116C549050051CC7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CB18EED316C549050051CC7C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CB18EED516C549050051CC7C /* TransitTestsIOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TransitTestsIOS-Prefix.pch"; sourceTree = "<group>"; };
+		CB18EED616C549050051CC7C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CB18EED716C549050051CC7C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CB18EED916C549050051CC7C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		CB18EEDB16C549050051CC7C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		CB18EEDD16C549050051CC7C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		CB18EEE416C549050051CC7C /* TransitTestsIOSTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TransitTestsIOSTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB18EEE516C549050051CC7C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		CB18EEED16C549050051CC7C /* TransitTestsIOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TransitTestsIOSTests-Info.plist"; sourceTree = "<group>"; };
+		CB18EEEF16C549050051CC7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransitTestsIOSTests.m; sourceTree = "<group>"; };
+		CB18EEFD16C549E50051CC7C /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
+		CB18EEFE16C549E50051CC7C /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
+		CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitUIWebViewTests.m; sourceTree = "<group>"; };
+		CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitNativeFunctionTests.m; sourceTree = "<group>"; };
+		CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitProxyTests.m; sourceTree = "<group>"; };
+		CB18EF5516C590F80051CC7C /* Transit+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Transit+Private.h"; sourceTree = "<group>"; };
+		CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitJSFunctionTests.m; sourceTree = "<group>"; };
+		CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitContextTest.m; sourceTree = "<group>"; };
+		CB2751F716C7C364004E957A /* forge_benchmark.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = forge_benchmark.html; sourceTree = "<group>"; };
+		CB2751FE16C7C3EA004E957A /* ForgeBenchmarkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgeBenchmarkViewController.h; sourceTree = "<group>"; };
+		CB2751FF16C7C3EA004E957A /* ForgeBenchmarkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgeBenchmarkViewController.m; sourceTree = "<group>"; };
+		CB27520016C7C3EA004E957A /* ForgeBenchmarkViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForgeBenchmarkViewController.xib; sourceTree = "<group>"; };
+		CB91AE8F16C7FB5100F46154 /* jasmine */ = {isa = PBXFileReference; lastKnownFileType = folder; name = jasmine; path = ../jasmine; sourceTree = "<group>"; };
+		CB91AE9216C7FB7B00F46154 /* JasmineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JasmineViewController.h; sourceTree = "<group>"; };
+		CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JasmineViewController.m; sourceTree = "<group>"; };
+		CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JasmineViewController.xib; sourceTree = "<group>"; };
+		CBE29FD716C671F4004AED2B /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testPage.html; sourceTree = "<group>"; };
+		CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCMockObject+Reset.h"; sourceTree = "<group>"; };
+		CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCMockObject+Reset.m"; sourceTree = "<group>"; };
+		F26B042BA5A1E209398767C6 /* TransitObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitObjectTests.m; sourceTree = "<group>"; };
+		F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCallScopeTests.m; sourceTree = "<group>"; };
+		F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitEvaluableTests.m; sourceTree = "<group>"; };
+		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CB18EEC016C549050051CC7C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB18EEC816C549050051CC7C /* UIKit.framework in Frameworks */,
+				CB18EECA16C549050051CC7C /* Foundation.framework in Frameworks */,
+				CB18EECC16C549050051CC7C /* CoreGraphics.framework in Frameworks */,
+				4C9AC81874F4481C80F5C1D0 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB18EEE016C549050051CC7C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB18EEE616C549050051CC7C /* SenTestingKit.framework in Frameworks */,
+				CB18EEE716C549050051CC7C /* UIKit.framework in Frameworks */,
+				CB18EEE816C549050051CC7C /* Foundation.framework in Frameworks */,
+				9275CFBEC36B45DEA60B61CA /* libPods-TransitTestsIOSTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CB18EEB816C549050051CC7C = {
+			isa = PBXGroup;
+			children = (
+				CB91AE8F16C7FB5100F46154 /* jasmine */,
+				CB2751F516C7C304004E957A /* Resource */,
+				CB18EEFC16C549970051CC7C /* Transit */,
+				CB18EECD16C549050051CC7C /* TransitTestsIOS */,
+				CB18EEEB16C549050051CC7C /* TransitTestsIOSTests */,
+				CB18EEC616C549050051CC7C /* Frameworks */,
+				CB18EEC416C549050051CC7C /* Products */,
+				2B050F32C5EC48FAB41053D2 /* Pods.xcconfig */,
+				81602410D054446ABF9036AE /* Pods-TransitTestsIOSTests.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		CB18EEC416C549050051CC7C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CB18EEC316C549050051CC7C /* TransitTestsIOS.app */,
+				CB18EEE416C549050051CC7C /* TransitTestsIOSTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CB18EEC616C549050051CC7C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CB18EEC716C549050051CC7C /* UIKit.framework */,
+				CB18EEC916C549050051CC7C /* Foundation.framework */,
+				CB18EECB16C549050051CC7C /* CoreGraphics.framework */,
+				CB18EEE516C549050051CC7C /* SenTestingKit.framework */,
+				3F9A734C099141A682749BE3 /* libPods.a */,
+				F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CB18EECD16C549050051CC7C /* TransitTestsIOS */ = {
+			isa = PBXGroup;
+			children = (
+				CB18EED616C549050051CC7C /* AppDelegate.h */,
+				CB18EED716C549050051CC7C /* AppDelegate.m */,
+				CB18EECE16C549050051CC7C /* Supporting Files */,
+				CB2751FE16C7C3EA004E957A /* ForgeBenchmarkViewController.h */,
+				CB2751FF16C7C3EA004E957A /* ForgeBenchmarkViewController.m */,
+				CB27520016C7C3EA004E957A /* ForgeBenchmarkViewController.xib */,
+				CB91AE9216C7FB7B00F46154 /* JasmineViewController.h */,
+				CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */,
+				CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */,
+			);
+			path = TransitTestsIOS;
+			sourceTree = "<group>";
+		};
+		CB18EECE16C549050051CC7C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CB18EECF16C549050051CC7C /* TransitTestsIOS-Info.plist */,
+				CB18EED016C549050051CC7C /* InfoPlist.strings */,
+				CB18EED316C549050051CC7C /* main.m */,
+				CB18EED516C549050051CC7C /* TransitTestsIOS-Prefix.pch */,
+				CB18EED916C549050051CC7C /* Default.png */,
+				CB18EEDB16C549050051CC7C /* Default@2x.png */,
+				CB18EEDD16C549050051CC7C /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CB18EEEB16C549050051CC7C /* TransitTestsIOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				CBE29FD516C671DD004AED2B /* TestResources */,
+				CB18EEEC16C549050051CC7C /* Supporting Files */,
+				CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */,
+				CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */,
+				CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */,
+				CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */,
+				CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */,
+				CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */,
+				CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */,
+				CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */,
+				F26B042BA5A1E209398767C6 /* TransitObjectTests.m */,
+				F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */,
+				F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */,
+			);
+			path = TransitTestsIOSTests;
+			sourceTree = "<group>";
+		};
+		CB18EEEC16C549050051CC7C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CB18EEED16C549050051CC7C /* TransitTestsIOSTests-Info.plist */,
+				CB18EEEE16C549050051CC7C /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CB18EEFC16C549970051CC7C /* Transit */ = {
+			isa = PBXGroup;
+			children = (
+				CB18EEFD16C549E50051CC7C /* Transit.h */,
+				CB18EF5516C590F80051CC7C /* Transit+Private.h */,
+				CB18EEFE16C549E50051CC7C /* Transit.m */,
+			);
+			name = Transit;
+			path = ../../source/objc;
+			sourceTree = SOURCE_ROOT;
+		};
+		CB2751F516C7C304004E957A /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				CB2751F716C7C364004E957A /* forge_benchmark.html */,
+			);
+			name = Resource;
+			path = TransitTestsIOS/Resources;
+			sourceTree = "<group>";
+		};
+		CBE29FD516C671DD004AED2B /* TestResources */ = {
+			isa = PBXGroup;
+			children = (
+				CBE29FD716C671F4004AED2B /* testPage.html */,
+			);
+			name = TestResources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CB18EEC216C549050051CC7C /* TransitTestsIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB18EEF616C549050051CC7C /* Build configuration list for PBXNativeTarget "TransitTestsIOS" */;
+			buildPhases = (
+				CB18EEBF16C549050051CC7C /* Sources */,
+				CB18EEC016C549050051CC7C /* Frameworks */,
+				CB18EEC116C549050051CC7C /* Resources */,
+				2C71114E57A34E51A9385968 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TransitTestsIOS;
+			productName = TransitTestsIOS;
+			productReference = CB18EEC316C549050051CC7C /* TransitTestsIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CB18EEE316C549050051CC7C /* TransitTestsIOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB18EEF916C549050051CC7C /* Build configuration list for PBXNativeTarget "TransitTestsIOSTests" */;
+			buildPhases = (
+				CB18EEDF16C549050051CC7C /* Sources */,
+				CB18EEE016C549050051CC7C /* Frameworks */,
+				CB18EEE116C549050051CC7C /* Resources */,
+				E49A120A96154540AA0B2F01 /* Copy Pods Resources */,
+				CB18EEE216C549050051CC7C /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CB18EEEA16C549050051CC7C /* PBXTargetDependency */,
+			);
+			name = TransitTestsIOSTests;
+			productName = TransitTestsIOSTests;
+			productReference = CB18EEE416C549050051CC7C /* TransitTestsIOSTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CB18EEBA16C549050051CC7C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = BeamApp;
+			};
+			buildConfigurationList = CB18EEBD16C549050051CC7C /* Build configuration list for PBXProject "TransitTestsIOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CB18EEB816C549050051CC7C;
+			productRefGroup = CB18EEC416C549050051CC7C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CB18EEC216C549050051CC7C /* TransitTestsIOS */,
+				CB18EEE316C549050051CC7C /* TransitTestsIOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CB18EEC116C549050051CC7C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB18EED216C549050051CC7C /* InfoPlist.strings in Resources */,
+				CB18EEDA16C549050051CC7C /* Default.png in Resources */,
+				CB18EEDC16C549050051CC7C /* Default@2x.png in Resources */,
+				CB18EEDE16C549050051CC7C /* Default-568h@2x.png in Resources */,
+				CB2751F816C7C364004E957A /* forge_benchmark.html in Resources */,
+				CB27520216C7C3EA004E957A /* ForgeBenchmarkViewController.xib in Resources */,
+				CB91AE9016C7FB5100F46154 /* jasmine in Resources */,
+				CB91AE9616C7FB7B00F46154 /* JasmineViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB18EEE116C549050051CC7C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB18EEF016C549050051CC7C /* InfoPlist.strings in Resources */,
+				CBE29FD816C671F4004AED2B /* testPage.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2C71114E57A34E51A9385968 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
+		CB18EEE216C549050051CC7C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"$RUN_UNIT_TEST_WITH_IOS_SIM\" = \"YES\" ]; then\ntest_bundle_path=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION\"\nios-sim launch \"$(dirname \"$TEST_HOST\")\" --setenv DYLD_INSERT_LIBRARIES=/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection --setenv XCInjectBundle=\"$test_bundle_path\" --setenv XCInjectBundleInto=\"$TEST_HOST\" --args -SenTest All \"$test_bundle_path\"\necho \"Finished running tests with ios-sim\"\nelse\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\nfi";
+			showEnvVarsInLog = 0;
+		};
+		E49A120A96154540AA0B2F01 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-TransitTestsIOSTests-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CB18EEBF16C549050051CC7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB18EED416C549050051CC7C /* main.m in Sources */,
+				CB18EED816C549050051CC7C /* AppDelegate.m in Sources */,
+				CB18EEFF16C549E50051CC7C /* Transit.m in Sources */,
+				CB27520116C7C3EA004E957A /* ForgeBenchmarkViewController.m in Sources */,
+				CB91AE9516C7FB7B00F46154 /* JasmineViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB18EEDF16C549050051CC7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB18EEF316C549050051CC7C /* TransitTestsIOSTests.m in Sources */,
+				CB18EF0216C54B830051CC7C /* TransitUIWebViewTests.m in Sources */,
+				CB18EF2E16C57BD90051CC7C /* TransitNativeFunctionTests.m in Sources */,
+				CB18EF5316C58FC70051CC7C /* TransitProxyTests.m in Sources */,
+				CB18EF5716C595B50051CC7C /* TransitJSFunctionTests.m in Sources */,
+				CB18EF5916C5A04D0051CC7C /* TransitContextTest.m in Sources */,
+				CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */,
+				F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */,
+				F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */,
+				F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CB18EEEA16C549050051CC7C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB18EEC216C549050051CC7C /* TransitTestsIOS */;
+			targetProxy = CB18EEE916C549050051CC7C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CB18EED016C549050051CC7C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CB18EED116C549050051CC7C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		CB18EEEE16C549050051CC7C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CB18EEEF16C549050051CC7C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CB18EEF416C549050051CC7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CB18EEF516C549050051CC7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CB18EEF716C549050051CC7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B050F32C5EC48FAB41053D2 /* Pods.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
+				INFOPLIST_FILE = "TransitTestsIOS/TransitTestsIOS-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		CB18EEF816C549050051CC7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2B050F32C5EC48FAB41053D2 /* Pods.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
+				INFOPLIST_FILE = "TransitTestsIOS/TransitTestsIOS-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		CB18EEFA16C549050051CC7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81602410D054446ABF9036AE /* Pods-TransitTestsIOSTests.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TransitTestsIOS.app/TransitTestsIOS";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
+				INFOPLIST_FILE = "TransitTestsIOSTests/TransitTestsIOSTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		CB18EEFB16C549050051CC7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81602410D054446ABF9036AE /* Pods-TransitTestsIOSTests.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TransitTestsIOS.app/TransitTestsIOS";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
+				INFOPLIST_FILE = "TransitTestsIOSTests/TransitTestsIOSTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CB18EEBD16C549050051CC7C /* Build configuration list for PBXProject "TransitTestsIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB18EEF416C549050051CC7C /* Debug */,
+				CB18EEF516C549050051CC7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB18EEF616C549050051CC7C /* Build configuration list for PBXNativeTarget "TransitTestsIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB18EEF716C549050051CC7C /* Debug */,
+				CB18EEF816C549050051CC7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB18EEF916C549050051CC7C /* Build configuration list for PBXNativeTarget "TransitTestsIOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB18EEFA16C549050051CC7C /* Debug */,
+				CB18EEFB16C549050051CC7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CB18EEBA16C549050051CC7C /* Project object */;
+}

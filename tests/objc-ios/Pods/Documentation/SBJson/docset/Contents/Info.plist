@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.cocoapods.SBJson-3.2</string>
+	<key>CFBundleName</key>
+	<string>SBJson 3.2 Documentation</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	
+	
+	<key>DocSetDescription</key>
+	<string>This library implements strict JSON parsing and generation in Objective-C.</string>
+	
+	<key>DocSetFeedName</key>
+	<string>SBJson 3.2 Documentation</string>
+	
+	<key>DocSetMinimumXcodeVersion</key>
+	<string>3.0</string>
+	
+	<key>DocSetPublisherIdentifier</key>
+	<string>org.cocoapods.documentation</string>
+	<key>DocSetPublisherName</key>
+	<string>Stig Brautaset</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Stig Brautaset</string>
+</dict>
+</plist>
