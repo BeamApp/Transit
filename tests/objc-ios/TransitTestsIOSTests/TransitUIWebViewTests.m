@@ -715,4 +715,19 @@
     STAssertEqualObjects(@123, result, @"variable put on global object");
 }
 
+-(void)testLargeTranferObject {
+    TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+
+    TransitFunction *loopback = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        return callScope.arguments[0];
+    }];
+
+    // 10 MB of data
+    int len = 1024*1024*10;
+    NSString* longString = [@"" stringByPaddingToLength:len withString:@"c" startingAtIndex:0];
+    NSString* result = [context eval:@"@(@)" val:loopback val:longString];
+
+    STAssertEqualObjects(result, longString, @"correctly returned");
+}
+
 @end
