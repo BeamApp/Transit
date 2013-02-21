@@ -51,7 +51,7 @@ ensure_emulator()
   echo "No emulator found. Starting one..."
 
   adb start-server
-  device=$(android list avd -c)
+  device=$(android list avd -c | head -n 1)
 
   echo "Booting AVD $device..."
   emulator -avd $device &
