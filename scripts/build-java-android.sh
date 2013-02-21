@@ -71,14 +71,18 @@ fill_local_properties()
 {
     echo "Filling local.properties..."
 
-    test -e "$ANDROID_HOME" || die "cannot find android SDK. Make sure, at ANDROID_HOME is set correctly."
-    export PATH="$ANDROID_HOME/platform-tools:$PATH"
+    if [[ -z "$ANDROID_SDK_ROOT" ]]; then
+        export ANDROID_SDK_ROOT=/usr/local/opt/android-sdk
+    fi
+
+    test -e "$ANDROID_SDK_ROOT" || die "cannot find android SDK. Make sure, at ANDROID_SDK_ROOT is set correctly."
+    export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
 
     # overwrite local.properties files
-    echo "sdk.dir=$ANDROID_HOME" > source/java-android/local.properties
-    echo "sdk.dir=$ANDROID_HOME" > tests/android/app/local.properties
-    echo "sdk.dir=$ANDROID_HOME" > tests/android/tests/local.properties
-    echo "sdk.dir=$ANDROID_HOME" > benchmark/cordova_android/local.properties
+    echo "sdk.dir=$ANDROID_SDK_ROOT" > source/java-android/local.properties
+    echo "sdk.dir=$ANDROID_SDK_ROOT" > tests/android/app/local.properties
+    echo "sdk.dir=$ANDROID_SDK_ROOT" > tests/android/tests/local.properties
+    echo "sdk.dir=$ANDROID_SDK_ROOT" > benchmark/cordova_android/local.properties
 }
 
 run_tests()
