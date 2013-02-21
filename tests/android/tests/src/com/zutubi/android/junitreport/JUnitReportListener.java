@@ -31,6 +31,7 @@ import junit.framework.TestListener;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
@@ -198,6 +199,8 @@ public class JUnitReportListener implements TestListener {
         return fileName;
     }
 
+    @SuppressLint("WorldReadableFiles")
+    @SuppressWarnings("deprecation")
     private FileOutputStream openOutputStream(String fileName) throws IOException {
         if (mReportDir == null) {
             Log.d(LOG_TAG, "No reportDir specified. Opening report file '" + fileName + "' in internal storage of app under test");
