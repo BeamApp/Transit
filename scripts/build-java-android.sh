@@ -3,6 +3,7 @@
 set -e
 
 BUILD_NUMBER=$1
+ORIGINAL_PWD=`pwd`
 ROOT=$(cd ..; pwd)
 
 die()
@@ -13,6 +14,27 @@ die()
 
 [ "$#" -ge 1  ] || die "Usage: $0 BUILD_NUMBER"
 
+killed()
+{
+  cd $ORIGINAL_PWD
+  exit 1
+}
+
+trap killed SIGINT SIGTERM SIGKILL
+
+ensure_command()
+{
+  type $@ >/dev/null 2>&1 || { echo >&2 "No such command: $@. Android SDK in PATH?"; exit 1; }
+}
+
+precheck()
+{
+  for cmd in android adb emulator ant
+  do
+    ensure_command $cmd
+  done
+}
+
 stop_emulator()
 {
   echo "Stopping emulator (if exists)"
@@ -21,7 +43,12 @@ stop_emulator()
 
 ensure_emulator()
 {
-  echo "Ensure that emulator is running..."
+  if (ps aux | grep '[e]mulator64-x86'); then
+    echo "Emulator seems to be running already."
+    return
+  fi
+
+  echo "No emulator found. Starting one..."
 
   adb start-server
   device=$(android list avd -c)
@@ -29,15 +56,15 @@ ensure_emulator()
   echo "Booting AVD $device..."
   emulator -avd $device &
 
+  # NORMALLY: adb wait-for-device
+  # but this commands hangs somtimes
   echo "Waiting until device has booted..."
-  # adb wait-for-device hangs
-  while [`adb shell 'getprop dev.bootcomplete'` != 1]; do
-    puts "Waiting..."
+  while [ `adb shell 'getprop dev.bootcomplete'` != 1 ]; do
+    echo "Waiting..."
     sleep 1
   done
-  echo "Waiting until device has booted [DONE]"
 
-  echo "Ensure that emulator is running [DONE]"
+  echo "Emulator ready!"
 }
 
 run_tests()
@@ -64,9 +91,10 @@ run_tests()
   echo "Building test app and run tests [DONE]"
 }
 
+precheck
 pushd `pwd`
 cd $ROOT
 # stop_emulator
-# ensure_emulator
+ensure_emulator
 run_tests
 popd
