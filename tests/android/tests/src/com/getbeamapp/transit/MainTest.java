@@ -1,20 +1,13 @@
 package com.getbeamapp.transit;
 
+import static com.getbeamapp.transit.TestHelpers.assertContains;
+
 import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.getbeamapp.transit.TransitCallable.Flags;
-
 import android.os.ConditionVariable;
 
-import static com.getbeamapp.transit.TestHelpers.assertContains;
+import com.getbeamapp.transit.TransitCallable.Flags;
 
 public class MainTest extends TestCase {
 
@@ -119,29 +112,6 @@ public class MainTest extends TestCase {
         } catch (IllegalArgumentException e) {
             // ok
         }
-    }
-    
-    @SuppressWarnings("unchecked")
-    public void testJsonParsing() throws JSONException {
-        JSONObject o = new JSONObject();
-        o.put("null", null);
-        o.put("a", 1);
-        
-        JSONObject o2 = new JSONObject();
-        o2.put("c", "2");
-        o.put("b", o2);
-        
-        JSONArray a = new JSONArray();
-        a.put(3);
-        a.put("4");
-        o.put("d", a);
-        
-        Map<String, Object> map = JsonConverter.toNativeMap(o);
-        assertNull(map.get("null"));
-        assertEquals(1, map.get("a"));
-        assertEquals("2", ((Map<String, Object>) map.get("b")).get("c"));
-        assertEquals(3, ((List<Object>) map.get("d")).get(0));
-        assertEquals("4", ((List<Object>) map.get("d")).get(1));
     }
 
     public void testFunctionDisposal() {
