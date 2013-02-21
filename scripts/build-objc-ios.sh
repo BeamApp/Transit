@@ -99,7 +99,7 @@ build_for_simulator()
 
 kill_simulator()
 {
-    if [[ $(ps axo pid,command | grep "[i]Phone Simulator") ]]; then
+    if [[ $(ps xo pid,command | grep "[i]Phone Simulator") ]]; then
         killall "iPhone Simulator"
     fi
 }
