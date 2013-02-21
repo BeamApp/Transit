@@ -1,4 +1,4 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.android;
 
 public interface TransitAdapter {
     void initialize();

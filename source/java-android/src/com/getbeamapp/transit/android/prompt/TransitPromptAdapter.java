@@ -1,4 +1,4 @@
-package com.getbeamapp.transit.prompt;
+package com.getbeamapp.transit.android.prompt;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,10 +17,10 @@ import android.os.Looper;
 import android.util.Log;
 import android.webkit.WebView;
 
-import com.getbeamapp.transit.AndroidTransitContext;
 import com.getbeamapp.transit.R;
-import com.getbeamapp.transit.TransitAdapter;
 import com.getbeamapp.transit.TransitContext.PreparedInvocation;
+import com.getbeamapp.transit.android.AndroidTransitContext;
+import com.getbeamapp.transit.android.TransitAdapter;
 import com.getbeamapp.transit.TransitException;
 import com.getbeamapp.transit.TransitJSObject;
 

@@ -1,9 +1,9 @@
-package com.getbeamapp.transit.prompt;
+package com.getbeamapp.transit.android.prompt;
 
 import android.os.ConditionVariable;
 
 import com.getbeamapp.transit.TransitException;
-import com.getbeamapp.transit.prompt.TransitPromptAdapter.TransitResponse;
+import com.getbeamapp.transit.android.prompt.TransitPromptAdapter.TransitResponse;
 
 class TransitEvalAction extends TransitAction {
     private final String stringToEvaluate;

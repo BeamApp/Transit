@@ -1,9 +1,9 @@
-package com.getbeamapp.transit.prompt;
+package com.getbeamapp.transit.android.prompt;
 
 import org.json.JSONObject;
 
 import com.getbeamapp.transit.JSRepresentable;
-import com.getbeamapp.transit.prompt.TransitPromptAdapter.TransitResponse;
+import com.getbeamapp.transit.android.prompt.TransitPromptAdapter.TransitResponse;
 
 public abstract class TransitAction implements JSRepresentable {
     protected String createJavaScriptRepresentation(TransitResponse type, JSRepresentable javaScriptRepresentation) {

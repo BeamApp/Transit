@@ -3,6 +3,8 @@ package com.getbeamapp.transit;
 import static com.getbeamapp.transit.Matchers.contains;
 import junit.framework.TestCase;
 
+import com.getbeamapp.transit.android.AndroidTransitContext;
+import com.getbeamapp.transit.android.TransitAdapter;
 import com.google.android.testing.mocking.AndroidMock;
 import com.google.android.testing.mocking.UsesMocks;
 

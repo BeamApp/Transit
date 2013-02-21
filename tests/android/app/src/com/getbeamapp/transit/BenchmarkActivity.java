@@ -14,8 +14,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.getbeamapp.transit.TransitCallable.Flags;
-import com.getbeamapp.transit.prompt.TransitChromeClient;
-import com.getbeamapp.transit.prompt.TransitPromptAdapter;
+import com.getbeamapp.transit.android.AndroidTransitContext;
+import com.getbeamapp.transit.android.prompt.TransitChromeClient;
+import com.getbeamapp.transit.android.prompt.TransitPromptAdapter;
 
 public class BenchmarkActivity extends Activity {
 

@@ -1,4 +1,4 @@
-package com.getbeamapp.transit.prompt;
+package com.getbeamapp.transit.android.prompt;
 
 import android.os.ConditionVariable;
 

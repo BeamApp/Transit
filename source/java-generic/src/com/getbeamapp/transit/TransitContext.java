@@ -72,11 +72,11 @@ public abstract class TransitContext extends TransitEvaluatable {
         evalWithThisArgAsync(stringToEvaluate, null, values);
     }
 
-    String jsExpressionFromCode(String stringToEvaluate, Object... values) {
+    public String jsExpressionFromCode(String stringToEvaluate, Object... values) {
         return jsExpressionFromCodeWithThis(stringToEvaluate, null, values);
     }
 
-    String jsExpressionFromCodeWithThis(String stringToEvaluate, Object thisArg, Object... values) {
+    public String jsExpressionFromCodeWithThis(String stringToEvaluate, Object thisArg, Object... values) {
         TransitScriptBuilder builder = new TransitScriptBuilder("transit", thisArg);
         builder.process(stringToEvaluate, values);
         return builder.toScript();
