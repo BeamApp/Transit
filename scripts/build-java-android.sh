@@ -40,13 +40,29 @@ ensure_emulator()
   echo "Ensure that emulator is running [DONE]"
 }
 
+fill_local_properties()
+{
+    echo "Filling local.properties..."
+
+    test -e "$ANDROID_HOME" || die "cannot find android SDK. Make sure, at ANDROID_HOME is set correctly."
+    export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+    # overwrite local.properties files
+    echo "sdk.dir=$ANDROID_HOME" > source/java-android/local.properties
+    echo "sdk.dir=$ANDROID_HOME" > tests/android/app/local.properties
+    echo "sdk.dir=$ANDROID_HOME" > tests/android/tests/local.properties
+    echo "sdk.dir=$ANDROID_HOME" > benchmark/cordova_android/local.properties
+}
+
 run_tests()
 {
   echo "Building java-android..."
 
+  fill_local_properties
+
   pushd `pwd`
   cd source/java-android
-  ant debug
+  ant clean debug
   popd
 
   echo "Building java-android... [DONE]"
@@ -58,7 +74,8 @@ run_tests()
 
   adb wait-for-device
   ant emma debug
-  ant emma installt test
+# deactivate tests for now
+#  ant emma installt test
   popd
 
   echo "Building test app and run tests [DONE]"
