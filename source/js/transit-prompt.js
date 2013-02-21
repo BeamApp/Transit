@@ -1,3 +1,6 @@
+/*global prompt console */
+/*jslint evil: true */
+
 (function(globalName){
   var transit = window[globalName];
   var polling = false;
@@ -39,7 +42,7 @@
     } else if (result.type === "RETURN") {
       return eval(result.data);
     } else {
-      throw("Unknown result type: " + result.type)
+      throw("Unknown result type: " + result.type);
     }
   }
 
@@ -53,7 +56,7 @@
 
     try {
       console.log("Evaluating " + script.replace(/\s+/, " "));
-      result = eval(script)
+      result = eval(script);
     } catch (e) {
       return postException(e);
     }
