@@ -1,4 +1,4 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
 
 public class TransitException extends RuntimeException {
 

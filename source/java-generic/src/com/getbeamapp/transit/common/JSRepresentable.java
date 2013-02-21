@@ -1,4 +1,5 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
+
 
 public interface JSRepresentable {
     public String getJSRepresentation();

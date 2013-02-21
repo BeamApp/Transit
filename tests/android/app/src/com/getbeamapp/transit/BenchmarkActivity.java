@@ -13,10 +13,13 @@ import android.webkit.ConsoleMessage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.getbeamapp.transit.TransitCallable.Flags;
 import com.getbeamapp.transit.android.AndroidTransitContext;
 import com.getbeamapp.transit.android.prompt.TransitChromeClient;
 import com.getbeamapp.transit.android.prompt.TransitPromptAdapter;
+import com.getbeamapp.transit.common.TransitCallable;
+import com.getbeamapp.transit.common.TransitJSFunction;
+import com.getbeamapp.transit.common.TransitNativeFunction;
+import com.getbeamapp.transit.common.TransitCallable.Flags;
 
 public class BenchmarkActivity extends Activity {
 

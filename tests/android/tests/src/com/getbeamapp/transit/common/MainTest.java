@@ -1,13 +1,13 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
 
-import static com.getbeamapp.transit.TestHelpers.assertContains;
+import static com.getbeamapp.transit.common.TestHelpers.assertContains;
 
 import java.util.EnumSet;
 
 import junit.framework.TestCase;
 import android.os.ConditionVariable;
 
-import com.getbeamapp.transit.TransitCallable.Flags;
+import com.getbeamapp.transit.common.TransitCallable.Flags;
 
 public class MainTest extends TestCase {
 

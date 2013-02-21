@@ -18,11 +18,11 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import com.getbeamapp.transit.R;
-import com.getbeamapp.transit.TransitContext.PreparedInvocation;
 import com.getbeamapp.transit.android.AndroidTransitContext;
 import com.getbeamapp.transit.android.TransitAdapter;
-import com.getbeamapp.transit.TransitException;
-import com.getbeamapp.transit.TransitJSObject;
+import com.getbeamapp.transit.common.TransitException;
+import com.getbeamapp.transit.common.TransitJSObject;
+import com.getbeamapp.transit.common.TransitContext.PreparedInvocation;
 
 public class TransitPromptAdapter implements TransitAdapter {
 

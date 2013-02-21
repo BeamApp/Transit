@@ -1,6 +1,6 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
 
-import static com.getbeamapp.transit.Matchers.contains;
+import static com.getbeamapp.transit.common.Matchers.contains;
 import junit.framework.TestCase;
 
 import com.getbeamapp.transit.android.AndroidTransitContext;

@@ -1,4 +1,4 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,8 +1,8 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
 
 import java.util.EnumSet;
 
-import com.getbeamapp.transit.TransitCallable.Flags;
+import com.getbeamapp.transit.common.TransitCallable.Flags;
 
 public class TransitNativeFunction extends TransitFunction {
 

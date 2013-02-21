@@ -1,4 +1,4 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
 
 import java.io.IOException;
 import java.util.EnumSet;

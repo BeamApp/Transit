@@ -1,6 +1,6 @@
 package com.getbeamapp.transit.android;
 
-import com.getbeamapp.transit.TransitContext;
+import com.getbeamapp.transit.common.TransitContext;
 
 import android.webkit.WebView;
 

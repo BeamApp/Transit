@@ -1,4 +1,5 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
+
 
 public interface TransitCallable {
     public Object evaluate(Object thisArg, Object... arguments);

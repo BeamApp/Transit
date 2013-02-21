@@ -1,4 +1,4 @@
-package com.getbeamapp.transit;
+package com.getbeamapp.transit.common;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -8,9 +8,10 @@ import java.util.List;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 
-import com.getbeamapp.transit.TransitCallable.Flags;
+import com.getbeamapp.transit.MainActivity;
 import com.getbeamapp.transit.android.AndroidTransitContext;
 import com.getbeamapp.transit.android.prompt.TransitPromptAdapter;
+import com.getbeamapp.transit.common.TransitCallable.Flags;
 
 public class IntegrationTest extends ActivityInstrumentationTestCase2<MainActivity> {
 

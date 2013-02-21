@@ -1,7 +1,7 @@
 package com.getbeamapp.transit.android.prompt;
 
-import com.getbeamapp.transit.TransitException;
 import com.getbeamapp.transit.android.prompt.TransitPromptAdapter.TransitResponse;
+import com.getbeamapp.transit.common.TransitException;
 
 class TransitExceptionAction extends TransitAction {
     private Throwable throwable;
