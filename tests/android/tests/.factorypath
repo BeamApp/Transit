@@ -1,0 +1,6 @@
+<factorypath>
+    <factorypathentry kind="VARJAR" id="TRANSIT/tests/android/tests/deps/AndroidMockGenerator.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="ANDROID_SDK" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="TRANSIT/source/java-android/bin/classes" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="TRANSIT/tests/android/app/bin/classes" enabled="true" runInBatchMode="false"/>
+</factorypath>

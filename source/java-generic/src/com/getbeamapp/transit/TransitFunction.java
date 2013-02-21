@@ -1,17 +1,20 @@
 package com.getbeamapp.transit;
 
 public abstract class TransitFunction extends TransitProxy {
-	public TransitFunction(AbstractTransitContext rootContext) {
-		super(rootContext);
-	}
+    
+    public TransitFunction(TransitContext rootContext, String proxyId) {
+        super(rootContext, proxyId);
+    }
 
-	public final TransitProxy call() {
-		return call(null, new Object[0]);
-	}
-	
-	public final TransitProxy call(Object... arguments) {
-		return call(null, arguments);
-	}
-	
-	public abstract TransitProxy call(TransitProxy context, Object... arguments);
+    public final Object call(Object... arguments) {
+        return callWithThisArg(null, arguments);
+    }
+    
+    public final void callAsync(Object... arguments) {
+        callWithThisArgAsync(null, arguments);
+    }
+
+    public abstract Object callWithThisArg(Object thisArg, Object... arguments);
+    
+    public abstract void callWithThisArgAsync(Object thisArg, Object... arguments);
 }

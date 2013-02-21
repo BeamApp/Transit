@@ -1,163 +1,44 @@
 package com.getbeamapp.transit;
 
-import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.json.JSONObject;
+public class TransitProxy extends TransitObject {
 
-public class TransitProxy {
-	public enum Type {
-		UNKNOWN, BOOLEAN, NUMBER, STRING, ARRAY, OBJECT
-	}
+    private final String proxyId;
+    private final TransitContext context;
 
-	protected Type type = Type.UNKNOWN;
+    TransitProxy(TransitContext context, String proxyId) {
+        assert context != null;
+        assert proxyId != null;
+        
+        this.context = context;
+        this.proxyId = proxyId;
+    }
+    
+    @Override
+    public TransitContext getContext() {
+        return context;
+    }
 
-	protected AbstractTransitContext rootContext;
+    public String getProxyId() {
+        return proxyId;
+    }
 
-	private Object value;
+    private boolean finalized = false;
 
-	public TransitProxy(AbstractTransitContext rootContext) {
-		this.rootContext = rootContext;
-	}
+    @Override
+    protected void finalize() throws Throwable {
+        if (!finalized) {
+            try {
+                if (this.context != null && proxyId != null) {
+                    this.context.releaseProxy(proxyId);
+                }
+            } catch (Exception e) {
+                // ignore
+            }
 
-	public static TransitProxy withValue(AbstractTransitContext rootContext,
-			Object value) {
-		TransitProxy result = new TransitProxy(rootContext);
-		result.value = value;
+            finalized = true;
+        }
 
-		if (value instanceof Boolean) {
-			result.type = Type.BOOLEAN;
-		} else if (value instanceof Number) {
-			result.type = Type.NUMBER;
-		} else if (value instanceof String) {
-			result.type = Type.STRING;
-		} else if (value instanceof Array) {
-			result.type = Type.ARRAY;
-		} else {
-			result.type = Type.OBJECT;
-		}
-
-		return result;
-	}
-
-	public TransitProxy get(String key) {
-		return null;
-	}
-
-	public TransitProxy get(int index) {
-		return null;
-	}
-
-	public Object get() {
-		return value;
-	}
-
-	private void assertType(Type expected) {
-		if (type != expected) {
-			throw new AssertionError(String.format(
-					"Expected value to be %s but was %s", expected, type));
-		}
-	}
-
-	public String getStringValue() {
-		assertType(Type.STRING);
-		return (String) value;
-	}
-
-	public int getIntegerValue() {
-		assertType(Type.NUMBER);
-		return (Integer) value;
-	}
-
-	public float getFloatValue() {
-		assertType(Type.NUMBER);
-		return (Float) value;
-	}
-
-	public double getDoubleValue() {
-		assertType(Type.NUMBER);
-		return (Double) value;
-	}
-
-	public boolean getBooleanValue() {
-		assertType(Type.BOOLEAN);
-		return (Boolean) value;
-	}
-
-	public Array getArrayValue() {
-		assertType(Type.ARRAY);
-		return (Array) value;
-	}
-
-	public Map<String, Object> getObjectValue() {
-		assertType(Type.OBJECT);
-		return new HashMap<String, Object>();
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("[TransitProxy type:%s value:%s]", type, value);
-	}
-
-	public TransitProxy eval(String stringToEvaluate) {
-		return eval(stringToEvaluate, this, new Object[0]);
-	}
-
-	public TransitProxy eval(String stringToEvaluate, Object... arguments) {
-		return eval(stringToEvaluate, this, new Object[0]);
-	}
-
-	public TransitProxy eval(String stringToEvaluate, TransitProxy context,
-			Object... arguments) {
-		return rootContext.eval(stringToEvaluate, context, arguments);
-	}
-
-	public static String jsExpressionFromCode(String stringToEvaluate,
-			Object... arguments) {
-		StringBuffer output = new StringBuffer();
-		Pattern pattern = Pattern.compile("(.*?)@");
-		Matcher matcher = pattern.matcher(stringToEvaluate);
-
-		int index = 0;
-		while (matcher.find()) {
-			output.append(matcher.group(1));
-			String replacement = "";
-
-			if (index >= arguments.length) {
-				matcher.appendReplacement(output, "@");
-				continue;
-			}
-
-			Object argument = arguments[index];
-
-			if (argument instanceof JavaScriptRepresentable) {
-				replacement = ((JavaScriptRepresentable) argument)
-						.getJavaScriptRepresentation();
-			} else if (argument instanceof Boolean) {
-				replacement = String.valueOf(argument);
-			} else if (argument instanceof Number) {
-				replacement = String.valueOf(argument);
-			} else if (argument instanceof String) {
-				replacement = JSONObject.quote((String) argument);
-			} else if (argument instanceof Array) {
-				replacement = "[]"; // TODO
-			} else if (argument instanceof Map) {
-				replacement = "{}"; // TODO
-			} else if (argument == null) {
-				replacement = "null";
-			} else {
-				throw new IllegalArgumentException("Argument at index " + index
-						+ " can't be serialized.");
-			}
-
-			matcher.appendReplacement(output, replacement);
-			index++;
-		}
-
-		matcher.appendTail(output);
-		return output.toString();
-	}
+        super.finalize();
+    }
 }
