@@ -114,7 +114,8 @@ run_tests()
 precheck
 pushd `pwd`
 cd $ROOT
-# stop_emulator
+stop_emulator
 ensure_emulator
 run_tests
+stop_emulator
 popd
