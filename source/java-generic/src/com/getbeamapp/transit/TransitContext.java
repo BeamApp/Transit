@@ -94,7 +94,7 @@ public abstract class TransitContext extends TransitEvaluatable {
         } else if (value.startsWith(NATIVE_FUNCTION_PREFIX)) {
             return getCallback(value.substring(NATIVE_FUNCTION_PREFIX.length()));
         } else if (value.startsWith(JS_FUNCTION_PREFIX)) {
-            return new TransitJSFunction(this, value.substring(JS_FUNCTION_PREFIX.length()));
+            return new TransitJSFunction(this, value);
         } else {
             return value;
         }

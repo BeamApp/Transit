@@ -29,7 +29,7 @@ public class MockTest extends TestCase {
 
     public void testProxyRelase() throws InterruptedException {
         TransitAdapter adapter = AndroidMock.createNiceMock(TransitAdapter.class);
-        adapter.releaseProxy("1");
+        adapter.releaseProxy("__TRANSIT_JS_FUNCTION_1");
         AndroidMock.replay(adapter);
 
         AndroidTransitContext ctx = new AndroidTransitContext(adapter);
