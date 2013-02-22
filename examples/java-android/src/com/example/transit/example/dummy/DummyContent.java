@@ -24,10 +24,9 @@ public class DummyContent {
     public static Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
     static {
-        // Add 3 sample items.
-        addItem(new DummyItem("1", "Item 1"));
-        addItem(new DummyItem("2", "Item 2"));
-        addItem(new DummyItem("3", "Item 3"));
+        addItem(new DummyItem("xtype", "Impact.js X-Type"));
+        addItem(new DummyItem("eliza", "Elizabot.js"));
+        addItem(new DummyItem("sharejs", "Share.js"));
     }
 
     private static void addItem(DummyItem item) {
