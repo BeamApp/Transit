@@ -54,14 +54,14 @@
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     // API of ShareJS requires separate insert and delete commands
     if(range.length>0)
-        [_transit eval:@"@.del(@,@)" val:_doc val:@(range.location) val:@(range.length)];
+        [_doc callMember:@"del" arg:@(range.location) arg:@(range.length)];
     if(text.length>0)
-        [_transit eval:@"@.insert(@, @)" val:_doc val:@(range.location) val:text];
+        [_doc callMember:@"insert" arg:@(range.location) arg:text];
     return YES;
 }
 
 -(void)checkForOpen:(id)doc {
-    NSString* state = [_transit eval:@"@.state" val:doc];
+    NSString* state = doc[@"state"];
     if([state isEqualToString:@"opening"]) {
         [self performSelector:@selector(checkForOpen:) withObject:doc afterDelay:0.5];
         return;
@@ -70,7 +70,7 @@
     _doc = doc;
 
     // prepare textview for editing
-    textView.text = [_transit eval:@"@.getText()" val:doc];
+    textView.text = [_doc callMember:@"getText"];
     textView.editable = YES;
 
     __weak id _self = self;
@@ -80,8 +80,10 @@
         return nil;
     }];
 
-    [_transit eval:@"@.on('remoteop', @)" val:doc val:func];
-
+    // js: doc.on('remoteop, function)
+    // could have been written as
+    // [_transit eval:@"@.on('remoteop', @)" val:doc val:func];
+    [_doc callMember:@"on" arg:@"remoteop" arg:func];
 }
 
 -(void)setupTransit {
@@ -100,6 +102,7 @@
                 return nil;
             }];
 
+        // exactly what's written at http://sharejs.org as code example
         [transit eval:@"sharejs.open('blag', 'text', @)" val:func];
     };
 

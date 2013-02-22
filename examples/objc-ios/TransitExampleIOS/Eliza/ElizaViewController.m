@@ -83,8 +83,7 @@
     [_transit evalContentsOfFileOnGlobalScope:path2 encoding:NSUTF8StringEncoding error:nil];
 
     _elizaBot = [_transit eval:@"new ElizaBot();"];
-
-    id initial = [_transit eval:@"@.getInitial()" val:_elizaBot];
+    NSString* initial = [_elizaBot callMember:@"getInitial"];
     [self pushElizaAnswer: initial];
 }
 
@@ -216,7 +215,7 @@
     [self.bubbleData addObject:sayBubble];
     [self.bubbleTable reloadData];
 
-    NSString* answer = [_transit eval:@"@.transform(@)" val:_elizaBot val:self.textField.text];
+    NSString* answer = [_elizaBot callMember:@"transform" arg:self.textField.text];
     self.textField.text = @"";
 
     [self pushElizaAnswer:answer];

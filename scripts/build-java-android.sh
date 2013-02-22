@@ -43,7 +43,7 @@ stop_emulator()
 
 ensure_emulator()
 {
-  if (ps aux | grep '[e]mulator64-x86'); then
+  if (ps aux | grep '[e]mulator64-\(arm\|x86\)'); then
     echo "Emulator seems to be running already."
     return
   fi
@@ -104,9 +104,8 @@ run_tests()
   cd tests/android/tests
 
   adb wait-for-device
-  ant emma debug
-# deactivate tests for now
-#  ant emma installt test fetch-report
+  ant clean emma debug
+  ant emma installt test fetch-report
   popd
 
   echo "Building test app and run tests [DONE]"
@@ -115,7 +114,8 @@ run_tests()
 precheck
 pushd `pwd`
 cd $ROOT
-# stop_emulator
+stop_emulator
 ensure_emulator
 run_tests
+stop_emulator
 popd

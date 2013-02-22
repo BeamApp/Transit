@@ -3,7 +3,7 @@
     <exec executable="${adb}" failonerror="true">
       <arg value="pull" />
       <arg line="data/data/com.getbeamapp.transit/files/junit-report.xml" />
-      <arg line="bin/junit-report.xml" />
+      <arg line="../../reports/java-android/junit-report.xml" />
     </exec>
   </target>
 </project>

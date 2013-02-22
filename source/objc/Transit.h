@@ -31,9 +31,21 @@ id TransitNilSafe(id valueOrNil);
 
 -(TransitContext*)context;
 
-- (id)objectForKey:(NSString *)string;
+- (id)objectForKey:(id)key;
+- (void)setObject:(id)object forKey:(id < NSCopying >)key;
+- (id)objectAtIndexedSubscript:(NSUInteger)idx;
+- (void)setObject:(id)obj atIndexedSubscript:(NSInteger)idx;
+- (id)objectForKeyedSubscript:(id)key;
+- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
 
-- (BOOL)callMember:(NSString *)string arguments:(NSArray *)arguments;
+- (id)callMember:(NSString *)string;
+- (id)callMember:(NSString *)string arg:(id)arg0;
+- (id)callMember:(NSString *)string arg:(id)arg0 arg:(id)arg1;
+- (id)callMember:(NSString *)string arg:(id)arg0 arg:(id)arg1 arg:(id)arg2;
+- (id)callMember:(NSString *)string arguments:(NSArray *)arguments;
+
+
+
 @end
 
 @interface TransitProxy : TransitObject
