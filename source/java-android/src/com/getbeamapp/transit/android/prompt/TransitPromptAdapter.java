@@ -289,6 +289,10 @@ public class TransitPromptAdapter implements TransitAdapter {
 
         boolean mustInitPoll = !isActive();
 
+        if (mustInitPoll && isUiThread()) {
+            throw new IllegalThreadStateException("Can't call (initial) blocking eval from UI thread.");
+        }
+
         TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
         pushAction(action);
 
