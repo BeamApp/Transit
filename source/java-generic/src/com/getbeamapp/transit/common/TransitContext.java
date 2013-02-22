@@ -25,6 +25,8 @@ public abstract class TransitContext extends TransitEvaluatable {
 
     private static final String JS_FUNCTION_PREFIX = "__TRANSIT_JS_FUNCTION_";
 
+    private static final String OBJECT_PROXY_PREFIX = "__TRANSIT_OBJECT_PROXY_";
+
     private static final String GLOBAL_OBJECT = "__TRANSIT_OBJECT_GLOBAL";
 
     public TransitContext() {
@@ -128,6 +130,8 @@ public abstract class TransitContext extends TransitEvaluatable {
             return getCallback(value.substring(NATIVE_FUNCTION_PREFIX.length()));
         } else if (value.startsWith(JS_FUNCTION_PREFIX)) {
             return new TransitJSFunction(this, value);
+        } else if (value.startsWith(OBJECT_PROXY_PREFIX)) {
+            return new TransitProxy(this, value);
         } else {
             return value;
         }
