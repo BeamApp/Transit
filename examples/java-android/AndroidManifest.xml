@@ -32,6 +32,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ExampleListActivity" />
         </activity>
+        <activity android:name="ElizaActivity"><meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ExampleListActivity" /></activity>
     </application>
 
 </manifest>

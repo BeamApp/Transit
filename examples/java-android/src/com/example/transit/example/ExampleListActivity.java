@@ -70,11 +70,16 @@ public class ExampleListActivity extends FragmentActivity
                     .commit();
 
         } else {
-            // In single-pane mode, simply start the detail activity
-            // for the selected item ID.
-            Intent detailIntent = new Intent(this, ExampleDetailActivity.class);
-            detailIntent.putExtra(ExampleDetailFragment.ARG_ITEM_ID, id);
-            startActivity(detailIntent);
+            Intent nextIntent = null;
+            
+            if("xtype".equals(id)) {
+                nextIntent = new Intent(this, ExampleDetailActivity.class);
+            } else if ("eliza".equals(id) ){
+                nextIntent = new Intent(this, ElizaActivity.class);
+            }
+            
+            nextIntent.putExtra(ExampleDetailFragment.ARG_ITEM_ID, id);
+            startActivity(nextIntent);
         }
     }
 }
