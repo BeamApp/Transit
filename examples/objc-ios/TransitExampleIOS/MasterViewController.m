@@ -93,7 +93,7 @@
         self.detailViewController = nil;
 	    if (!self.detailViewController) {
             if(indexPath.row == 0)
-	            self.detailViewController = [[XTypeViewController alloc] initWithNibName:@"DetailViewController_iPhone" bundle:nil];
+	            self.detailViewController = [[XTypeViewController alloc] initWithNibName:@"XTypeViewController_iPhone" bundle:nil];
             if(indexPath.row == 1)
                 self.detailViewController = [[ElizaViewController alloc] initWithNibName:@"ElizaViewController" bundle:nil];
             if(indexPath.row == 2)
