@@ -16,7 +16,7 @@ fi
 if [ ! -f __xcode_license ]; then
   echo "Also, to make sure, Xcode works correctly, this script will show its EULA first."
   echo ""
-  echo "Press 'Q' and hit enter to close the Xcode EULA."
+  echo "Press 'Q' and anter 'agree' to accept the Xcode EULA."
 
   read -n 1 -s
 
