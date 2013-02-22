@@ -56,6 +56,7 @@ ensure_emulator()
   echo "Booting AVD $device..."
   emulator -avd $device &
 
+  echo "Waiting for AVD $device..."
   adb wait-for-device
 
   echo "Emulator ready!"
