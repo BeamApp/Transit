@@ -17,4 +17,24 @@ public final class TestHelpers {
             TestCase.fail(String.format("Expected `%s` to contain `%s`", containingString, otherString));
         }
     }
+    
+    public static TransitContext createNoopContext() {
+        return new TransitContext() {
+            
+            @Override
+            public Object evalWithThisArg(String arg0, Object arg1, Object... arg2) {
+                return null;
+            }
+            
+            @Override
+            public void evalWithThisArgAsync(String arg0, Object arg1, Object... arg2) {
+                
+            }
+            
+            @Override
+            public void releaseProxy(String arg0) {
+                return;
+            }
+        };
+    }
 }
