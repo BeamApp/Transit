@@ -272,10 +272,8 @@ public class TransitScriptBuilder {
         if (p instanceof TransitNativeFunction) {
             TransitNativeFunction f = (TransitNativeFunction) p;
             return "__TRANSIT_NATIVE_FUNCTION_" + f.getNativeId();
-        } else if (p instanceof TransitJSFunction) {
-            return "__TRANSIT_JS_FUNCTION_" + p.getProxyId();
         } else {
-            return "__TRANSIT_OBJECT_PROXY_" + p.getProxyId();
+            return p.getProxyId();
         }
     }
 }

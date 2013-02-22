@@ -261,8 +261,10 @@ public class TransitPromptAdapter implements TransitAdapter {
 
     @Override
     public final void evaluateAsync(final String stringToEvaluate) {
+        Log.d(TAG, "evaluateAsync: " + stringToEvaluate);
+        
         asyncEvaluations.add(stringToEvaluate);
-
+        
         boolean mustNotify = false;
         synchronized (notifiedUiThreadLock) {
             mustNotify = !notifiedUiThread;
@@ -284,10 +286,16 @@ public class TransitPromptAdapter implements TransitAdapter {
     }
 
     public final Object evaluate(String stringToEvaluate) {
+        Log.d(TAG, "evaluate: " + stringToEvaluate);
+        
         // TODO: Make sure no "outside" evaluate-calls cause conflicts with
         // active Transit threads
 
         boolean mustInitPoll = !isActive();
+        
+        if (mustInitPoll && isUiThread()) {
+            throw new IllegalThreadStateException("Can't call (initial) blocking eval from UI thread.");
+        }
 
         TransitEvalAction action = new TransitEvalAction(stringToEvaluate);
         pushAction(action);

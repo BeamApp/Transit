@@ -24,7 +24,7 @@ trap killed SIGINT SIGTERM SIGKILL
 
 ensure_command()
 {
-  type $@ >/dev/null 2>&1 || { echo >&2 "No such command: $@. Android SDK in PATH?"; exit 1; }
+  type $@ >/dev/null 2>&1 || { echo >&2 "No such command: $@. Android (platform-)tools in PATH?"; exit 1; }
 }
 
 precheck()
@@ -56,13 +56,8 @@ ensure_emulator()
   echo "Booting AVD $device..."
   emulator -avd $device &
 
-  # NORMALLY: adb wait-for-device
-  # but this commands hangs somtimes
-  echo "Waiting until device has booted..."
-  while [ `adb shell 'getprop dev.bootcomplete'` != 1 ]; do
-    echo "Waiting..."
-    sleep 1
-  done
+  echo "Waiting for AVD $device..."
+  adb wait-for-device
 
   echo "Emulator ready!"
 }

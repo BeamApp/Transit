@@ -25,6 +25,8 @@ public abstract class TransitContext extends TransitEvaluatable {
 
     private static final String JS_FUNCTION_PREFIX = "__TRANSIT_JS_FUNCTION_";
 
+    private static final String OBJECT_PROXY_PREFIX = "__TRANSIT_OBJECT_PROXY_";
+
     private static final String GLOBAL_OBJECT = "__TRANSIT_OBJECT_GLOBAL";
 
     public TransitContext() {
@@ -64,6 +66,39 @@ public abstract class TransitContext extends TransitEvaluatable {
         return function;
     }
 
+    public void replaceFunction(String location, final TransitReplacementCallable callable) {
+        final TransitJSFunction original = (TransitJSFunction) eval(location);
+
+        TransitNativeFunction f = registerCallable(new TransitCallable() {
+            @Override
+            public Object evaluate(Object thisArg, Object... arguments) {
+                return callable.evaluate(original, thisArg, arguments);
+            }
+        });
+
+        eval("@ = @", TransitScriptBuilder.raw(location), f);
+    }
+
+    public void replaceFunctionAsync(String location, final TransitReplacementCallable callable) {
+        TransitNativeFunction f = registerCallable(new TransitCallable() {
+            @Override
+            public Object evaluate(Object thisArg, Object... arguments) {
+                TransitJSFunction original = (TransitJSFunction) arguments[0];
+                Object[] rest = new Object[arguments.length - 1];
+
+                for (int i = 1; i < arguments.length; i++) {
+                    rest[i - 1] = arguments[i];
+                }
+
+                return callable.evaluate(original, thisArg, rest);
+            }
+        });
+
+        Object locationExpression = TransitScriptBuilder.raw(location);
+
+        evalAsync("(function(original, replacement) { @ = function() { return replacement.apply(this, [original].concat(Array.prototype.slice.call(arguments, 0))); } })(@, @)", locationExpression, locationExpression, f);
+    }
+
     public Object eval(String stringToEvaluate, Object... values) {
         return evalWithThisArg(stringToEvaluate, null, values);
     }
@@ -95,6 +130,8 @@ public abstract class TransitContext extends TransitEvaluatable {
             return getCallback(value.substring(NATIVE_FUNCTION_PREFIX.length()));
         } else if (value.startsWith(JS_FUNCTION_PREFIX)) {
             return new TransitJSFunction(this, value);
+        } else if (value.startsWith(OBJECT_PROXY_PREFIX)) {
+            return new TransitProxy(this, value);
         } else {
             return value;
         }

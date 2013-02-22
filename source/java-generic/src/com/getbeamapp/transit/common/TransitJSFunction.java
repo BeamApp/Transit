@@ -9,12 +9,16 @@ public class TransitJSFunction extends TransitFunction {
 
     @Override
     public Object callWithThisArg(Object thisArg, Object... arguments) {
+        boolean emptyArguments = arguments.length == 0;
+        
         if (thisArg == null || thisArg == getContext()) {
-            if (arguments.length == 0) {
+            if (emptyArguments) {
                 return getContext().eval("@()", this);
             } else {
                 return getContext().eval("@(@)", this, TransitScriptBuilder.arguments(arguments));
             }
+        } else if (emptyArguments) {
+            return getContext().eval("@.call(@)", this, thisArg);
         } else {
             return getContext().eval("@.call(@, @)", this, thisArg, TransitScriptBuilder.arguments(arguments));
         }
@@ -22,14 +26,18 @@ public class TransitJSFunction extends TransitFunction {
 
     @Override
     public void callWithThisArgAsync(Object thisArg, Object... arguments) {
+        boolean emptyArguments = arguments.length == 0;
+        
         if (thisArg == null || thisArg == getContext()) {
-            if (arguments.length == 0) {
+            if (emptyArguments) {
                 getContext().evalAsync("@()", this);
             } else {
                 getContext().evalAsync("@(@)", this, TransitScriptBuilder.arguments(arguments));
             }
+        } else if (emptyArguments) {
+            getContext().evalAsync("@.call(@)", this, thisArg);
         } else {
-            getContext().evalAsync("@.call(@, @)", this, thisArg, TransitScriptBuilder.arguments(arguments));
+            getContext().evalAsync("@.call(@, @)", this, thisArg, TransitScriptBuilder.arguments(arguments));            
         }
     }
 
