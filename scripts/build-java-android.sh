@@ -56,13 +56,7 @@ ensure_emulator()
   echo "Booting AVD $device..."
   emulator -avd $device &
 
-  # NORMALLY: adb wait-for-device
-  # but this commands hangs somtimes
-  echo "Waiting until device has booted..."
-  while [ `adb shell 'getprop dev.bootcomplete'` != 1 ]; do
-    echo "Waiting..."
-    sleep 1
-  done
+  adb wait-for-device
 
   echo "Emulator ready!"
 }
