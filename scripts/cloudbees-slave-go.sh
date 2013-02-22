@@ -86,4 +86,8 @@ echo "       make sure to send us your automatically generated public SSH Key by
 echo "       running 'cat cloudbees-slave.pub | pbcopy' and "
 echo "       comment on https://github.com/BeamApp/Transit/issues/26 to do so"
 
-./run-cloudbees-slave.sh
+while [  1 ]; do
+    ./run-cloudbees-slave.sh
+    echo "sleeping for 10 seconds before trying again..."
+    sleep 10
+done
