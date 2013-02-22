@@ -40,6 +40,8 @@ ensure_command()
 }
 
 ensure_command brew "Homebrew" "ruby -e \"\$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)\""
+brew update
+
 ensure_command git "Git" "brew install git"
 ensure_command node "node.js+npm" "brew install node"
 ensure_command phantomjs "PhantomJS" "brew install phantomjs"
