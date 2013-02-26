@@ -13,4 +13,4 @@ for computer in computerSet.iter("computer"):
     if slave_name == host_name:
         exit(1)
 
-# Touch
+# Touch 2
