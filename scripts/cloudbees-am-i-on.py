@@ -12,3 +12,5 @@ for computer in computerSet.iter("computer"):
     slave_name = computer.find("displayName").text
     if slave_name == host_name:
         exit(1)
+
+# Touch 2
