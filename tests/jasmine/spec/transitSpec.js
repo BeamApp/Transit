@@ -211,7 +211,7 @@ describe("Transit", function() {
             var f2 = function(){};
 
             var actual = transit.proxify([f0, f1, f2]);
-            expect(actual.length).toEqual(2);
+            expect(actual.length).toEqual(3);
             expect(transit.retained[actual[0]]).toBe(f0);
             expect(transit.retained[actual[1]]).toBe(f1);
             expect(transit.retained[actual[2]]).toBe(f2);
