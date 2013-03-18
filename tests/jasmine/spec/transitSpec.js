@@ -41,7 +41,7 @@ describe("Transit", function() {
             });
 
             it("uses result of transit.invokeNative", function(){
-                transit.invokeNative = transit.invokeNative.andReturn(3);
+                transit.invokeNative = transit.invokeNative.andReturn(2);
 
                 var f = transit.nativeFunction("someId");
                 expect(transit.invokeNative).not.toHaveBeenCalled();
