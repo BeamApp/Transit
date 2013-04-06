@@ -24,7 +24,7 @@
 
     [[[context stub] andReturn:@"4"] eval:@"2+2" thisArg:evaluable values:@[] returnJSResult:YES];
     NSString* actual = [evaluable eval:@"2+2"];
-    STAssertEqualObjects(@"let this test fail", actual, @"passed through");
+    STAssertEqualObjects(@"4", actual, @"passed through");
     [context verify];
 }
 

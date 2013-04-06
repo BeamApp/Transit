@@ -185,10 +185,6 @@ piped_input = ARGF.readlines
 
 report = ReportParser.new(piped_input)
 
-print "## CHECK ENV TRAVIS"
-print ENV["TRAVIS"]
-print ENV
-                              
 if report.any_error_or_failure
     print "stopped due to error or failure in unit tests"
     exit 5
