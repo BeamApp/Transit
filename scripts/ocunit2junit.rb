@@ -34,10 +34,12 @@ require 'socket'
 class ReportParser
 
   attr_reader :exit_code
+  attr_reader :any_error_or_failure
   
   def initialize(piped_input)
     @piped_input = piped_input
     @exit_code = 0
+    @any_error_or_failure = false
     
     FileUtils.rm_rf(TEST_REPORTS_FOLDER)
     FileUtils.mkpath(TEST_REPORTS_FOLDER)
@@ -156,11 +158,13 @@ class ReportParser
   end
 
   def handle_test_error(test_suite,test_case,error_message,error_location)
+    @any_error_or_failure = true
 #    error_message.tr!('<','').tr!('>','')
     @errors[test_case] = [ error_message, error_location ]
   end
 
-  def handle_test_failed(test_case,test_case_duration) 
+  def handle_test_failed(test_case,test_case_duration)
+    @any_error_or_failure = true
     @total_failed_test_cases +=1
     @tests_results[test_case] = test_case_duration
   end
@@ -181,4 +185,9 @@ piped_input = ARGF.readlines
 
 report = ReportParser.new(piped_input)
 
-exit report.exit_code
+if ENV["TRAVIS"] and report.any_error_or_failure
+    print "stopped due to error or failure in unit tests"
+    exit 5
+else
+    exit report.exit_code
+end
