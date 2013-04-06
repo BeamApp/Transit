@@ -26,7 +26,7 @@ describe("Transit", function() {
                 var f = transit.nativeFunction("someId");
                 expect(transit.invokeNative).not.toHaveBeenCalled();
                 f();
-                expect(transit.invokeNative).toHaveBeenCalledWith("someId-intentionallyWrong", window, [], undefined);
+                expect(transit.invokeNative).toHaveBeenCalledWith("someId", window, [], undefined);
 
                 var obj = {func:f};
                 obj.func("foo");
