@@ -54,7 +54,7 @@ ensure_emulator()
   device=$(android list avd -c | head -n 1)
 
   echo "Booting AVD $device..."
-  emulator -avd $device &
+  emulator -avd $device -no-skin -no-audio -no-window &
 
   echo "Waiting for AVD $device..."
   adb wait-for-device
