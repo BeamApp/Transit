@@ -60,6 +60,23 @@ ensure_emulator()
   adb wait-for-device
 
   echo "Emulator ready!"
+
+  timeoutInSeconds=60
+  timeout=`date -v+${timeoutInSeconds}S +%s`
+
+  while [ ! `adb shell pm path android` ]; do
+    sleep 2
+
+    now=`date +%s`
+    if [ "$now" -ge "$timeout"  ]; then
+      echo "PackageManager didn't become available within $timeoutInSeconds seconds"
+      exit 1
+    fi
+
+    echo "Waiting for PackageManager..."
+  done
+
+  echo "PackageManager ready!"
 }
 
 fill_local_properties()
