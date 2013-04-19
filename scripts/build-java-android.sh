@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -69,11 +69,12 @@ ensure_package_manager()
 
   echo "Waiting for Package Manager..."
 
-  while [ ! `adb shell pm path android` ]; do
+  while [ -z `adb shell pm path android` ]
+  do
     sleep 2
-
     now=`date +%s`
-    if [ "$now" -ge "$timeout"  ]; then
+    if [ "$now" -ge "$timeout"  ]
+    then
       echo "PackageManager didn't become available within $timeoutInSeconds seconds"
       die
     fi
