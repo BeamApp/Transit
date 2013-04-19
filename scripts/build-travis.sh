@@ -1,7 +1,9 @@
 #!/bin/sh
 set -e
 
-export PATH=$HOME/homebrew/bin:$PATH
+HOMEBREW=$HOME/homebrew
+export PATH=$HOMEBREW/bin:$PATH
+export ANDROID_SDK_ROOT=$HOMEBREW/opt/android-sdk
 
 cd $(dirname $0)
 ./build-js.sh
