@@ -9,7 +9,7 @@ ROOT=$(cd ..; pwd)
 die()
 {
     echo >&2 "$@"
-    exit
+    exit 1
 }
 
 [ "$#" -ge 1  ] || die "Usage: $0 BUILD_NUMBER"
