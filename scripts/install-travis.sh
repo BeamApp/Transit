@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set -ev
 
 HOMEBREW=$HOME/homebrew
 mkdir $HOMEBREW
@@ -7,6 +7,10 @@ curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C $H
 export PATH=$HOMEBREW/bin:$PATH
 
 brew install phantomjs
+which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
+
 brew install android-sdk
+which android || (echo "Android not in PATH" && exit 1)
+
 android update sdk -u --filter platform-tools,android-17,system-image,extra-intel-Hardware_Accelerated_Execution_Manager
 echo "no" | android create avd -n default -t android-17 -b x86
