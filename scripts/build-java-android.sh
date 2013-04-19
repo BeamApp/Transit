@@ -68,8 +68,10 @@ ensure_package_manager()
   timeout=`date -v+${timeoutInSeconds}S +%s`
 
   echo "Waiting for Package Manager..."
+  poll_cmd="adb shell pm path android"
 
-  while [ -n `adb shell pm path android; echo $?` ]
+  rc=$($poll_cmd)
+  while [ -n $rc ]
   do
     sleep 2
     now=`date +%s`
@@ -80,6 +82,7 @@ ensure_package_manager()
     fi
 
     echo "Waiting for Package Manager..."
+    rc=$($poll_cmd)
   done
 
   echo "Package Manager ready!"
