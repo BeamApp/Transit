@@ -64,12 +64,12 @@ ensure_emulator()
 
 package_manager_not_available()
 {
-  set +e
-  adb shell pm path android
-  test "$?" -ne 0
-  exitCode=$?
-  set -e
-  return $exitCode
+  if (adb shell pm path android &> /dev/null)
+  then
+    return 0
+  else
+    return 1
+  fi
 }
 
 ensure_package_manager()
@@ -77,8 +77,7 @@ ensure_package_manager()
   timeoutInSeconds=60
   timeout=`date -v+${timeoutInSeconds}S +%s`
 
-  echo "Waiting for Package Manager..."
-  poll_cmd="adb shell pm path android"
+  printf "Waiting for Package Manager"
 
   while package_manager_not_available
   do
@@ -86,14 +85,14 @@ ensure_package_manager()
     now=`date +%s`
     if [ "$now" -ge "$timeout" ]
     then
-      echo "PackageManager didn't become available within $timeoutInSeconds seconds"
-      die
+      echo " [TIMEOUT]"
+      die "PackageManager didn't become available within $timeoutInSeconds seconds"
     fi
 
-    echo "Waiting for Package Manager..."
+    printf "."
   done
 
-  echo "Package Manager ready!"
+  echo " [READY]"
 }
 
 fill_local_properties()
