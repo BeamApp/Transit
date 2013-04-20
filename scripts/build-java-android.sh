@@ -62,6 +62,16 @@ ensure_emulator()
   echo "Emulator ready!"
 }
 
+package_manager_not_available()
+{
+  set +e
+  adb shell pm path android
+  test "$?" -ne 0
+  exitCode=$?
+  set -e
+  return $exitCode
+}
+
 ensure_package_manager()
 {
   timeoutInSeconds=60
@@ -70,8 +80,7 @@ ensure_package_manager()
   echo "Waiting for Package Manager..."
   poll_cmd="adb shell pm path android"
 
-  rc=$($poll_cmd)
-  while [ -n $rc ]
+  while package_manager_not_available
   do
     sleep 2
     now=`date +%s`
@@ -82,7 +91,6 @@ ensure_package_manager()
     fi
 
     echo "Waiting for Package Manager..."
-    rc=$($poll_cmd)
   done
 
   echo "Package Manager ready!"
