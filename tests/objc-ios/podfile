@@ -1,6 +1,6 @@
 platform :ios, '5.0'
 
-pod "SBJson"
+pod "SBJson", '~> 3.2'
 
 target :TransitTestsIOSTests, :exclusive => true do
   pod 'OCMock'
