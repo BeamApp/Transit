@@ -1,10 +1,12 @@
 #!/bin/sh
 set -ev
 
-HOMEBREW=$HOME/homebrew
-mkdir $HOMEBREW
-curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C $HOMEBREW
-export PATH=$HOMEBREW/bin:$PATH
+# skip custom install of homebrew (introduced to get android running)
+#
+# HOMEBREW=$HOME/homebrew
+# mkdir $HOMEBREW
+# curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C $HOMEBREW
+# export PATH=$HOMEBREW/bin:$PATH
 
 brew install phantomjs
 which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
