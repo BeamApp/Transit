@@ -17,5 +17,5 @@ TESTS_PROJECT_ROOT="`cd ../tests/objc-ios; pwd`"
 EXAMPLES_PROJECT_NAME="TransitExampleIOS"
 EXAMPLES_PROJECT_ROOT="`cd ../examples/objc-ios; pwd`"
 
-xctool -workspace "$TESTS_PROJECT_ROOT/$TESTS_PROJECT_NAME.xcworkspace" -scheme $TESTS_PROJECT_NAME clean build test
-xctool -workspace "$EXAMPLES_PROJECT_ROOT/$EXAMPLES_PROJECT_NAME.xcworkspace" -scheme $EXAMPLES_PROJECT_NAME clean build test
+xctool -workspace "$TESTS_PROJECT_ROOT/$TESTS_PROJECT_NAME.xcworkspace" -scheme $TESTS_PROJECT_NAME -arch i386 clean build test
+xctool -workspace "$EXAMPLES_PROJECT_ROOT/$EXAMPLES_PROJECT_NAME.xcworkspace" -scheme $EXAMPLES_PROJECT_NAME -arch i386 clean build test
