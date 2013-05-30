@@ -553,6 +553,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitExampleIOS/TransitExampleIOS-Prefix.pch";
 				INFOPLIST_FILE = "TransitExampleIOS/TransitExampleIOS-Info.plist";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

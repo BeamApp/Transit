@@ -9,6 +9,8 @@ export PATH=$HOMEBREW/bin:$PATH
 brew install phantomjs
 which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
 
+brew install xctool
+
 # android build currently not supported on travis => skip installation
 #
 # brew install android-sdk
