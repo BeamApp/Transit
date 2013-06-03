@@ -12,7 +12,7 @@ It does not rely on special JavaScript runtimes such as JavaScript Core or Rhino
 This example creates a transit context from a webview and binds a native callback to `jQuery(document).ready`.
 
 ```
-TransitContext transit = [TransitContext transitContextWithWebView:someWebView];
+TransitContext* transit = [TransitContext transitContextWithWebView:someWebView];
 
 TransitNativeFunc* callback = [transit nativeFuncWithBlock:^(id thisArg, NSArray* arguments){
     // _this points to document as it has been called by jQuery
