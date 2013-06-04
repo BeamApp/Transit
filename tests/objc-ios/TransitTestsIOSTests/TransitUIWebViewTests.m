@@ -408,6 +408,8 @@
     TransitProxy* proxy = [context eval:@"window.document"];
     NSString* result = [context eval:@"@.title" val:proxy];
     STAssertEqualObjects(@"Empty Page", result, @"document.title");
+    result = proxy[@"title"];
+    STAssertEqualObjects(@"Empty Page", result, @"document.title");
 }
 
 -(void)testPerformance {
@@ -705,6 +707,35 @@
         STAssertEquals((NSUInteger)1,parentScope.level, @"level");
 
         [function1 dispose];
+    }
+}
+
+-(void)testCallStack {
+    @autoreleasepool {
+        TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+
+        __block TransitCallScope* deepestScope;
+
+        TransitFunction *jsFunc = [context eval:@"function(otherFunc, level){otherFunc.apply(this, [level+1])}"];
+        TransitFunction *nativeFunc = [context functionWithBlock:^id(TransitNativeFunctionCallScope *scope) {
+            deepestScope = scope;
+            NSNumber *level = scope.arguments[0];
+            if([level intValue] <= 2)
+                [jsFunc callWithArg:scope.function arg:level];
+            return nil;
+        }];
+
+        [context eval:@"@.apply(42, [@, 1])" val:jsFunc val:nativeFunc];
+
+        NSString* expectedStackFmt = @""
+            @"004 TransitNativeFunctionCallScope(this=%1$@)(3)\n"
+            @"003 TransitJSFunctionCallScope(this=%1$@)(%2$@, 2)\n"
+            @"002 TransitNativeFunctionCallScope(this=42)(2)\n"
+            @"001 TransitEvalCallScope(this=%1$@) @.apply(42, [@, 1]) -- values:(%3$@, %2$@)";
+
+        NSString* expectedStack = [NSString stringWithFormat:expectedStackFmt, context.description, nativeFunc.description, jsFunc.description];
+        NSString* actualStack = deepestScope.callStackDescription;
+        STAssertEqualObjects(expectedStack, actualStack, @"stacks");
     }
 }
 

@@ -119,6 +119,8 @@ typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,N
 
 - (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)thisArg expectsResult:(BOOL)expectsResult;
 
+- (NSString*)callStackFrameDescription;
+
 @end
 
 extern NSString* _TRANSIT_JS_RUNTIME_CODE;

@@ -157,6 +157,8 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 @property (nonatomic, readonly) BOOL expectsResult;
 @property (nonatomic, readonly) NSUInteger level;
 
+-(NSString*)callStackDescription;
+
 @end
 
 @interface TransitEvalCallScope : TransitCallScope

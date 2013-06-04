@@ -1188,6 +1188,25 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     return self.parentScope.level + 1;
 }
 
+- (NSString*)description {
+    return [NSString stringWithFormat:@"%.3d %@(this=%@)", self.level, NSStringFromClass(self.class), self.thisArg];
+}
+
+- (NSString *)callStackDescription {
+    NSMutableArray *stackSymbols = NSMutableArray.new;
+    TransitCallScope *scope = self;
+    while(scope) {
+        [stackSymbols addObject:scope.callStackFrameDescription];
+        scope = scope.parentScope;
+    }
+
+    return [stackSymbols componentsJoinedByString:@"\n"];
+}
+
+- (NSString *)callStackFrameDescription {
+    return [NSString stringWithFormat:@"unkown call frame %@", NSStringFromClass(self.class)];
+}
+
 @end
 
 @implementation TransitEvalCallScope : TransitCallScope
@@ -1200,6 +1219,11 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     }
     return self;
 }
+
+- (NSString *)callStackFrameDescription {
+    return [NSString stringWithFormat:@"%@ %@ -- values:(%@)", self.description, self.jsCode, [self.values componentsJoinedByString:@", "]];
+}
+
 @end
 
 @implementation TransitFunctionCallScope : TransitCallScope
@@ -1219,6 +1243,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 -(id)forwardToDelegate:(id<TransitFunctionBodyProtocol>)delegate {
     return [delegate callWithFunction:self.function thisArg:self.thisArg arguments:self.arguments expectsResult:self.expectsResult];
+}
+
+- (NSString *)callStackFrameDescription {
+    return [NSString stringWithFormat:@"%@(%@)", self.description, [self.arguments componentsJoinedByString:@", "]];
 }
 
 @end
