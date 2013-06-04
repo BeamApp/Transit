@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/BeamApp/Transit.png)](https://travis-ci.org/BeamApp/Transit)
-[![Build Status](https://beamapp.ci.cloudbees.com/job/Transit/badge/icon)](https://beamapp.ci.cloudbees.com/job/Transit/)
 
 # Transit
 
@@ -14,20 +13,18 @@ This example creates a transit context from a webview and binds a native callbac
 ```
 TransitContext* transit = [TransitContext transitContextWithWebView:someWebView];
 
-TransitNativeFunc* callback = [transit nativeFuncWithBlock:^(id thisArg, NSArray* arguments){
-    // _this points to document as it has been called by jQuery
-    // you can easily access properties from _this 
-    NSLog(@"page %@ has been loaded", [thisArg objectForKey:@"title"]);
+TransitNativeFunc* callback = [transit functionWithBlock:^id(TransitNativeFunctionCallScope *scope) {
+    // callscope offers access to .this, .arguments, callstack and more...
+    NSLog(@"page %@ has been loaded", scope[@"title"]);
 	
-    // use javascript proxies inside javascript, again!
-    NSString* url = [transit eval:@"@.location.href" val:thisArg];
+    // ...or use JS, again!
+    NSString* url = [scope eval:@"this.location.href"];
     NSLog(@"page url: %@", url);
+    return nil;
 }];
 
 [transit eval:@"jQuery(document).ready(@)" val:callback];
 ```
-
-TBD: Another Example with button.onclick
 
 ## Additional Information
 
