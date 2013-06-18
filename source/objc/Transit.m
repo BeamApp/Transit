@@ -11,7 +11,9 @@
 #import "SBJson.h"
 #import "SBJsonStreamWriterAccumulator.h"
 #import "SBJsonStreamWriterState.h"
+#import "CTBlockDescription.h"
 #import <objc/runtime.h>
+#import <Foundation/Foundation.h>
 
 @implementation NSString(Transit)
 
@@ -1105,6 +1107,40 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         return [delegate callWithFunction:scope.function thisArg:scope.thisArg arguments:scope.arguments expectsResult:scope.expectsResult];
     };
 }
+
++ (void)assertSpecificBlockCanBeUsedAsTransitFunction:(id)block {
+    if(![block isKindOfClass:NSClassFromString(@"NSBlock")])
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"expected block but was %@", NSStringFromClass([block class])] userInfo:nil];
+
+    CTBlockDescription *desc = [CTBlockDescription.alloc initWithBlock:block];
+    NSMethodSignature *sig = desc.blockSignature;
+
+    void(^assertValidType)(char const*, NSString*) = ^(char const* typeChar, NSString* suffix){
+        NSString *type = [NSString stringWithFormat:@"%c", (unsigned char) *typeChar];
+        NSRange range = [@"cislqCISLQfdBv@" rangeOfString:type];
+        if(range.location == NSNotFound)
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %@ for %@", type, suffix] userInfo:nil];
+    };
+
+    assertValidType(sig.methodReturnType, @"return type");
+    for(NSUInteger i=0;i<sig.numberOfArguments;i++)
+        assertValidType([sig getArgumentTypeAtIndex:i], [NSString stringWithFormat:@"argument at index %d", i]);
+}
+
++ (TransitGenericFunctionBlock)genericFunctionBlockWithBlock:(id)block {
+    [self assertSpecificBlockCanBeUsedAsTransitFunction:block];
+    return ^id(TransitNativeFunctionCallScope *callScope) {
+        CTBlockDescription *desc = [CTBlockDescription.alloc initWithBlock:block];
+        NSMethodSignature *sig = desc.blockSignature;
+        NSInvocation *inv = [NSInvocation invocationWithMethodSignature:sig];
+
+        // TODO: transform args and return value
+        [inv invokeWithTarget:block];
+
+        return nil;
+    };
+}
+
 
 -(id)_callWithScope:(TransitNativeFunctionCallScope *)scope {
     return _block(scope);
