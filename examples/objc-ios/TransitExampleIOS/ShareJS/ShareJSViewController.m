@@ -75,9 +75,8 @@
 
     __weak id _self = self;
     // attach to change event
-    TransitFunction *func = [_transit functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
-        [_self handleDeltas:callScope.arguments[0]];
-        return nil;
+    TransitFunction *func = [_transit functionWithBlock:^(NSArray* delta) {
+        [_self handleDeltas:delta];
     }];
 
     // js: doc.on('remoteop, function)
@@ -93,13 +92,10 @@
 
     __weak id _self = self;
     _transit.readyHandler = ^(TransitContext* transit) {
-            TransitFunction *func = [transit functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
-                id doc = callScope.arguments[1];
-
+            TransitFunction *func = [transit functionWithBlock:^(id error, id doc) {
                 // to bad at this point the document is not open, yet
                 // seems we have to poll for it's state
                 [_self checkForOpen: doc];
-                return nil;
             }];
 
         // exactly what's written at http://sharejs.org as code example
