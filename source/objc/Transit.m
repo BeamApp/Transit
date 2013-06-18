@@ -404,6 +404,28 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     [self disposeAllNativeProxies];
 }
 
+TransitContext *_TransitContext_currentContext;
+
++(TransitContext *)currentContext {
+    return _TransitContext_currentContext;
+}
+
++(TransitCallScope *)currentCallScope {
+    return self.currentContext.currentCallScope;
+}
+
++(id)currentThisArg {
+    return [self.currentCallScope.thisArg copy];
+}
+
++(NSArray*)currentArguments {
+    TransitCallScope *scope = self.currentCallScope;
+    if([scope isKindOfClass:TransitFunctionCallScope.class])
+        return [[(TransitFunctionCallScope*)scope arguments] copy];
+    else
+        return nil;
+}
+
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
     return proxyId;
 }
@@ -637,10 +659,13 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 
     TransitNativeFunctionCallScope *scope = [[TransitNativeFunctionCallScope alloc] initWithContext:self parentScope:_currentCallScope thisArg:thisArg arguments:arguments expectsResult:expectsResult function:func];
     _currentCallScope = scope;
+    TransitContext *oldTransitContextCurrentContext = _TransitContext_currentContext;
+    _TransitContext_currentContext = self;
     @try {
         return [func _callWithScope:scope];
     }
     @finally {
+        _TransitContext_currentContext = oldTransitContextCurrentContext;
         _currentCallScope = _currentCallScope.parentScope;
     }
 }
