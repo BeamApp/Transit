@@ -93,4 +93,36 @@
     STAssertEqualObjects(@"foo 123", actualResult, @"args");
 }
 
+-(void)testNativeTypes {
+    NSArray* expectedArgs = @[[NSNumber numberWithChar:'c'], @2, @3, @4, @5, [NSNumber numberWithChar:'C'], @7, @8, @9, @10, @11.5, @12.5, @YES];
+    //cislqCISLQfdB see https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
+    id block = ^(
+            char c, int i, short s, long l, long long q,
+            unsigned char C, unsigned int I, unsigned short S, unsigned long L, unsigned long long Q,
+            float f, double d, bool B){
+        STAssertEquals(c, (char)'c', @"char");
+        STAssertEquals(i, (int)2, @"int");
+        STAssertEquals(s, (short)3, @"short");
+        STAssertEquals(l, (long)4, @"long");
+        STAssertEquals(q, (long long)5, @"long long");
+        STAssertEquals(C, (unsigned char)'C', @"unsigned char");
+        STAssertEquals(I, (unsigned int)7, @"unsigned int");
+        STAssertEquals(S, (unsigned short)8, @"unsigned short");
+        STAssertEquals(L, (unsigned long)9, @"unsigned long");
+        STAssertEquals(Q, (unsigned long long)10, @"unsigned long long");
+        STAssertEquals(f, (float)11.5, @"float");
+        STAssertEquals(d, (double)12.5, @"double");
+        STAssertEquals(B, (bool)YES, @"bool");
+
+        // TODO: uncomment me, again
+//        return f+d;
+        return @(f+d);
+    };
+
+    TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
+    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
+
+    STAssertEqualObjects(actualResult, @24, @"result");
+}
+
 @end

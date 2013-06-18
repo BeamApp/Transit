@@ -1117,10 +1117,8 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     NSMethodSignature *sig = desc.blockSignature;
 
     void(^assertValidType)(char const*, NSString*) = ^(char const* typeChar, NSString* suffix){
-        NSString *type = [NSString stringWithFormat:@"%c", (unsigned char) *typeChar];
-        NSRange range = [@"cislqCISLQfdBv@" rangeOfString:type];
-        if(range.location == NSNotFound)
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %@ for %@", type, suffix] userInfo:nil];
+        if(strchr("cislqCISLQfdBv@", typeChar[0]) == NULL)
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for %@", typeChar[0], suffix] userInfo:nil];
     };
 
     assertValidType(sig.methodReturnType, @"return type");
@@ -1305,8 +1303,83 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 @implementation NSInvocation (TransitAdditions)
 
 -(void)transitSetObject:(id)object forArgumentAtIndex:(NSUInteger)index {
-    // TODO: check actual types
-    [self setArgument:&object atIndex:index];
+    const char* argType = [self.methodSignature getArgumentTypeAtIndex:index];
+    switch(argType[0]) {
+        //cislqCISLQfdBv@
+        case 'c': {
+            char value = [object charValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'i': {
+            int value = [object intValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 's': {
+            short value = [object shortValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'l': {
+            long value = [object longValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'q': {
+            long long value = [object longLongValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'C': {
+            unsigned char value = [object unsignedCharValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'I': {
+            unsigned int value = [object unsignedIntValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'S': {
+            unsigned short value = [object unsignedShortValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'L': {
+            unsigned long value = [object unsignedLongValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'Q': {
+            unsigned long long value = [object unsignedLongLongValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'f': {
+            float value = [object floatValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'd': {
+            double value = [object doubleValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case 'B': {
+            BOOL value = [object boolValue];
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        case '#':
+        case '@': {
+            id value = object;
+            [self setArgument:&value atIndex:index];
+            return;
+        }
+        default:
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for argument at index %d", argType[0], index] userInfo:nil];
+    }
 }
 
 -(id)transitReturnValueAsObject {
