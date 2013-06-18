@@ -471,7 +471,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return [self functionWithGenericBlock:[TransitNativeFunction genericFunctionBlockWithDelegate:delegate]];
 }
 
--(TransitFunction*)asyncFunctionWithBlock:(TransitVoidFunctionBlock)block {
+-(TransitFunction*)asyncFunctionWithBlock:(TransitGenericVoidFunctionBlock)block {
     TransitNativeFunction* func = (TransitNativeFunction*) [self functionWithGenericBlock:^id(TransitNativeFunctionCallScope *scope) {
         block(scope);
         return nil;
@@ -480,7 +480,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return func;
 }
 
--(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block {
+-(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericFunctionWithBlock:(TransitGenericReplaceFunctionBlock)block {
     TransitFunction *original = [self eval:path];
     if(!original)
         return nil;

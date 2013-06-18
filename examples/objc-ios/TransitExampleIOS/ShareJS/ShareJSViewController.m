@@ -75,7 +75,7 @@
 
     __weak id _self = self;
     // attach to change event
-    TransitFunction *func = [_transit functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+    TransitFunction *func = [_transit functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
         [_self handleDeltas:callScope.arguments[0]];
         return nil;
     }];
@@ -93,7 +93,7 @@
 
     __weak id _self = self;
     _transit.readyHandler = ^(TransitContext* transit) {
-            TransitFunction *func = [transit functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            TransitFunction *func = [transit functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
                 id doc = callScope.arguments[1];
 
                 // to bad at this point the document is not open, yet
