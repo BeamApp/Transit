@@ -93,7 +93,7 @@
     STAssertEqualObjects(@"foo 123", actualResult, @"args");
 }
 
--(void)testNativeTypes {
+-(void)testNativeArgumentTypes {
     NSArray* expectedArgs = @[[NSNumber numberWithChar:'c'], @2, @3, @4, @5, [NSNumber numberWithChar:'C'], @7, @8, @9, @10, @11.5, @12.5, @YES];
     //cislqCISLQfdB see https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
     id block = ^(
@@ -114,15 +114,45 @@
         STAssertEquals(d, (double)12.5, @"double");
         STAssertEquals(B, (bool)YES, @"bool");
 
-        // TODO: uncomment me, again
-//        return f+d;
-        return @(f+d);
+        return f+d;
     };
 
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
     id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
 
     STAssertEqualObjects(actualResult, @24, @"result");
+}
+
+-(void)testBoolReturnType {
+    TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:^{return YES;}];
+    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil]);
+    STAssertEqualObjects(actualResult, @YES, @"result");
+}
+
+-(void)testNativeReturnTypes {
+    //cislqCISLQfdB see https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
+    NSArray* blocks = @[
+            ^{return (char)1;},
+            ^{return (int)2;},
+            ^{return (short)3;},
+            ^{return (long)4;},
+            ^{return (long long)5;},
+            ^{return (unsigned char)6;},
+            ^{return (unsigned int)7;},
+            ^{return (unsigned short)8;},
+            ^{return (unsigned long)9;},
+            ^{return (unsigned long long)10;},
+            ^{return (float)11;},
+            ^{return (double)12;},
+    ];
+
+    for(NSUInteger i=0; i<blocks.count; i++) {
+        id block = blocks[i];
+        TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
+        id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil]);
+        STAssertEqualObjects(actualResult, @(i+1), @"result");
+    }
+
 }
 
 @end

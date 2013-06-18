@@ -1371,7 +1371,6 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
             [self setArgument:&value atIndex:index];
             return;
         }
-        case '#':
         case '@': {
             id value = object;
             [self setArgument:&value atIndex:index];
@@ -1386,10 +1385,77 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if(self.methodSignature.methodReturnLength<=0)
         return nil;
 
-    // TODO: check actual types
-    __unsafe_unretained id result;
-    [self getReturnValue:&result];
-    return result;
+    const char* argType = [self.methodSignature methodReturnType];
+    switch(argType[0]) {
+        //cislqCISLQfdBv@
+        case 'c': {
+            char value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'i': {
+            int value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 's': {
+            short value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'l': {
+            long value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'q': {
+            long long value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'C': {
+            unsigned char value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'I': {
+            unsigned int value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'S': {
+            unsigned short value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'L': {
+            unsigned long value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'Q': {
+            unsigned long long value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'f': {
+            float value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case 'd': {
+            double value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
+        case '@': {
+            __unsafe_unretained id value;
+            [self getReturnValue:&value];
+            return value;
+        }
+        default:
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for returm type", argType[0]] userInfo:nil];
+    }
 }
 
 @end
