@@ -127,6 +127,13 @@ typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,N
 
 @end
 
+@interface NSInvocation (TransitAdditions)
+
+-(void)transitSetObject:(id)object forArgumentAtIndex:(NSUInteger)index;
+-(id)transitReturnValueAsObject;
+
+@end
+
 extern NSString* _TRANSIT_JS_RUNTIME_CODE;
 extern NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_;
 extern NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_;

@@ -44,15 +44,53 @@
 
 -(void)testNonArgCall {
     NSArray* expectedArgs = @[];
-    __block NSArray* actualArgs;
+    __block bool called;
     id block = ^{
-        actualArgs = @[];
+        called = YES;
     };
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
-    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:actualArgs expectsResult:YES function:nil]);
+    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
+    STAssertNil(actualResult, @"result is nil");
+    STAssertTrue(called, @"called");
+}
 
-    STAssertEqualObjects(actualArgs, expectedArgs, @"args");
-    STAssertEqualObjects(nil, actualResult, @"args");
+-(void)testObjectCall {
+    NSArray* expectedArgs = @[@"foo", @123];
+    id block = ^(NSString* s, NSNumber *n){
+        STAssertEqualObjects(s, @"foo", @"arg 1");
+        STAssertEqualObjects(n, @123, @"arg 2");
+        return [NSString stringWithFormat:@"%@ %@", s, n];
+    };
+    TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
+    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
+
+    STAssertEqualObjects(@"foo 123", actualResult, @"args");
+}
+
+-(void)testTooFewArgs {
+    NSArray* expectedArgs = @[@"foo"];
+    id block = ^(NSString* s, NSNumber *n){
+        STAssertEqualObjects(s, @"foo", @"arg 1");
+        STAssertNil(n, @"arg 2");
+        return [NSString stringWithFormat:@"%@ %@", s, n];
+    };
+    TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
+    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
+
+    STAssertEqualObjects(@"foo (null)", actualResult, @"args");
+}
+
+-(void)testTooManyArgs {
+    NSArray* expectedArgs = @[@"foo", @123, @YES];
+    id block = ^(NSString* s, NSNumber *n){
+        STAssertEqualObjects(s, @"foo", @"arg 1");
+        STAssertEqualObjects(n, @123, @"arg 2");
+        return [NSString stringWithFormat:@"%@ %@", s, n];
+    };
+    TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
+    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
+
+    STAssertEqualObjects(@"foo 123", actualResult, @"args");
 }
 
 @end
