@@ -52,6 +52,7 @@
 		F26B048F484A125D105A64B7 /* elizadata.js in Sources */ = {isa = PBXBuildFile; fileRef = F26B054C1BCDE60B42B0550C /* elizadata.js */; };
 		F26B05AF4DBA2C9B51CDDFDB /* elizabot.js in Sources */ = {isa = PBXBuildFile; fileRef = F26B0AA3515DC52DC0E397E3 /* elizabot.js */; };
 		F26B0798FBDD82E972F1AE78 /* ElizaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0F93E1712FCD42114F69 /* ElizaViewController.m */; };
+		F26B08F8A0C7FF54E52E1CE3 /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B06FC0E8823435A15C07A /* CTBlockDescription.m */; };
 		F26B0A116C974F7405AF9D09 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B04C7CD1DC2FD7467E1BE /* DetailsViewController.m */; };
 		F26B0A11B79FAEA0F8B5CDBB /* ShareJSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0BB77BAA07F406D8B45F /* ShareJSViewController.m */; };
 /* End PBXBuildFile section */
@@ -115,9 +116,11 @@
 		F26B0473D7128C544DE18AEC /* ShareJSViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareJSViewController.xib; sourceTree = "<group>"; };
 		F26B04C7CD1DC2FD7467E1BE /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 		F26B054C1BCDE60B42B0550C /* elizadata.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = elizadata.js; path = elizabot/elizadata.js; sourceTree = "<group>"; };
+		F26B06FC0E8823435A15C07A /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
 		F26B0971D441B3C6207B3B6D /* ElizaViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ElizaViewController.xib; sourceTree = "<group>"; };
 		F26B0AA3515DC52DC0E397E3 /* elizabot.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = elizabot.js; path = elizabot/elizabot.js; sourceTree = "<group>"; };
 		F26B0B3A5D55C8C534D4359F /* DetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
+		F26B0BAF97B857076BD6F5AD /* CTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBlockDescription.h; sourceTree = "<group>"; };
 		F26B0BB77BAA07F406D8B45F /* ShareJSViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareJSViewController.m; sourceTree = "<group>"; };
 		F26B0DE5AF728EEFAD9E4F2A /* ShareJSViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareJSViewController.h; sourceTree = "<group>"; };
 		F26B0F93E1712FCD42114F69 /* ElizaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElizaViewController.m; sourceTree = "<group>"; };
@@ -301,6 +304,8 @@
 			children = (
 				CBCE188C16C9570900C2D816 /* Transit.h */,
 				CBCE188D16C9570900C2D816 /* Transit.m */,
+				F26B0BAF97B857076BD6F5AD /* CTBlockDescription.h */,
+				F26B06FC0E8823435A15C07A /* CTBlockDescription.m */,
 			);
 			name = Transit;
 			path = ../../source/objc;
@@ -445,6 +450,7 @@
 				F26B05AF4DBA2C9B51CDDFDB /* elizabot.js in Sources */,
 				F26B048F484A125D105A64B7 /* elizadata.js in Sources */,
 				F26B0A11B79FAEA0F8B5CDBB /* ShareJSViewController.m in Sources */,
+				F26B08F8A0C7FF54E52E1CE3 /* CTBlockDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

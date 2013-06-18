@@ -83,6 +83,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @interface TransitContext : TransitEvaluable
 
+-(TransitFunction*)functionWithBlock:(id)block;
 -(TransitFunction*)functionWithGenericBlock:(TransitGenericFunctionBlock)block;
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 -(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericFunctionWithBlock:(TransitGenericReplaceFunctionBlock)block;

@@ -12,7 +12,6 @@
 #import "SBJsonStreamWriterAccumulator.h"
 #import "SBJsonStreamWriterState.h"
 #import "CTBlockDescription.h"
-#import "NSInvocation+OCMAdditions.h"
 #import <objc/runtime.h>
 #import <Foundation/Foundation.h>
 
@@ -472,6 +471,10 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate {
     return [self functionWithGenericBlock:[TransitNativeFunction genericFunctionBlockWithDelegate:delegate]];
+}
+
+-(TransitFunction*)functionWithBlock:(id)block {
+    return [self functionWithGenericBlock:[TransitNativeFunction genericFunctionBlockWithBlock:block]];
 }
 
 -(TransitFunction*)asyncFunctionWithBlock:(TransitGenericVoidFunctionBlock)block {

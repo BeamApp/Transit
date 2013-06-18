@@ -152,7 +152,53 @@
         id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil]);
         STAssertEqualObjects(actualResult, @(i+1), @"result");
     }
+}
 
+-(void)testIncompatibleArgsWillBeTransformedToAsGoodAsPossible {
+    id block = ^(int i, float f, bool b1, bool b2, double d) {
+        return [NSString stringWithFormat:@"i: %d, f: %.2f, b1: %d, b2: %d, d: %.2f", i, f, b1, b2, d];
+    };
+
+    NSArray* args = @[@"foo", @"bar", @"baz", @"true", @"12.5"];
+    TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
+    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:args expectsResult:YES function:nil]);
+    STAssertEqualObjects(actualResult, @"i: 0, f: 0.00, b1: 0, b2: 1, d: 12.50", @"result");
+}
+
+-(void)testCannotDetectClassesFromSignature {
+    id block = ^(NSString* s, NSNumber* n) {
+        return [NSString stringWithFormat:@"%@-%@, %@-%@", s, s.class, n, n.class];
+    };
+
+    NSArray* args = @[@12.5, @"foo"];
+    TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
+    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:args expectsResult:YES function:nil]);
+    STAssertEqualObjects(actualResult, @"12.5-__NSCFNumber, foo-__NSCFConstantString", @"result");
+}
+
+
+-(void)testCallFromContext {
+    id mock = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
+    id block = ^(int i, float f, BOOL b, NSString* s){
+        STAssertEquals(i, (int)1, @"int");
+        STAssertEquals(f, (float)2.5, @"float");
+        STAssertEquals(b, YES, @"bool");
+        STAssertEqualObjects(s, @"foo", @"string");
+
+        return f+i;
+    };
+
+    TransitContext *context = TransitContext.new;
+    TransitFunction *func = [context functionWithBlock:block];
+
+    id thisArg = @{};
+    id args = @[@1, @2.5, @YES, @"foo"];
+    id returnValue = @"3.5";
+
+    [[[mock stub] andReturn:returnValue] callWithFunction:func thisArg:thisArg arguments:args expectsResult:YES];
+    id actualResult = [func callWithThisArg:thisArg arguments:args];
+    STAssertEquals([actualResult floatValue], [returnValue floatValue], @"result");
+    [mock verify];
 }
 
 @end
