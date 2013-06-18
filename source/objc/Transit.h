@@ -54,7 +54,7 @@ id TransitNilSafe(id valueOrNil);
 
 @end
 
-typedef id (^TransitFunctionBlock)(TransitNativeFunctionCallScope *callScope);
+typedef id (^TransitGenericFunctionBlock)(TransitNativeFunctionCallScope *callScope);
 typedef void (^TransitVoidFunctionBlock)(TransitNativeFunctionCallScope *callScope);
 typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNativeFunctionCallScope *callScope);
 
@@ -83,7 +83,7 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 
 @interface TransitContext : TransitEvaluable
 
--(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block;
+-(TransitFunction*)functionWithGenericBlock:(TransitGenericFunctionBlock)block;
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 -(TransitFunction*)replaceFunctionAt:(NSString*)path withFunctionWithBlock:(TransitReplaceFunctionBlock)block;
 
@@ -141,7 +141,7 @@ typedef id (^TransitReplaceFunctionBlock)(TransitFunction* original, TransitNati
 @property(nonatomic, assign) BOOL async;
 @property(nonatomic, assign) BOOL noThis;
 
-@property(readonly) TransitFunctionBlock block;
+@property(readonly) TransitGenericFunctionBlock block;
 
 @end
 

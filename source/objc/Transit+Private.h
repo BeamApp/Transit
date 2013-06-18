@@ -88,8 +88,9 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 @interface TransitNativeFunction(Private)
 
 -(id)_callWithScope:(TransitNativeFunctionCallScope *)scope;
--(id)initWithContext:(TransitContext *)context nativeId:(NSString *)nativeId block:(TransitFunctionBlock)block;
+-(id)initWithContext:(TransitContext *)context nativeId:(NSString *)nativeId genericBlock:(TransitGenericFunctionBlock)block;
 
++ (TransitGenericFunctionBlock)genericFunctionBlockWithDelegate:(id <TransitFunctionBodyProtocol>)o;
 @end
 
 @interface TransitJSFunction(Private)

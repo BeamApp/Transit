@@ -54,8 +54,8 @@
         [cb callAsyncWithArg:data];
     }];
     
-    TransitNativeFunction *blockingFunc = (TransitNativeFunction*)[self.transit functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
-        NSString* data = callScope.arguments[0];
+    TransitNativeFunction *blockingFunc = (TransitNativeFunction*) [self.transit functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        NSString *data = callScope.arguments[0];
         return data;
     }];
 

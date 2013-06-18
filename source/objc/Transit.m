@@ -461,20 +461,18 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     return [NSString stringWithFormat:@"%d", ++_lastNativeFunctionId];
 }
 
--(TransitFunction*)functionWithBlock:(TransitFunctionBlock)block {
-    TransitNativeFunction* function = [[TransitNativeFunction alloc] initWithContext:self nativeId:[self nextNativeFunctionId] block:block];
+-(TransitFunction*)functionWithGenericBlock:(TransitGenericFunctionBlock)block {
+    TransitNativeFunction* function = [[TransitNativeFunction alloc] initWithContext:self nativeId:[self nextNativeFunctionId] genericBlock:block];
     [self retainNativeFunction:function];
     return function;
 }
 
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate {
-    return [self functionWithBlock:^id(TransitNativeFunctionCallScope *scope) {
-        return [delegate callWithFunction:scope.function thisArg:scope.thisArg arguments:scope.arguments expectsResult:scope.expectsResult];
-    }];
+    return [self functionWithGenericBlock:[TransitNativeFunction genericFunctionBlockWithDelegate:delegate]];
 }
 
 -(TransitFunction*)asyncFunctionWithBlock:(TransitVoidFunctionBlock)block {
-    TransitNativeFunction* func = (TransitNativeFunction*)[self functionWithBlock:^id(TransitNativeFunctionCallScope *scope) {
+    TransitNativeFunction* func = (TransitNativeFunction*) [self functionWithGenericBlock:^id(TransitNativeFunctionCallScope *scope) {
         block(scope);
         return nil;
     }];
@@ -487,7 +485,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     if(!original)
         return nil;
     
-    TransitFunction *function = [self functionWithBlock:^id(TransitNativeFunctionCallScope *scope) {
+    TransitFunction *function = [self functionWithGenericBlock:^id(TransitNativeFunctionCallScope *scope) {
         return block(original, scope);
     }];
 
@@ -1092,7 +1090,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 @implementation TransitNativeFunction
 
--(id)initWithContext:(TransitContext *)context nativeId:(NSString *)nativeId block:(TransitFunctionBlock)block {
+-(id)initWithContext:(TransitContext *)context nativeId:(NSString *)nativeId genericBlock:(TransitGenericFunctionBlock)block {
     self = [self initWithContext:context proxyId:nativeId];
     if(self) {
         NSParameterAssert(nativeId);
@@ -1100,6 +1098,12 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         _block = [block copy];
     }
     return self;
+}
+
++ (TransitGenericFunctionBlock)genericFunctionBlockWithDelegate:(id <TransitFunctionBodyProtocol>)delegate {
+    return ^id(TransitNativeFunctionCallScope *scope) {
+        return [delegate callWithFunction:scope.function thisArg:scope.thisArg arguments:scope.arguments expectsResult:scope.expectsResult];
+    };
 }
 
 -(id)_callWithScope:(TransitNativeFunctionCallScope *)scope {

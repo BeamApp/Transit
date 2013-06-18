@@ -238,7 +238,7 @@
 -(void)testInvokeNativeWithThisArgVariations {
     @autoreleasepool {
         TransitContext* context = TransitContext.new;
-        TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" block:^id(TransitNativeFunctionCallScope *scope) {
+        TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
             return scope.thisArg;
         }];
         
@@ -291,13 +291,13 @@
         NSArray *arguments = @[@1, @2, @3];
         BOOL expectsResult = YES;
 
-        __block TransitFunction *function = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        __block TransitFunction *function = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
             BOOL callScopeIsBoundToCurrentFunction = callScope.function == function;
             STAssertTrue(callScopeIsBoundToCurrentFunction, @"current function");
             STAssertNil(callScope.parentScope, @"parent scope");
-            return @{@"function": callScope.function, @"thisArg": callScope.thisArg, @"arguments": callScope.arguments, @"expectsResult":@(callScope.expectsResult)};
+            return @{@"function" : callScope.function, @"thisArg" : callScope.thisArg, @"arguments" : callScope.arguments, @"expectsResult" : @(callScope.expectsResult)};
         }];
 
         NSDictionary* scope = [function callWithThisArg:thisArg arguments:arguments returnResult:expectsResult];
@@ -325,15 +325,15 @@
         __block TransitFunctionCallScope *scope1;
         __block TransitFunctionCallScope *scope2;
 
-         __block TransitFunction *function1 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
-            scope1 = callScope;
+         __block TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+             scope1 = callScope;
 
-            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
-            return nil;
-        }];
+             return nil;
+         }];
 
-        __block TransitFunction *function2 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        __block TransitFunction *function2 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope2 = callScope;
 
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");

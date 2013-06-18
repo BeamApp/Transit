@@ -229,7 +229,7 @@
 
 -(void)testCallThroughJavaScript {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope *scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         int a = [scope.arguments[0] intValue];
         int b = [scope.arguments[1] intValue];
         return @(a + b);
@@ -260,7 +260,7 @@
 -(void)testInvokeNativeProducesJSExceptionIfNotHandledCorrectly {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     context.handleRequestBlock = nil;
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         // do nothing
         return nil;
     }];
@@ -271,7 +271,7 @@
 
 -(void)testInvokeNativeThatThrowsExceptionWithoutLocalizedReason {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:nil];
     }];
     [context retainNativeFunction:func];
@@ -282,7 +282,7 @@
 
 -(void)testInvokeNativeThatThrowsExceptionWithLocalizedReason {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         @throw [NSException exceptionWithName:@"ExceptionName" reason:@"some reason" userInfo:@{NSLocalizedDescriptionKey : @"my localized description"}];
     }];
     [context retainNativeFunction:func];
@@ -293,7 +293,7 @@
 
 -(void)testInvokeNativeThatReturnsIncompatibleResultCausesJSException {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         // object that cannnot be represented as JS
         return self;
     }];
@@ -318,7 +318,7 @@
 
 -(void)testNativeFunctionCanReturnVoid {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         return nil;
     }];
     [context retainNativeFunction:func];
@@ -328,7 +328,7 @@
 
 -(void)testNativeFunctionCanReturnNull {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         return NSNull.null;
     }];
     [context retainNativeFunction:func];
@@ -339,7 +339,7 @@
 
 -(void)testInvokeNativeWithJSProxies {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         STAssertTrue([scope.thisArg isKindOfClass:TransitJSFunction.class], @"this became js function proxy");
         STAssertTrue([scope.arguments[0] isKindOfClass:TransitProxy.class], @"proxy");
 
@@ -418,7 +418,7 @@
     NSString* longString = [@"" stringByPaddingToLength:len withString:@"c" startingAtIndex:0];
 
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *nativeFunc = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *nativeFunc = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         return [scope.arguments[0] stringByAppendingFormat:@"%d", [scope.arguments[1] intValue]];
     }];
     [context retainNativeFunction:nativeFunc];
@@ -448,7 +448,7 @@
     [context.webView loadRequest:[NSURLRequest requestWithURL:url]];
     
     __block BOOL finished = NO;
-    TransitFunction *onFinish = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onFinish" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *onFinish = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onFinish" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         id results = [context eval:@"{failed:this.results().failedCount, passed:this.results().passedCount}" thisArg:scope.arguments[0]];
         finished = YES;
         STAssertEqualObjects(@0, results[@"failed"], @"no test failed");
@@ -456,7 +456,7 @@
         return @"finished :)";
     }];
     
-    TransitFunction *onLoad = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onLoad" block:^id(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *onLoad = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"onLoad" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
         [context eval:@"jasmineEnv.addReporter({reportRunnerResults: @})" val:onFinish];
         return @"foo";
     }];
@@ -603,7 +603,7 @@
 
         __block TransitNativeFunctionCallScope* scope1;
 
-        TransitFunction *function1 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope1 = callScope;
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
@@ -639,7 +639,7 @@
 
         __block TransitNativeFunctionCallScope* scope1;
 
-        TransitFunction *function1 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope1 = callScope;
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
@@ -678,7 +678,7 @@
 
         __block TransitNativeFunctionCallScope* scope1;
 
-        TransitFunction *function1 = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope1 = callScope;
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
@@ -717,10 +717,10 @@
         __block TransitCallScope* deepestScope;
 
         TransitFunction *jsFunc = [context eval:@"function(otherFunc, level){otherFunc.apply(this, [level+1])}"];
-        TransitFunction *nativeFunc = [context functionWithBlock:^id(TransitNativeFunctionCallScope *scope) {
+        TransitFunction *nativeFunc = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *scope) {
             deepestScope = scope;
             NSNumber *level = scope.arguments[0];
-            if([level intValue] <= 2)
+            if ([level intValue] <= 2)
                 [jsFunc callWithArg:scope.function arg:level];
             return nil;
         }];
@@ -751,7 +751,7 @@
 -(void)testLargeTranferObject {
     TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
 
-    TransitFunction *loopback = [context functionWithBlock:^id(TransitNativeFunctionCallScope *callScope) {
+    TransitFunction *loopback = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
         return callScope.arguments[0];
     }];
 

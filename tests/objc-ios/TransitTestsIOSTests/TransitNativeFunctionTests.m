@@ -19,12 +19,12 @@
 
 -(void)testWillCallBlock {
     id mock = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
-    TransitFunctionBlock block = ^(TransitNativeFunctionCallScope *scope){
+    TransitGenericFunctionBlock block = ^(TransitNativeFunctionCallScope *scope){
         return [scope forwardToDelegate:mock];
     };
 
     TransitContext *context = TransitContext.new;
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" block:block];
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"someId" genericBlock:block];
     
     id thisArg = @{@"a":@1};
     id args = @[@1, @"b"];
@@ -44,7 +44,7 @@
 }
 
 -(void)testJSRepresentation {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" genericBlock:^(TransitNativeFunctionCallScope *scope) {
         return (id) nil;
     }];
     
@@ -56,7 +56,7 @@
 }
 
 -(void)testJSRepresentationToResolveProxyBlocked {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" genericBlock:^(TransitNativeFunctionCallScope *scope) {
         return (id) nil;
     }];
     
@@ -66,7 +66,7 @@
 }
 
 -(void)testJSRepresentationToResolveProxyAsync {
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitNativeFunctionCallScope* scope) {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" genericBlock:^(TransitNativeFunctionCallScope *scope) {
         return (id) nil;
     }];
     func.async = YES;
@@ -77,7 +77,7 @@
 }
 
 -(void)testJSRepresentationToResolveProxyNoThis {
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitNativeFunctionCallScope* scope) {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" genericBlock:^(TransitNativeFunctionCallScope *scope) {
         return (id) nil;
     }];
     func.noThis = YES;
@@ -88,7 +88,7 @@
 }
 
 -(void)testJSRepresentationToResolveProxyAsyncAndNoThis {
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitNativeFunctionCallScope* scope) {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" genericBlock:^(TransitNativeFunctionCallScope *scope) {
         return (id) nil;
     }];
     func.async = YES;
@@ -100,7 +100,7 @@
 }
 
 -(void)testInExpression {
-    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" block:^(TransitNativeFunctionCallScope* scope) {
+    TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:[self simpleContext] nativeId:@"someId" genericBlock:^(TransitNativeFunctionCallScope *scope) {
         return (id) nil;
     }];
     
@@ -110,7 +110,7 @@
 }
 
 -(void)testDisposeOnNilContextDoesNotThrowException {
-    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:nil nativeId:@"someId" block:^(TransitNativeFunctionCallScope* scope) {
+    TransitNativeFunction *func = [[TransitNativeFunction alloc] initWithContext:nil nativeId:@"someId" genericBlock:^(TransitNativeFunctionCallScope *scope) {
         return (id) nil;
     }];
     [func dispose];
