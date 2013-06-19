@@ -140,6 +140,8 @@
     }
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "objc_incompatible_pointers"
 -(void)testDisposesNativeProxiesOnDispose {
     @autoreleasepool {
         TransitContext *context = TransitContext.new;
@@ -155,6 +157,7 @@
         [context.retainedNativeProxies removeAllObjects];
     }
 }
+#pragma clang diagnostic pop
 
 -(TransitProxy*)createAndReleaseContextButReturnNativeProxy {
     TransitProxy *proxy;
@@ -238,7 +241,8 @@
     TransitContext* context = TransitContext.new;
     id result = [context invokeNativeWithDescription:@{@"nativeId" : @"missing"}];
     STAssertTrue([result isKindOfClass:NSError.class], @"missing native functions results in error");
-    STAssertEqualObjects(@"No native function with id: missing. Could have been disposed.", [result userInfo][NSLocalizedDescriptionKey], @"meaningful error message");
+    NSDictionary* userInfo = [result userInfo];
+    STAssertEqualObjects(@"No native function with id: missing. Could have been disposed.",userInfo[NSLocalizedDescriptionKey], @"meaningful error message");
 }
 
 -(void)testInvokeNativeWithThisArgVariations {
@@ -347,18 +351,18 @@
         __block TransitFunctionCallScope *scope1;
         __block TransitFunctionCallScope *scope2;
 
-         __block TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
-             scope1 = callScope;
+        __block TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            scope1 = callScope;
 
-             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
-             STAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
-             STAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
-             STAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
-             STAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
+            STAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
+            STAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
+            STAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
+            STAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
 
-             return nil;
-         }];
+            return nil;
+        }];
 
         __block TransitFunction *function2 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope2 = callScope;
@@ -399,11 +403,14 @@
         STAssertEquals(expectsResult2, scope2.expectsResult, @"expectsResult");
         STAssertNil(scope2.parentScope, @"parentScope");
 
+        // set to nil explicitly to release object ref
         scope1 = nil;
         scope2 = nil;
 
         [function1 dispose];
         [function2 dispose];
+
+        // set to nil explicitly to release object ref
         function1 = nil;
         function2 = nil;
     }

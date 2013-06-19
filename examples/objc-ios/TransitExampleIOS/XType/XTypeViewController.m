@@ -113,14 +113,20 @@
 
     // best hook to patch XType is on first call of window.setTimeout. The game engine calls this once with
     // window.setTimeout(XType.startGame, 1);
-    __block BOOL firstCall = YES;
     __weak id _self = self;
-    [transit replaceFunctionAt:@"setTimeout" withBlock:^{
-        if(firstCall)
-            [_self setupTransit];
-        firstCall = NO;
-        return [TransitCurrentCall forwardToReplacedFunction];
+    [transit replaceFunctionAt:@"setTimeout" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
+        [_self setupTransit];
+        callScope.context[@"setTimeout"] = original;
+        return [callScope forwardToFunction:original];
     }];
+
+    // or use singleton accessors if you like
+//    [transit replaceFunctionAt:@"setTimeout" withBlock:^{
+//        [_self setupTransit];
+//        TransitCurrentCall.context[@"setTimeout"] = TransitCurrentCall.replacedFunction;
+//        return [TransitCurrentCall forwardToReplacedFunction];
+//    }];
+
 
     // load unmodified game from web
     NSURL *url = [NSURL URLWithString:@"http://phoboslab.org/xtype/"];
