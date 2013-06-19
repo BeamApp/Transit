@@ -875,30 +875,58 @@
 -(void)testReadmeExample {
     UIWebView *someViewView = [self webViewWithEmptyPage];
 
-    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:someViewView];
 
-    NSLog(@"%@",
+
+    void (^log)(id) = ^(id obj) {
+        NSLog(@"%@ %@", [obj class], obj);
+    };
+
+    
+
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:someViewView];
+    
+    log(
+            [context eval:@"42 + Math.PI"]
+    );
+
+    log(
+            [context eval:@"2+@" val: @"f'o\"o"]
+    );
+
+    log(
             [context eval:@" {result: @ + Math.max(23, @) } " val: @"foo" val: @42.5]
     );
 
     TransitFunction *mathMax = [context eval:@"Math.max"];
-    NSLog(@"%@", [mathMax callWithArg:@3.5 arg:@6] );
-    NSLog(@"%@", [context eval:@" @(3.5, @)" val: mathMax val:@6] );
+    log(
+            [mathMax callWithArg:@3.5 arg:@6]
+    );
+    log(
+            [context eval:@" @(3.5, @)" val: mathMax val:@6]
+    );
+
+    id doc = context[@"document"];
+    [context eval:@"document.title = 'some title'"];
+    log(
+       doc[@"title"]
+    );
 
     context[@"log"] = ^(id object){
         NSLog(@"%@", object);
+        log(object);
     };
     [context eval:@"log('Hello, World!')"];
 
-    TransitFunction *applyFunc = [context functionWithBlock:^(TransitFunction* func, float a, NSDictionary *b){
-        NSLog(@"arguments: func: %@, a: %f, b: %@", func, a, b);
-        NSLog(@"%@", TransitCurrentCall.callScope.callStackDescription);
-        return [func callWithArg:@(a) arg:b[@"field"]];
+    TransitFunction *applyFunc =
+        [context functionWithBlock:^(TransitFunction* func, float a, NSDictionary *b){
+            NSLog(@"arguments: func: %@, a: %f, b: %@", func, a, b);
+            NSLog(@"%@", TransitCurrentCall.callScope.callStackDescription);
+            return [func callWithArg:@(a) arg:b[@"field"]];
     }];
 
-    NSNumber* result = [context eval:@"@(Math.max, 3.5, {field:@})" val:applyFunc val:@6];
-
-    NSLog(@"result: %f", result.floatValue);
+    log(
+            [context eval:@"@(Math.max, 3.5, {field:@})" val:applyFunc val:@6]
+    );
 }
 
 @end
