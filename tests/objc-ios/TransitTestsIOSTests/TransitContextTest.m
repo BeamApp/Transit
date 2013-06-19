@@ -300,10 +300,10 @@
         __block TransitFunction *function = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
-            STAssertTrue(TransitContext.currentContext == callScope.context, @"TransitContext.currentContext");
-            STAssertTrue(TransitContext.currentCallScope == callScope, @"TransitContext.currentCallScope");
-            STAssertEqualObjects(TransitContext.currentThisArg, callScope.thisArg, @"TransitContext.currentThisArg");
-            STAssertEqualObjects(TransitContext.currentArguments, callScope.arguments, @"TransitContext.currentArguments");
+            STAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
+            STAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
+            STAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
+            STAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
 
             BOOL callScopeIsBoundToCurrentFunction = callScope.function == function;
             STAssertTrue(callScopeIsBoundToCurrentFunction, @"current function");
@@ -311,17 +311,17 @@
             return @{@"function" : callScope.function, @"thisArg" : callScope.thisArg, @"arguments" : callScope.arguments, @"expectsResult" : @(callScope.expectsResult)};
         }];
 
-        STAssertNil(TransitContext.currentContext, @"TransitContext.currentContext");
-        STAssertNil(TransitContext.currentCallScope, @"TransitContext.currentCallScope");
-        STAssertNil(TransitContext.currentThisArg, @"TransitContext.currentThisArg");
-        STAssertNil(TransitContext.currentArguments, @"TransitContext.currentArguments");
+        STAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
+        STAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
+        STAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
+        STAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
 
         NSDictionary* scope = [function callWithThisArg:thisArg arguments:arguments returnResult:expectsResult];
 
-        STAssertNil(TransitContext.currentContext, @"TransitContext.currentContext");
-        STAssertNil(TransitContext.currentCallScope, @"TransitContext.currentCallScope");
-        STAssertNil(TransitContext.currentThisArg, @"TransitContext.currentThisArg");
-        STAssertNil(TransitContext.currentArguments, @"TransitContext.currentArguments");
+        STAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
+        STAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
+        STAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
+        STAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
 
 
         NSDictionary *expected = @{@"function": function, @"thisArg":thisArg, @"arguments":arguments, @"expectsResult": @(expectsResult)};
@@ -352,10 +352,10 @@
 
              STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
-             STAssertTrue(TransitContext.currentContext == callScope.context, @"TransitContext.currentContext");
-             STAssertTrue(TransitContext.currentCallScope == callScope, @"TransitContext.currentCallScope");
-             STAssertEqualObjects(TransitContext.currentThisArg, callScope.thisArg, @"TransitContext.currentThisArg");
-             STAssertEqualObjects(TransitContext.currentArguments, callScope.arguments, @"TransitContext.currentArguments");
+             STAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
+             STAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
+             STAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
+             STAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
 
              return nil;
          }];
@@ -367,25 +367,25 @@
             [function1 callWithThisArg:thisArg1 arguments:arguments1 returnResult:expectsResult1];
             STAssertTrue(context.currentCallScope == callScope, @"currentCallScope after call");
 
-            STAssertTrue(TransitContext.currentContext == callScope.context, @"TransitContext.currentContext");
-            STAssertTrue(TransitContext.currentCallScope == callScope, @"TransitContext.currentCallScope");
-            STAssertEqualObjects(TransitContext.currentThisArg, callScope.thisArg, @"TransitContext.currentThisArg");
-            STAssertEqualObjects(TransitContext.currentArguments, callScope.arguments, @"TransitContext.currentArguments");
+            STAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
+            STAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
+            STAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
+            STAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
 
             return nil;
         }];
 
-        STAssertNil(TransitContext.currentContext, @"TransitContext.currentContext");
-        STAssertNil(TransitContext.currentCallScope, @"TransitContext.currentCallScope");
-        STAssertNil(TransitContext.currentThisArg, @"TransitContext.currentThisArg");
-        STAssertNil(TransitContext.currentArguments, @"TransitContext.currentArguments");
+        STAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
+        STAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
+        STAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
+        STAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
 
         [function2 callWithThisArg:thisArg2 arguments:arguments2 returnResult:expectsResult2];
 
-        STAssertNil(TransitContext.currentContext, @"TransitContext.currentContext");
-        STAssertNil(TransitContext.currentCallScope, @"TransitContext.currentCallScope");
-        STAssertNil(TransitContext.currentThisArg, @"TransitContext.currentThisArg");
-        STAssertNil(TransitContext.currentArguments, @"TransitContext.currentArguments");
+        STAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
+        STAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
+        STAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
+        STAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
 
         STAssertTrue(function1 == scope1.function, @"function");
         STAssertEqualObjects(thisArg1, scope1.thisArg, @"thisArg");

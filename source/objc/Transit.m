@@ -447,6 +447,40 @@ NSError*transit_errorWithCodeFromException(NSUInteger code, NSException* excepti
 
 @end
 
+@implementation TransitCurrentCall
+
+TransitContext *_TransitCurrentCall_currentContext;
+TransitFunction *_TransitCurrentCall_originalFunctionForCurrentCall;
+
++(TransitContext *)context {
+    return _TransitCurrentCall_currentContext;
+}
+
++(TransitFunctionCallScope *)callScope {
+    TransitFunctionCallScope *scope = (TransitFunctionCallScope *) self.context.currentCallScope;
+    if(scope && ![scope isKindOfClass:TransitFunctionCallScope.class])
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"currentCallScope is not a TransitFunctionCallScope: %@", scope] userInfo:nil];
+    return scope;
+}
+
++(id)thisArg {
+    return [self.callScope.thisArg copy];
+}
+
++(NSArray*)arguments {
+    return self.callScope.arguments;
+}
+
++ (TransitFunction *)replacedFunction {
+    return _TransitCurrentCall_originalFunctionForCurrentCall;
+}
+
++(id)forwardToReplacedFunction {
+    return [self.callScope forwardToFunction:self.replacedFunction];
+}
+
+@end
+
 
 NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT = 0;
 NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD = 250;
@@ -486,33 +520,6 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 
 -(void)dispose {
     [self disposeAllNativeProxies];
-}
-
-TransitContext *_TransitContext_currentContext;
-
-+(TransitContext *)currentContext {
-    return _TransitContext_currentContext;
-}
-
-+(TransitFunctionCallScope *)currentCallScope {
-    TransitFunctionCallScope *scope = (TransitFunctionCallScope *) self.currentContext.currentCallScope;
-    if(scope && ![scope isKindOfClass:TransitFunctionCallScope.class])
-        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"currentCallScope is not a TransitFunctionCallScope: %@", scope] userInfo:nil];
-    return scope;
-}
-
-+(id)currentThisArg {
-    return [self.currentCallScope.thisArg copy];
-}
-
-+(NSArray*)currentArguments {
-    return self.currentCallScope.arguments;
-}
-
-TransitFunction *_TransitContext_originalFunctionForCurrentCall;
-
-+ (TransitFunction *)replacedFunctionForCurrentCall {
-    return _TransitContext_originalFunctionForCurrentCall;
 }
 
 -(TransitContext*)context {
@@ -610,12 +617,12 @@ TransitFunction *_TransitContext_originalFunctionForCurrentCall;
         return nil;
     
     TransitFunction *function = [self functionWithGenericBlock:^id(TransitNativeFunctionCallScope *scope) {
-        TransitFunction *oldOriginalFunctionForCurrentCall = _TransitContext_originalFunctionForCurrentCall;
+        TransitFunction *oldOriginalFunctionForCurrentCall = _TransitCurrentCall_originalFunctionForCurrentCall;
         @try {
-            _TransitContext_originalFunctionForCurrentCall = original;
+            _TransitCurrentCall_originalFunctionForCurrentCall = original;
             return block(original, scope);
         }@finally{
-            _TransitContext_originalFunctionForCurrentCall = oldOriginalFunctionForCurrentCall;
+            _TransitCurrentCall_originalFunctionForCurrentCall = oldOriginalFunctionForCurrentCall;
         }
     }];
 
@@ -789,13 +796,13 @@ TransitFunction *_TransitContext_originalFunctionForCurrentCall;
 
     TransitNativeFunctionCallScope *scope = [[TransitNativeFunctionCallScope alloc] initWithContext:self parentScope:_currentCallScope thisArg:thisArg arguments:arguments expectsResult:expectsResult function:func];
     _currentCallScope = scope;
-    TransitContext *oldTransitContextCurrentContext = _TransitContext_currentContext;
-    _TransitContext_currentContext = self;
+    TransitContext *oldTransitContextCurrentContext = _TransitCurrentCall_currentContext;
+    _TransitCurrentCall_currentContext = self;
     @try {
         return [func _callWithScope:scope];
     }
     @finally {
-        _TransitContext_currentContext = oldTransitContextCurrentContext;
+        _TransitCurrentCall_currentContext = oldTransitContextCurrentContext;
         _currentCallScope = _currentCallScope.parentScope;
     }
 }

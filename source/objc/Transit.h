@@ -82,12 +82,6 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @interface TransitContext : TransitEvaluable
 
-+(TransitContext *)currentContext;
-+(TransitFunctionCallScope *)currentCallScope;
-+(id)currentThisArg;
-+(NSArray*)currentArguments;
-+(TransitFunction *)replacedFunctionForCurrentCall;
-
 -(TransitFunction*)functionWithBlock:(id)block;
 -(TransitFunction*)functionWithGenericBlock:(TransitGenericFunctionBlock)block;
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
@@ -154,6 +148,19 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 
 @interface TransitJSFunction : TransitFunction
+
+@end
+
+
+@interface TransitCurrentCall : NSObject
+
++(TransitContext *)context;
++(TransitFunctionCallScope *)callScope;
++(id)thisArg;
++(NSArray*)arguments;
++(TransitFunction *)replacedFunction;
+
++(id)forwardToReplacedFunction;
 
 @end
 

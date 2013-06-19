@@ -62,7 +62,7 @@
     // shoot sound is disabled on mobile. Hook into shoot logic to start sound
     [transit replaceFunctionAt:@"EntityPlayer.prototype.shoot" withBlock: ^{
         [_self playShootSound];
-        return [TransitContext.currentCallScope forwardToFunction:TransitContext.replacedFunctionForCurrentCall];
+        return [TransitCurrentCall forwardToReplacedFunction];
     }];
     
     // here's the "replace a function" version that takes a generic block
@@ -115,11 +115,11 @@
     // window.setTimeout(XType.startGame, 1);
     __block BOOL firstCall = YES;
     __weak id _self = self;
-    [transit replaceFunctionAt:@"setTimeout" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
+    [transit replaceFunctionAt:@"setTimeout" withBlock:^{
         if(firstCall)
             [_self setupTransit];
         firstCall = NO;
-        return [scope forwardToFunction:original];
+        return [TransitCurrentCall forwardToReplacedFunction];
     }];
 
     // load unmodified game from web

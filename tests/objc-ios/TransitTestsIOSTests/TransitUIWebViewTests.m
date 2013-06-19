@@ -748,7 +748,7 @@
     @autoreleasepool {
         TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
         __block __weak TransitFunction *function = [context functionWithBlock:^(NSUInteger expectedCallLevel){
-            STAssertEquals(TransitContext.currentCallScope.level, expectedCallLevel, @"different callscope");
+            STAssertEquals(TransitCurrentCall.callScope.level, expectedCallLevel, @"different callscope");
             if(expectedCallLevel < 4)
                 [function callWithArg:@(expectedCallLevel+1)];
         }];
@@ -819,13 +819,13 @@
 
     [context replaceFunctionAt:@"globalFunc" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
         blockOriginal = original;
-        STAssertEquals(original, TransitContext.replacedFunctionForCurrentCall, @"original");
-        STAssertEquals(callScope, TransitContext.currentCallScope, @"current callscope");
+        STAssertEquals(original, TransitCurrentCall.replacedFunction, @"original");
+        STAssertEquals(callScope, TransitCurrentCall.callScope, @"current callscope");
         STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
         return nil;
     }];
     [context eval:@"globalFunc('foo')"];
-    STAssertNil(TransitContext.replacedFunctionForCurrentCall, @"original");
+    STAssertNil(TransitCurrentCall.replacedFunction, @"original");
 
     STAssertEquals(blockOriginal, f, @"same function");
 }
@@ -839,12 +839,12 @@
     __block TransitFunction* blockOriginal;
 
     [context replaceFunctionAt:@"globalFunc" withBlock:^{
-        blockOriginal = TransitContext.replacedFunctionForCurrentCall;
-        TransitCallScope* callScope = TransitContext.currentCallScope;
+        blockOriginal = TransitCurrentCall.replacedFunction;
+        TransitCallScope* callScope = TransitCurrentCall.callScope;
         STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
     }];
     [context eval:@"globalFunc('foo')"];
-    STAssertNil(TransitContext.replacedFunctionForCurrentCall, @"original");
+    STAssertNil(TransitCurrentCall.replacedFunction, @"original");
 
     STAssertEquals(blockOriginal, f, @"same function");
 }
@@ -855,16 +855,16 @@
     context[@"globalFunc"] = ^{return 42;};
     __weak TransitFunction *f0 = context[@"globalFunc"];
     __weak TransitFunction *f1 = [context replaceFunctionAt:@"globalFunc" withBlock:^{
-        STAssertEquals(f0, TransitContext.replacedFunctionForCurrentCall, @"original");
-        TransitFunctionCallScope* callScope = TransitContext.currentCallScope;
+        STAssertEquals(f0, TransitCurrentCall.replacedFunction, @"original");
+        TransitFunctionCallScope* callScope = TransitCurrentCall.callScope;
         STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope.parentScope) jsCode], @"correct scope");
-        return [callScope forwardToFunction:TransitContext.replacedFunctionForCurrentCall];
+        return [callScope forwardToFunction:TransitCurrentCall.replacedFunction];
     }];
-    TransitFunction *f2 = [context replaceFunctionAt:@"globalFunc" withBlock:^{
-        STAssertEquals(f1, TransitContext.replacedFunctionForCurrentCall, @"original");
-        TransitFunctionCallScope* callScope = TransitContext.currentCallScope;
+    [context replaceFunctionAt:@"globalFunc" withBlock:^{
+        STAssertEquals(f1, TransitCurrentCall.replacedFunction, @"original");
+        TransitFunctionCallScope* callScope = TransitCurrentCall.callScope;
         STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
-        return [callScope forwardToFunction:TransitContext.replacedFunctionForCurrentCall];
+        return [callScope forwardToFunction:TransitCurrentCall.replacedFunction];
     }];
 
     NSNumber* result = [context eval:@"globalFunc('foo')"];
@@ -892,7 +892,7 @@
 
     TransitFunction *applyFunc = [context functionWithBlock:^(TransitFunction* func, float a, NSDictionary *b){
         NSLog(@"arguments: func: %@, a: %f, b: %@", func, a, b);
-        NSLog(@"%@", TransitContext.currentCallScope.callStackDescription);
+        NSLog(@"%@", TransitCurrentCall.callScope.callStackDescription);
         return [func callWithArg:@(a) arg:b[@"field"]];
     }];
 

@@ -61,12 +61,11 @@ result: 6.0000
 
 to the console.
 
-There's a lot more. e.g. `TransitContext.currentCallScope` gives you access to the `this` variable, all `arguments` and let's you even print the unified call stack from JavaScript and native functions:
+There's a lot more. e.g. `TransitCurrentCall` gives you access to the `this` variable, all `arguments` and let's you even print the unified call stack from JavaScript and native functions:
 
 ```
 002 TransitNativeFunctionCallScope(this=<TransitUIWebViewContext: 0x75250d0>(<TransitJSFunction:0x11b34fc0>, 3.5, {field = 6;})
 001 TransitEvalCallScope(this=<TransitUIWebViewContext: 0x75250d0>) @(Math.max, 3.5, {field:@}) -- values:(<TransitNativeFunction: 0x752ff00>, 6)
-
 ```
 
 Read the [API documentation](http://cocoadocs.org/docsets/Transit/) for further details.
