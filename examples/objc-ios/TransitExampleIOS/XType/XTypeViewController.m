@@ -51,30 +51,29 @@
     __weak XTypeViewController* _self = self;
 
     // only sound on mobile version is explosion
-    [transit replaceFunctionAt:@"ig.Sound.prototype.play" withGenericFunctionWithBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
+    [transit replaceFunctionAt:@"ig.Sound.prototype.play" withBlock:^ {
         [_self playSoundFromStart:_self.soundExplode];
-        return @YES;
     }];
 
-    [transit replaceFunctionAt:@"ig.Music.prototype.play" withGenericFunctionWithBlock:^id(TransitFunction *original,TransitNativeFunctionCallScope* scope) {
+    [transit replaceFunctionAt:@"ig.Music.prototype.play" withBlock:^ {
         [_self.soundMusic play];
-        return @YES;
     }];
 
     // shoot sound is disabled on mobile. Hook into shoot logic to start sound
-    [transit replaceFunctionAt:@"EntityPlayer.prototype.shoot" withGenericFunctionWithBlock:^id(TransitFunction *original,TransitNativeFunctionCallScope* scope) {
+    [transit replaceFunctionAt:@"EntityPlayer.prototype.shoot" withBlock: ^{
         [_self playShootSound];
-        return [scope forwardToFunction:original];
+        return [TransitContext.currentCallScope forwardToFunction:TransitContext.replacedFunctionForCurrentCall];
     }];
     
+    // here's the "replace a function" version that takes a generic block
     // vibrate
     TransitGenericReplaceFunctionBlock vibrate = ^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
         AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
         return [scope forwardToFunction:original];
     };
     
-    [transit replaceFunctionAt:@"EntityEnemyHeart.prototype.kill" withGenericFunctionWithBlock:vibrate];
-    [transit replaceFunctionAt:@"EntityPlayer.prototype.kill" withGenericFunctionWithBlock:vibrate];
+    [transit replaceFunctionAt:@"EntityEnemyHeart.prototype.kill" withGenericBlock:vibrate];
+    [transit replaceFunctionAt:@"EntityPlayer.prototype.kill" withGenericBlock:vibrate];
 }
 
 -(AVAudioPlayer*)loadSound:(NSString*)name {
@@ -116,11 +115,11 @@
     // window.setTimeout(XType.startGame, 1);
     __block BOOL firstCall = YES;
     __weak id _self = self;
-    [transit replaceFunctionAt:@"setTimeout" withGenericFunctionWithBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
+    [transit replaceFunctionAt:@"setTimeout" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope* scope) {
         if(firstCall)
             [_self setupTransit];
         firstCall = NO;
-        return [original callWithThisArg:scope.thisArg arguments:scope.arguments];
+        return [scope forwardToFunction:original];
     }];
 
     // load unmodified game from web

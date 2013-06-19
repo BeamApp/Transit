@@ -80,18 +80,19 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @end
 
-
 @interface TransitContext : TransitEvaluable
 
 +(TransitContext *)currentContext;
-+(TransitCallScope *)currentCallScope;
++(TransitFunctionCallScope *)currentCallScope;
 +(id)currentThisArg;
 +(NSArray*)currentArguments;
++(TransitFunction *)replacedFunctionForCurrentCall;
 
 -(TransitFunction*)functionWithBlock:(id)block;
 -(TransitFunction*)functionWithGenericBlock:(TransitGenericFunctionBlock)block;
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
--(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericFunctionWithBlock:(TransitGenericReplaceFunctionBlock)block;
+-(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericBlock:(TransitGenericReplaceFunctionBlock)block;
+-(TransitFunction*)replaceFunctionAt:(NSString *)path withBlock:(id)block;
 
 -(TransitFunction*)asyncFunctionWithGenericBlock:(TransitGenericVoidFunctionBlock)block;
 

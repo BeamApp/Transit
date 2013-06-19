@@ -494,8 +494,11 @@ TransitContext *_TransitContext_currentContext;
     return _TransitContext_currentContext;
 }
 
-+(TransitCallScope *)currentCallScope {
-    return self.currentContext.currentCallScope;
++(TransitFunctionCallScope *)currentCallScope {
+    TransitFunctionCallScope *scope = (TransitFunctionCallScope *) self.currentContext.currentCallScope;
+    if(scope && ![scope isKindOfClass:TransitFunctionCallScope.class])
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"currentCallScope is not a TransitFunctionCallScope: %@", scope] userInfo:nil];
+    return scope;
 }
 
 +(id)currentThisArg {
@@ -503,11 +506,13 @@ TransitContext *_TransitContext_currentContext;
 }
 
 +(NSArray*)currentArguments {
-    TransitCallScope *scope = self.currentCallScope;
-    if([scope isKindOfClass:TransitFunctionCallScope.class])
-        return [[(TransitFunctionCallScope*)scope arguments] copy];
-    else
-        return nil;
+    return self.currentCallScope.arguments;
+}
+
+TransitFunction *_TransitContext_originalFunctionForCurrentCall;
+
++ (TransitFunction *)replacedFunctionForCurrentCall {
+    return _TransitContext_originalFunctionForCurrentCall;
 }
 
 -(TransitContext*)context {
@@ -599,13 +604,19 @@ TransitContext *_TransitContext_currentContext;
     return func;
 }
 
--(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericFunctionWithBlock:(TransitGenericReplaceFunctionBlock)block {
+-(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericBlock:(TransitGenericReplaceFunctionBlock)block {
     TransitFunction *original = [self eval:path];
     if(!original)
         return nil;
     
     TransitFunction *function = [self functionWithGenericBlock:^id(TransitNativeFunctionCallScope *scope) {
-        return block(original, scope);
+        TransitFunction *oldOriginalFunctionForCurrentCall = _TransitContext_originalFunctionForCurrentCall;
+        @try {
+            _TransitContext_originalFunctionForCurrentCall = original;
+            return block(original, scope);
+        }@finally{
+            _TransitContext_originalFunctionForCurrentCall = oldOriginalFunctionForCurrentCall;
+        }
     }];
 
     [self eval:@"@ = @" values:@[path.transit_stringAsJSExpression, function]];
@@ -613,6 +624,13 @@ TransitContext *_TransitContext_currentContext;
     return function;
 }
 
+-(TransitFunction*)replaceFunctionAt:(NSString *)path withBlock:(id)block {
+    TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
+    TransitGenericReplaceFunctionBlock genericReplaceBlock = ^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
+        return genericBlock(callScope);
+    };
+    return [self replaceFunctionAt:path withGenericBlock:genericReplaceBlock];
+}
 
 -(void)retainNativeFunction:(TransitProxy*)proxy {
     NSParameterAssert(proxy.context == self);
