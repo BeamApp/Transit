@@ -10,6 +10,7 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+#import "CCWeakMockProxy.h"
 
 @interface TransitNativeFunctionTests : SenTestCase
 
@@ -18,7 +19,7 @@
 @implementation TransitNativeFunctionTests
 
 -(void)testWillCallBlock {
-    id mock = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
+    id mock = [CCWeakMockProxy mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
     TransitGenericFunctionBlock block = ^(TransitNativeFunctionCallScope *scope){
         return [scope forwardToDelegate:mock];
     };
@@ -115,7 +116,7 @@
 }
 
 -(void)testExplicitDispose {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context proxyId:@"someId"];
     
     // calls for the first time

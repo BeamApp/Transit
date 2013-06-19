@@ -10,6 +10,7 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+#import "CCWeakMockProxy.h"
 
 @interface TransitProxyTests : SenTestCase
 
@@ -122,7 +123,7 @@
 }
 
 -(void)testExplicitDispose {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:@"someId"];
     
     // calls for the first time
@@ -142,7 +143,7 @@
 }
 
 -(void)testImplicitDisposeOnDealloc {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
 
     [[context expect] releaseJSProxyWithId:@"fakeId"];
     [self createAndReleseProxyWithContext:context proxyId:@"fakeId"];
@@ -150,7 +151,7 @@
 }
 
 -(void)testNoJSReleaseIfNoProxyId {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context];
     
     STAssertNil(proxy.proxyId, @"proxy without id");
@@ -160,7 +161,7 @@
 }
 
 -(void)testJsRepresentationWithProxyId {
-    id context = [OCMockObject niceMockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy niceMockForClass:TransitContext.class];
     
     NSString* proxyId = @"someProxyId";
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:proxyId];
@@ -199,7 +200,7 @@
 }
 
 -(void)testJsRepresentationOfArrayWithProxies {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:@"someId"];
     
@@ -215,7 +216,7 @@
 }
 
 -(void)testJsRepresentationOfDictionaryWithProxies {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:@"someId"];
 
@@ -231,7 +232,7 @@
 }
 
 -(void)testJSRepresentationOfNestedDictionaryWithProxies {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:@"someId"];
     

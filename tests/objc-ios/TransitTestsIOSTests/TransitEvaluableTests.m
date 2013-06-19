@@ -10,6 +10,7 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+#import "CCWeakMockProxy.h"
 
 @interface TransitEvaluableTests : SenTestCase
 
@@ -19,7 +20,7 @@
 
 
 -(void)testDelegatesEvalToRootContext {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitEvaluable *evaluable = [[TransitEvaluable alloc] initWithContext:context];
 
     [[[context stub] andReturn:@"4"] eval:@"2+2" thisArg:evaluable values:@[] returnJSResult:YES];

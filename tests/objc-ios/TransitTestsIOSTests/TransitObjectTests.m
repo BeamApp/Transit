@@ -10,6 +10,7 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+#import "CCWeakMockProxy.h"
 
 @interface TransitObjectTests : SenTestCase
 
@@ -18,21 +19,21 @@
 @implementation TransitObjectTests
 
 -(void)testObjectForKeyNotSupported {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitObject *object = [TransitObject.alloc initWithContext:context];
 
     STAssertThrows([object objectForKey:@"someKey"], @"not supported by base class");
 }
 
 -(void)testCallMemberNotSupported {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitObject *object = [TransitObject.alloc initWithContext:context];
 
     STAssertThrows(([object callMember:@"someMember" arguments:@[@1, @2, @3]]), @"not supported by base class");
 }
 
 -(void)testContextCanBeCleared {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitObject *object = [TransitObject.alloc initWithContext:context];
 
     STAssertTrue(object.context == context, @"context correctly assigned");
@@ -41,7 +42,7 @@
 }
 
 -(void)testObjectForKey {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitObject *object = [TransitObject.alloc initWithContext:context];
 
     [[[context stub] andReturn:@"value"] eval:@"@[@]" val:object val:@"key"];
@@ -56,7 +57,7 @@
 }
 
 -(void)testIndexedSubscript {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitObject *object = [TransitObject.alloc initWithContext:context];
 
     [[[context stub] andReturn:@"value"] eval:@"@[@]" val:object val:@1];
@@ -71,7 +72,7 @@
 }
 
 -(void)testKeyedSubscript {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     id  object = [TransitObject.alloc initWithContext:context];
 
     [[[context stub] andReturn:@"value"] eval:@"@[@]" val:object val:@"key"];
@@ -86,7 +87,7 @@
 }
 
 -(void)testCallMember {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     id  object = [TransitObject.alloc initWithContext:context];
 
     NSArray* arguments = @[@1,@2,@3];

@@ -11,6 +11,7 @@
 #import "Transit+Private.h"
 #import "OCMock.h"
 #import "OCMockObject+Reset.h"
+#import "CCWeakMockProxy.h"
 
 @interface TransitJSFunctionTests : SenTestCase
 
@@ -20,7 +21,7 @@
 @implementation TransitJSFunctionTests
 
 -(void)testCallRetainedWithoutArguments {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWithContext:context proxyId:@"proxyId"];
     [[[context stub] andReturn:@"someJSRepresentation"] jsRepresentationForProxyWithId:@"proxyId"];
 
@@ -38,7 +39,7 @@
 }
 
 -(void)testCallWithoutArguments {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
     [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
@@ -49,7 +50,7 @@
 }
 
 -(void)testCallWithEmptyArguments {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
     [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
@@ -60,7 +61,7 @@
 }
 
 -(void)testShortcutCallWithNilArguments {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
     [[context expect] _eval:@"func()" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
@@ -71,7 +72,7 @@
 }
 
 -(void)testCallWithOneArgument {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
     [[context expect] _eval:@"func(1)" jsThisArg:@"null" collectedProxiesOnScope:[NSMutableOrderedSet orderedSet] returnJSResult:YES onGlobalScope:NO useAndRestoreCallScope:OCMOCK_ANY];
@@ -82,7 +83,7 @@
 }
 
 -(void)testShortcutCallWithTwoArguments {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
 
     [[context expect] currentCallScope];
@@ -93,7 +94,7 @@
 }
 
 -(void)testShortcutCallWithRetainedArguments {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitFunction *func = [[TransitJSFunction alloc] initWitContext:context jsRepresentation:@"func"];
     TransitProxy* p1 = [[TransitProxy alloc] initWithContext:context proxyId:@"p1"];
     TransitProxy* p2 = [[TransitProxy alloc] initWithContext:context proxyId:@"p2"];
@@ -112,7 +113,7 @@
 
 
 -(void)testCallWithThisAndArguments {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     
     id thisArg = @{@"one":@1};
     id arguments = @[@1,@"two", @YES];
@@ -127,7 +128,7 @@
 }
 
 -(void)testQueuedCallWithTwoArguments {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     [[[context stub] andReturn:@"transit.r('proxyId')"] jsRepresentationToResolveProxyWithId:@"proxyId"];
     [[[context stub] andReturn:@"__JSFUNC_proxyId"] jsRepresentationForProxyWithId:@"proxyId"];
     
@@ -146,7 +147,7 @@
 }
 
 -(void)testQueuedCallWithThisAndArgument {
-    id context = [OCMockObject mockForClass:TransitContext.class];
+    id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     [[[context stub] andReturn:@"transit.r('proxyId')"] jsRepresentationToResolveProxyWithId:@"proxyId"];
     [[[context stub] andReturn:@"__JSFUNC_proxyId"] jsRepresentationForProxyWithId:@"proxyId"];
     

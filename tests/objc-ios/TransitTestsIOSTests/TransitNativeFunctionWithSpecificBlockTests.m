@@ -10,6 +10,7 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+#import "CCWeakMockProxy.h"
 
 @interface TransitNativeFunctionWithSpecificBlockTests : SenTestCase
 
@@ -125,7 +126,8 @@
 
 -(void)testBoolReturnType {
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:^{return YES;}];
-    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil]);
+    TransitNativeFunctionCallScope *scope = [TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil];
+    id actualResult = genericBlock(scope);
     STAssertEqualObjects(actualResult, @YES, @"result");
 }
 
@@ -178,7 +180,7 @@
 
 
 -(void)testCallFromContext {
-    id mock = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
+    id mock = [CCWeakMockProxy mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
     id block = ^(int i, float f, BOOL b, NSString* s){
         STAssertEquals(i, (int)1, @"int");
         STAssertEquals(f, (float)2.5, @"float");

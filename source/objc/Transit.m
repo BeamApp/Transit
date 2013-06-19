@@ -61,6 +61,12 @@ typedef int TransitCTBlockDescriptionFlags;
 
 @end
 
+@interface NSInvocation (PrivateHack)
+- (void)invokeUsingIMP: (IMP)imp;
+@end
+
+
+
 @implementation TransitCTBlockDescription
 
 - (id)initWithBlock:(id)block
@@ -1302,7 +1308,14 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         // arg 0 of invocation is self and will be block
         for(NSUInteger i=0;i<MIN(sig.numberOfArguments-1, callScope.arguments.count);i++)
             [inv transit_setObject:callScope.arguments[i] forArgumentAtIndex:i + 1];
-        [inv invokeWithTarget:block];
+
+        // TODO: find a way to avoid private API
+        inv.target = block;
+        void* impl = ((__bridge struct TransitCTBlockLiteral *)block)->invoke;
+        [inv invokeUsingIMP:impl];
+
+        // does not work on iOS 5
+//        [inv invokeWithTarget:block];
         return inv.transit_returnValueAsObject;
     };
 }

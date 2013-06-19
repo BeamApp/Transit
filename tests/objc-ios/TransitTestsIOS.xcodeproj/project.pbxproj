@@ -39,6 +39,7 @@
 		CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */; };
 		F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B042BA5A1E209398767C6 /* TransitObjectTests.m */; };
 		F26B07A719E0E927520FD85F /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */; };
+		F26B0B7FD7F7008323507797 /* CCWeakMockProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */; };
 		F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */; };
 		F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */; };
 /* End PBXBuildFile section */
@@ -95,9 +96,11 @@
 		CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCMockObject+Reset.h"; sourceTree = "<group>"; };
 		CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCMockObject+Reset.m"; sourceTree = "<group>"; };
 		F26B042BA5A1E209398767C6 /* TransitObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitObjectTests.m; sourceTree = "<group>"; };
+		F26B0AA681B3507C406A4011 /* CCWeakMockProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCWeakMockProxy.h; sourceTree = "<group>"; };
 		F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitNativeFunctionWithSpecificBlockTests.m; sourceTree = "<group>"; };
 		F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCallScopeTests.m; sourceTree = "<group>"; };
 		F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitEvaluableTests.m; sourceTree = "<group>"; };
+		F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCWeakMockProxy.m; sourceTree = "<group>"; };
 		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -211,6 +214,8 @@
 				F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */,
 				F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */,
 				F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */,
+				F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */,
+				F26B0AA681B3507C406A4011 /* CCWeakMockProxy.h */,
 			);
 			path = TransitTestsIOSTests;
 			sourceTree = "<group>";
@@ -420,6 +425,7 @@
 				F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */,
 				F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */,
 				F26B07A719E0E927520FD85F /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */,
+				F26B0B7FD7F7008323507797 /* CCWeakMockProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +548,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
 				INFOPLIST_FILE = "TransitTestsIOSTests/TransitTestsIOSTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -561,6 +568,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
 				INFOPLIST_FILE = "TransitTestsIOSTests/TransitTestsIOSTests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;

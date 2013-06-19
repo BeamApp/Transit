@@ -179,7 +179,10 @@
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     TransitFunction *func = [self callContext:context];
     
-    int expectedMaxDepth = 63;
+    // iOS6 = 63
+    // iOS5 = 92
+    int expectedMaxDepth =
+        ([UIDevice.currentDevice.systemVersion compare:@"6" options:NSNumericSearch] == NSOrderedDescending) ? 63 : 92;
 
     context.handleRequestBlock = ^(TransitUIWebViewContext *ctx, NSURLRequest* req) {
         int arg = req.URL.resourceSpecifier.intValue;

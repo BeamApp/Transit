@@ -10,6 +10,7 @@
 #import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
+#import "CCWeakMockProxy.h"
 
 @interface TransitCallScopeTests : SenTestCase
 
@@ -18,24 +19,24 @@
 @implementation TransitCallScopeTests
 
 -(void)testFunctionCallScope {
-    TransitContext *context = [OCMockObject mockForClass:TransitContext .class];
-    TransitNativeFunction *function = [OCMockObject mockForClass:TransitNativeFunction.class];
+    TransitContext *context = [CCWeakMockProxy mockForClass:TransitContext .class];
+    TransitNativeFunction *function = [CCWeakMockProxy mockForClass:TransitNativeFunction.class];
     id thisArg = @"thisValue";
     NSArray *arguments = @[@1, @2, @3];
     TransitCallScope *parentScope = [TransitCallScope.alloc initWithContext:context];
     TransitFunctionCallScope *scope = [TransitFunctionCallScope.alloc initWithContext:context parentScope:parentScope thisArg:thisArg arguments:arguments expectsResult:NO function:function];
 
-    STAssertTrue(context == scope.context, @"context prop");
-    STAssertTrue(parentScope == scope.parentScope, @"parentScope");
-    STAssertTrue(function == scope.function, @"function");
-    STAssertTrue(thisArg == scope.thisArg, @"thisArg");
-    STAssertTrue(arguments == scope.arguments, @"arguments");
+    STAssertEquals(context, scope.context, @"context prop");
+    STAssertEquals(parentScope, scope.parentScope, @"parentScope");
+    STAssertEquals(function, scope.function, @"function");
+    STAssertEquals(thisArg, scope.thisArg, @"thisArg");
+    STAssertEquals(arguments, scope.arguments, @"arguments");
 }
 
 -(void)testForwardToFunction {
-    TransitContext *context = [OCMockObject mockForClass:TransitContext .class];
-    TransitNativeFunction *function = [OCMockObject mockForClass:TransitNativeFunction.class];
-    id function2 = [OCMockObject mockForClass:TransitFunction.class];
+    TransitContext *context = [CCWeakMockProxy mockForClass:TransitContext .class];
+    TransitNativeFunction *function = [CCWeakMockProxy mockForClass:TransitNativeFunction.class];
+    id function2 = [CCWeakMockProxy mockForClass:TransitFunction.class];
     id thisArg = @"thisValue";
     NSArray *arguments = @[@1, @2, @3];
     BOOL expectsResult = YES;
@@ -47,8 +48,8 @@
 }
 
 -(void)testForwardToDelegate {
-    TransitContext *context = [OCMockObject mockForClass:TransitContext .class];
-    TransitNativeFunction *function = [OCMockObject mockForClass:TransitNativeFunction.class];
+    TransitContext *context = [CCWeakMockProxy mockForClass:TransitContext .class];
+    TransitNativeFunction *function = [CCWeakMockProxy mockForClass:TransitNativeFunction.class];
     id delegate = [OCMockObject mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
     id thisArg = @"thisValue";
     NSArray *arguments = @[@1, @2, @3];
