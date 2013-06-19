@@ -63,6 +63,7 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 -(TransitNativeFunction*)retainedNativeFunctionWithId:(id)nativeProxyId;
 
 -(id)recursivelyReplaceMarkersWithProxies:(id)unproxified;
+- (id)recursivelyReplaceBlocksWithNativeFunctions:(id)value;
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId;
 -(NSString*)jsRepresentationToResolveProxyWithId:(NSString*)proxyId;

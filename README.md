@@ -10,13 +10,13 @@ It does not rely on special JavaScript runtimes such as JavaScript Core or Rhino
 
 Create a transit context from any (non-)visible webview
 
-```
+```objc
 TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:someViewView];
 ```
 
 Evaluate JavaScript with convenient placeholders `@` and implicit type conversion. So, calling
 
-```
+```objc
 NSLog(@"%@", [context eval:@" {result: @ + Math.max(23, @) } " val: @"foo" val: @42.5]);
 ```
 prints `NSDictionary: { result: "foo42.5" }` to the console.
@@ -24,17 +24,25 @@ prints `NSDictionary: { result: "foo42.5" }` to the console.
 
 You can store JavaScript functions in native variables and call them later or pass them back to JavaScript at any time. This code
 
-```
+```objc
 TransitFunction *mathMax = [context eval:@"Math.max"];
 NSLog(@"%@", [mathMax callWithArg:@3.5 arg:@6] );
 NSLog(@"%@", [context eval:@" @(3.5, @)" val: mathMax val:@6] );
 ```
 prints `6` in both cases.
 
+The same works the other way around, were you can pass blocks to JavaScript, e.g. to register or override global functions
+
+```objc
+context[@"log"] = ^(id object){
+  NSLog(@"%@", object);
+};
+[context eval:@"log('Hello, World!')"];
+```
 
 But the real strength of transit comes when you combine native code with JavaScript. Blocks or delegates can be called from JavaScript and can even receive JavaScript functions as arguments. This code snippet
 
-```
+```objc
 TransitFunction *applyFunc = [context functionWithBlock:^(TransitFunction* func, float a, int b){
   NSLog(@"arguments: func: %@, a: %f, b: %d", func, a, b);
   return [func callWithArg:@(a) arg:@(b)];

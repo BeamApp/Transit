@@ -409,6 +409,32 @@
     }
 }
 
+-(void)testRecursivelyReplaceBlocksWithNativeFunctions {
+    @autoreleasepool {
+        TransitContext *context = TransitContext.new;
+        //Class cls = NSClassFromString(@"NSBlock");
+        Class cls = TransitNativeFunction.class;
+
+        id func = [context recursivelyReplaceBlocksWithNativeFunctions:^{}];
+        STAssertTrue([func isKindOfClass:cls], @"single block)");
+
+        NSArray *array = [context recursivelyReplaceBlocksWithNativeFunctions:@[@"foo", ^{}]];
+        STAssertTrue([array[1] isKindOfClass:cls], @"array)");
+        STAssertEqualObjects(array[0], @"foo", @"keep non-funcs untouched");
+
+        NSDictionary *dict = [context recursivelyReplaceBlocksWithNativeFunctions:@{@"foo": ^{}, @"bar": @"baz"}];
+        STAssertTrue([dict[@"foo"] isKindOfClass:cls], @"array)");
+        STAssertEqualObjects(dict[@"bar"], @"baz", @"keep non-funcs untouched");
+
+        array = [context recursivelyReplaceBlocksWithNativeFunctions:@[@{@"foo": ^{}, @"bar": @"baz"}]];
+        dict = array[0];
+        STAssertTrue([dict[@"foo"] isKindOfClass:cls], @"array)");
+        STAssertEqualObjects(dict[@"bar"], @"baz", @"keep non-funcs untouched");
+
+        [context dispose];
+    }
+}
+
 
 
 @end

@@ -637,6 +637,27 @@ TransitContext *_TransitContext_currentContext;
     return unproxified;
 }
 
+- (id)recursivelyReplaceBlocksWithNativeFunctions:(id)value {
+    if([value isKindOfClass:NSDictionary.class]) {
+        NSMutableDictionary *dict = [value mutableCopy];
+        for (id key in dict.allKeys) {
+            dict[key] = [self recursivelyReplaceBlocksWithNativeFunctions:dict[key]];
+        }
+        return dict;
+    }
+    if([value isKindOfClass:NSArray.class]) {
+        NSMutableArray *array = [value mutableCopy];
+        for(NSUInteger i=0; i<array.count; i++)
+            array[i] = [self recursivelyReplaceBlocksWithNativeFunctions:array[i]];
+        return array;
+    }
+    if([value isKindOfClass:NSClassFromString(@"NSBlock")]) {
+        return [self functionWithBlock:value];
+    }
+
+    return value;
+}
+
 -(id)invokeNativeWithDescription:(NSDictionary*)description {
     id nativeProxyId = description[@"nativeId"];
     TransitFunction* func;
@@ -970,7 +991,8 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 - (id)_eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)values returnJSResult:(BOOL)returnJSResult useAndRestoreCallScope:(TransitCallScope *)callScope {
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
-    
+
+    values = [self recursivelyReplaceBlocksWithNativeFunctions:values];
     NSString* jsExpression = [TransitProxy jsRepresentationFromCode:jsCode arguments:values collectingProxiesOnScope:proxiesOnScope];
     id adjustedThisArg = thisArg == self ? nil : thisArg;
     NSString* jsAdjustedThisArg = adjustedThisArg ? [TransitProxy jsRepresentation:thisArg collectingProxiesOnScope:proxiesOnScope] : @"null";

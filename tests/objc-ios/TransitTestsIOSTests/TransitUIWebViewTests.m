@@ -231,6 +231,15 @@
     STAssertTrue(func == context[@"globalFunc"], @"keeps identity");
 }
 
+-(void)testConvenientSettingOfGlobalFunc {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    context[@"globalFunc"] = ^(int a, float b){
+        return a + b;
+    };
+    NSNumber* result = [context eval:@"globalFunc(1,2)"];
+    STAssertEquals(3, result.intValue, @"calls function");
+}
+
 -(void)testTransitProxifiesDocument {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     id proxified = [context eval:@"document"];
@@ -800,6 +809,11 @@
     TransitFunction *mathMax = [context eval:@"Math.max"];
     NSLog(@"%@", [mathMax callWithArg:@3.5 arg:@6] );
     NSLog(@"%@", [context eval:@" @(3.5, @)" val: mathMax val:@6] );
+
+    context[@"log"] = ^(id object){
+        NSLog(@"%@", object);
+    };
+    [context eval:@"log('Hello, World!')"];
 
     TransitFunction *applyFunc = [context functionWithBlock:^(TransitFunction* func, float a, NSDictionary *b){
         NSLog(@"arguments: func: %@, a: %f, b: %@", func, a, b);
