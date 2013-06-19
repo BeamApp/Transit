@@ -45,6 +45,12 @@
     [super tearDown];
 }
 
+-(void)testContextReturnsSelfAsContext {
+    TransitContext *context = [TransitContext new];
+    STAssertEqualObjects(context.context, context, @"equal");
+    STAssertTrue(context.context == context, @"identity");
+}
+
 -(void)testJsRepresentationForProxy {
     TransitContext *context = [TransitContext new];
     NSString* actual = [context jsRepresentationForProxyWithId:@"someId"];

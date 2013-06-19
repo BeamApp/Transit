@@ -149,12 +149,16 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
     _context = nil;
 }
 
+- (id)objectForImplicitVars {
+    return self;
+}
+
 - (id)objectForKey:(id)key{
-    return [self.context eval:@"@[@]" val:self val:key];
+    return [self.context eval:@"@[@]" val:self.objectForImplicitVars val:key];
 }
 
 - (void)setObject:(id)object forKey:(id < NSCopying >)key {
-    [self.context eval:@"@[@]=@" val:self val:key val:object];
+    [self.context eval:@"@[@]=@" val:self.objectForImplicitVars val:key val:object];
 }
 
 - (id)objectAtIndexedSubscript:(NSUInteger)idx {
@@ -424,6 +428,14 @@ TransitContext *_TransitContext_currentContext;
         return [[(TransitFunctionCallScope*)scope arguments] copy];
     else
         return nil;
+}
+
+-(TransitContext*)context {
+    return self;
+}
+
+-(id)objectForImplicitVars {
+    return @"window".stringAsJSExpression;
 }
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
@@ -1303,6 +1315,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         _arguments = [arguments copy];
     }
     return self;
+}
+
+- (id)objectForImplicitVars {
+    return self.thisArg;
 }
 
 - (id)forwardToFunction:(TransitFunction *)function {

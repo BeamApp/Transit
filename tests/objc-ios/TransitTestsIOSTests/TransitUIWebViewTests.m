@@ -86,6 +86,13 @@
     STAssertEqualObjects([context eval:@"this.a + @" thisArg:@{@"a" : @"foo"} val:@"bar"], @"foobar", @"this has been set");
 }
 
+-(void)testAssignmentOfGlobalObject {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    context[@"foo"] = @"bar";
+    id actual = context[@"foo"];
+    STAssertEqualObjects(actual, @"bar", @"result");
+}
+
 -(void)testInjectsCode {
     _TRANSIT_JS_RUNTIME_CODE = @"window.findme = true";
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
@@ -216,6 +223,14 @@
     STAssertEqualObjects(([NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, lastRetainId]), [proxified proxyId], @"detected proxy id");
 }
 
+-(void)testIdentityOfNativeFunction {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [context functionWithBlock:^{}];
+    [context eval:@"globalFunc = @" val:func];
+
+    STAssertTrue(func == context[@"globalFunc"], @"keeps identity");
+}
+
 -(void)testTransitProxifiesDocument {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
     id proxified = [context eval:@"document"];
@@ -240,6 +255,16 @@
     
     STAssertEqualObjects(@5, [context eval:@"transit.nativeInvokeTransferObject"], @"has been evaluated");
     STAssertEqualObjects(@5, result, @"correctly passes values");
+}
+
+-(void)testSubscriptInCallScope {
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+    TransitFunction *func = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        return callScope[@"field"];
+    }];
+
+    id result = [context eval:@"@.apply({field:'foo'},[])" val:func];
+    STAssertEqualObjects(result, @"foo", @"access to this on callscope subscript");
 }
 
 -(id)captureErrorMessageFromContext:(TransitContext*)context whenCallingFunction:(TransitFunction*)function {
