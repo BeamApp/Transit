@@ -45,8 +45,8 @@
 -(void)setupTransit {
     self.transit = [[TransitUIWebViewContext alloc] initWithUIWebView:self.webView];
     
-    TransitNativeFunction *asyncFunc = (TransitNativeFunction*)[self.transit asyncFunctionWithBlock:^(TransitNativeFunctionCallScope *callScope) {
-        NSString* data = callScope.arguments[0];
+    TransitNativeFunction *asyncFunc = (TransitNativeFunction*) [self.transit asyncFunctionWithGenericBlock:^(TransitNativeFunctionCallScope *callScope) {
+        NSString *data = callScope.arguments[0];
         TransitFunction *cb = callScope.arguments[1];
         
         // you could also use [cb callAsyncWithArg:data];

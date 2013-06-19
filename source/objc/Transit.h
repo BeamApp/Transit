@@ -93,7 +93,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 -(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericFunctionWithBlock:(TransitGenericReplaceFunctionBlock)block;
 
--(TransitFunction*)asyncFunctionWithBlock:(TransitGenericVoidFunctionBlock)block;
+-(TransitFunction*)asyncFunctionWithGenericBlock:(TransitGenericVoidFunctionBlock)block;
 
 @property(nonatomic, readonly) TransitCallScope* currentCallScope;
 

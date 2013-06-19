@@ -499,7 +499,7 @@ TransitContext *_TransitContext_currentContext;
     return [self functionWithGenericBlock:[TransitNativeFunction genericFunctionBlockWithBlock:block]];
 }
 
--(TransitFunction*)asyncFunctionWithBlock:(TransitGenericVoidFunctionBlock)block {
+-(TransitFunction*)asyncFunctionWithGenericBlock:(TransitGenericVoidFunctionBlock)block {
     TransitNativeFunction* func = (TransitNativeFunction*) [self functionWithGenericBlock:^id(TransitNativeFunctionCallScope *scope) {
         block(scope);
         return nil;
