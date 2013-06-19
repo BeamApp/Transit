@@ -744,6 +744,18 @@
     }
 }
 
+-(void)testCallScopeSingletonWithDirectCall {
+    @autoreleasepool {
+        TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
+        __block __weak TransitFunction *function = [context functionWithBlock:^(NSUInteger expectedCallLevel){
+            STAssertEquals(TransitContext.currentCallScope.level, expectedCallLevel, @"different callscope");
+            if(expectedCallLevel < 4)
+                [function callWithArg:@(expectedCallLevel+1)];
+        }];
+        [context eval:@"@(2)" val:function];
+    }
+}
+
 -(void)testCallStack {
     @autoreleasepool {
         TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
