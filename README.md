@@ -8,23 +8,61 @@ It does not rely on special JavaScript runtimes such as JavaScript Core or Rhino
 
 ## Example for Objective-C
 
-This example creates a transit context from a webview and binds a native callback to `jQuery(document).ready`.
+Create a transit context from any (non-)visible webview
 
 ```
-TransitContext* transit = [TransitContext transitContextWithWebView:someWebView];
+TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:someViewView];
+```
 
-TransitNativeFunc* callback = [transit functionWithBlock:^id(TransitNativeFunctionCallScope *scope) {
-    // callscope offers access to .this, .arguments, callstack and more...
-    NSLog(@"page %@ has been loaded", scope[@"title"]);
-	
-    // ...or use JS, again!
-    NSString* url = [scope eval:@"this.location.href"];
-    NSLog(@"page url: %@", url);
-    return nil;
+Evaluate JavaScript with convenient placeholders `@` and implicit type conversion. So, calling
+
+```
+NSLog(@"%@", [context eval:@" {result: @ + Math.max(23, @) } " val: @"foo" val: @42.5]);
+```
+prints `NSDictionary: { result: "foo42.5" }` to the console.
+
+
+You can store JavaScript functions in native variables and call them later or pass them back to JavaScript at any time. This code
+
+```
+TransitFunction *mathMax = [context eval:@"Math.max"];
+NSLog(@"%@", [mathMax callWithArg:@3.5 arg:@6] );
+NSLog(@"%@", [context eval:@" @(3.5, @)" val: mathMax val:@6] );
+```
+prints `6` in both cases.
+
+
+But the real strength of transit comes when you combine native code with JavaScript. Blocks or delegates can be called from JavaScript and can even receive JavaScript functions as arguments. This code snippet
+
+```
+TransitFunction *applyFunc = [context functionWithBlock:^(TransitFunction* func, float a, int b){
+  NSLog(@"arguments: func: %@, a: %f, b: %d", func, a, b);
+  return [func callWithArg:@(a) arg:@(b)];
 }];
 
-[transit eval:@"jQuery(document).ready(@)" val:callback];
+NSNumber* result = [context eval:@"@(Math.max, 3.5, @)" val:applyFunc val:@6];
+NSLog(@"result: %f", result.floatValue);
 ```
+
+outputs
+
+```
+arguments: func: <TransitJSFunction: 0x11b34fc0>, a: 3.500000, b: 6
+result: 6.0000
+```
+
+to the console.
+
+There's a lot more. e.g. `TransitContext.currentCallScope` gives you access to the `this` variable, all `arguments` and let's you even print the unified call stack from JavaScript and native functions:
+
+```
+002 TransitNativeFunctionCallScope(this=<TransitUIWebViewContext: 0x75250d0>(<TransitJSFunction:0x11b34fc0>, 3.5, {field = 6;})
+001 TransitEvalCallScope(this=<TransitUIWebViewContext: 0x75250d0>) @(Math.max, 3.5, {field:@}) -- values:(<TransitNativeFunction: 0x752ff00>, 6)
+
+```
+
+Read the [API documentation](http://cocoadocs.org/docsets/Transit/) for further details.
+
 
 ## Additional Information
 

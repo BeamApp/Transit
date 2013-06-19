@@ -763,4 +763,28 @@
     STAssertEqualObjects(result, longString, @"correctly returned");
 }
 
+-(void)testReadmeExample {
+    UIWebView *someViewView = [self webViewWithEmptyPage];
+
+    TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:someViewView];
+
+    NSLog(@"%@",
+            [context eval:@" {result: @ + Math.max(23, @) } " val: @"foo" val: @42.5]
+    );
+
+    TransitFunction *mathMax = [context eval:@"Math.max"];
+    NSLog(@"%@", [mathMax callWithArg:@3.5 arg:@6] );
+    NSLog(@"%@", [context eval:@" @(3.5, @)" val: mathMax val:@6] );
+
+    TransitFunction *applyFunc = [context functionWithBlock:^(TransitFunction* func, float a, NSDictionary *b){
+        NSLog(@"arguments: func: %@, a: %f, b: %@", func, a, b);
+        NSLog(@"%@", TransitContext.currentCallScope.callStackDescription);
+        return [func callWithArg:@(a) arg:b[@"field"]];
+    }];
+
+    NSNumber* result = [context eval:@"@(Math.max, 3.5, {field:@})" val:applyFunc val:@6];
+
+    NSLog(@"result: %f", result.floatValue);
+}
+
 @end
