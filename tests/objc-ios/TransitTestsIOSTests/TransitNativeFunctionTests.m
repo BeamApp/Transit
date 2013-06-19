@@ -38,8 +38,6 @@
 
 -(id)simpleContext {
     TransitContext *context = [[TransitContext alloc] init];
-//    id globalVar = @"transit".stringAsJSExpression;
-//    [[[(id)context stub] andReturn:globalVar] transitGlobalVarJSRepresentation];
     return context;
 }
 

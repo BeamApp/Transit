@@ -39,7 +39,6 @@
 		CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */; };
 		F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B042BA5A1E209398767C6 /* TransitObjectTests.m */; };
 		F26B07A719E0E927520FD85F /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */; };
-		F26B09D9E250003E6DFF698E /* CTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B024A41D0719A6DF71C67 /* CTBlockDescription.m */; };
 		F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */; };
 		F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */; };
 /* End PBXBuildFile section */
@@ -95,9 +94,7 @@
 		CBE29FD716C671F4004AED2B /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testPage.html; sourceTree = "<group>"; };
 		CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCMockObject+Reset.h"; sourceTree = "<group>"; };
 		CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCMockObject+Reset.m"; sourceTree = "<group>"; };
-		F26B024A41D0719A6DF71C67 /* CTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBlockDescription.m; sourceTree = "<group>"; };
 		F26B042BA5A1E209398767C6 /* TransitObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitObjectTests.m; sourceTree = "<group>"; };
-		F26B0BB4F1485F0334F23C8B /* CTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBlockDescription.h; sourceTree = "<group>"; };
 		F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitNativeFunctionWithSpecificBlockTests.m; sourceTree = "<group>"; };
 		F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCallScopeTests.m; sourceTree = "<group>"; };
 		F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitEvaluableTests.m; sourceTree = "<group>"; };
@@ -233,8 +230,6 @@
 				CB18EEFD16C549E50051CC7C /* Transit.h */,
 				CB18EF5516C590F80051CC7C /* Transit+Private.h */,
 				CB18EEFE16C549E50051CC7C /* Transit.m */,
-				F26B0BB4F1485F0334F23C8B /* CTBlockDescription.h */,
-				F26B024A41D0719A6DF71C67 /* CTBlockDescription.m */,
 			);
 			name = Transit;
 			path = ../../source/objc;
@@ -407,7 +402,6 @@
 				CB18EEFF16C549E50051CC7C /* Transit.m in Sources */,
 				CB27520116C7C3EA004E957A /* ForgeBenchmarkViewController.m in Sources */,
 				CB91AE9516C7FB7B00F46154 /* JasmineViewController.m in Sources */,
-				F26B09D9E250003E6DFF698E /* CTBlockDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

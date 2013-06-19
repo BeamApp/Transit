@@ -11,8 +11,8 @@
 
 @interface NSString(Transit)
 
--(NSString*)stringAsJSExpression;
--(BOOL) isJSExpression;
+-(NSString*)transit_stringAsJSExpression;
+-(BOOL)transit_isJSExpression;
 
 @end
 

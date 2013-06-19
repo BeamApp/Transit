@@ -130,8 +130,8 @@ typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,N
 
 @interface NSInvocation (TransitAdditions)
 
--(void)transitSetObject:(id)object forArgumentAtIndex:(NSUInteger)index;
--(id)transitReturnValueAsObject;
+-(void)transit_setObject:(id)object forArgumentAtIndex:(NSUInteger)index;
+-(id)transit_returnValueAsObject;
 
 @end
 

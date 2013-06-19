@@ -152,7 +152,7 @@
     
     TransitJSFunction *func = [[TransitJSFunction alloc] initWithContext:context proxyId:@"proxyId"];
     
-    TransitQueuedCallToJSFunction *queuedCall = [TransitQueuedCallToJSFunction.alloc initWithJSFunction:func thisArg:@"someObj".stringAsJSExpression arguments:@[@1]];
+    TransitQueuedCallToJSFunction *queuedCall = [TransitQueuedCallToJSFunction.alloc initWithJSFunction:func thisArg:@"someObj".transit_stringAsJSExpression arguments:@[@1]];
     
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     NSString* js = [queuedCall jsRepresentationOfCallCollectingProxiesOnScope:proxiesOnScope];

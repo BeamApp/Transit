@@ -11,16 +11,96 @@
 #import "SBJson.h"
 #import "SBJsonStreamWriterAccumulator.h"
 #import "SBJsonStreamWriterState.h"
-#import "CTBlockDescription.h"
 #import <objc/runtime.h>
-#import <Foundation/Foundation.h>
+
+
+#pragma mark - extract from CTObjectiveCRuntimeAdditions
+
+//
+//  TransitCTBlock* has originally been developed by
+//  Copyright (c) 2012 olettere
+//
+//  Find the code at
+//  https://github.com/ebf/CTObjectiveCRuntimeAdditions
+//
+
+struct TransitCTBlockLiteral {
+    void *isa; // initialized to &_NSConcreteStackBlock or &_NSConcreteGlobalBlock
+    int flags;
+    int reserved;
+    void (*invoke)(void *, ...);
+    struct block_descriptor {
+        unsigned long int reserved;	// NULL
+        unsigned long int size;         // sizeof(struct Block_literal_1)
+        // optional helper functions
+        void (*copy_helper)(void *dst, void *src);     // IFF (1<<25)
+        void (*dispose_helper)(void *src);             // IFF (1<<25)
+        // required ABI.2010.3.16
+        const char *signature;                         // IFF (1<<30)
+    } *descriptor;
+    // imported variables
+};
+
+enum {
+    TransitCTBlockDescriptionFlagsHasCopyDispose = (1 << 25),
+    TransitCTBlockDescriptionFlagsHasCtor = (1 << 26), // helpers have C++ code
+    TransitCTBlockDescriptionFlagsIsGlobal = (1 << 28),
+    TransitCTBlockDescriptionFlagsHasStret = (1 << 29), // IFF BLOCK_HAS_SIGNATURE
+    TransitCTBlockDescriptionFlagsHasSignature = (1 << 30)
+};
+typedef int TransitCTBlockDescriptionFlags;
+
+@interface TransitCTBlockDescription : NSObject
+
+@property (nonatomic, readonly) TransitCTBlockDescriptionFlags flags;
+@property (nonatomic, readonly) NSMethodSignature *blockSignature;
+@property (nonatomic, readonly) unsigned long int size;
+@property (nonatomic, readonly) id block;
+
+- (id)initWithBlock:(id)block;
+
+@end
+
+@implementation TransitCTBlockDescription
+
+- (id)initWithBlock:(id)block
+{
+    if (self = [super init]) {
+        _block = block;
+
+        struct TransitCTBlockLiteral *blockRef = (__bridge struct TransitCTBlockLiteral *)block;
+        _flags = blockRef->flags;
+        _size = blockRef->descriptor->size;
+
+        if (_flags & TransitCTBlockDescriptionFlagsHasSignature) {
+            void *signatureLocation = blockRef->descriptor;
+            signatureLocation += sizeof(unsigned long int);
+            signatureLocation += sizeof(unsigned long int);
+
+            if (_flags & TransitCTBlockDescriptionFlagsHasCopyDispose) {
+                signatureLocation += sizeof(void(*)(void *dst, void *src));
+                signatureLocation += sizeof(void (*)(void *src));
+            }
+
+            const char *signature = (*(const char **)signatureLocation);
+            _blockSignature = [NSMethodSignature signatureWithObjCTypes:signature];
+        }
+    }
+    return self;
+}
+
+@end
+
+#pragma mark - Transit Basics
+
+
 
 @implementation NSString(Transit)
 
 void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION;
 
--(NSString*)stringAsJSExpression {
-    if(self.isJSExpression)
+-(NSString*)transit_stringAsJSExpression {
+    if(self.transit_isJSExpression)
         return self;
     
     NSString *result = [NSString stringWithFormat:@"%@", self];
@@ -28,7 +108,7 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
     return result;
 }
 
--(BOOL) isJSExpression {
+-(BOOL)transit_isJSExpression {
     id assoc = objc_getAssociatedObject(self, _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION);
     return [assoc boolValue];
 }
@@ -36,12 +116,12 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
 @end
 
 id TransitNilSafe(id valueOrNil) {
-    return valueOrNil ? valueOrNil : @"undefined".stringAsJSExpression;
+    return valueOrNil ? valueOrNil : @"undefined".transit_stringAsJSExpression;
 }
 
 @implementation NSString(TransRegExp)
 
--(NSString*)stringByReplacingMatchesOf:(NSRegularExpression*)regex withTransformation:(NSString*(^)(NSString*element)) block {
+-(NSString*)transit_stringByReplacingMatchesOf:(NSRegularExpression *)regex withTransformation:(NSString*(^)(NSString*element)) block {
 
     NSMutableString* mutableString = [self mutableCopy];
     NSInteger offset = 0;
@@ -84,7 +164,7 @@ id TransitNilSafe(id valueOrNil) {
         return [self writeJSExpression:@"undefined"];
     
     // NSString marked as jsExpression -> jsEpxression
-    if([value isKindOfClass:NSString.class] && [value isJSExpression])
+    if([value isKindOfClass:NSString.class] && [value transit_isJSExpression])
         return [self writeJSExpression:value];
     
     // TransitProxy -> must provide own representation
@@ -124,7 +204,7 @@ id TransitNilSafe(id valueOrNil) {
 
 @end
 
-NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
+NSError*transit_errorWithCodeFromException(NSUInteger code, NSException* exception) {
     NSString *desc = exception.userInfo[NSLocalizedDescriptionKey] ? exception.userInfo[NSLocalizedDescriptionKey] : [NSString stringWithFormat:@"%@: %@", exception.name, exception.reason];
     return [NSError errorWithDomain:@"transit" code:code userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
@@ -220,7 +300,7 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 }
 
 -(id)initWitContext:(TransitContext *)context jsRepresentation:(NSString*)jsRepresentation {
-    return [self initWithContext:context value:jsRepresentation.stringAsJSExpression];
+    return [self initWithContext:context value:jsRepresentation.transit_stringAsJSExpression];
 }
 
 
@@ -290,7 +370,7 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
 }
 
 +(NSString*)jsRepresentationFromCode:(NSString *)jsCode arguments:(NSArray *)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
-    if(jsCode.isJSExpression) {
+    if(jsCode.transit_isJSExpression) {
         if(arguments.count > 0)
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"jsExpression cannot take any additional arguments" userInfo:nil];
         return jsCode;
@@ -303,14 +383,14 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
                                   error:&error];
     
     NSMutableArray* mutableArguments = [arguments mutableCopy];
-    jsCode = [jsCode stringByReplacingMatchesOf:regex withTransformation:^(NSString* match){
-        if(mutableArguments.count <=0)
+    jsCode = [jsCode transit_stringByReplacingMatchesOf:regex withTransformation:^(NSString *match) {
+        if (mutableArguments.count <= 0)
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too few arguments" userInfo:nil];
-        
+
         id elem = mutableArguments[0];
-        NSString* jsRepresentation = [self jsRepresentation:elem collectingProxiesOnScope:proxiesOnScope];
-        NSString* result =  [NSString stringWithFormat:@"%@", jsRepresentation];
-        
+        NSString *jsRepresentation = [self jsRepresentation:elem collectingProxiesOnScope:proxiesOnScope];
+        NSString *result = [NSString stringWithFormat:@"%@", jsRepresentation];
+
         [mutableArguments removeObjectAtIndex:0];
         return result;
     }];
@@ -318,7 +398,7 @@ NSError* errorWithCodeFromException(NSUInteger code, NSException* exception) {
     if(mutableArguments.count >0)
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too many arguments" userInfo:nil];
     
-    return jsCode.stringAsJSExpression;
+    return jsCode.transit_stringAsJSExpression;
 }
 
 @end
@@ -392,7 +472,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT++;
         _retainedNativeProxies = [NSMutableDictionary dictionary];
         _jsProxiesToBeReleased = [NSMutableArray array];
-        _transitGlobalVarJSRepresentation = @"transit".stringAsJSExpression;
+        _transitGlobalVarJSRepresentation = @"transit".transit_stringAsJSExpression;
         _queuedAsyncCallsToJSFunctions = [NSMutableArray array];
     }
     return self;
@@ -435,7 +515,7 @@ TransitContext *_TransitContext_currentContext;
 }
 
 -(id)objectForImplicitVars {
-    return @"window".stringAsJSExpression;
+    return @"window".transit_stringAsJSExpression;
 }
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
@@ -443,7 +523,7 @@ TransitContext *_TransitContext_currentContext;
 }
 
 -(NSString*)jsRepresentationToResolveProxyWithId:(NSString*)proxyId {
-    return [[NSString stringWithFormat:@"%@.r(\"%@\")", self.transitGlobalVarJSRepresentation, proxyId] stringAsJSExpression];
+    return [[NSString stringWithFormat:@"%@.r(\"%@\")", self.transitGlobalVarJSRepresentation, proxyId] transit_stringAsJSExpression];
 }
 
 -(NSString*)jsRepresentationForNativeFunctionWithId:(NSString*)proxyId {
@@ -468,7 +548,6 @@ TransitContext *_TransitContext_currentContext;
     [result appendString:@")"];
     
     return result;
-//    return [[NSString stringWithFormat:@"%@.%@(\"%@\")", self.transitGlobalVarJSRepresentation, (async?@"asyncNativeFunction":@"nativeFunction"), proxyId] stringAsJSExpression];
 }
 
 -(void)disposeAllNativeProxies {
@@ -529,7 +608,7 @@ TransitContext *_TransitContext_currentContext;
         return block(original, scope);
     }];
 
-    [self eval:@"@ = @" values:@[path.stringAsJSExpression, function]];
+    [self eval:@"@ = @" values:@[path.transit_stringAsJSExpression, function]];
     
     return function;
 }
@@ -664,7 +743,7 @@ TransitContext *_TransitContext_currentContext;
     @try {
         func = [self retainedNativeFunctionWithId:nativeProxyId];
     } @catch (NSException *exception) {
-        NSError* error = errorWithCodeFromException(5, exception);
+        NSError* error = transit_errorWithCodeFromException(5, exception);
         NSLog(@"TRANSIT-BRIDGE-ERROR: %@ (while called from JavaScript)", error.userInfo[NSLocalizedDescriptionKey]);
         return error;
     }
@@ -676,7 +755,7 @@ TransitContext *_TransitContext_currentContext;
         return result;
     }
     @catch (NSException *exception) {
-        NSError* error = errorWithCodeFromException(5, exception);
+        NSError* error = transit_errorWithCodeFromException(5, exception);
         NSLog(@"TRANSIT-NATIVE-ERROR: %@ (while called from javascript with arguments %@)", error.userInfo[NSLocalizedDescriptionKey], arguments);
         return error;
     }
@@ -1018,7 +1097,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
        transferObject = [self recursivelyReplaceMarkersWithProxies:parsedJSON];
     }
     @catch (NSException *exception) {
-        result = errorWithCodeFromException(3, exception);
+        result = transit_errorWithCodeFromException(3, exception);
         NSLog(@"TRANSIT-BRIDGE-ERROR: %@ (while called from JavaScript)", [result userInfo][NSLocalizedDescriptionKey]);
     }
     
@@ -1175,7 +1254,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     if(![block isKindOfClass:NSClassFromString(@"NSBlock")])
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"expected block but was %@", NSStringFromClass([block class])] userInfo:nil];
 
-    CTBlockDescription *desc = [CTBlockDescription.alloc initWithBlock:block];
+    TransitCTBlockDescription *desc = [TransitCTBlockDescription.alloc initWithBlock:block];
     NSMethodSignature *sig = desc.blockSignature;
 
     void(^assertValidType)(char const*, NSString*) = ^(char const* typeChar, NSString* suffix){
@@ -1191,15 +1270,15 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 + (TransitGenericFunctionBlock)genericFunctionBlockWithBlock:(id)block {
     [self assertSpecificBlockCanBeUsedAsTransitFunction:block];
     return ^id(TransitNativeFunctionCallScope *callScope) {
-        CTBlockDescription *desc = [CTBlockDescription.alloc initWithBlock:block];
+        TransitCTBlockDescription *desc = [TransitCTBlockDescription.alloc initWithBlock:block];
         NSMethodSignature *sig = desc.blockSignature;
         NSInvocation *inv = [NSInvocation invocationWithMethodSignature:sig];
 
         // arg 0 of invocation is self and will be block
         for(NSUInteger i=0;i<MIN(sig.numberOfArguments-1, callScope.arguments.count);i++)
-            [inv transitSetObject:callScope.arguments[i] forArgumentAtIndex:i+1];
+            [inv transit_setObject:callScope.arguments[i] forArgumentAtIndex:i + 1];
         [inv invokeWithTarget:block];
-        return inv.transitReturnValueAsObject;
+        return inv.transit_returnValueAsObject;
     };
 }
 
@@ -1368,7 +1447,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 
 @implementation NSInvocation (TransitAdditions)
 
--(void)transitSetObject:(id)object forArgumentAtIndex:(NSUInteger)index {
+-(void)transit_setObject:(id)object forArgumentAtIndex:(NSUInteger)index {
     const char* argType = [self.methodSignature getArgumentTypeAtIndex:index];
     switch(argType[0]) {
         //cislqCISLQfdBv@
@@ -1447,7 +1526,7 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
     }
 }
 
--(id)transitReturnValueAsObject {
+-(id)transit_returnValueAsObject {
     if(self.methodSignature.methodReturnLength<=0)
         return nil;
 
