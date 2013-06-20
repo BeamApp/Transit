@@ -29,24 +29,70 @@ id TransitNilSafe(id valueOrNil);
 @class TransitFunctionCallScope;
 @class TransitNativeFunctionCallScope;
 
+/// TransitObject builds the foundation for many objects represented in the JavaScript environment.
 @interface TransitObject : NSObject
 
+/// The TransitContext this object belongs to. On TransitContext this property points to itself.
 -(TransitContext*)context;
 
+/// @name Accessing Properties of Object
+
+/// Returns the value associated with a given key.
+/// @param key The key for which to return the corresponding value.
 - (id)objectForKey:(id)key;
+
+/// Adds or overrides a given key-value pair to the object.
+/// @param object The value for key.
+/// @param key The key for value.
 - (void)setObject:(id)object forKey:(id < NSCopying >)key;
+
+/// Adds or overrides a given key-value pair to the object.
+/// @param idx An index within the bounds of the array.
 - (id)objectAtIndexedSubscript:(NSUInteger)idx;
-- (void)setObject:(id)obj atIndexedSubscript:(NSInteger)idx;
+
+
+/// Replaces the object at the index with the new object, possibly adding the object.
+/// @param object The object with which to replace the object at index index in the array. This value can be nil.
+/// @param index The index of the object to be replaced.
+- (void)setObject:(id)object atIndexedSubscript:(NSInteger)index;
+
+/// Returns the value associated with a given key.
+/// @param key The key for which to return the corresponding value.
 - (id)objectForKeyedSubscript:(id)key;
-- (void)setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
 
-- (id)callMember:(NSString *)string;
-- (id)callMember:(NSString *)string arg:(id)arg0;
-- (id)callMember:(NSString *)string arg:(id)arg0 arg:(id)arg1;
-- (id)callMember:(NSString *)string arg:(id)arg0 arg:(id)arg1 arg:(id)arg2;
-- (id)callMember:(NSString *)string arguments:(NSArray *)arguments;
+/// Set or adds a given key-value pair to the object.
+/// @param object The value for key.
+/// @param key The key for value.
+ - (void)setObject:(id)object forKeyedSubscript:(id <NSCopying>)key;
 
+/// @name Calling Methods on Object
 
+/// Executes method on object
+/// @param key Name of method to be executed.
+- (id)callMember:(NSString *)key;
+
+/// Executes method on object
+/// @param key Name of method to be executed.
+/// @param arg0 First argument.
+- (id)callMember:(NSString *)key arg:(id)arg0;
+
+/// Executes method on object
+/// @param key Name of method to be executed.
+/// @param arg0 First argument.
+/// @param arg1 Second argument.
+- (id)callMember:(NSString *)key arg:(id)arg0 arg:(id)arg1;
+
+/// Executes method on object
+/// @param key Name of method to be executed.
+/// @param arg0 First argument.
+/// @param arg1 Second argument.
+/// @param arg2 Third argument.
+- (id)callMember:(NSString *)key arg:(id)arg0 arg:(id)arg1 arg:(id)arg2;
+
+/// Executes method on object
+/// @param key Name of method to be executed.
+/// @param arguments Array of arguments.
+- (id)callMember:(NSString *)key arguments:(NSArray *)arguments;
 
 @end
 

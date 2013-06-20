@@ -11,4 +11,4 @@ examples/objc-ios/build
 examples/objc-ios/dist
 keystore.db
 secure.properties
-documentation
+tests/objc-ios/documentation
