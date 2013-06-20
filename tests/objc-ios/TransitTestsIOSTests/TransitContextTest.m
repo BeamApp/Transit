@@ -425,6 +425,9 @@
 }
 
 -(void)testRecursivelyReplaceBlocksWithNativeFunctions {
+    if(!transit_specificBlocksSupported())
+        return;
+
     @autoreleasepool {
         TransitContext *context = TransitContext.new;
         //Class cls = NSClassFromString(@"NSBlock");

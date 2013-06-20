@@ -99,7 +99,17 @@ typedef int TransitCTBlockDescriptionFlags;
 
 #pragma mark - Transit Basics
 
+BOOL transit_iOS6OrLater() {
+    return ([UIDevice.currentDevice.systemVersion compare:@"6" options:NSNumericSearch] == NSOrderedDescending);
+}
 
+BOOL transit_specificBlocksSupported() {
+#if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
+    return transit_iOS6OrLater();
+#else
+    return NO;
+#endif
+}
 
 @implementation NSString(Transit)
 
@@ -1299,6 +1309,10 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 }
 
 + (TransitGenericFunctionBlock)genericFunctionBlockWithBlock:(id)block {
+    // additional runtime-check, in case TRANSIT_SPECIFIC_BLOCKS_SUPPORTED has been overriden (e.g. for unit tests)
+    if(!transit_specificBlocksSupported())
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"specific blocks are not supported on this version/platform" userInfo:nil];
+
     [self assertSpecificBlockCanBeUsedAsTransitFunction:block];
     return ^id(TransitNativeFunctionCallScope *callScope) {
         TransitCTBlockDescription *desc = [TransitCTBlockDescription.alloc initWithBlock:block];
@@ -1309,13 +1323,14 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
         for(NSUInteger i=0;i<MIN(sig.numberOfArguments-1, callScope.arguments.count);i++)
             [inv transit_setObject:callScope.arguments[i] forArgumentAtIndex:i + 1];
 
-        // TODO: find a way to avoid private API
-        inv.target = block;
-        void* impl = ((__bridge struct TransitCTBlockLiteral *)block)->invoke;
-        [inv invokeUsingIMP:impl];
+//        // this would work on iOS5 but is private API
+//        // should there be another pre compiler flag to allow them?
+//        inv.target = block;
+//        void* impl = ((__bridge struct TransitCTBlockLiteral *)block)->invoke;
+//        [inv invokeUsingIMP:impl];
 
         // does not work on iOS 5
-//        [inv invokeWithTarget:block];
+        [inv invokeWithTarget:block];
         return inv.transit_returnValueAsObject;
     };
 }

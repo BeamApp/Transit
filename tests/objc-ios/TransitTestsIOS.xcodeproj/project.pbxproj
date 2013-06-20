@@ -547,6 +547,11 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"TRANSIT_SPECIFIC_BLOCKS_SUPPORTED=1",
+				);
 				INFOPLIST_FILE = "TransitTestsIOSTests/TransitTestsIOSTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = NO;

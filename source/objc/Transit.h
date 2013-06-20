@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
+#define TRANSIT_SPECIFIC_BLOCKS_SUPPORTED (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0)
+#endif
+
+BOOL transit_iOS6OrLater();
+BOOL transit_specificBlocksSupported();
 
 @interface NSString(Transit)
 
@@ -82,13 +88,16 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @interface TransitContext : TransitEvaluable
 
--(TransitFunction*)functionWithBlock:(id)block;
 -(TransitFunction*)functionWithGenericBlock:(TransitGenericFunctionBlock)block;
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 -(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericBlock:(TransitGenericReplaceFunctionBlock)block;
--(TransitFunction*)replaceFunctionAt:(NSString *)path withBlock:(id)block;
-
 -(TransitFunction*)asyncFunctionWithGenericBlock:(TransitGenericVoidFunctionBlock)block;
+
+#if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
+-(TransitFunction*)functionWithBlock:(id)block NS_AVAILABLE_IOS(6_0);
+-(TransitFunction*)replaceFunctionAt:(NSString *)path withBlock:(id)block NS_AVAILABLE_IOS(6_0);
+#endif
+
 
 @property(nonatomic, readonly) TransitCallScope* currentCallScope;
 

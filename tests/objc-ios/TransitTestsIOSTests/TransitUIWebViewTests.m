@@ -181,8 +181,7 @@
     
     // iOS6 = 63
     // iOS5 = 92
-    int expectedMaxDepth =
-        ([UIDevice.currentDevice.systemVersion compare:@"6" options:NSNumericSearch] == NSOrderedDescending) ? 63 : 92;
+    int expectedMaxDepth = transit_iOS6OrLater() ? 63 : 92;
 
     context.handleRequestBlock = ^(TransitUIWebViewContext *ctx, NSURLRequest* req) {
         int arg = req.URL.resourceSpecifier.intValue;
@@ -228,7 +227,9 @@
 
 -(void)testIdentityOfNativeFunction {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    TransitFunction *func = [context functionWithBlock:^{}];
+    TransitFunction *func = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        return nil;
+    }];
     [context eval:@"globalFunc = @" val:func];
 
     STAssertTrue(func == context[@"globalFunc"], @"keeps identity");
@@ -236,9 +237,9 @@
 
 -(void)testConvenientSettingOfGlobalFunc {
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    context[@"globalFunc"] = ^(int a, float b){
-        return a + b;
-    };
+    context[@"globalFunc"] = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        return @([callScope.arguments[0] intValue] + [callScope.arguments[1] floatValue]);
+    }];
     NSNumber* result = [context eval:@"globalFunc(1,2)"];
     STAssertEquals(3, result.intValue, @"calls function");
 }
@@ -750,10 +751,12 @@
 -(void)testCallScopeSingletonWithDirectCall {
     @autoreleasepool {
         TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-        __block __weak TransitFunction *function = [context functionWithBlock:^(NSUInteger expectedCallLevel){
+        __block __weak TransitFunction *function = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+            NSUInteger expectedCallLevel = [callScope.arguments[0] intValue];
             STAssertEquals(TransitCurrentCall.callScope.level, expectedCallLevel, @"different callscope");
             if(expectedCallLevel < 4)
                 [function callWithArg:@(expectedCallLevel+1)];
+            return nil;
         }];
         [context eval:@"@(2)" val:function];
     }
@@ -815,7 +818,9 @@
 -(void)testReplaceGlobalFunctionGeneric {
     TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
 
-    context[@"globalFunc"] = ^{};
+    context[@"globalFunc"] = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        return nil;
+    }];
     TransitFunction *f = context[@"globalFunc"];
 
     __block TransitFunction* blockOriginal;
@@ -833,19 +838,24 @@
     STAssertEquals(blockOriginal, f, @"same function");
 }
 
--(void)testReplaceGlobalFunctionSpecific {
+-(void)testReplaceGlobalFunction {
     TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
 
-    context[@"globalFunc"] = ^{};
-    TransitFunction *f = context[@"globalFunc"];
+    context[@"globalFunc"] = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        return nil;
+    }];
 
+    TransitFunction *f = context[@"globalFunc"];
     __block TransitFunction* blockOriginal;
 
-    [context replaceFunctionAt:@"globalFunc" withBlock:^{
-        blockOriginal = TransitCurrentCall.replacedFunction;
-        TransitCallScope* callScope = TransitCurrentCall.callScope;
+    [context replaceFunctionAt:@"globalFunc" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
+        blockOriginal = original;
+        STAssertEquals(original, TransitCurrentCall.replacedFunction, @"original");
+        STAssertEquals(callScope, TransitCurrentCall.callScope, @"callscope");;
         STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
+        return nil;
     }];
+
     [context eval:@"globalFunc('foo')"];
     STAssertNil(TransitCurrentCall.replacedFunction, @"original");
 
@@ -855,17 +865,22 @@
 -(void)testReplaceGlobalFunctionTwice {
     TransitContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
 
-    context[@"globalFunc"] = ^{return 42;};
+    context[@"globalFunc"] = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
+        return @42;
+    }];
+
     __weak TransitFunction *f0 = context[@"globalFunc"];
-    __weak TransitFunction *f1 = [context replaceFunctionAt:@"globalFunc" withBlock:^{
+    __weak TransitFunction *f1 = [context replaceFunctionAt:@"globalFunc" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
         STAssertEquals(f0, TransitCurrentCall.replacedFunction, @"original");
-        TransitFunctionCallScope* callScope = TransitCurrentCall.callScope;
+        STAssertEquals(original, TransitCurrentCall.replacedFunction, @"original");
+        STAssertEquals(callScope, TransitCurrentCall.callScope, @"callscope");;
         STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope.parentScope) jsCode], @"correct scope");
         return [callScope forwardToFunction:TransitCurrentCall.replacedFunction];
     }];
-    [context replaceFunctionAt:@"globalFunc" withBlock:^{
+    [context replaceFunctionAt:@"globalFunc" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
         STAssertEquals(f1, TransitCurrentCall.replacedFunction, @"original");
-        TransitFunctionCallScope* callScope = TransitCurrentCall.callScope;
+        STAssertEquals(original, TransitCurrentCall.replacedFunction, @"original");
+        STAssertEquals(callScope, TransitCurrentCall.callScope, @"callscope");;
         STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
         return [callScope forwardToFunction:TransitCurrentCall.replacedFunction];
     }];
@@ -876,6 +891,9 @@
 
 
 -(void)testReadmeExample {
+    if(!transit_specificBlocksSupported())
+        return;
+
     UIWebView *someViewView = [self webViewWithEmptyPage];
 
 

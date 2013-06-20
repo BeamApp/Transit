@@ -18,6 +18,28 @@
 
 @implementation TransitNativeFunctionWithSpecificBlockTests
 
++ (NSArray *) testInvocations {
+    // hide these tests on iOS 5
+    // specific blocks are not supported over there
+    if(transit_iOS6OrLater()) {
+        return [super testInvocations];
+    } else {
+        // if specific blocks are not supported, test at least that calls will cause an intended exception
+        SEL selector = @selector(testGenericFunctionBlockWithBlockThrowsIfUnsupported);
+        NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[self instanceMethodSignatureForSelector:selector]];
+        inv.selector = selector;
+        return @[inv];
+    }
+}
+
+-(void)testGenericFunctionBlockWithBlockThrowsIfUnsupported {
+    if(transit_specificBlocksSupported()){
+        STAssertNoThrow(([TransitNativeFunction genericFunctionBlockWithBlock:^{}]), @"specfic block supported");
+    } else {
+        STAssertThrows(([TransitNativeFunction genericFunctionBlockWithBlock:^{}]), @"specfic block not supported");
+    }
+}
+
 -(void)testAssertFailsOnNonBlocks {
     STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:nil], @"nil");
     STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:NSNull.null], @"NSNull");
