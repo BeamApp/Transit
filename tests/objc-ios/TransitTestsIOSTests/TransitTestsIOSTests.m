@@ -21,7 +21,7 @@
     
     STAssertEqualObjects(value, actual, @"equal");
     STAssertTrue(value == actual, @"same");
-    STAssertFalse([actual transit_isJSExpression], @"plain string");
+    STAssertFalse(transit_isJSExpression(actual), @"plain string");
 }
 
 -(void)testTransitNilSafeOnNil {
@@ -30,7 +30,7 @@
     
     STAssertFalse(value == actual, @"same");
     STAssertEqualObjects(@"undefined", actual, @"string containined 'undefined'");
-    STAssertTrue([actual transit_isJSExpression], @"marked as jsExpression");
+    STAssertTrue(transit_isJSExpression(actual), @"marked as jsExpression");
 }
 
 

@@ -15,12 +15,8 @@
 BOOL transit_iOS6OrLater();
 BOOL transit_specificBlocksSupported();
 
-@interface NSString(Transit)
-
--(NSString*)transit_stringAsJSExpression;
--(BOOL)transit_isJSExpression;
-
-@end
+NSString* transit_stringAsJSExpression(NSString* string);
+BOOL transit_isJSExpression(NSString* string);
 
 id TransitNilSafe(id valueOrNil);
 

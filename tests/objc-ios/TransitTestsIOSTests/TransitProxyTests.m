@@ -59,14 +59,14 @@
 }
 
 -(void)testJSExpression {
-    NSString* varName = @"some.var".transit_stringAsJSExpression;
+    NSString* varName = transit_stringAsJSExpression(@"some.var");
     
-    STAssertTrue(varName.transit_isJSExpression, @"marked as JS Expression");
+    STAssertTrue(transit_isJSExpression(varName), @"marked as JS Expression");
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     STAssertEqualObjects(varName, [TransitProxy jsRepresentation:varName collectingProxiesOnScope:proxiesOnScope], @"js expression is its own jsRepresentation");
     
     varName = [@[varName] copy][0];
-    STAssertTrue(varName.transit_isJSExpression, @"marked as JS Expression");
+    STAssertTrue(transit_isJSExpression(varName), @"marked as JS Expression");
     STAssertEqualObjects(varName, [TransitProxy jsRepresentation:varName collectingProxiesOnScope:proxiesOnScope], @"js expression is its own jsRepresentation");
     
     STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies on scope");
@@ -74,20 +74,20 @@
 
 -(void)testMarkAsJSExpressionHasNoSideEffect {
     NSString* s1 = @"someString";
-    NSString* s2 = s1.transit_stringAsJSExpression;
+    NSString* s2 = transit_stringAsJSExpression(s1);
     
     STAssertTrue(s1 != s2, @"not same identity");
-    STAssertFalse(s1.transit_isJSExpression, @"s1 uneffected");
-    STAssertTrue(s2.transit_isJSExpression, @"s2 correctly marked");
+    STAssertFalse(transit_isJSExpression(s1), @"s1 uneffected");
+    STAssertTrue(transit_isJSExpression(s2), @"s2 correctly marked");
 }
 
 -(void)testJSExpressionWillNotBeUnderstoodAsString {
     NSString* realString = @"some.var";
-    NSString* varName = realString.transit_stringAsJSExpression;
+    NSString* varName = transit_stringAsJSExpression(realString);
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     
     NSString* actual = [TransitProxy jsRepresentationFromCode:@"@ = @" arguments:@[varName, realString] collectingProxiesOnScope:proxiesOnScope];
-    STAssertTrue(actual.transit_isJSExpression, @"marked as JS expression");
+    STAssertTrue(transit_isJSExpression(actual), @"marked as JS expression");
     STAssertEqualObjects(@"some.var = \"some.var\"", actual, @"replaced correctly");
     STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies on scope");
 }
@@ -204,7 +204,7 @@
     [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:@"someId"];
     
-    id values = @[@"string", @"expression".transit_stringAsJSExpression, proxy];
+    id values = @[@"string", transit_stringAsJSExpression(@"expression"), proxy];
 
     NSMutableOrderedSet* proxiesOnScope = NSMutableOrderedSet.orderedSet;
     id actual = [TransitProxy jsRepresentation:values collectingProxiesOnScope:proxiesOnScope];
@@ -220,7 +220,7 @@
     [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:@"someId"];
 
-    id values = @{@"a":@"string", @"b":@"expression".transit_stringAsJSExpression, @"c":proxy};
+    id values = @{@"a":@"string", @"b":transit_stringAsJSExpression(@"expression"), @"c":proxy};
     
     NSMutableOrderedSet* proxiesOnScope = NSMutableOrderedSet.orderedSet;
     id actual = [TransitProxy jsRepresentation:values collectingProxiesOnScope:proxiesOnScope];
@@ -236,7 +236,7 @@
     [[[context stub] andReturn:@"PROXY_REPRESENTATION" ] jsRepresentationForProxyWithId:@"someId"];
     TransitProxy *proxy = [[TransitProxy alloc] initWithContext:context proxyId:@"someId"];
     
-    id values = @{@"a":@"string", @"b":@[@"expression".transit_stringAsJSExpression, proxy], @"c":proxy};
+    id values = @{@"a":@"string", @"b":@[transit_stringAsJSExpression(@"expression"), proxy], @"c":proxy};
     
     NSMutableOrderedSet* proxiesOnScope = NSMutableOrderedSet.orderedSet;
     id actual = [TransitProxy jsRepresentation:values collectingProxiesOnScope:proxiesOnScope];

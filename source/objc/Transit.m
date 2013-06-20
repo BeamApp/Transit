@@ -111,12 +111,10 @@ BOOL transit_specificBlocksSupported() {
 #endif
 }
 
-@implementation NSString(Transit)
-
 void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION;
 
--(NSString*)transit_stringAsJSExpression {
-    if(self.transit_isJSExpression)
+NSString* transit_stringAsJSExpression(NSString* self) {
+    if(transit_isJSExpression(self))
         return self;
     
     NSString *result = [NSString stringWithFormat:@"%@", self];
@@ -124,15 +122,13 @@ void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSIO
     return result;
 }
 
--(BOOL)transit_isJSExpression {
+BOOL transit_isJSExpression(NSString* self) {
     id assoc = objc_getAssociatedObject(self, _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION);
     return [assoc boolValue];
 }
 
-@end
-
 id TransitNilSafe(id valueOrNil) {
-    return valueOrNil ? valueOrNil : @"undefined".transit_stringAsJSExpression;
+    return valueOrNil ? valueOrNil : transit_stringAsJSExpression(@"undefined");
 }
 
 @implementation NSString(TransRegExp)
@@ -180,7 +176,7 @@ id TransitNilSafe(id valueOrNil) {
         return [self writeJSExpression:@"undefined"];
     
     // NSString marked as jsExpression -> jsEpxression
-    if([value isKindOfClass:NSString.class] && [value transit_isJSExpression])
+    if([value isKindOfClass:NSString.class] && transit_isJSExpression(value))
         return [self writeJSExpression:value];
     
     // TransitProxy -> must provide own representation
@@ -316,7 +312,7 @@ NSError*transit_errorWithCodeFromException(NSUInteger code, NSException* excepti
 }
 
 -(id)initWitContext:(TransitContext *)context jsRepresentation:(NSString*)jsRepresentation {
-    return [self initWithContext:context value:jsRepresentation.transit_stringAsJSExpression];
+    return [self initWithContext:context value:transit_stringAsJSExpression(jsRepresentation)];
 }
 
 
@@ -386,7 +382,7 @@ NSError*transit_errorWithCodeFromException(NSUInteger code, NSException* excepti
 }
 
 +(NSString*)jsRepresentationFromCode:(NSString *)jsCode arguments:(NSArray *)arguments collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
-    if(jsCode.transit_isJSExpression) {
+    if(transit_isJSExpression(jsCode)) {
         if(arguments.count > 0)
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"jsExpression cannot take any additional arguments" userInfo:nil];
         return jsCode;
@@ -414,7 +410,7 @@ NSError*transit_errorWithCodeFromException(NSUInteger code, NSException* excepti
     if(mutableArguments.count >0)
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"too many arguments" userInfo:nil];
     
-    return jsCode.transit_stringAsJSExpression;
+    return transit_stringAsJSExpression(jsCode);
 }
 
 @end
@@ -522,7 +518,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT++;
         _retainedNativeProxies = [NSMutableDictionary dictionary];
         _jsProxiesToBeReleased = [NSMutableArray array];
-        _transitGlobalVarJSRepresentation = @"transit".transit_stringAsJSExpression;
+        _transitGlobalVarJSRepresentation = transit_stringAsJSExpression(@"transit");
         _queuedAsyncCallsToJSFunctions = [NSMutableArray array];
     }
     return self;
@@ -543,7 +539,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 -(id)objectForImplicitVars {
-    return @"window".transit_stringAsJSExpression;
+    return transit_stringAsJSExpression(@"window");
 }
 
 -(NSString*)jsRepresentationForProxyWithId:(NSString*)proxyId {
@@ -551,7 +547,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 -(NSString*)jsRepresentationToResolveProxyWithId:(NSString*)proxyId {
-    return [[NSString stringWithFormat:@"%@.r(\"%@\")", self.transitGlobalVarJSRepresentation, proxyId] transit_stringAsJSExpression];
+    return transit_stringAsJSExpression([NSString stringWithFormat:@"%@.r(\"%@\")", self.transitGlobalVarJSRepresentation, proxyId]);
 }
 
 -(NSString*)jsRepresentationForNativeFunctionWithId:(NSString*)proxyId {
@@ -642,7 +638,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
         }
     }];
 
-    [self eval:@"@ = @" values:@[path.transit_stringAsJSExpression, function]];
+    [self eval:@"@ = @" values:@[transit_stringAsJSExpression(path), function]];
     
     return function;
 }
