@@ -46,7 +46,6 @@
 		CB6711C516C98894004B1893 /* plasma-burst.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CB6711C216C98894004B1893 /* plasma-burst.mp3 */; };
 		CB6711C616C98894004B1893 /* xtype.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CB6711C316C98894004B1893 /* xtype.mp3 */; };
 		CB6711C816C98978004B1893 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB6711C716C98978004B1893 /* AVFoundation.framework */; };
-		CBCE188E16C9570900C2D816 /* Transit.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCE188D16C9570900C2D816 /* Transit.m */; };
 		F26B0243324CFADDF325187C /* ElizaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F26B0971D441B3C6207B3B6D /* ElizaViewController.xib */; };
 		F26B0302B70881633E440C00 /* ShareJSViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F26B0473D7128C544DE18AEC /* ShareJSViewController.xib */; };
 		F26B048F484A125D105A64B7 /* elizadata.js in Sources */ = {isa = PBXBuildFile; fileRef = F26B054C1BCDE60B42B0550C /* elizadata.js */; };
@@ -109,8 +108,6 @@
 		CB6711C216C98894004B1893 /* plasma-burst.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "plasma-burst.mp3"; sourceTree = "<group>"; };
 		CB6711C316C98894004B1893 /* xtype.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = xtype.mp3; sourceTree = "<group>"; };
 		CB6711C716C98978004B1893 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		CBCE188C16C9570900C2D816 /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
-		CBCE188D16C9570900C2D816 /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
 		F26B004AFDA53E08393BB2DE /* ElizaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElizaViewController.h; sourceTree = "<group>"; };
 		F26B0473D7128C544DE18AEC /* ShareJSViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShareJSViewController.xib; sourceTree = "<group>"; };
 		F26B04C7CD1DC2FD7467E1BE /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
@@ -227,7 +224,6 @@
 			isa = PBXGroup;
 			children = (
 				CB32E29216CFD0350094BCCE /* SGBubbleTableView */,
-				CBCE188A16C956E300C2D816 /* Transit */,
 				CB4AE16616C9557B0083D29F /* TransitExampleIOS */,
 				CB4AE15F16C9557A0083D29F /* Frameworks */,
 				CB4AE15D16C9557A0083D29F /* Products */,
@@ -294,16 +290,6 @@
 			);
 			name = Resources;
 			path = XType/Resources;
-			sourceTree = "<group>";
-		};
-		CBCE188A16C956E300C2D816 /* Transit */ = {
-			isa = PBXGroup;
-			children = (
-				CBCE188C16C9570900C2D816 /* Transit.h */,
-				CBCE188D16C9570900C2D816 /* Transit.m */,
-			);
-			name = Transit;
-			path = ../../source/objc;
 			sourceTree = "<group>";
 		};
 		F26B059D2BC9D2044E06AD5F /* ShareJS */ = {
@@ -433,7 +419,6 @@
 				CB4AE17116C9557B0083D29F /* AppDelegate.m in Sources */,
 				CB4AE17A16C9557B0083D29F /* MasterViewController.m in Sources */,
 				CB4AE17D16C9557B0083D29F /* XTypeViewController.m in Sources */,
-				CBCE188E16C9570900C2D816 /* Transit.m in Sources */,
 				CB32E2B816CFD0900094BCCE /* SGBubbleData.m in Sources */,
 				CB32E2B916CFD0900094BCCE /* SGBubbleTableView.m in Sources */,
 				CB32E2BA16CFD0900094BCCE /* SGBubbleTableViewContentCell.m in Sources */,
