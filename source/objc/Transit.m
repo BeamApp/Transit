@@ -293,6 +293,7 @@ NSError*transit_errorWithCodeFromException(NSUInteger code, NSException* excepti
 
 @implementation TransitProxy {
     NSString* _proxyId;
+    id _value;
 }
 
 -(id)initWithContext:(TransitContext *)context proxyId:(NSString*)proxyId {

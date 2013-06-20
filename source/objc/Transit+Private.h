@@ -28,6 +28,7 @@
 -(void)dispose;
 -(BOOL)disposed;
 
+@property(nonatomic, readonly) id value;
 @property(readonly) NSString* proxyId;
 
 -(void)clearContextAndProxyId;
@@ -125,6 +126,18 @@ typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,N
 - (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)thisArg expectsResult:(BOOL)expectsResult;
 
 - (NSString*)callStackFrameDescription;
+
+@end
+
+@interface TransitEvalCallScope (Private)
+
+- (id)initWithContext:(TransitContext *)parentScope parentScope:(TransitCallScope *)scope thisArg:(id)thisArg jsCode:(NSString *)jsCode values:(NSArray *)values expectsResult:(BOOL)expectsResult;
+
+@end
+
+@interface TransitFunctionCallScope (Private)
+
+- (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult function:(TransitFunction *)function;
 
 @end
 

@@ -37,83 +37,48 @@ id TransitNilSafe(id valueOrNil);
 
 /// @name Accessing Properties of Object
 
-/// Returns the value associated with a given key.
-/// @param key The key for which to return the corresponding value.
 - (id)objectForKey:(id)key;
-
-/// Adds or overrides a given key-value pair to the object.
-/// @param object The value for key.
-/// @param key The key for value.
 - (void)setObject:(id)object forKey:(id < NSCopying >)key;
-
-/// Adds or overrides a given key-value pair to the object.
-/// @param idx An index within the bounds of the array.
 - (id)objectAtIndexedSubscript:(NSUInteger)idx;
-
-
-/// Replaces the object at the index with the new object, possibly adding the object.
-/// @param object The object with which to replace the object at index index in the array. This value can be nil.
-/// @param index The index of the object to be replaced.
 - (void)setObject:(id)object atIndexedSubscript:(NSInteger)index;
-
-/// Returns the value associated with a given key.
-/// @param key The key for which to return the corresponding value.
 - (id)objectForKeyedSubscript:(id)key;
-
-/// Set or adds a given key-value pair to the object.
-/// @param object The value for key.
-/// @param key The key for value.
  - (void)setObject:(id)object forKeyedSubscript:(id <NSCopying>)key;
 
 /// @name Calling Methods on Object
 
-/// Executes method on object
-/// @param key Name of method to be executed.
 - (id)callMember:(NSString *)key;
-
-/// Executes method on object
-/// @param key Name of method to be executed.
-/// @param arg0 First argument.
 - (id)callMember:(NSString *)key arg:(id)arg0;
-
-/// Executes method on object
-/// @param key Name of method to be executed.
-/// @param arg0 First argument.
-/// @param arg1 Second argument.
 - (id)callMember:(NSString *)key arg:(id)arg0 arg:(id)arg1;
-
-/// Executes method on object
-/// @param key Name of method to be executed.
-/// @param arg0 First argument.
-/// @param arg1 Second argument.
-/// @param arg2 Third argument.
 - (id)callMember:(NSString *)key arg:(id)arg0 arg:(id)arg1 arg:(id)arg2;
-
-/// Executes method on object
-/// @param key Name of method to be executed.
-/// @param arguments Array of arguments.
 - (id)callMember:(NSString *)key arguments:(NSArray *)arguments;
 
 @end
 
+/// Representation of complex JavaScript objects such as DOM elements.
 @interface TransitProxy : TransitObject
-
-@property(nonatomic, readonly) id value;
-
 @end
 
 typedef id (^TransitGenericFunctionBlock)(TransitNativeFunctionCallScope *callScope);
 typedef void (^TransitGenericVoidFunctionBlock)(TransitNativeFunctionCallScope *callScope);
 typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, TransitNativeFunctionCallScope *callScope);
 
+/// Protocol to provide native implementations for [TransitContext functionWithDelegate:]
 @protocol TransitFunctionBodyProtocol <NSObject>
+
+/// Called [TransitFunction call].
+/// @param function Reference to TransitFunction this is the implementation for.
+/// @param thisArg JavaScript's this argument.
+/// @param arguments Array if arguments passed to the function.
+/// @param expectsResult YES, if call expects to return a result. Can be NO on async calls.
 - (id)callWithFunction:(TransitFunction *)function thisArg:(id)thisArg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult;
 @end
 
+/// Baseclass on anything you can evaluate JavaScript on.
 @interface TransitEvaluable : TransitObject
 
+/// Various convenience methods.
+/// @param jsCode String with actual JavaScript code.
 -(id)eval:(NSString*)jsCode;
-
 -(id)eval:(NSString *)jsCode val:(id)val0;
 -(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1;
 -(id)eval:(NSString *)jsCode val:(id)val0 val:(id)val1 val:(id)val2;
@@ -124,13 +89,22 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg val:(id)val0 val:(id)val1;
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray*)values;
 
+/// Evaluates Javascript in the context of this object.
+/// @param jsCode String with actual JavaScript code.
+/// @param thisArg Explicit reference to JavaScript this if not nil. Other convenience methods will pass nil.
+/// @param values Array of arguments.
+/// @param returnJSResult YES, if result expected. Passing NO can increase performance. Other convenience methods will pass YES.
 -(id)eval:(NSString *)jsCode thisArg:(id)thisArg values:(NSArray *)values returnJSResult:(BOOL)returnJSResult;
 
 @end
 
+/// Represents JavaScript environment.
 @interface TransitContext : TransitEvaluable
 
 -(TransitFunction*)functionWithGenericBlock:(TransitGenericFunctionBlock)block;
+
+/// Creates a new TransitNativeFunction based on a protocol.
+/// @param delegate Method implementation.
 -(TransitFunction*)functionWithDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 -(TransitFunction*)replaceFunctionAt:(NSString *)path withGenericBlock:(TransitGenericReplaceFunctionBlock)block;
 -(TransitFunction*)asyncFunctionWithGenericBlock:(TransitGenericVoidFunctionBlock)block;
@@ -152,6 +126,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @end
 
+/// Context to expose JavaScript environment of existing webview.
 @interface TransitUIWebViewContext : TransitContext<UIWebViewDelegate>
 
 +(id)contextWithUIWebView:(UIWebView*)webView;
@@ -162,8 +137,10 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @end
 
+/// Super type for native and JavaScript functions to provide a uniform interface.
 @interface TransitFunction : TransitProxy
 
+/// Calls method without arguments.
 -(id)call;
 -(id)callWithArg:(id)arg0;
 -(id)callWithArg:(id)arg0 arg:(id)arg1;
@@ -186,23 +163,31 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @end
 
+/// Function that represents native implementation.
 @interface TransitNativeFunction : TransitFunction
 
+/// Call dispose to explicitly release native function.
 -(void)dispose;
 
+/// TRUE, if calls can be executed aynchronous. Can increase performance.
 @property(nonatomic, assign) BOOL async;
+
+/// TRUE, if this arg is not needed. Can increase performance.
 @property(nonatomic, assign) BOOL noThis;
 
+/// Block that represents native implementation. Will always be a block, even if created with [TransitContext functionWithDelegate:].
 @property(readonly) TransitGenericFunctionBlock block;
 
 @end
 
 
+/// Function that represents JavaScript implementation.
 @interface TransitJSFunction : TransitFunction
 
 @end
 
 
+/// Singleton to access state for current call to TransitNativeFunction.
 @interface TransitCurrentCall : NSObject
 
 +(TransitContext *)context;
@@ -215,6 +200,8 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @end
 
+/// State for the current call of a TransitNativeFunction
+// @see TransitCurrentCall
 @interface TransitCallScope : TransitEvaluable
 
 @property (nonatomic, readonly) TransitCallScope *parentScope;
@@ -226,32 +213,38 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @end
 
+/// Created when calling any [TransitEvaluable eval:].
 @interface TransitEvalCallScope : TransitCallScope
 
 @property (nonatomic, readonly) NSString* jsCode;
 @property (nonatomic, readonly) NSArray* values;
 
-- (id)initWithContext:(TransitContext *)parentScope parentScope:(TransitCallScope *)scope thisArg:(id)thisArg jsCode:(NSString *)jsCode values:(NSArray *)values expectsResult:(BOOL)expectsResult;
 @end
 
+/// Implicitly created on asynchrounous call.
 @interface TransitAsyncCallScope : TransitCallScope
 @end
 
+/// Super type of native and JavaScript function calls. Created whenever a function is called from native code or JavaScript.
 @interface TransitFunctionCallScope : TransitCallScope
 
 @property (nonatomic, readonly) TransitFunction *function;
 @property (nonatomic, readonly) NSArray* arguments;
 
-- (id)initWithContext:(TransitContext *)context parentScope:(TransitCallScope *)parentScope thisArg:(id)arg arguments:(NSArray *)arguments expectsResult:(BOOL)expectsResult function:(TransitFunction *)function;
-
+/// Forwards current call to another TransitFunction. Preservers all arguments and thisArg.
+/// @param function To be called.
+/// @returns Result of called TransitFunction.
 -(id)forwardToFunction:(TransitFunction *)function;
+
 -(id)forwardToDelegate:(id<TransitFunctionBodyProtocol>)delegate;
 
 @end
 
+/// Created when calling a TransitJSFunction function from native code or JavaScript.
 @interface TransitJSFunctionCallScope : TransitFunctionCallScope
 @end
 
+/// Created when calling a TransitNativeFunction function from native code or JavaScript.
 @interface TransitNativeFunctionCallScope : TransitFunctionCallScope
 
 @end
