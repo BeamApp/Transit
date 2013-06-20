@@ -133,6 +133,7 @@
 		CB18EEB816C549050051CC7C = {
 			isa = PBXGroup;
 			children = (
+				CBA19B6317733B8B00FEFCE2 /* source */,
 				CB91AE8F16C7FB5100F46154 /* jasmine */,
 				CB2751F516C7C304004E957A /* Resource */,
 				CB18EEFC16C549970051CC7C /* Transit */,
@@ -249,6 +250,21 @@
 			path = TransitTestsIOS/Resources;
 			sourceTree = "<group>";
 		};
+		CBA19B6317733B8B00FEFCE2 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				CBA19B6417733B9100FEFCE2 /* objc */,
+			);
+			name = source;
+			sourceTree = "<group>";
+		};
+		CBA19B6417733B9100FEFCE2 /* objc */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = objc;
+			sourceTree = "<group>";
+		};
 		CBE29FD516C671DD004AED2B /* TestResources */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +274,23 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		CBA19B5F177333A800FEFCE2 /* transit */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "${PROJECT_DIR}/../../scripts/build-appledoc.sh ${PROJECT_DIR}";
+			buildConfigurationList = CBA19B62177333A800FEFCE2 /* Build configuration list for PBXLegacyTarget "transit" */;
+			buildPhases = (
+			);
+			buildToolPath = /bin/sh;
+			buildWorkingDirectory = "";
+			dependencies = (
+			);
+			name = transit;
+			passBuildSettingsInEnvironment = 1;
+			productName = transit;
+		};
+/* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
 		CB18EEC216C549050051CC7C /* TransitTestsIOS */ = {
@@ -321,6 +354,7 @@
 			targets = (
 				CB18EEC216C549050051CC7C /* TransitTestsIOS */,
 				CB18EEE316C549050051CC7C /* TransitTestsIOSTests */,
+				CBA19B5F177333A800FEFCE2 /* transit */,
 			);
 		};
 /* End PBXProject section */
@@ -580,6 +614,44 @@
 			};
 			name = Release;
 		};
+		CBA19B60177333A800FEFCE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CBA19B61177333A800FEFCE2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -609,6 +681,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		CBA19B62177333A800FEFCE2 /* Build configuration list for PBXLegacyTarget "transit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBA19B60177333A800FEFCE2 /* Debug */,
+				CBA19B61177333A800FEFCE2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
