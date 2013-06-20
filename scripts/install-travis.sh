@@ -12,6 +12,7 @@ brew install phantomjs
 which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
 
 brew install xctool
+brew install appledoc
 
 # android build currently not supported on travis => skip installation
 #
