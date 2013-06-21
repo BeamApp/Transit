@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'TransitTestsOSX' target in the 'TransitTestsOSX' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
