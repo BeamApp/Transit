@@ -104,16 +104,6 @@ extern NSUInteger _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT;
 
 @end
 
-typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,NSURLRequest*);
-@interface TransitUIWebViewContext(Private)
-
--(void)doInvokeNative;
-
-@property(copy) TransitUIWebViewContextRequestHandler handleRequestBlock;
-@property(assign) BOOL proxifyEval;
-
-@end
-
 @interface TransitQueuedCallToJSFunction : NSObject<TransitEvaluator>
 
 -(id)initWithJSFunction:(TransitJSFunction*)jsFunc thisArg:(id)thisArg arguments:(NSArray*)arguments;
@@ -153,3 +143,20 @@ extern NSString* _TRANSIT_MARKER_PREFIX_JS_FUNCTION_;
 extern NSString* _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_;
 extern NSString* _TRANSIT_MARKER_GLOBAL_OBJECT;
 extern NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD;
+
+
+#pragma mark - iOS-specific code
+
+#if TARGET_OS_IPHONE
+
+typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,NSURLRequest*);
+@interface TransitUIWebViewContext(Private)
+
+-(void)doInvokeNative;
+
+@property(copy) TransitUIWebViewContextRequestHandler handleRequestBlock;
+@property(assign) BOOL proxifyEval;
+
+@end
+
+#endif

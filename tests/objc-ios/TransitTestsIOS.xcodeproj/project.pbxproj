@@ -79,11 +79,11 @@
 		CB18EEFD16C549E50051CC7C /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
 		CB18EEFE16C549E50051CC7C /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
 		CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitUIWebViewTests.m; sourceTree = "<group>"; };
-		CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitNativeFunctionTests.m; sourceTree = "<group>"; };
-		CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitProxyTests.m; sourceTree = "<group>"; };
+		CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitNativeFunctionTests.m; path = "../../objc-general/TransitNativeFunctionTests.m"; sourceTree = "<group>"; };
+		CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitProxyTests.m; path = "../../objc-general/TransitProxyTests.m"; sourceTree = "<group>"; };
 		CB18EF5516C590F80051CC7C /* Transit+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Transit+Private.h"; sourceTree = "<group>"; };
-		CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitJSFunctionTests.m; sourceTree = "<group>"; };
-		CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitContextTest.m; sourceTree = "<group>"; };
+		CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitJSFunctionTests.m; path = "../../objc-general/TransitJSFunctionTests.m"; sourceTree = "<group>"; };
+		CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitContextTest.m; path = "../../objc-general/TransitContextTest.m"; sourceTree = "<group>"; };
 		CB2751F716C7C364004E957A /* forge_benchmark.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = forge_benchmark.html; sourceTree = "<group>"; };
 		CB2751FE16C7C3EA004E957A /* ForgeBenchmarkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgeBenchmarkViewController.h; sourceTree = "<group>"; };
 		CB2751FF16C7C3EA004E957A /* ForgeBenchmarkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgeBenchmarkViewController.m; sourceTree = "<group>"; };
@@ -93,14 +93,14 @@
 		CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JasmineViewController.m; sourceTree = "<group>"; };
 		CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JasmineViewController.xib; sourceTree = "<group>"; };
 		CBE29FD716C671F4004AED2B /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testPage.html; sourceTree = "<group>"; };
-		CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCMockObject+Reset.h"; sourceTree = "<group>"; };
-		CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCMockObject+Reset.m"; sourceTree = "<group>"; };
-		F26B042BA5A1E209398767C6 /* TransitObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitObjectTests.m; sourceTree = "<group>"; };
-		F26B0AA681B3507C406A4011 /* CCWeakMockProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCWeakMockProxy.h; sourceTree = "<group>"; };
-		F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitNativeFunctionWithSpecificBlockTests.m; sourceTree = "<group>"; };
-		F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCallScopeTests.m; sourceTree = "<group>"; };
-		F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitEvaluableTests.m; sourceTree = "<group>"; };
-		F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCWeakMockProxy.m; sourceTree = "<group>"; };
+		CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "OCMockObject+Reset.h"; path = "../../objc-general/OCMockObject+Reset.h"; sourceTree = "<group>"; };
+		CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OCMockObject+Reset.m"; path = "../../objc-general/OCMockObject+Reset.m"; sourceTree = "<group>"; };
+		F26B042BA5A1E209398767C6 /* TransitObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitObjectTests.m; path = "../../objc-general/TransitObjectTests.m"; sourceTree = "<group>"; };
+		F26B0AA681B3507C406A4011 /* CCWeakMockProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCWeakMockProxy.h; path = "../../objc-general/CCWeakMockProxy.h"; sourceTree = "<group>"; };
+		F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitNativeFunctionWithSpecificBlockTests.m; path = "../../objc-general/TransitNativeFunctionWithSpecificBlockTests.m"; sourceTree = "<group>"; };
+		F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitCallScopeTests.m; path = "../../objc-general/TransitCallScopeTests.m"; sourceTree = "<group>"; };
+		F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitEvaluableTests.m; path = "../../objc-general/TransitEvaluableTests.m"; sourceTree = "<group>"; };
+		F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCWeakMockProxy.m; path = "../../objc-general/CCWeakMockProxy.m"; sourceTree = "<group>"; };
 		F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsIOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -133,7 +133,6 @@
 		CB18EEB816C549050051CC7C = {
 			isa = PBXGroup;
 			children = (
-				CBA19B6317733B8B00FEFCE2 /* source */,
 				CB91AE8F16C7FB5100F46154 /* jasmine */,
 				CB2751F516C7C304004E957A /* Resource */,
 				CB18EEFC16C549970051CC7C /* Transit */,
@@ -248,21 +247,6 @@
 			);
 			name = Resource;
 			path = TransitTestsIOS/Resources;
-			sourceTree = "<group>";
-		};
-		CBA19B6317733B8B00FEFCE2 /* source */ = {
-			isa = PBXGroup;
-			children = (
-				CBA19B6417733B9100FEFCE2 /* objc */,
-			);
-			name = source;
-			sourceTree = "<group>";
-		};
-		CBA19B6417733B9100FEFCE2 /* objc */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = objc;
 			sourceTree = "<group>";
 		};
 		CBE29FD516C671DD004AED2B /* TestResources */ = {
@@ -689,6 +673,7 @@
 				CBA19B61177333A800FEFCE2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #ifndef TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
-#define TRANSIT_SPECIFIC_BLOCKS_SUPPORTED (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0)
+#define TRANSIT_SPECIFIC_BLOCKS_SUPPORTED (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0 || __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7)
 #endif
 
 BOOL transit_iOS6OrLater();
@@ -110,8 +110,8 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 -(TransitFunction*)asyncFunctionWithGenericBlock:(TransitGenericVoidFunctionBlock)block;
 
 #if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
--(TransitFunction*)functionWithBlock:(id)block NS_AVAILABLE_IOS(6_0);
--(TransitFunction*)replaceFunctionAt:(NSString *)path withBlock:(id)block NS_AVAILABLE_IOS(6_0);
+-(TransitFunction*)functionWithBlock:(id)block NS_AVAILABLE(10_7, 6_0);
+-(TransitFunction*)replaceFunctionAt:(NSString *)path withBlock:(id)block NS_AVAILABLE(10_7, 6_0);
 #endif
 
 
@@ -123,17 +123,6 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 - (void)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error;
 - (void)evalOnGlobalScope:(NSString *)string;
-
-@end
-
-/// Context to expose JavaScript environment of existing webview.
-@interface TransitUIWebViewContext : TransitContext<UIWebViewDelegate>
-
-+(id)contextWithUIWebView:(UIWebView*)webView;
-
--(id)initWithUIWebView:(UIWebView*)webView;
-
-@property(readonly) UIWebView* webView;
 
 @end
 
@@ -248,3 +237,21 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 @interface TransitNativeFunctionCallScope : TransitFunctionCallScope
 
 @end
+
+#pragma mark - iOS-specific code
+
+#if TARGET_OS_IPHONE
+
+/// Context to expose JavaScript environment of existing webview.
+@interface TransitUIWebViewContext : TransitContext<UIWebViewDelegate>
+
++(id)contextWithUIWebView:(UIWebView*)webView;
+
+-(id)initWithUIWebView:(UIWebView*)webView;
+
+@property(readonly) UIWebView* webView;
+
+@end
+
+#endif
+

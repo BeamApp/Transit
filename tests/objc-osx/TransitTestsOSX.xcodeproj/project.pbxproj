@@ -1,1058 +1,606 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>archiveVersion</key>
-	<string>1</string>
-	<key>classes</key>
-	<dict/>
-	<key>objectVersion</key>
-	<string>46</string>
-	<key>objects</key>
-	<dict>
-		<key>2EE02D29005C4EB69421F8EB</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>name</key>
-			<string>Check Pods Manifest.lock</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string>diff "${PODS_ROOT}/../Podfile.lock" "${PODS_ROOT}/Manifest.lock" &gt; /dev/null
-if [[ $? != 0 ]] ; then
-    cat &lt;&lt; EOM
-error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.
-EOM
-    exit 1
-fi
-</string>
-			<key>showEnvVarsInLog</key>
-			<string>1</string>
-		</dict>
-		<key>43AA1EFFE5B44CB481EA58CC</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>archive.ar</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>name</key>
-			<string>libPods-TransitTestsOSXTests.a</string>
-			<key>path</key>
-			<string>libPods-TransitTestsOSXTests.a</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>748EE20FD0064D519701499A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>43AA1EFFE5B44CB481EA58CC</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict/>
-		</dict>
-		<key>8D9E001DA1AC4A518F97578F</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.xcconfig</string>
-			<key>name</key>
-			<string>Pods-TransitTestsOSXTests.xcconfig</string>
-			<key>path</key>
-			<string>Pods/Pods-TransitTestsOSXTests.xcconfig</string>
-			<key>sourceTree</key>
-			<string>SOURCE_ROOT</string>
-		</dict>
-		<key>CB0C9CC01774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CD21774EA4300A900FB</string>
-				<string>CB0C9CEF1774EA4400A900FB</string>
-				<string>CB0C9CCB1774EA4300A900FB</string>
-				<string>CB0C9CCA1774EA4300A900FB</string>
-				<string>8D9E001DA1AC4A518F97578F</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CC11774EA4300A900FB</key>
-		<dict>
-			<key>attributes</key>
-			<dict>
-				<key>LastUpgradeCheck</key>
-				<string>0460</string>
-				<key>ORGANIZATIONNAME</key>
-				<string>BeamApp UG</string>
-			</dict>
-			<key>buildConfigurationList</key>
-			<string>CB0C9CC41774EA4300A900FB</string>
-			<key>compatibilityVersion</key>
-			<string>Xcode 3.2</string>
-			<key>developmentRegion</key>
-			<string>English</string>
-			<key>hasScannedForEncodings</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXProject</string>
-			<key>knownRegions</key>
-			<array>
-				<string>en</string>
-			</array>
-			<key>mainGroup</key>
-			<string>CB0C9CC01774EA4300A900FB</string>
-			<key>productRefGroup</key>
-			<string>CB0C9CCA1774EA4300A900FB</string>
-			<key>projectDirPath</key>
-			<string></string>
-			<key>projectReferences</key>
-			<array/>
-			<key>projectRoot</key>
-			<string></string>
-			<key>targets</key>
-			<array>
-				<string>CB0C9CC81774EA4300A900FB</string>
-				<string>CB0C9CE81774EA4400A900FB</string>
-			</array>
-		</dict>
-		<key>CB0C9CC41774EA4300A900FB</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>CB0C9CF81774EA4400A900FB</string>
-				<string>CB0C9CF91774EA4400A900FB</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>CB0C9CC51774EA4300A900FB</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>CB0C9CD91774EA4300A900FB</string>
-				<string>CB0C9CE01774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>CB0C9CC61774EA4300A900FB</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>CB0C9CCD1774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>CB0C9CC71774EA4300A900FB</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>CB0C9CD71774EA4300A900FB</string>
-				<string>CB0C9CDD1774EA4300A900FB</string>
-				<string>CB0C9CE31774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXResourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>CB0C9CC81774EA4300A900FB</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>CB0C9CFA1774EA4400A900FB</string>
-			<key>buildPhases</key>
-			<array>
-				<string>CB0C9CC51774EA4300A900FB</string>
-				<string>CB0C9CC61774EA4300A900FB</string>
-				<string>CB0C9CC71774EA4300A900FB</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>TransitTestsOSX</string>
-			<key>productName</key>
-			<string>TransitTestsOSX</string>
-			<key>productReference</key>
-			<string>CB0C9CC91774EA4300A900FB</string>
-			<key>productType</key>
-			<string>com.apple.product-type.application</string>
-		</dict>
-		<key>CB0C9CC91774EA4300A900FB</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.application</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>TransitTestsOSX.app</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>CB0C9CCA1774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CC91774EA4300A900FB</string>
-				<string>CB0C9CE91774EA4400A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Products</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CCB1774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CCC1774EA4300A900FB</string>
-				<string>CB0C9CEA1774EA4400A900FB</string>
-				<string>CB0C9CCE1774EA4300A900FB</string>
-				<string>43AA1EFFE5B44CB481EA58CC</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Frameworks</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CCC1774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>Cocoa.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/Cocoa.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>CB0C9CCD1774EA4300A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CCC1774EA4300A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CCE1774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CCF1774EA4300A900FB</string>
-				<string>CB0C9CD01774EA4300A900FB</string>
-				<string>CB0C9CD11774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Other Frameworks</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CCF1774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>AppKit.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/AppKit.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>CB0C9CD01774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>CoreData.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/CoreData.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>CB0C9CD11774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>Foundation.framework</string>
-			<key>path</key>
-			<string>System/Library/Frameworks/Foundation.framework</string>
-			<key>sourceTree</key>
-			<string>SDKROOT</string>
-		</dict>
-		<key>CB0C9CD21774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CDE1774EA4300A900FB</string>
-				<string>CB0C9CDF1774EA4300A900FB</string>
-				<string>CB0C9CE11774EA4300A900FB</string>
-				<string>CB0C9CD31774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>path</key>
-			<string>TransitTestsOSX</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CD31774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CD41774EA4300A900FB</string>
-				<string>CB0C9CD51774EA4300A900FB</string>
-				<string>CB0C9CD81774EA4300A900FB</string>
-				<string>CB0C9CDA1774EA4300A900FB</string>
-				<string>CB0C9CDB1774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Supporting Files</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CD41774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.xml</string>
-			<key>path</key>
-			<string>TransitTestsOSX-Info.plist</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CD51774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CD61774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>InfoPlist.strings</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CD61774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.strings</string>
-			<key>name</key>
-			<string>en</string>
-			<key>path</key>
-			<string>en.lproj/InfoPlist.strings</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CD71774EA4300A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CD51774EA4300A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CD81774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>main.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CD91774EA4300A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CD81774EA4300A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CDA1774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>TransitTestsOSX-Prefix.pch</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CDB1774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CDC1774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>Credits.rtf</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CDC1774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.rtf</string>
-			<key>name</key>
-			<string>en</string>
-			<key>path</key>
-			<string>en.lproj/Credits.rtf</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CDD1774EA4300A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CDB1774EA4300A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CDE1774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>AppDelegate.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CDF1774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>AppDelegate.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CE01774EA4300A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CDF1774EA4300A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CE11774EA4300A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CE21774EA4300A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>MainMenu.xib</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CE21774EA4300A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>file.xib</string>
-			<key>name</key>
-			<string>en</string>
-			<key>path</key>
-			<string>en.lproj/MainMenu.xib</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CE31774EA4300A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CE11774EA4300A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CE41774EA4400A900FB</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>CB0C9CF71774EA4400A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>CB0C9CE51774EA4400A900FB</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>CB0C9CEB1774EA4400A900FB</string>
-				<string>CB0C9CEC1774EA4400A900FB</string>
-				<string>748EE20FD0064D519701499A</string>
-			</array>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>CB0C9CE61774EA4400A900FB</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>CB0C9CF41774EA4400A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXResourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>CB0C9CE71774EA4400A900FB</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string># Run the unit tests in this test bundle.
-"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests"
-</string>
-		</dict>
-		<key>CB0C9CE81774EA4400A900FB</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>CB0C9CFD1774EA4400A900FB</string>
-			<key>buildPhases</key>
-			<array>
-				<string>2EE02D29005C4EB69421F8EB</string>
-				<string>CB0C9CE41774EA4400A900FB</string>
-				<string>CB0C9CE51774EA4400A900FB</string>
-				<string>CB0C9CE61774EA4400A900FB</string>
-				<string>CB0C9CE71774EA4400A900FB</string>
-				<string>ED14E0EE989D4AA697DEED2F</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array>
-				<string>CB0C9CEE1774EA4400A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>TransitTestsOSXTests</string>
-			<key>productName</key>
-			<string>TransitTestsOSXTests</string>
-			<key>productReference</key>
-			<string>CB0C9CE91774EA4400A900FB</string>
-			<key>productType</key>
-			<string>com.apple.product-type.bundle</string>
-		</dict>
-		<key>CB0C9CE91774EA4400A900FB</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.cfbundle</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>TransitTestsOSXTests.octest</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>CB0C9CEA1774EA4400A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>SenTestingKit.framework</string>
-			<key>path</key>
-			<string>Library/Frameworks/SenTestingKit.framework</string>
-			<key>sourceTree</key>
-			<string>DEVELOPER_DIR</string>
-		</dict>
-		<key>CB0C9CEB1774EA4400A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CEA1774EA4400A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CEC1774EA4400A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CCC1774EA4300A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CED1774EA4400A900FB</key>
-		<dict>
-			<key>containerPortal</key>
-			<string>CB0C9CC11774EA4300A900FB</string>
-			<key>isa</key>
-			<string>PBXContainerItemProxy</string>
-			<key>proxyType</key>
-			<string>1</string>
-			<key>remoteGlobalIDString</key>
-			<string>CB0C9CC81774EA4300A900FB</string>
-			<key>remoteInfo</key>
-			<string>TransitTestsOSX</string>
-		</dict>
-		<key>CB0C9CEE1774EA4400A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXTargetDependency</string>
-			<key>target</key>
-			<string>CB0C9CC81774EA4300A900FB</string>
-			<key>targetProxy</key>
-			<string>CB0C9CED1774EA4400A900FB</string>
-		</dict>
-		<key>CB0C9CEF1774EA4400A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CF51774EA4400A900FB</string>
-				<string>CB0C9CF61774EA4400A900FB</string>
-				<string>CB0C9CF01774EA4400A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>path</key>
-			<string>TransitTestsOSXTests</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CF01774EA4400A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CF11774EA4400A900FB</string>
-				<string>CB0C9CF21774EA4400A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Supporting Files</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CF11774EA4400A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.xml</string>
-			<key>path</key>
-			<string>TransitTestsOSXTests-Info.plist</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CF21774EA4400A900FB</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>CB0C9CF31774EA4400A900FB</string>
-			</array>
-			<key>isa</key>
-			<string>PBXVariantGroup</string>
-			<key>name</key>
-			<string>InfoPlist.strings</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CF31774EA4400A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.plist.strings</string>
-			<key>name</key>
-			<string>en</string>
-			<key>path</key>
-			<string>en.lproj/InfoPlist.strings</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CF41774EA4400A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CF21774EA4400A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CF51774EA4400A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>path</key>
-			<string>TransitTestsOSXTests.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CF61774EA4400A900FB</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>TransitTestsOSXTests.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>CB0C9CF71774EA4400A900FB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>CB0C9CF61774EA4400A900FB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>CB0C9CF81774EA4400A900FB</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>ARCHS</key>
-				<string>$(ARCHS_STANDARD_64_BIT)</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>YES</string>
-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN_ENUM_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_INT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
-				<string>YES</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>NO</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_DYNAMIC_NO_PIC</key>
-				<string>NO</string>
-				<key>GCC_ENABLE_OBJC_EXCEPTIONS</key>
-				<string>YES</string>
-				<key>GCC_OPTIMIZATION_LEVEL</key>
-				<string>0</string>
-				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
-				<array>
-					<string>DEBUG=1</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
-				<string>NO</string>
-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
-				<string>YES</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
-				<key>MACOSX_DEPLOYMENT_TARGET</key>
-				<string>10.7</string>
-				<key>ONLY_ACTIVE_ARCH</key>
-				<string>YES</string>
-				<key>SDKROOT</key>
-				<string>macosx</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>CB0C9CF91774EA4400A900FB</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>ARCHS</key>
-				<string>$(ARCHS_STANDARD_64_BIT)</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>YES</string>
-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN_ENUM_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_INT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN__DUPLICATE_METHOD_MATCH</key>
-				<string>YES</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>YES</string>
-				<key>DEBUG_INFORMATION_FORMAT</key>
-				<string>dwarf-with-dsym</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_ENABLE_OBJC_EXCEPTIONS</key>
-				<string>YES</string>
-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
-				<string>YES</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
-				<key>MACOSX_DEPLOYMENT_TARGET</key>
-				<string>10.7</string>
-				<key>SDKROOT</key>
-				<string>macosx</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>CB0C9CFA1774EA4400A900FB</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>CB0C9CFB1774EA4400A900FB</string>
-				<string>CB0C9CFC1774EA4400A900FB</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>CB0C9CFB1774EA4400A900FB</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>COMBINE_HIDPI_IMAGES</key>
-				<string>YES</string>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>TransitTestsOSX/TransitTestsOSX-Prefix.pch</string>
-				<key>INFOPLIST_FILE</key>
-				<string>TransitTestsOSX/TransitTestsOSX-Info.plist</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>app</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>CB0C9CFC1774EA4400A900FB</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>COMBINE_HIDPI_IMAGES</key>
-				<string>YES</string>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>TransitTestsOSX/TransitTestsOSX-Prefix.pch</string>
-				<key>INFOPLIST_FILE</key>
-				<string>TransitTestsOSX/TransitTestsOSX-Info.plist</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>app</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>CB0C9CFD1774EA4400A900FB</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>CB0C9CFE1774EA4400A900FB</string>
-				<string>CB0C9CFF1774EA4400A900FB</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>CB0C9CFE1774EA4400A900FB</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>8D9E001DA1AC4A518F97578F</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>BUNDLE_LOADER</key>
-				<string>$(BUILT_PRODUCTS_DIR)/TransitTestsOSX.app/Contents/MacOS/TransitTestsOSX</string>
-				<key>COMBINE_HIDPI_IMAGES</key>
-				<string>YES</string>
-				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<string>"$(DEVELOPER_LIBRARY_DIR)/Frameworks"</string>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>TransitTestsOSX/TransitTestsOSX-Prefix.pch</string>
-				<key>INFOPLIST_FILE</key>
-				<string>TransitTestsOSXTests/TransitTestsOSXTests-Info.plist</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>TEST_HOST</key>
-				<string>$(BUNDLE_LOADER)</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>octest</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Debug</string>
-		</dict>
-		<key>CB0C9CFF1774EA4400A900FB</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>8D9E001DA1AC4A518F97578F</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>BUNDLE_LOADER</key>
-				<string>$(BUILT_PRODUCTS_DIR)/TransitTestsOSX.app/Contents/MacOS/TransitTestsOSX</string>
-				<key>COMBINE_HIDPI_IMAGES</key>
-				<string>YES</string>
-				<key>FRAMEWORK_SEARCH_PATHS</key>
-				<string>"$(DEVELOPER_LIBRARY_DIR)/Frameworks"</string>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>GCC_PREFIX_HEADER</key>
-				<string>TransitTestsOSX/TransitTestsOSX-Prefix.pch</string>
-				<key>INFOPLIST_FILE</key>
-				<string>TransitTestsOSXTests/TransitTestsOSXTests-Info.plist</string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>TEST_HOST</key>
-				<string>$(BUNDLE_LOADER)</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>octest</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>ED14E0EE989D4AA697DEED2F</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>inputPaths</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXShellScriptBuildPhase</string>
-			<key>name</key>
-			<string>Copy Pods Resources</string>
-			<key>outputPaths</key>
-			<array/>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-			<key>shellPath</key>
-			<string>/bin/sh</string>
-			<key>shellScript</key>
-			<string>"${SRCROOT}/Pods/Pods-TransitTestsOSXTests-resources.sh"
-</string>
-			<key>showEnvVarsInLog</key>
-			<string>1</string>
-		</dict>
-	</dict>
-	<key>rootObject</key>
-	<string>CB0C9CC11774EA4300A900FB</string>
-</dict>
-</plist>
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B83DE3151444DE38EE12E31 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D2874E75B5A4508A67C5CCA /* libPods.a */; };
+		748EE20FD0064D519701499A /* libPods-TransitTestsOSXTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43AA1EFFE5B44CB481EA58CC /* libPods-TransitTestsOSXTests.a */; };
+		CB0C9CCD1774EA4300A900FB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0C9CCC1774EA4300A900FB /* Cocoa.framework */; };
+		CB0C9CD71774EA4300A900FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB0C9CD51774EA4300A900FB /* InfoPlist.strings */; };
+		CB0C9CD91774EA4300A900FB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9CD81774EA4300A900FB /* main.m */; };
+		CB0C9CDD1774EA4300A900FB /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = CB0C9CDB1774EA4300A900FB /* Credits.rtf */; };
+		CB0C9CE01774EA4300A900FB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9CDF1774EA4300A900FB /* AppDelegate.m */; };
+		CB0C9CE31774EA4300A900FB /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB0C9CE11774EA4300A900FB /* MainMenu.xib */; };
+		CB0C9CEB1774EA4400A900FB /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0C9CEA1774EA4400A900FB /* SenTestingKit.framework */; };
+		CB0C9CEC1774EA4400A900FB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0C9CCC1774EA4300A900FB /* Cocoa.framework */; };
+		CB0C9CF41774EA4400A900FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB0C9CF21774EA4400A900FB /* InfoPlist.strings */; };
+		CB0C9CF71774EA4400A900FB /* TransitTestsOSXTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9CF61774EA4400A900FB /* TransitTestsOSXTests.m */; };
+		CB0C9D051774F00400A900FB /* CCWeakMockProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D011774F00400A900FB /* CCWeakMockProxy.m */; };
+		CB0C9D061774F00400A900FB /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D031774F00400A900FB /* OCMockObject+Reset.m */; };
+		CB0C9D071774F00400A900FB /* TransitObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D041774F00400A900FB /* TransitObjectTests.m */; };
+		CB0C9D0C1774F05900A900FB /* Transit.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D0B1774F05900A900FB /* Transit.m */; };
+		CB0C9D141774F41E00A900FB /* TransitCallScopeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D0D1774F41E00A900FB /* TransitCallScopeTests.m */; };
+		CB0C9D151774F41E00A900FB /* TransitContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D0E1774F41E00A900FB /* TransitContextTest.m */; };
+		CB0C9D161774F41E00A900FB /* TransitEvaluableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D0F1774F41E00A900FB /* TransitEvaluableTests.m */; };
+		CB0C9D171774F41E00A900FB /* TransitJSFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D101774F41E00A900FB /* TransitJSFunctionTests.m */; };
+		CB0C9D181774F41E00A900FB /* TransitNativeFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D111774F41E00A900FB /* TransitNativeFunctionTests.m */; };
+		CB0C9D191774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D121774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m */; };
+		CB0C9D1A1774F41E00A900FB /* TransitProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D131774F41E00A900FB /* TransitProxyTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CB0C9CED1774EA4400A900FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB0C9CC11774EA4300A900FB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB0C9CC81774EA4300A900FB;
+			remoteInfo = TransitTestsOSX;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		43AA1EFFE5B44CB481EA58CC /* libPods-TransitTestsOSXTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TransitTestsOSXTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D2874E75B5A4508A67C5CCA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D9E001DA1AC4A518F97578F /* Pods-TransitTestsOSXTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TransitTestsOSXTests.xcconfig"; path = "Pods/Pods-TransitTestsOSXTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		CB0C9CC91774EA4300A900FB /* TransitTestsOSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransitTestsOSX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB0C9CCC1774EA4300A900FB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		CB0C9CCF1774EA4300A900FB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		CB0C9CD01774EA4300A900FB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		CB0C9CD11774EA4300A900FB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		CB0C9CD41774EA4300A900FB /* TransitTestsOSX-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TransitTestsOSX-Info.plist"; sourceTree = "<group>"; };
+		CB0C9CD61774EA4300A900FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CB0C9CD81774EA4300A900FB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CB0C9CDA1774EA4300A900FB /* TransitTestsOSX-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TransitTestsOSX-Prefix.pch"; sourceTree = "<group>"; };
+		CB0C9CDC1774EA4300A900FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		CB0C9CDE1774EA4300A900FB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CB0C9CDF1774EA4300A900FB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CB0C9CE21774EA4300A900FB /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		CB0C9CE91774EA4400A900FB /* TransitTestsOSXTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TransitTestsOSXTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB0C9CEA1774EA4400A900FB /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		CB0C9CF11774EA4400A900FB /* TransitTestsOSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TransitTestsOSXTests-Info.plist"; sourceTree = "<group>"; };
+		CB0C9CF31774EA4400A900FB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CB0C9CF51774EA4400A900FB /* TransitTestsOSXTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TransitTestsOSXTests.h; sourceTree = "<group>"; };
+		CB0C9CF61774EA4400A900FB /* TransitTestsOSXTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransitTestsOSXTests.m; sourceTree = "<group>"; };
+		CB0C9D001774F00400A900FB /* CCWeakMockProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCWeakMockProxy.h; path = "../../objc-general/CCWeakMockProxy.h"; sourceTree = "<group>"; };
+		CB0C9D011774F00400A900FB /* CCWeakMockProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCWeakMockProxy.m; path = "../../objc-general/CCWeakMockProxy.m"; sourceTree = "<group>"; };
+		CB0C9D021774F00400A900FB /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "OCMockObject+Reset.h"; path = "../../objc-general/OCMockObject+Reset.h"; sourceTree = "<group>"; };
+		CB0C9D031774F00400A900FB /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OCMockObject+Reset.m"; path = "../../objc-general/OCMockObject+Reset.m"; sourceTree = "<group>"; };
+		CB0C9D041774F00400A900FB /* TransitObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitObjectTests.m; path = "../../objc-general/TransitObjectTests.m"; sourceTree = "<group>"; };
+		CB0C9D091774F05900A900FB /* Transit+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Transit+Private.h"; sourceTree = "<group>"; };
+		CB0C9D0A1774F05900A900FB /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
+		CB0C9D0B1774F05900A900FB /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
+		CB0C9D0D1774F41E00A900FB /* TransitCallScopeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitCallScopeTests.m; path = "../../objc-general/TransitCallScopeTests.m"; sourceTree = "<group>"; };
+		CB0C9D0E1774F41E00A900FB /* TransitContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitContextTest.m; path = "../../objc-general/TransitContextTest.m"; sourceTree = "<group>"; };
+		CB0C9D0F1774F41E00A900FB /* TransitEvaluableTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitEvaluableTests.m; path = "../../objc-general/TransitEvaluableTests.m"; sourceTree = "<group>"; };
+		CB0C9D101774F41E00A900FB /* TransitJSFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitJSFunctionTests.m; path = "../../objc-general/TransitJSFunctionTests.m"; sourceTree = "<group>"; };
+		CB0C9D111774F41E00A900FB /* TransitNativeFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitNativeFunctionTests.m; path = "../../objc-general/TransitNativeFunctionTests.m"; sourceTree = "<group>"; };
+		CB0C9D121774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitNativeFunctionWithSpecificBlockTests.m; path = "../../objc-general/TransitNativeFunctionWithSpecificBlockTests.m"; sourceTree = "<group>"; };
+		CB0C9D131774F41E00A900FB /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitProxyTests.m; path = "../../objc-general/TransitProxyTests.m"; sourceTree = "<group>"; };
+		CCEC38D4B3A14A76A31DA9BF /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CB0C9CC61774EA4300A900FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB0C9CCD1774EA4300A900FB /* Cocoa.framework in Frameworks */,
+				2B83DE3151444DE38EE12E31 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB0C9CE51774EA4400A900FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB0C9CEB1774EA4400A900FB /* SenTestingKit.framework in Frameworks */,
+				CB0C9CEC1774EA4400A900FB /* Cocoa.framework in Frameworks */,
+				748EE20FD0064D519701499A /* libPods-TransitTestsOSXTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CB0C9CC01774EA4300A900FB = {
+			isa = PBXGroup;
+			children = (
+				CB0C9CD21774EA4300A900FB /* TransitTestsOSX */,
+				CB0C9CEF1774EA4400A900FB /* TransitTestsOSXTests */,
+				CB0C9CCB1774EA4300A900FB /* Frameworks */,
+				CB0C9CCA1774EA4300A900FB /* Products */,
+				8D9E001DA1AC4A518F97578F /* Pods-TransitTestsOSXTests.xcconfig */,
+				CCEC38D4B3A14A76A31DA9BF /* Pods.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		CB0C9CCA1774EA4300A900FB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CB0C9CC91774EA4300A900FB /* TransitTestsOSX.app */,
+				CB0C9CE91774EA4400A900FB /* TransitTestsOSXTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CB0C9CCB1774EA4300A900FB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CB0C9CCC1774EA4300A900FB /* Cocoa.framework */,
+				CB0C9CEA1774EA4400A900FB /* SenTestingKit.framework */,
+				CB0C9CCE1774EA4300A900FB /* Other Frameworks */,
+				43AA1EFFE5B44CB481EA58CC /* libPods-TransitTestsOSXTests.a */,
+				4D2874E75B5A4508A67C5CCA /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CB0C9CCE1774EA4300A900FB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CB0C9CCF1774EA4300A900FB /* AppKit.framework */,
+				CB0C9CD01774EA4300A900FB /* CoreData.framework */,
+				CB0C9CD11774EA4300A900FB /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		CB0C9CD21774EA4300A900FB /* TransitTestsOSX */ = {
+			isa = PBXGroup;
+			children = (
+				CB0C9D081774F05900A900FB /* Transit */,
+				CB0C9CDE1774EA4300A900FB /* AppDelegate.h */,
+				CB0C9CDF1774EA4300A900FB /* AppDelegate.m */,
+				CB0C9CE11774EA4300A900FB /* MainMenu.xib */,
+				CB0C9CD31774EA4300A900FB /* Supporting Files */,
+			);
+			path = TransitTestsOSX;
+			sourceTree = "<group>";
+		};
+		CB0C9CD31774EA4300A900FB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CB0C9CD41774EA4300A900FB /* TransitTestsOSX-Info.plist */,
+				CB0C9CD51774EA4300A900FB /* InfoPlist.strings */,
+				CB0C9CD81774EA4300A900FB /* main.m */,
+				CB0C9CDA1774EA4300A900FB /* TransitTestsOSX-Prefix.pch */,
+				CB0C9CDB1774EA4300A900FB /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CB0C9CEF1774EA4400A900FB /* TransitTestsOSXTests */ = {
+			isa = PBXGroup;
+			children = (
+				CB0C9D0D1774F41E00A900FB /* TransitCallScopeTests.m */,
+				CB0C9D0E1774F41E00A900FB /* TransitContextTest.m */,
+				CB0C9D0F1774F41E00A900FB /* TransitEvaluableTests.m */,
+				CB0C9D101774F41E00A900FB /* TransitJSFunctionTests.m */,
+				CB0C9D111774F41E00A900FB /* TransitNativeFunctionTests.m */,
+				CB0C9D121774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m */,
+				CB0C9D131774F41E00A900FB /* TransitProxyTests.m */,
+				CB0C9D001774F00400A900FB /* CCWeakMockProxy.h */,
+				CB0C9D011774F00400A900FB /* CCWeakMockProxy.m */,
+				CB0C9D021774F00400A900FB /* OCMockObject+Reset.h */,
+				CB0C9D031774F00400A900FB /* OCMockObject+Reset.m */,
+				CB0C9D041774F00400A900FB /* TransitObjectTests.m */,
+				CB0C9CF51774EA4400A900FB /* TransitTestsOSXTests.h */,
+				CB0C9CF61774EA4400A900FB /* TransitTestsOSXTests.m */,
+				CB0C9CF01774EA4400A900FB /* Supporting Files */,
+			);
+			path = TransitTestsOSXTests;
+			sourceTree = "<group>";
+		};
+		CB0C9CF01774EA4400A900FB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CB0C9CF11774EA4400A900FB /* TransitTestsOSXTests-Info.plist */,
+				CB0C9CF21774EA4400A900FB /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CB0C9D081774F05900A900FB /* Transit */ = {
+			isa = PBXGroup;
+			children = (
+				CB0C9D091774F05900A900FB /* Transit+Private.h */,
+				CB0C9D0A1774F05900A900FB /* Transit.h */,
+				CB0C9D0B1774F05900A900FB /* Transit.m */,
+			);
+			name = Transit;
+			path = ../../../source/objc;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CB0C9CC81774EA4300A900FB /* TransitTestsOSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB0C9CFA1774EA4400A900FB /* Build configuration list for PBXNativeTarget "TransitTestsOSX" */;
+			buildPhases = (
+				4924863BBD4D48B6925468C8 /* Check Pods Manifest.lock */,
+				CB0C9CC51774EA4300A900FB /* Sources */,
+				CB0C9CC61774EA4300A900FB /* Frameworks */,
+				CB0C9CC71774EA4300A900FB /* Resources */,
+				3DD14A3F5CF9458185B582DC /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TransitTestsOSX;
+			productName = TransitTestsOSX;
+			productReference = CB0C9CC91774EA4300A900FB /* TransitTestsOSX.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CB0C9CE81774EA4400A900FB /* TransitTestsOSXTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB0C9CFD1774EA4400A900FB /* Build configuration list for PBXNativeTarget "TransitTestsOSXTests" */;
+			buildPhases = (
+				2EE02D29005C4EB69421F8EB /* Check Pods Manifest.lock */,
+				CB0C9CE41774EA4400A900FB /* Sources */,
+				CB0C9CE51774EA4400A900FB /* Frameworks */,
+				CB0C9CE61774EA4400A900FB /* Resources */,
+				CB0C9CE71774EA4400A900FB /* ShellScript */,
+				ED14E0EE989D4AA697DEED2F /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CB0C9CEE1774EA4400A900FB /* PBXTargetDependency */,
+			);
+			name = TransitTestsOSXTests;
+			productName = TransitTestsOSXTests;
+			productReference = CB0C9CE91774EA4400A900FB /* TransitTestsOSXTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CB0C9CC11774EA4300A900FB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "BeamApp UG";
+			};
+			buildConfigurationList = CB0C9CC41774EA4300A900FB /* Build configuration list for PBXProject "TransitTestsOSX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CB0C9CC01774EA4300A900FB;
+			productRefGroup = CB0C9CCA1774EA4300A900FB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CB0C9CC81774EA4300A900FB /* TransitTestsOSX */,
+				CB0C9CE81774EA4400A900FB /* TransitTestsOSXTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CB0C9CC71774EA4300A900FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB0C9CD71774EA4300A900FB /* InfoPlist.strings in Resources */,
+				CB0C9CDD1774EA4300A900FB /* Credits.rtf in Resources */,
+				CB0C9CE31774EA4300A900FB /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB0C9CE61774EA4400A900FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB0C9CF41774EA4400A900FB /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2EE02D29005C4EB69421F8EB /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+		};
+		3DD14A3F5CF9458185B582DC /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
+		4924863BBD4D48B6925468C8 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+		};
+		CB0C9CE71774EA4400A900FB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		ED14E0EE989D4AA697DEED2F /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-TransitTestsOSXTests-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CB0C9CC51774EA4300A900FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB0C9CD91774EA4300A900FB /* main.m in Sources */,
+				CB0C9CE01774EA4300A900FB /* AppDelegate.m in Sources */,
+				CB0C9D0C1774F05900A900FB /* Transit.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB0C9CE41774EA4400A900FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB0C9CF71774EA4400A900FB /* TransitTestsOSXTests.m in Sources */,
+				CB0C9D051774F00400A900FB /* CCWeakMockProxy.m in Sources */,
+				CB0C9D061774F00400A900FB /* OCMockObject+Reset.m in Sources */,
+				CB0C9D071774F00400A900FB /* TransitObjectTests.m in Sources */,
+				CB0C9D141774F41E00A900FB /* TransitCallScopeTests.m in Sources */,
+				CB0C9D151774F41E00A900FB /* TransitContextTest.m in Sources */,
+				CB0C9D161774F41E00A900FB /* TransitEvaluableTests.m in Sources */,
+				CB0C9D171774F41E00A900FB /* TransitJSFunctionTests.m in Sources */,
+				CB0C9D181774F41E00A900FB /* TransitNativeFunctionTests.m in Sources */,
+				CB0C9D191774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */,
+				CB0C9D1A1774F41E00A900FB /* TransitProxyTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CB0C9CEE1774EA4400A900FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB0C9CC81774EA4300A900FB /* TransitTestsOSX */;
+			targetProxy = CB0C9CED1774EA4400A900FB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CB0C9CD51774EA4300A900FB /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CB0C9CD61774EA4300A900FB /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		CB0C9CDB1774EA4300A900FB /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CB0C9CDC1774EA4300A900FB /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		CB0C9CE11774EA4300A900FB /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CB0C9CE21774EA4300A900FB /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		CB0C9CF21774EA4400A900FB /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CB0C9CF31774EA4400A900FB /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CB0C9CF81774EA4400A900FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CB0C9CF91774EA4400A900FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CB0C9CFB1774EA4400A900FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CCEC38D4B3A14A76A31DA9BF /* Pods.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
+				INFOPLIST_FILE = "TransitTestsOSX/TransitTestsOSX-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		CB0C9CFC1774EA4400A900FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CCEC38D4B3A14A76A31DA9BF /* Pods.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
+				INFOPLIST_FILE = "TransitTestsOSX/TransitTestsOSX-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		CB0C9CFE1774EA4400A900FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8D9E001DA1AC4A518F97578F /* Pods-TransitTestsOSXTests.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TransitTestsOSX.app/Contents/MacOS/TransitTestsOSX";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
+				INFOPLIST_FILE = "TransitTestsOSXTests/TransitTestsOSXTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		CB0C9CFF1774EA4400A900FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8D9E001DA1AC4A518F97578F /* Pods-TransitTestsOSXTests.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TransitTestsOSX.app/Contents/MacOS/TransitTestsOSX";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
+				INFOPLIST_FILE = "TransitTestsOSXTests/TransitTestsOSXTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CB0C9CC41774EA4300A900FB /* Build configuration list for PBXProject "TransitTestsOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB0C9CF81774EA4400A900FB /* Debug */,
+				CB0C9CF91774EA4400A900FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB0C9CFA1774EA4400A900FB /* Build configuration list for PBXNativeTarget "TransitTestsOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB0C9CFB1774EA4400A900FB /* Debug */,
+				CB0C9CFC1774EA4400A900FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB0C9CFD1774EA4400A900FB /* Build configuration list for PBXNativeTarget "TransitTestsOSXTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB0C9CFE1774EA4400A900FB /* Debug */,
+				CB0C9CFF1774EA4400A900FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CB0C9CC11774EA4300A900FB /* Project object */;
+}

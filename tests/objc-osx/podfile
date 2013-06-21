@@ -1,5 +1,7 @@
 platform :osx, '10.7'
 
+pod "SBJson"
+
 target :TransitTestsOSXTests, :exclusive => true do
   pod 'OCMock'
 end
