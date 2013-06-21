@@ -26,7 +26,6 @@ xctool -workspace "$TESTS_PROJECT_ROOT/$TESTS_PROJECT_NAME.xcworkspace" -scheme 
 
 # somehow, clean on example project seems to fail...
 cd "$EXAMPLES_PROJECT_ROOT"
-pod install
 xctool -workspace "$EXAMPLES_PROJECT_ROOT/$EXAMPLES_PROJECT_NAME.xcworkspace" -scheme $EXAMPLES_PROJECT_NAME  build test
 
 

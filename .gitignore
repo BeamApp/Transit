@@ -12,6 +12,3 @@ examples/objc-ios/dist
 keystore.db
 secure.properties
 tests/objc-ios/documentation
-examples/objc-ios/Pods/BuildHeaders
-examples/objc-ios/Pods/Headers
-examples/objc-ios/Pods/Local Podspecs
