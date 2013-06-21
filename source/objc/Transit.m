@@ -1029,7 +1029,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 
     assertValidType(sig.methodReturnType, @"return type");
     for(NSUInteger i=0;i<sig.numberOfArguments;i++)
-        assertValidType([sig getArgumentTypeAtIndex:i], [NSString stringWithFormat:@"argument at index %ld", i]);
+        assertValidType([sig getArgumentTypeAtIndex:i], [NSString stringWithFormat:@"argument at index %ld", (unsigned long)i]);
 }
 
 + (TransitGenericFunctionBlock)genericFunctionBlockWithBlock:(id)block {
@@ -1147,7 +1147,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"%.3ld %@(this=%@)", self.level, NSStringFromClass(self.class), self.thisArg];
+    return [NSString stringWithFormat:@"%.3ld %@(this=%@)", (unsigned long)self.level, NSStringFromClass(self.class), self.thisArg];
 }
 
 - (NSString *)callStackDescription {
@@ -1299,7 +1299,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
             return;
         }
         default:
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for argument at index %ld", argType[0], index] userInfo:nil];
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for argument at index %ld", argType[0], (unsigned long)index] userInfo:nil];
     }
 }
 
@@ -1663,6 +1663,28 @@ NSString* _TRANSIT_URL_TESTPATH = @"testcall";
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     if([_originalDelegate respondsToSelector:_cmd])
         return [_originalDelegate webView:webView didFailLoadWithError:error];
+}
+
+@end
+
+#endif
+
+#pragma mark - OSX-specific code
+
+#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+
+@implementation TransitWebViewContext
+
++(id)contextWithWebView:(WebView*)webView {
+    return [self.class.new initWithWebView:webView];
+}
+
+-(id)initWithWebView:(WebView*)webView {
+    self = [self init];
+    if(self) {
+        _webView = webView;
+    }
+    return self;
 }
 
 @end

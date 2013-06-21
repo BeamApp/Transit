@@ -7,6 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+
+#import <WebKit/WebKit.h>
+
+#endif
 
 #ifndef TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
 #define TRANSIT_SPECIFIC_BLOCKS_SUPPORTED (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0 || __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7)
@@ -250,6 +255,22 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 -(id)initWithUIWebView:(UIWebView*)webView;
 
 @property(readonly) UIWebView* webView;
+
+@end
+
+#endif
+
+#pragma mark - OSX-specific code
+
+#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+
+@interface TransitWebViewContext : TransitContext
+
++(id)contextWithWebView:(WebView*)webView;
+
+-(id)initWithWebView:(WebView*)webView;
+
+@property(readonly) WebView* webView;
 
 @end
 

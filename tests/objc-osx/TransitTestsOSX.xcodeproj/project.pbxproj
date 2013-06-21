@@ -30,6 +30,9 @@
 		CB0C9D181774F41E00A900FB /* TransitNativeFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D111774F41E00A900FB /* TransitNativeFunctionTests.m */; };
 		CB0C9D191774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D121774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m */; };
 		CB0C9D1A1774F41E00A900FB /* TransitProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D131774F41E00A900FB /* TransitProxyTests.m */; };
+		CB0C9D1D1774FE8E00A900FB /* TransitWebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D1C1774FE8E00A900FB /* TransitWebViewTests.m */; };
+		CB0C9D1F1774FFA500A900FB /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0C9D1E1774FFA500A900FB /* WebKit.framework */; };
+		CB0C9D201774FFD300A900FB /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0C9D1E1774FFA500A900FB /* WebKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +83,8 @@
 		CB0C9D111774F41E00A900FB /* TransitNativeFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitNativeFunctionTests.m; path = "../../objc-general/TransitNativeFunctionTests.m"; sourceTree = "<group>"; };
 		CB0C9D121774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitNativeFunctionWithSpecificBlockTests.m; path = "../../objc-general/TransitNativeFunctionWithSpecificBlockTests.m"; sourceTree = "<group>"; };
 		CB0C9D131774F41E00A900FB /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitProxyTests.m; path = "../../objc-general/TransitProxyTests.m"; sourceTree = "<group>"; };
+		CB0C9D1C1774FE8E00A900FB /* TransitWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitWebViewTests.m; sourceTree = "<group>"; };
+		CB0C9D1E1774FFA500A900FB /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		CCEC38D4B3A14A76A31DA9BF /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -88,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB0C9D1F1774FFA500A900FB /* WebKit.framework in Frameworks */,
 				CB0C9CCD1774EA4300A900FB /* Cocoa.framework in Frameworks */,
 				2B83DE3151444DE38EE12E31 /* libPods.a in Frameworks */,
 			);
@@ -97,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB0C9D201774FFD300A900FB /* WebKit.framework in Frameworks */,
 				CB0C9CEB1774EA4400A900FB /* SenTestingKit.framework in Frameworks */,
 				CB0C9CEC1774EA4400A900FB /* Cocoa.framework in Frameworks */,
 				748EE20FD0064D519701499A /* libPods-TransitTestsOSXTests.a in Frameworks */,
@@ -109,6 +116,7 @@
 		CB0C9CC01774EA4300A900FB = {
 			isa = PBXGroup;
 			children = (
+				CB0C9D1E1774FFA500A900FB /* WebKit.framework */,
 				CB0C9CD21774EA4300A900FB /* TransitTestsOSX */,
 				CB0C9CEF1774EA4400A900FB /* TransitTestsOSXTests */,
 				CB0C9CCB1774EA4300A900FB /* Frameworks */,
@@ -190,6 +198,7 @@
 				CB0C9D041774F00400A900FB /* TransitObjectTests.m */,
 				CB0C9CF51774EA4400A900FB /* TransitTestsOSXTests.h */,
 				CB0C9CF61774EA4400A900FB /* TransitTestsOSXTests.m */,
+				CB0C9D1C1774FE8E00A900FB /* TransitWebViewTests.m */,
 				CB0C9CF01774EA4400A900FB /* Supporting Files */,
 			);
 			path = TransitTestsOSXTests;
@@ -404,6 +413,7 @@
 				CB0C9D181774F41E00A900FB /* TransitNativeFunctionTests.m in Sources */,
 				CB0C9D191774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */,
 				CB0C9D1A1774F41E00A900FB /* TransitProxyTests.m in Sources */,
+				CB0C9D1D1774FE8E00A900FB /* TransitWebViewTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,6 +530,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
 				INFOPLIST_FILE = "TransitTestsOSX/TransitTestsOSX-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -533,6 +544,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
 				INFOPLIST_FILE = "TransitTestsOSX/TransitTestsOSX-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
