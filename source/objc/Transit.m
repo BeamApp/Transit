@@ -869,10 +869,11 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
     _currentCallScope = _currentCallScope.parentScope;
 }
 
-- (void)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error {
+- (BOOL)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error {
     NSString* jsCode = [NSString stringWithContentsOfFile:path encoding:encoding error:error];
     if(jsCode)
         [self evalOnGlobalScope:jsCode];
+    return jsCode != nil;
 }
 
 - (void)evalOnGlobalScope:(NSString *)jsCode {
@@ -1028,7 +1029,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 
     assertValidType(sig.methodReturnType, @"return type");
     for(NSUInteger i=0;i<sig.numberOfArguments;i++)
-        assertValidType([sig getArgumentTypeAtIndex:i], [NSString stringWithFormat:@"argument at index %d", i]);
+        assertValidType([sig getArgumentTypeAtIndex:i], [NSString stringWithFormat:@"argument at index %ld", i]);
 }
 
 + (TransitGenericFunctionBlock)genericFunctionBlockWithBlock:(id)block {
@@ -1146,7 +1147,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"%.3d %@(this=%@)", self.level, NSStringFromClass(self.class), self.thisArg];
+    return [NSString stringWithFormat:@"%.3ld %@(this=%@)", self.level, NSStringFromClass(self.class), self.thisArg];
 }
 
 - (NSString *)callStackDescription {
@@ -1298,7 +1299,7 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
             return;
         }
         default:
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for argument at index %d", argType[0], index] userInfo:nil];
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for argument at index %ld", argType[0], index] userInfo:nil];
     }
 }
 

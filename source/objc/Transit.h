@@ -121,7 +121,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @property(nonatomic, copy) void (^readyHandler)(TransitContext *);
 
-- (void)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error;
+- (BOOL)evalContentsOfFileOnGlobalScope:(NSString *)path encoding:(NSStringEncoding)encoding error:(NSError **)error;
 - (void)evalOnGlobalScope:(NSString *)string;
 
 @end
