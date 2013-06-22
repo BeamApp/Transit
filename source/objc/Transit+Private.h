@@ -145,16 +145,24 @@ extern NSString* _TRANSIT_MARKER_GLOBAL_OBJECT;
 extern NSUInteger _TRANSIT_DRAIN_JS_PROXIES_THRESHOLD;
 
 
+typedef void (^TransitWebViewContextRequestHandler)(TransitAbstractWebViewContext*,NSURLRequest*);
+
+@interface TransitAbstractWebViewContext(Private)
+
+@property (readonly) BOOL codeInjected;
+@property(copy) TransitWebViewContextRequestHandler handleRequestBlock;
+
+- (void)doInvokeNative;
+- (id)parseJSON:(NSString *)json;
+
+@end
+
 #pragma mark - iOS-specific code
 
 #if TARGET_OS_IPHONE
 
-typedef void (^TransitUIWebViewContextRequestHandler)(TransitUIWebViewContext*,NSURLRequest*);
 @interface TransitUIWebViewContext(Private)
 
--(void)doInvokeNative;
-
-@property(copy) TransitUIWebViewContextRequestHandler handleRequestBlock;
 @property(assign) BOOL proxifyEval;
 
 @end

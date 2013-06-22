@@ -165,7 +165,7 @@
 
 -(void)testSimpleCallFromWebView{
     TransitUIWebViewContext *context = [TransitUIWebViewContext contextWithUIWebView:[self webViewWithEmptyPage]];
-    context.handleRequestBlock = ^(TransitUIWebViewContext *ctx, NSURLRequest* req) {
+    context.handleRequestBlock = ^(TransitAbstractWebViewContext *ctx, NSURLRequest* req) {
         [ctx eval:@"window.globalTestVar = 'changedFromContext'"];
     };
     TransitFunction *func = [self callContext:context];
@@ -183,7 +183,7 @@
     // iOS5 = 92
     int expectedMaxDepth = transit_iOS6OrLater() ? 63 : 92;
 
-    context.handleRequestBlock = ^(TransitUIWebViewContext *ctx, NSURLRequest* req) {
+    context.handleRequestBlock = ^(TransitAbstractWebViewContext *ctx, NSURLRequest* req) {
         int arg = req.URL.resourceSpecifier.intValue;
         
         if(arg <= expectedMaxDepth){
