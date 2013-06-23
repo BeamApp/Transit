@@ -18,4 +18,16 @@
 - (void)testProxifyOfGlobalObject;
 
 - (NSString *)htmlStringForEmptyPage;
+
+- (void)testSimpleCallFromWebView;
+
+- (void)testRecursiveCallBetweenWebViewAndNative;
+
+- (void)testConvenientSettingOfGlobalFunc;
+
+- (void)testPerformance;
+
+- (void)testReadmeExample;
+
+- (void)testAsyncInvocationQueue;
 @end

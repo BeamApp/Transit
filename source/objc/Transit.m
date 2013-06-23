@@ -1773,7 +1773,25 @@ NSString* _TRANSIT_SCHEME = @"transit";
     }
 }
 
--(void)_handleRequestBlock {
+#pragma mark - WebScripting protocol
+
+- (id)invokeUndefinedMethodFromWebScript:(NSString *)name withArguments:(NSArray *)args {
+    NSAssert("calling undefined method %@", name);
+    return nil;
+}
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
+{
+    if(sel == @selector(callHandleRequestBlock))
+        return NO;
+    return YES;
+}
+
++(BOOL)isKeyExcludedFromWebScript:(const char *)name {
+    return YES;
+}
+
+-(void)callHandleRequestBlock {
     if(self.handleRequestBlock)
         self.handleRequestBlock(self, nil);
 }
@@ -1790,7 +1808,31 @@ NSString* TransitWebScriptNamespace = @"transit_callback";
 -(void)injectCodeToWebView {
     [super injectCodeToWebView];
     // temporary workaround, modify grunt.js to build proper string literal
-    NSString* customJS = @"transit.doInvokeNative = function(invocationDescription){transit_callback._handleRequestBlock()}";
+    NSString* customJS = @"(function(){"
+        "transit.doInvokeNative = function(invocationDescription){\n"
+            "transit.nativeInvokeTransferObject = invocationDescription;\n"
+            "transit_callback.callHandleRequestBlock();\n"
+            "if(transit.nativeInvokeTransferObject === invocationDescription) {\n"
+            "    throw new Error(\"internal error with transit: invocation transfer object not filled.\");\n"
+            "}\n"
+            "var result = transit.nativeInvokeTransferObject;\n"
+            "if(result instanceof Error) {\n"
+            "    throw result;\n"
+            "} else {\n"
+            "    return result;\n"
+            "}\n"
+        "};"
+
+        "transit.doHandleInvocationQueue = function(invocationDescriptions) {\n"
+            "transit.nativeInvokeTransferObject = invocationDescriptions;\n"
+            "transit_callback.callHandleRequestBlock();\n"
+            "transit.nativeInvokeTransferObject = null;\n"
+        "};"
+
+    "})()";
+
+
+
     [self _stringByEvaluatingJavaScriptFromString:customJS];
 }
 

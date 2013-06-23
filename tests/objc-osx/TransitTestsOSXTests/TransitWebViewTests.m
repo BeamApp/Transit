@@ -38,4 +38,16 @@
     [webView.mainFrame loadRequest:request];
 }
 
+-(TransitJSFunction*)functionToCallContextBareToTheMetal:(TransitContext*)context {
+    NSString* js = @"(function(arg){\n"
+            "window.globalTestVar = 'beforeCall '+arg;\n"
+            "transit_callback.callHandleRequestBlock();\n"
+            "return window.globalTestVar;\n"
+            "})";
+    return [[TransitJSFunction alloc] initWitContext:context jsRepresentation:js];
+}
+
+#pragma mark - actual tests
+
+
 @end
