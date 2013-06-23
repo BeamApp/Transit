@@ -150,6 +150,9 @@ typedef void (^TransitWebViewContextRequestHandler)(TransitAbstractWebViewContex
 @interface TransitAbstractWebViewContext(Private)
 
 @property (readonly) BOOL codeInjected;
+@property (readonly) id webView;
+@property(assign) BOOL proxifyEval;
+
 @property(copy) TransitWebViewContextRequestHandler handleRequestBlock;
 
 - (void)doInvokeNative;
@@ -163,7 +166,17 @@ typedef void (^TransitWebViewContextRequestHandler)(TransitAbstractWebViewContex
 
 @interface TransitUIWebViewContext(Private)
 
-@property(assign) BOOL proxifyEval;
+@end
+
+#endif
+
+#pragma mark - OSX-specific code
+
+#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+
+@interface TransitWebViewContext (Private)
+
+@property(nonatomic) BOOL shouldWaitForTransitLoaded;
 
 @end
 

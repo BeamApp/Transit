@@ -1700,7 +1700,10 @@ NSString* _TRANSIT_SCHEME = @"transit";
 
 #if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
 
-@implementation TransitWebViewContext
+@implementation TransitWebViewContext {
+    id _originalFrameLoadDelegate;
+    BOOL _shouldWaitForTransitLoaded;
+}
 
 +(id)contextWithWebView:(WebView*)webView {
     return [self.class.new initWithWebView:webView];
@@ -1710,8 +1713,85 @@ NSString* _TRANSIT_SCHEME = @"transit";
     self = [self init];
     if(self) {
         _webView = webView;
+        [self bindToWebView];
     }
     return self;
+}
+
+-(void)dealloc {
+    [_webView removeObserver:self forKeyPath:@"delegate"];
+}
+
+-(void)bindToWebView {
+    _originalFrameLoadDelegate = _webView.frameLoadDelegate;
+    _webView.frameLoadDelegate = self;
+    [_webView addObserver:self forKeyPath:@"delegate" options:NSKeyValueObservingOptionNew context:nil];
+    [self injectCodeToWebView];
+}
+
+- (NSString *)_stringByEvaluatingJavaScriptFromString:(NSString *)js {
+    return [_webView stringByEvaluatingJavaScriptFromString:js];
+}
+
+#pragma mark - WebFrameLoadDelegate
+
+-(BOOL)shouldWaitForTransitLoaded {
+    return _shouldWaitForTransitLoaded;
+}
+
+- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
+    if(frame != sender.mainFrame) return;
+
+    // avoid race condition: under OSX ML, frame itself is loaded but not every JS
+    // so poll for its existence and value of window.transit_loaded == true
+    if(self.shouldWaitForTransitLoaded)
+        [self pollForTransitLoadedAndEventuallyCallReadyHandler];
+    else {
+        if(self.readyHandler)
+            self.readyHandler(self);
+    }
+}
+
+- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
+    NSLog(@"did fail");
+}
+
+- (void)pollForTransitLoadedAndEventuallyCallReadyHandler {
+    if(!self.readyHandler)
+        return;
+
+//    DDLogVerbose(@"polling for transit loaded: %@", [self _stringByEvaluatingJavaScriptFromString:@"location.href"]);
+
+    NSString* js = @"typeof(transit_loaded)=='boolean' && transit_loaded";
+    NSString* result = [self _stringByEvaluatingJavaScriptFromString:js];
+    if(result.boolValue) {
+//        DDLogVerbose(@"loaded :) calling completionBlock");
+        self.readyHandler(self);
+    } else {
+        // actual polling
+        [self performSelector:_cmd withObject:nil afterDelay:0.1];
+    }
+}
+
+-(void)_handleRequestBlock {
+    if(self.handleRequestBlock)
+        self.handleRequestBlock(self, nil);
+}
+
+NSString* TransitWebScriptNamespace = @"transit_callback";
+
+- (void)webView:(WebView *)sender didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
+    if(frame != sender.mainFrame) return;
+
+    [windowObject setValue:self forKey:TransitWebScriptNamespace];
+    [self injectCodeToWebView];
+}
+
+-(void)injectCodeToWebView {
+    [super injectCodeToWebView];
+    // temporary workaround, modify grunt.js to build proper string literal
+    NSString* customJS = @"transit.doInvokeNative = function(invocationDescription){transit_callback._handleRequestBlock()}";
+    [self _stringByEvaluatingJavaScriptFromString:customJS];
 }
 
 @end

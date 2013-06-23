@@ -33,6 +33,9 @@
 		CB0C9D1D1774FE8E00A900FB /* TransitWebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB0C9D1C1774FE8E00A900FB /* TransitWebViewTests.m */; };
 		CB0C9D1F1774FFA500A900FB /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0C9D1E1774FFA500A900FB /* WebKit.framework */; };
 		CB0C9D201774FFD300A900FB /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0C9D1E1774FFA500A900FB /* WebKit.framework */; };
+		CB48975517772A8F0013DCA3 /* TransitGeneralTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB48975417772A8F0013DCA3 /* TransitGeneralTests.m */; };
+		CB48975817772B650013DCA3 /* TransitAbstractWebViewContextTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB48975717772B650013DCA3 /* TransitAbstractWebViewContextTests.m */; };
+		CB48975B177743990013DCA3 /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CB48975A177743990013DCA3 /* testPage.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +88,10 @@
 		CB0C9D131774F41E00A900FB /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitProxyTests.m; path = "../../objc-general/TransitProxyTests.m"; sourceTree = "<group>"; };
 		CB0C9D1C1774FE8E00A900FB /* TransitWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitWebViewTests.m; sourceTree = "<group>"; };
 		CB0C9D1E1774FFA500A900FB /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		CB48975417772A8F0013DCA3 /* TransitGeneralTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitGeneralTests.m; path = "../../objc-general/TransitGeneralTests.m"; sourceTree = "<group>"; };
+		CB48975617772B650013DCA3 /* TransitAbstractWebViewContextTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TransitAbstractWebViewContextTests.h; path = "../../objc-general/TransitAbstractWebViewContextTests.h"; sourceTree = "<group>"; };
+		CB48975717772B650013DCA3 /* TransitAbstractWebViewContextTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitAbstractWebViewContextTests.m; path = "../../objc-general/TransitAbstractWebViewContextTests.m"; sourceTree = "<group>"; };
+		CB48975A177743990013DCA3 /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = testPage.html; path = "../../objc-general/testPage.html"; sourceTree = "<group>"; };
 		CCEC38D4B3A14A76A31DA9BF /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -184,6 +191,10 @@
 		CB0C9CEF1774EA4400A900FB /* TransitTestsOSXTests */ = {
 			isa = PBXGroup;
 			children = (
+				CB489759177742DA0013DCA3 /* TestResources */,
+				CB48975617772B650013DCA3 /* TransitAbstractWebViewContextTests.h */,
+				CB48975717772B650013DCA3 /* TransitAbstractWebViewContextTests.m */,
+				CB48975417772A8F0013DCA3 /* TransitGeneralTests.m */,
 				CB0C9D0D1774F41E00A900FB /* TransitCallScopeTests.m */,
 				CB0C9D0E1774F41E00A900FB /* TransitContextTest.m */,
 				CB0C9D0F1774F41E00A900FB /* TransitEvaluableTests.m */,
@@ -222,6 +233,14 @@
 			);
 			name = Transit;
 			path = ../../../source/objc;
+			sourceTree = "<group>";
+		};
+		CB489759177742DA0013DCA3 /* TestResources */ = {
+			isa = PBXGroup;
+			children = (
+				CB48975A177743990013DCA3 /* testPage.html */,
+			);
+			name = TestResources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,6 +329,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB0C9CF41774EA4400A900FB /* InfoPlist.strings in Resources */,
+				CB48975B177743990013DCA3 /* testPage.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,6 +434,8 @@
 				CB0C9D191774F41E00A900FB /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */,
 				CB0C9D1A1774F41E00A900FB /* TransitProxyTests.m in Sources */,
 				CB0C9D1D1774FE8E00A900FB /* TransitWebViewTests.m in Sources */,
+				CB48975517772A8F0013DCA3 /* TransitGeneralTests.m in Sources */,
+				CB48975817772B650013DCA3 /* TransitAbstractWebViewContextTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

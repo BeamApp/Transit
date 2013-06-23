@@ -38,7 +38,9 @@
 		CBE29FD816C671F4004AED2B /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
 		CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */; };
 		F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B042BA5A1E209398767C6 /* TransitObjectTests.m */; };
+		F26B076335789851B19DE09B /* TransitAbstractWebViewContextTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B07477794407FEEDD95FE /* TransitAbstractWebViewContextTests.m */; };
 		F26B07A719E0E927520FD85F /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */; };
+		F26B0A048B7C710C59E8E499 /* TransitGeneralTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B092555C0D3ACEE43FF03 /* TransitGeneralTests.m */; };
 		F26B0B7FD7F7008323507797 /* CCWeakMockProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */; };
 		F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */; };
 		F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */; };
@@ -92,10 +94,13 @@
 		CB91AE9216C7FB7B00F46154 /* JasmineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JasmineViewController.h; sourceTree = "<group>"; };
 		CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JasmineViewController.m; sourceTree = "<group>"; };
 		CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JasmineViewController.xib; sourceTree = "<group>"; };
-		CBE29FD716C671F4004AED2B /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testPage.html; sourceTree = "<group>"; };
+		CBE29FD716C671F4004AED2B /* testPage.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = testPage.html; path = "../../objc-general/testPage.html"; sourceTree = "<group>"; };
 		CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "OCMockObject+Reset.h"; path = "../../objc-general/OCMockObject+Reset.h"; sourceTree = "<group>"; };
 		CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OCMockObject+Reset.m"; path = "../../objc-general/OCMockObject+Reset.m"; sourceTree = "<group>"; };
+		F26B03C610F49551F650863F /* TransitAbstractWebViewContextTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TransitAbstractWebViewContextTests.h; path = "../../objc-general/TransitAbstractWebViewContextTests.h"; sourceTree = "<group>"; };
 		F26B042BA5A1E209398767C6 /* TransitObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitObjectTests.m; path = "../../objc-general/TransitObjectTests.m"; sourceTree = "<group>"; };
+		F26B07477794407FEEDD95FE /* TransitAbstractWebViewContextTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitAbstractWebViewContextTests.m; path = "../../objc-general/TransitAbstractWebViewContextTests.m"; sourceTree = "<group>"; };
+		F26B092555C0D3ACEE43FF03 /* TransitGeneralTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitGeneralTests.m; path = "../../objc-general/TransitGeneralTests.m"; sourceTree = "<group>"; };
 		F26B0AA681B3507C406A4011 /* CCWeakMockProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCWeakMockProxy.h; path = "../../objc-general/CCWeakMockProxy.h"; sourceTree = "<group>"; };
 		F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitNativeFunctionWithSpecificBlockTests.m; path = "../../objc-general/TransitNativeFunctionWithSpecificBlockTests.m"; sourceTree = "<group>"; };
 		F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitCallScopeTests.m; path = "../../objc-general/TransitCallScopeTests.m"; sourceTree = "<group>"; };
@@ -216,6 +221,9 @@
 				F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */,
 				F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */,
 				F26B0AA681B3507C406A4011 /* CCWeakMockProxy.h */,
+				F26B07477794407FEEDD95FE /* TransitAbstractWebViewContextTests.m */,
+				F26B03C610F49551F650863F /* TransitAbstractWebViewContextTests.h */,
+				F26B092555C0D3ACEE43FF03 /* TransitGeneralTests.m */,
 			);
 			path = TransitTestsIOSTests;
 			sourceTree = "<group>";
@@ -444,6 +452,8 @@
 				F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */,
 				F26B07A719E0E927520FD85F /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */,
 				F26B0B7FD7F7008323507797 /* CCWeakMockProxy.m in Sources */,
+				F26B076335789851B19DE09B /* TransitAbstractWebViewContextTests.m in Sources */,
+				F26B0A048B7C710C59E8E499 /* TransitGeneralTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

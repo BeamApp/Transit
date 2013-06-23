@@ -243,12 +243,12 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @end
 
+@interface TransitAbstractWebViewContext : TransitContext
+@end
+
 #pragma mark - iOS-specific code
 
 #if TARGET_OS_IPHONE
-
-@interface TransitAbstractWebViewContext : TransitContext
-@end
 
 /// Context to expose JavaScript environment of existing webview.
 @interface TransitUIWebViewContext : TransitAbstractWebViewContext<UIWebViewDelegate>
@@ -267,7 +267,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 #if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
 
-@interface TransitWebViewContext : TransitContext
+@interface TransitWebViewContext : TransitAbstractWebViewContext
 
 +(id)contextWithWebView:(WebView*)webView;
 
