@@ -176,7 +176,8 @@ typedef void (^TransitWebViewContextRequestHandler)(TransitAbstractWebViewContex
 
 @interface TransitWebViewContext (Private)
 
-@property(nonatomic) BOOL shouldWaitForTransitLoaded;
+@property (nonatomic) BOOL shouldWaitForTransitLoaded;
+@property (weak, nonatomic) id originalFrameLoadDelegate;
 
 @end
 

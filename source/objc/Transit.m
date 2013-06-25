@@ -1437,8 +1437,8 @@ TransitWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER =
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if([keyPath isEqualToString:@"delegate"] && change[NSKeyValueChangeNewKey] != self)
-        @throw [NSException exceptionWithName:@"TransitException" reason:@"UIWebView.delegate must not be changed" userInfo:@{NSLocalizedDescriptionKey: @"UIWebView.delegate must not be changed"}];
+    if(change[NSKeyValueChangeNewKey] != self && [@[@"delegate", @"frameLoadDelegate"] containsObject:keyPath])
+        @throw [NSException exceptionWithName:@"TransitException" reason:@"WebView's delegate must not be changed" userInfo:@{NSLocalizedDescriptionKey: @"WebView's delegate must not be changed"}];
 
     // not implemented in super class
     // [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
@@ -1701,7 +1701,7 @@ NSString* _TRANSIT_SCHEME = @"transit";
 #if TRANSIT_OS_MAC
 
 @implementation TransitWebViewContext {
-    id _originalFrameLoadDelegate;
+    __weak id _originalFrameLoadDelegate;
     BOOL _shouldWaitForTransitLoaded;
 }
 
@@ -1719,13 +1719,17 @@ NSString* _TRANSIT_SCHEME = @"transit";
 }
 
 -(void)dealloc {
-    [_webView removeObserver:self forKeyPath:@"delegate"];
+    [_webView removeObserver:self forKeyPath:@"frameLoadDelegate"];
+}
+
+-(id)originalFrameLoadDelegate {
+    return _originalFrameLoadDelegate;
 }
 
 -(void)bindToWebView {
     _originalFrameLoadDelegate = _webView.frameLoadDelegate;
     _webView.frameLoadDelegate = self;
-    [_webView addObserver:self forKeyPath:@"delegate" options:NSKeyValueObservingOptionNew context:nil];
+    [_webView addObserver:self forKeyPath:@"frameLoadDelegate" options:NSKeyValueObservingOptionNew context:nil];
     [self injectCodeToWebView];
 }
 
@@ -1740,20 +1744,20 @@ NSString* _TRANSIT_SCHEME = @"transit";
 }
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
-    if(frame != sender.mainFrame) return;
+    if(frame == sender.mainFrame) {
 
-    // avoid race condition: under OSX ML, frame itself is loaded but not every JS
-    // so poll for its existence and value of window.transit_loaded == true
-    if(self.shouldWaitForTransitLoaded)
-        [self pollForTransitLoadedAndEventuallyCallReadyHandler];
-    else {
-        if(self.readyHandler)
-            self.readyHandler(self);
+        // avoid race condition: under OSX ML, frame itself is loaded but not every JS
+        // so poll for its existence and value of window.transit_loaded == true
+        if(self.shouldWaitForTransitLoaded)
+            [self pollForTransitLoadedAndEventuallyCallReadyHandler];
+        else {
+            if(self.readyHandler)
+                self.readyHandler(self);
+        }
     }
-}
 
-- (void)webView:(WebView *)sender didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
-    NSLog(@"did fail");
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:sender didFinishLoadForFrame:frame];
 }
 
 - (void)pollForTransitLoadedAndEventuallyCallReadyHandler {
@@ -1799,10 +1803,12 @@ NSString* _TRANSIT_SCHEME = @"transit";
 NSString* TransitWebScriptNamespace = @"transit_callback";
 
 - (void)webView:(WebView *)sender didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame {
-    if(frame != sender.mainFrame) return;
-
-    [windowObject setValue:self forKey:TransitWebScriptNamespace];
-    [self injectCodeToWebView];
+    if(frame == sender.mainFrame){
+        [windowObject setValue:self forKey:TransitWebScriptNamespace];
+        [self injectCodeToWebView];
+    }
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:sender didClearWindowObject:windowObject forFrame:frame];
 }
 
 -(void)injectCodeToWebView {
@@ -1835,6 +1841,73 @@ NSString* TransitWebScriptNamespace = @"transit_callback";
 
     [self _stringByEvaluatingJavaScriptFromString:customJS];
 }
+#pragma mark WebFrameLoadDelegate
+
+- (void)webView:(WebView *)webView didStartProvisionalLoadForFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didStartProvisionalLoadForFrame:frame];
+};
+
+- (void)webView:(WebView *)webView didReceiveServerRedirectForProvisionalLoadForFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didReceiveServerRedirectForProvisionalLoadForFrame:frame];
+};
+
+- (void)webView:(WebView *)webView didFailProvisionalLoadWithError:(NSError *)error forFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didFailProvisionalLoadWithError:error forFrame:frame];
+};
+
+- (void)webView:(WebView *)webView didCommitLoadForFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didCommitLoadForFrame:frame];
+};
+
+- (void)webView:(WebView *)webView didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didReceiveTitle:title forFrame:frame];
+};
+
+- (void)webView:(WebView *)webView didReceiveIcon:(NSImage *)image forFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didReceiveIcon:image forFrame:frame];
+};
+
+//- (void)webView:(WebView *)webView didFinishLoadForFrame:(WebFrame *)frame{};
+
+- (void)webView:(WebView *)webView didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didFailLoadWithError:error forFrame:frame];
+};
+
+- (void)webView:(WebView *)webView didChangeLocationWithinPageForFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didChangeLocationWithinPageForFrame:frame];
+};
+
+- (void)webView:(WebView *)webView willPerformClientRedirectToURL:(NSURL *)URL delay:(NSTimeInterval)seconds fireDate:(NSDate *)date forFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView willPerformClientRedirectToURL:URL delay:seconds fireDate:date forFrame:frame];
+};
+
+- (void)webView:(WebView *)webView didCancelClientRedirectForFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView didCancelClientRedirectForFrame:frame];
+};
+
+- (void)webView:(WebView *)webView willCloseFrame:(WebFrame *)frame{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView willCloseFrame:frame];
+};
+
+//- (void)webView:(WebView *)webView didClearWindowObject:(WebScriptObject *)windowObject forFrame:(WebFrame *)frame{};
+
+- (void)webView:(WebView *)webView windowScriptObjectAvailable:(WebScriptObject *)windowScriptObject{
+    if([_originalFrameLoadDelegate respondsToSelector:_cmd])
+        [_originalFrameLoadDelegate webView:webView windowScriptObjectAvailable:windowScriptObject];
+};
+
+
 
 @end
 
