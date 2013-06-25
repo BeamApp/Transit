@@ -162,7 +162,7 @@ typedef void (^TransitWebViewContextRequestHandler)(TransitAbstractWebViewContex
 
 #pragma mark - iOS-specific code
 
-#if TARGET_OS_IPHONE
+#if TRANSIT_OS_IOS
 
 @interface TransitUIWebViewContext(Private)
 
@@ -172,7 +172,7 @@ typedef void (^TransitWebViewContextRequestHandler)(TransitAbstractWebViewContex
 
 #pragma mark - OSX-specific code
 
-#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+#if TRANSIT_OS_MAC
 
 @interface TransitWebViewContext (Private)
 

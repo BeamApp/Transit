@@ -7,7 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+
+#define TRANSIT_OS_MAC (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+#define TRANSIT_OS_IOS (TARGET_OS_IPHONE)
+
+#if TRANSIT_OS_MAC
 
 #import <WebKit/WebKit.h>
 
@@ -248,7 +252,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 #pragma mark - iOS-specific code
 
-#if TARGET_OS_IPHONE
+#if TRANSIT_OS_IOS
 
 /// Context to expose JavaScript environment of existing webview.
 @interface TransitUIWebViewContext : TransitAbstractWebViewContext<UIWebViewDelegate>
@@ -265,7 +269,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 #pragma mark - OSX-specific code
 
-#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+#if TRANSIT_OS_MAC
 
 @interface TransitWebViewContext : TransitAbstractWebViewContext
 

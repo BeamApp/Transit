@@ -847,7 +847,9 @@
 }
 
 -(void)testReadmeExample {
+    #if TRANSIT_OS_MAC
     return;
+    #endif
 
     if(!transit_specificBlocksSupported())
         return;

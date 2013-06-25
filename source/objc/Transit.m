@@ -100,7 +100,7 @@ typedef int TransitCTBlockDescriptionFlags;
 #pragma mark - Transit Basics
 
 BOOL transit_iOS6OrLater() {
-#if TARGET_OS_IPHONE
+#if TRANSIT_OS_IOS
     return ([UIDevice.currentDevice.systemVersion compare:@"6" options:NSNumericSearch] == NSOrderedDescending);
 #else
     return NO;
@@ -108,7 +108,7 @@ BOOL transit_iOS6OrLater() {
 }
 
 BOOL transit_specificBlocksSupported() {
-#if TARGET_OS_IPHONE
+#if TRANSIT_OS_IOS
   #if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
     return transit_iOS6OrLater();
   #else
@@ -1623,7 +1623,7 @@ NSString* _TRANSIT_SCHEME = @"transit";
 
 #pragma mark - iOS-specific code
 
-#if TARGET_OS_IPHONE
+#if TRANSIT_OS_IOS
 
 @implementation TransitUIWebViewContext{
     id<UIWebViewDelegate> _originalDelegate;
@@ -1698,7 +1698,7 @@ NSString* _TRANSIT_SCHEME = @"transit";
 
 #pragma mark - OSX-specific code
 
-#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+#if TRANSIT_OS_MAC
 
 @implementation TransitWebViewContext {
     id _originalFrameLoadDelegate;
