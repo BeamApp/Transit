@@ -22,11 +22,11 @@ echo "Generate Documentation"
 
 echo "Build"
 
-xctool -workspace "$TESTS_PROJECT_ROOT/$TESTS_PROJECT_NAME.xcworkspace" -scheme $TESTS_PROJECT_NAME build test
+xctool -workspace "$TESTS_PROJECT_ROOT/$TESTS_PROJECT_NAME.xcworkspace" -scheme $TESTS_PROJECT_NAME -sdk iphonesimulator build test
 
 # somehow, clean on example project seems to fail...
 cd "$EXAMPLES_PROJECT_ROOT"
-xctool -workspace "$EXAMPLES_PROJECT_ROOT/$EXAMPLES_PROJECT_NAME.xcworkspace" -scheme $EXAMPLES_PROJECT_NAME  build test
+xctool -workspace "$EXAMPLES_PROJECT_ROOT/$EXAMPLES_PROJECT_NAME.xcworkspace" -scheme $EXAMPLES_PROJECT_NAME -sdk iphonesimulator build test
 
 
 echo "Validate PodSpec"

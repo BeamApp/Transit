@@ -250,6 +250,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 @end
 
+/// Abstract base-class for TransitUIWebViewContext and TransitWebViewContext
 @interface TransitAbstractWebViewContext : TransitContext
 @end
 
@@ -257,7 +258,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 #if TRANSIT_OS_IOS
 
-/// Context to expose JavaScript environment of existing webview.
+/// Context to expose JavaScript environment of existing webview on iOS.
 @interface TransitUIWebViewContext : TransitAbstractWebViewContext<UIWebViewDelegate>
 
 +(id)contextWithUIWebView:(UIWebView*)webView;
@@ -274,6 +275,7 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 
 #if TRANSIT_OS_MAC
 
+/// Context to expose JavaScript environment of existing webview on OS X.
 @interface TransitWebViewContext : TransitAbstractWebViewContext
 
 +(id)contextWithWebView:(WebView*)webView;
