@@ -1,0 +1,7 @@
+#include "Pods-SBJson.xcconfig"
+#include "Pods-Transit.xcconfig"
+ALWAYS_SEARCH_USER_PATHS = YES
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/SBJson" "${PODS_ROOT}/Headers/Transit"
+OTHER_LDFLAGS = -ObjC ${PODS_TRANSIT_OTHER_LDFLAGS}
+PODS_ROOT = ${SRCROOT}/Pods

@@ -1,0 +1,17 @@
+PODS:
+  - SBJson (3.2)
+  - Transit (0.0.2):
+    - SBJson (~> 3.2)
+
+DEPENDENCIES:
+  - Transit (from `../..`)
+
+EXTERNAL SOURCES:
+  Transit:
+    :path: ../..
+
+SPEC CHECKSUMS:
+  SBJson: e60b4dc22448c2ae1e754b523a4ab53408e85c8d
+  Transit: 357b42646e161234cf241b0c0ecec9d0c332c3b7
+
+COCOAPODS: 0.21.0
