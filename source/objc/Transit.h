@@ -17,11 +17,14 @@
 
 #endif
 
+// explicitly overriden in test projects
 #ifndef TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
-#define TRANSIT_SPECIFIC_BLOCKS_SUPPORTED (__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0 || __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_7)
+#define TRANSIT_SPECIFIC_BLOCKS_SUPPORTED ( (TRANSIT_OS_IOS && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_6_0) || (__MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_10_8) )
 #endif
 
-BOOL transit_iOS6OrLater();
+//
+
+BOOL transit_iOS_6_OrLater();
 BOOL transit_specificBlocksSupported();
 
 NSString* transit_stringAsJSExpression(NSString* string);
@@ -119,8 +122,8 @@ typedef id (^TransitGenericReplaceFunctionBlock)(TransitFunction* original, Tran
 -(TransitFunction*)asyncFunctionWithGenericBlock:(TransitGenericVoidFunctionBlock)block;
 
 #if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
--(TransitFunction*)functionWithBlock:(id)block NS_AVAILABLE(10_7, 6_0);
--(TransitFunction*)replaceFunctionAt:(NSString *)path withBlock:(id)block NS_AVAILABLE(10_7, 6_0);
+-(TransitFunction*)functionWithBlock:(id)block NS_AVAILABLE(10_8, 6_0);
+-(TransitFunction*)replaceFunctionAt:(NSString *)path withBlock:(id)block NS_AVAILABLE(10_8, 6_0);
 #endif
 
 

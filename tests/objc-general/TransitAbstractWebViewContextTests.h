@@ -27,7 +27,5 @@
 
 - (void)testPerformance;
 
-- (void)testReadmeExample;
-
 - (void)testAsyncInvocationQueue;
 @end

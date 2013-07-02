@@ -99,24 +99,37 @@ typedef int TransitCTBlockDescriptionFlags;
 
 #pragma mark - Transit Basics
 
-BOOL transit_iOS6OrLater() {
+BOOL transit_iOS_6_OrLater() {
 #if TRANSIT_OS_IOS
-    return ([UIDevice.currentDevice.systemVersion compare:@"6" options:NSNumericSearch] == NSOrderedDescending);
+    return ([UIDevice.currentDevice.systemVersion compare:@"6" options:NSNumericSearch]) > NSOrderedAscending;
 #else
     return NO;
 #endif
 }
 
-BOOL transit_specificBlocksSupported() {
-#if TRANSIT_OS_IOS
-  #if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
-    return transit_iOS6OrLater();
-  #else
-    return NO;
-  #endif
+BOOL transit_OSX_10_8_OrLater() {
+#if TRANSIT_OS_MAC
+    SInt32 major, minor;
+    Gestalt(gestaltSystemVersionMajor, &major);
+    Gestalt(gestaltSystemVersionMinor, &minor);
+    NSString* version = [NSString stringWithFormat:@"%d.%d", major, minor];
+    return [version compare:@"10.8" options:NSNumericSearch] > NSOrderedAscending;
 #else
-    return YES;
+    return NO;
 #endif
+}
+
+
+BOOL transit_specificBlocksSupported() {
+#if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
+    #if TRANSIT_OS_IOS
+        return transit_iOS_6_OrLater();
+    #endif
+    #if TRANSIT_OS_MAC
+        return transit_OSX_10_8_OrLater();
+    #endif
+#endif
+    return NO;
 }
 
 void * _TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION = &_TRANSIT_ASSOC_KEY_IS_JS_EXPRESSION;

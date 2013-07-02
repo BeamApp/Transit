@@ -551,6 +551,11 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"TRANSIT_SPECIFIC_BLOCKS_SUPPORTED=1",
+				);
 				INFOPLIST_FILE = "TransitTestsOSX/TransitTestsOSX-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -581,8 +586,14 @@
 				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"TRANSIT_SPECIFIC_BLOCKS_SUPPORTED=1",
+				);
 				INFOPLIST_FILE = "TransitTestsOSXTests/TransitTestsOSXTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
@@ -599,6 +610,7 @@
 				GCC_PREFIX_HEADER = "TransitTestsOSX/TransitTestsOSX-Prefix.pch";
 				INFOPLIST_FILE = "TransitTestsOSXTests/TransitTestsOSXTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};

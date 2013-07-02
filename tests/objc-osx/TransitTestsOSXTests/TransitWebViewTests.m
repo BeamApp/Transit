@@ -101,8 +101,8 @@
     STAssertTrue(context.originalFrameLoadDelegate == mockedDelegate, @"mocked delegated kept by context");
 
     // test if context passes calls through
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://some.server"]];
-    NSError *error = [NSError errorWithDomain:@"test" code:123 userInfo:nil];
+    [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://some.server"]];
+    [NSError errorWithDomain:@"test" code:123 userInfo:nil];
 
     [self.class waitForWebViewToBeLoaded:webView];
 
@@ -145,9 +145,6 @@
 
     [[mockedDelegate expect] webView:nil didClearWindowObject:nil forFrame:nil];
     [context webView:nil didClearWindowObject:nil forFrame:nil];
-
-    [[mockedDelegate expect] webView:nil windowScriptObjectAvailable:nil];
-    [context webView:nil windowScriptObjectAvailable:nil];
 
     STAssertNoThrow([mockedDelegate verify], @"verify");
 }

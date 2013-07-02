@@ -21,7 +21,7 @@
 + (NSArray *) testInvocations {
     // hide these tests on iOS 5
     // specific blocks are not supported over there
-    if(transit_iOS6OrLater()) {
+    if(transit_specificBlocksSupported()) {
         return [super testInvocations];
     } else {
         // if specific blocks are not supported, test at least that calls will cause an intended exception
@@ -64,6 +64,8 @@
 -(void)testAssertFailsOnVoidPointer {
     STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:^(void* p){}], @"void(void*)");
 }
+
+#if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
 
 -(void)testNonArgCall {
     NSArray* expectedArgs = @[];
@@ -224,5 +226,7 @@
     STAssertEquals([actualResult floatValue], [returnValue floatValue], @"result");
     [mock verify];
 }
+
+#endif
 
 @end

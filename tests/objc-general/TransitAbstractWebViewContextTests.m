@@ -198,7 +198,7 @@
     // iOS6 = 63
     // iOS5 = 92
     // OSX = 255;
-    int expectedMaxDepth = transit_iOS6OrLater() ? 63 : 92;
+    int expectedMaxDepth = transit_iOS_6_OrLater() ? 63 : 92;
 #if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
     expectedMaxDepth = 255;
 #endif
@@ -846,10 +846,8 @@
     STAssertNoThrow([funcMock2 verify], @"verify mock");
 }
 
+#if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
 -(void)testReadmeExample {
-    #if TRANSIT_OS_MAC
-    return;
-    #endif
 
     if(!transit_specificBlocksSupported())
         return;
@@ -911,5 +909,7 @@
             [context eval:@"@(Math.max, 3.5, {field:@})" val:applyFunc val:@6]
     );
 }
+#endif
+
 
 @end
