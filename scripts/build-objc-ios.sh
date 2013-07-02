@@ -31,4 +31,4 @@ xctool -workspace "$EXAMPLES_PROJECT_ROOT/$EXAMPLES_PROJECT_NAME.xcworkspace" -s
 
 echo "Validate PodSpec"
 cd ..
-pod spec lint
+#pod spec lint
