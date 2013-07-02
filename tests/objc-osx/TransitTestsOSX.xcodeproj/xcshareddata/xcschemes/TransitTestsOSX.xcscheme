@@ -14,6 +14,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3659FD670E1548A1BB55DDB9"
+               BuildableName = "libPods-TransitTestsOSXTests-OCMock.a"
+               BlueprintName = "Pods-TransitTestsOSXTests-OCMock"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "1F424CD7C1E54FF197E6DD5B"
                BuildableName = "libPods-SBJson.a"
                BlueprintName = "Pods-SBJson"
