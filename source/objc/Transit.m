@@ -121,13 +121,11 @@ BOOL transit_OSX_10_8_OrLater() {
 
 
 BOOL transit_specificBlocksSupported() {
-#if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
-    #if TRANSIT_OS_IOS
-        return transit_iOS_6_OrLater();
-    #endif
-    #if TRANSIT_OS_MAC
-        return transit_OSX_10_8_OrLater();
-    #endif
+#if TRANSIT_OS_IOS
+    return transit_iOS_6_OrLater();
+#endif
+#if TRANSIT_OS_MAC
+    return transit_OSX_10_8_OrLater();
 #endif
     return NO;
 }

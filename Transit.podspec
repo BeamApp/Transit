@@ -6,7 +6,9 @@ Pod::Spec.new do |s|
   s.license      = 'new BSD'
   s.authors      = { "Heiko Behrens" => "HeikoBehrens@gmx.de", "Marcel Jackwerth" => "marceljackwerth@gmail.com"}
   s.source       = { :git => "https://github.com/BeamApp/Transit.git", :tag => "0.0.2" }
-  s.platform     = :ios, '5.0'
+  s.ios.deployment_target = '5.0'
+  s.osx.deployment_target = '10.7'  
+  s.osx.frameworks = 'WebKit'
   s.source_files = 'source/objc/*.{h,m}'
   s.public_header_files = 'source/objc/Transit.h'
   s.requires_arc = true
