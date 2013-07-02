@@ -14,6 +14,9 @@ which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
 brew install xctool
 brew install appledoc
 
+pod --version
+gem update cocoapods
+
 # android build currently not supported on travis => skip installation
 #
 # brew install android-sdk
