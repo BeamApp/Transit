@@ -1,6 +1,6 @@
 
 
-# Transit [![Build Status](https://travis-ci.org/BeamApp/Transit.png)](https://travis-ci.org/BeamApp/Transit) [![Cocoa Pod](http://cocoapod-badges.herokuapp.com/v/Transit/badge.png)](#)
+# Transit [![Build Status](https://travis-ci.org/BeamApp/Transit.png)](https://travis-ci.org/BeamApp/Transit) [![Cocoa Pod](http://cocoapod-badges.herokuapp.com/p/Transit/badge.svg)](http://cocoadocs.org/docsets/Transit/) [![Cocoa Pod](http://cocoapod-badges.herokuapp.com/v/Transit/badge.svg)](http://cocoadocs.org/docsets/Transit/)
 
 Transit bridges between JavaScript and iOS, OSX, Android. You can easily embed a WebView or scripted logic via JS into your application and pass in native code as functions and especially event handlers. Whenever your native code got called you can use all arguments as well as the `this` argument even if they are JavaScript, functions again!
 
