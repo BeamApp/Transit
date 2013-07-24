@@ -160,7 +160,7 @@ public class TransitPromptAdapter implements TransitAdapter {
                 try {
                     doInvokeNativeAsync(invocation);
                 } catch (Exception e) {
-                    Log.e(TAG, String.format("[%s] Invocation of `%s` failed", TransitRequest.BATCH_INVOKE, invocation));
+                    Log.e(TAG, String.format("[%s] Invocation of `%s` failed", TransitRequest.BATCH_INVOKE, invocation), e);
                 }
             }
         };
