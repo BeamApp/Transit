@@ -167,7 +167,9 @@ public class TransitScriptBuilder {
     }
 
     private void parse(Object o) {
-        if (o instanceof JSRepresentable) {
+        if (o instanceof JSSerializable) {
+            parse(((JSSerializable) o).toJSObject());
+        } else if (o instanceof JSRepresentable) {
             buffer.append(((JSRepresentable) o).getJSRepresentation());
         } else if (o instanceof TransitProxy) {
             TransitProxy p = (TransitProxy) o;
