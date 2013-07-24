@@ -12,3 +12,8 @@ examples/objc-ios/dist
 keystore.db
 secure.properties
 tests/objc-ios/documentation
+
+# IntelliJ (git 1.8.2 required)
+.idea/**/*.iws
+.idea/workspace.xml
+.idea/tasks.xml
