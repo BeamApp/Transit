@@ -17,3 +17,4 @@ tests/objc-ios/documentation
 .idea/**/*.iws
 .idea/workspace.xml
 .idea/tasks.xml
+TransitExampleIOS.xccheckout
