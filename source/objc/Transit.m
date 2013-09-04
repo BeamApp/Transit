@@ -99,6 +99,14 @@ typedef int TransitCTBlockDescriptionFlags;
 
 #pragma mark - Transit Basics
 
+BOOL transit_iOS_7_OrLater() {
+#if TRANSIT_OS_IOS
+    return ([UIDevice.currentDevice.systemVersion compare:@"7" options:NSNumericSearch]) > NSOrderedAscending;
+#else
+    return NO;
+#endif
+}
+
 BOOL transit_iOS_6_OrLater() {
 #if TRANSIT_OS_IOS
     return ([UIDevice.currentDevice.systemVersion compare:@"6" options:NSNumericSearch]) > NSOrderedAscending;

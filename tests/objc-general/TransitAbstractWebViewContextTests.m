@@ -195,10 +195,14 @@
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     TransitFunction *func = [self functionToCallContextBareToTheMetal:context];
 
+    // iOS7 = 856
     // iOS6 = 63
     // iOS5 = 92
     // OSX = 255;
-    int expectedMaxDepth = transit_iOS_6_OrLater() ? 63 : 92;
+    int expectedMaxDepth = 92;
+    if(transit_iOS_6_OrLater()) expectedMaxDepth = 63;
+    if(transit_iOS_7_OrLater()) expectedMaxDepth = 856;
+
 #if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
     expectedMaxDepth = 255;
 #endif
