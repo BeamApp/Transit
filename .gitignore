@@ -18,3 +18,4 @@ tests/objc-ios/documentation
 .idea/workspace.xml
 .idea/tasks.xml
 TransitExampleIOS.xccheckout
+TransitTestsOSX.xccheckout
