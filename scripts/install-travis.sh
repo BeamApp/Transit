@@ -8,6 +8,9 @@ set -ev
 # curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C $HOMEBREW
 # export PATH=$HOMEBREW/bin:$PATH
 
+
+rvm install 2.0.0
+rvm use 2.0.0
 echo $PATH
 
 gem --debug install node
