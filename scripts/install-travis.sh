@@ -10,7 +10,7 @@ set -ev
 
 echo $PATH
 
-gem install node
+gem --verbose install node
 
 ls -l /usr/local/bin
 
