@@ -9,17 +9,15 @@ set -ev
 # export PATH=$HOMEBREW/bin:$PATH
 
 
-rvm install 2.0.0
-rvm use 2.0.0
-rvm gemset create travis
-rvm gemset use travis
+#rvm install 2.0.0
+#rvm use 2.0.0
+#rvm gemset create travis
+#rvm gemset use travis
 echo $PATH
 
-gem --debug install node
+brew install node
 
-ls -l /usr/local/bin
-
-which npm || (echo "npm not in PATH" %% exit 1)
+which npm || (echo "npm not in PATH" && exit 1)
 
 
 brew install xctool
