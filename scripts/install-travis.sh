@@ -14,6 +14,7 @@ which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
 brew install xctool
 brew install appledoc
 
+which pod
 pod --version
 gem update cocoapods
 
