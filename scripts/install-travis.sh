@@ -8,11 +8,19 @@ set -ev
 # curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C $HOMEBREW
 # export PATH=$HOMEBREW/bin:$PATH
 
+echo $PATH
+
+gem install node
+
+ls -l /usr/local/bin
+
+which npm || (echo "npm not in PATH" %% exit 1)
+
+
 brew install xctool
 brew install appledoc
 
 gem install cocoapods
-gem install node
 
 brew install phantomjs
 which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
