@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="appledoc" type="AppleRunConfiguration" factoryName="Application" SCHEME_NAME="appledoc" PROJECT_NAME="TransitTestsIOS" TARGET_NAME="transit" CONFIG_NAME="Debug" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+    <envs />
+    <method />
+  </configuration>
+</component>

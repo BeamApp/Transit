@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TransitTestsOSX" type="AppleRunConfiguration" factoryName="Application" SCHEME_NAME="TransitTestsOSX" PROJECT_NAME="Pods" TARGET_NAME="Pods-SBJson" CONFIG_NAME="Debug" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" RUN_TARGET_PROJECT_NAME="TransitTestsOSX" RUN_TARGET_NAME="TransitTestsOSX" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+    <envs />
+    <RunnerSettings RunnerId="AppRunner" />
+    <ConfigurationWrapper RunnerId="AppRunner" />
+    <method />
+  </configuration>
+</component>

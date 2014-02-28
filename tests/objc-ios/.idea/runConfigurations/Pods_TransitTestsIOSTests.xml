@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Pods-TransitTestsIOSTests" type="AppleRunConfiguration" factoryName="Application" SCHEME_NAME="Pods-TransitTestsIOSTests" PROJECT_NAME="Pods" TARGET_NAME="Pods-TransitTestsIOSTests" CONFIG_NAME="Debug" WORKING_DIR="" PASS_PARENT_ENVS="FALSE" RUN_TARGET_PROJECT_NAME="TransitTestsIOS" RUN_TARGET_NAME="TransitTestsIOS" MAKE_ACTIVE="TRUE" WAIT_FOR="FALSE">
+    <envs />
+    <method />
+  </configuration>
+</component>

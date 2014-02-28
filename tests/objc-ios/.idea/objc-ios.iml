@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CIDR_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../../source/objc">
+      <sourceFolder url="file://$MODULE_DIR$/../../source/objc" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../jasmine">
+      <sourceFolder url="file://$MODULE_DIR$/../jasmine" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/CCWeakMockProxy.h">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/CCWeakMockProxy.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/CCWeakMockProxy.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/CCWeakMockProxy.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/OCMockObject+Reset.h">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/OCMockObject+Reset.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/OCMockObject+Reset.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/OCMockObject+Reset.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitAbstractWebViewContextTests.h">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitAbstractWebViewContextTests.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitAbstractWebViewContextTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitAbstractWebViewContextTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitCallScopeTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitCallScopeTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitContextTest.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitContextTest.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitEvaluableTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitEvaluableTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitGeneralTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitGeneralTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitJSFunctionTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitJSFunctionTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitNativeFunctionTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitNativeFunctionTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitNativeFunctionWithSpecificBlockTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitNativeFunctionWithSpecificBlockTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitObjectTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitObjectTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/TransitProxyTests.m">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/TransitProxyTests.m" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../objc-general/testPage.html">
+      <sourceFolder url="file://$MODULE_DIR$/../objc-general/testPage.html" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
+
