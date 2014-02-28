@@ -8,14 +8,23 @@ set -ev
 # curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C $HOMEBREW
 # export PATH=$HOMEBREW/bin:$PATH
 
-brew install phantomjs
-which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
 
+brew install node
+which npm || (echo "npm not in PATH" && exit 1)
+
+# workaround as describe in http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more
+npm config set ca ""
+
+brew update
+brew unlink xctool
 brew install xctool
+
 brew install appledoc
 
-pod --version
-gem update cocoapods
+gem install cocoapods
+
+brew install phantomjs
+which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
 
 # android build currently not supported on travis => skip installation
 #

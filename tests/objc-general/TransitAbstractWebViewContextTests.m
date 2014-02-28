@@ -474,7 +474,7 @@
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     [self.class waitForWebViewToBeLoaded:context.webView];
     // hack to add some extra waiting since this test fails sometimes in ci environment
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.2]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
     TransitProxy* proxy = [context eval:@"window.document"];
     NSString* result = [context eval:@"@.title" val:proxy];
     STAssertEqualObjects(@"Empty Page", result, @"document.title");
