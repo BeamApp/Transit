@@ -20,7 +20,6 @@ brew install node
 which npm || (echo "npm not in PATH" && exit 1)
 
 # workaround as describe in http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more
-npm install npm -g
 npm config set ca ""
 
 brew install xctool
