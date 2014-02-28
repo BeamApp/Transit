@@ -23,8 +23,8 @@ which npm || (echo "npm not in PATH" && exit 1)
 npm config set ca ""
 
 brew update
+brew unlink xctool
 brew install xctool
-brew upgrade xctool
 
 brew install appledoc
 
