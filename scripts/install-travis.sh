@@ -8,17 +8,19 @@ set -ev
 # curl -L https://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C $HOMEBREW
 # export PATH=$HOMEBREW/bin:$PATH
 
-brew install phantomjs
-which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
-
 brew install xctool
 brew install appledoc
 
 which pod
-pod --version
-echo "after ersion"
+#pod --version
+#echo "after ersion"
 cat /usr/bin/pod
 gem install cocoapods
+
+brew install phantomjs
+which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
+
+
 
 # android build currently not supported on travis => skip installation
 #
