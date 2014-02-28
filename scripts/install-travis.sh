@@ -16,7 +16,9 @@ brew install appledoc
 
 which pod
 pod --version
-gem update cocoapods
+echo "after ersion"
+cat /usr/bin/pod
+gem install cocoapods
 
 # android build currently not supported on travis => skip installation
 #
