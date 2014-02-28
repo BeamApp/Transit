@@ -198,13 +198,15 @@
     // iOS7 = 856
     // iOS6 = 63
     // iOS5 = 92
-    // OSX = 255;
+    // OSX 10.8 = 255
+    // OSX 10.9 = 974
     int expectedMaxDepth = 92;
     if(transit_iOS_6_OrLater()) expectedMaxDepth = 63;
     if(transit_iOS_7_OrLater()) expectedMaxDepth = 856;
 
 #if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
-    expectedMaxDepth = 255;
+    if(transit_OSX_10_8_OrLater()) expectedMaxDepth = 255;
+    if(transit_OSX_10_9_OrLater()) expectedMaxDepth = 974;
 #endif
 
     __block int callCounter = 1;

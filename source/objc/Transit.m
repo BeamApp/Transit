@@ -115,16 +115,24 @@ BOOL transit_iOS_6_OrLater() {
 #endif
 }
 
-BOOL transit_OSX_10_8_OrLater() {
+BOOL transit_OSX_min_version(NSString *minVersion){
 #if TRANSIT_OS_MAC
     SInt32 major, minor;
     Gestalt(gestaltSystemVersionMajor, &major);
     Gestalt(gestaltSystemVersionMinor, &minor);
     NSString* version = [NSString stringWithFormat:@"%d.%d", major, minor];
-    return [version compare:@"10.8" options:NSNumericSearch] > NSOrderedAscending;
+    return [version compare:minVersion options:NSNumericSearch] > NSOrderedAscending;
 #else
     return NO;
 #endif
+}
+
+BOOL transit_OSX_10_8_OrLater() {
+    return transit_OSX_min_version(@"10.8");
+}
+
+BOOL transit_OSX_10_9_OrLater(){
+    return transit_OSX_min_version(@"10.9");
 }
 
 

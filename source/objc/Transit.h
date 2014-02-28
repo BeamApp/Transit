@@ -19,6 +19,9 @@
 
 BOOL transit_iOS_6_OrLater();
 BOOL transit_iOS_7_OrLater();
+BOOL transit_OSX_10_8_OrLater();
+BOOL transit_OSX_10_9_OrLater();
+
 BOOL transit_specificBlocksSupported();
 
 NSString* transit_stringAsJSExpression(NSString* string);

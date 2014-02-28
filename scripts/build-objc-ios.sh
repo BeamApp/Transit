@@ -2,14 +2,7 @@
 
 set -e
 
-BUILD_NUMBER=$1
-
-die () {
-    echo >&2 "$@"
-    exit
-}
-[ "$#" -ge 1  ] || die "$0 BUILD_NUMBER"
-
+cd $(dirname $0)
 
 TESTS_PROJECT_NAME="TransitTestsIOS"
 TESTS_PROJECT_ROOT="`cd ../tests/objc-ios; pwd`"
@@ -22,14 +15,17 @@ echo "Generate Documentation"
 
 echo "Build"
 
+echo $?
+pushd "$TESTS_PROJECT_ROOT"
 xctool -workspace "$TESTS_PROJECT_ROOT/$TESTS_PROJECT_NAME.xcworkspace" -scheme $TESTS_PROJECT_NAME -sdk iphonesimulator build test
+popd
 
 # somehow, clean on example project seems to fail...
-cd "$EXAMPLES_PROJECT_ROOT"
+pushd "$EXAMPLES_PROJECT_ROOT"
 xctool -workspace "$EXAMPLES_PROJECT_ROOT/$EXAMPLES_PROJECT_NAME.xcworkspace" -scheme $EXAMPLES_PROJECT_NAME -sdk iphonesimulator build test
-
+popd
 
 echo "Validate PodSpec"
-cd ../..
+cd ..
 pod --version
 pod spec lint Transit.podspec

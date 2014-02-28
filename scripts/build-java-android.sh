@@ -1,8 +1,8 @@
 #!/bin/sh
 
 set -e
+cd $(dirname $0)
 
-BUILD_NUMBER=$1
 ORIGINAL_PWD=`pwd`
 ROOT=$(cd ..; pwd)
 
@@ -11,8 +11,6 @@ die()
     echo >&2 "$@"
     exit 1
 }
-
-[ "$#" -ge 1  ] || die "Usage: $0 BUILD_NUMBER"
 
 killed()
 {
