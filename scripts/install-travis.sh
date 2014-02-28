@@ -11,6 +11,8 @@ set -ev
 
 rvm install 2.0.0
 rvm use 2.0.0
+rvm gemset create travis
+rvm gemset use travis
 echo $PATH
 
 gem --debug install node
