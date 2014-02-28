@@ -11,11 +11,8 @@ set -ev
 brew install xctool
 brew install appledoc
 
-which pod
-#pod --version
-#echo "after ersion"
-cat /usr/bin/pod
 gem install cocoapods
+gem install node
 
 brew install phantomjs
 which phantomjs || (echo "PhantomJS not in PATH" && exit 1)
