@@ -23,6 +23,8 @@ which npm || (echo "npm not in PATH" && exit 1)
 npm config set ca ""
 
 brew install xctool
+brew upgrade xctool
+
 brew install appledoc
 
 gem install cocoapods
