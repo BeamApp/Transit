@@ -90,7 +90,7 @@
   };
 
 })(
-  // TRANSIT_GLOBAL_NAME
+  /* TRANSIT_GLOBAL_NAME */
     "transit"
-  // TRANSIT_GLOBAL_NAME
+  /* TRANSIT_GLOBAL_NAME */
 );

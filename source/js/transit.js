@@ -19,11 +19,11 @@
         throw "must be replaced by native runtime " + invocationDescription;
     };
 
-    // should be replaced by native runtime to support more efficient solution
-    // this behavior is expected:
-    //   1. if one call throws an exception, all others must still be executed
-    //   2. result is ignored
-    //   3. order is not relevant
+    /* should be replaced by native runtime to support more efficient solution */
+    /* this behavior is expected: */
+    /*   1. if one call throws an exception, all others must still be executed */
+    /*   2. result is ignored */
+    /*   3. order is not relevant */
     transit.doHandleInvocationQueue = function(invocationDescriptions){
         for(var i=0; i<invocationDescriptions.length; i++) {
             var description = invocationDescriptions[i];
@@ -80,7 +80,7 @@
             if(elem === GLOBAL_OBJECT) {
                 return MARKER_MAGIC_OBJECT_GLOBAL;
             }
-            // when called from native code, typeof ('string') might return 'object'
+            /* when called from native code, typeof ('string') might return 'object' */
             if(elem != null && [Object, Array, String, Boolean, Number].indexOf(elem.constructor)<0) {
                 return transit.retainElement(elem);
             }
@@ -169,6 +169,6 @@
         delete transit.retained[retainId];
     };
 
-    window[globalName] = transit;
+    window[globalName] = transit;      
 
 })("transit");
