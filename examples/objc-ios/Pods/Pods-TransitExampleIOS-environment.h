@@ -15,6 +15,6 @@
 // Transit
 #define COCOAPODS_POD_AVAILABLE_Transit
 #define COCOAPODS_VERSION_MAJOR_Transit 0
-#define COCOAPODS_VERSION_MINOR_Transit 0
-#define COCOAPODS_VERSION_PATCH_Transit 2
+#define COCOAPODS_VERSION_MINOR_Transit 1
+#define COCOAPODS_VERSION_PATCH_Transit 0
 
