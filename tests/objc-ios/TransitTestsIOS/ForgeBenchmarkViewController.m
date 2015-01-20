@@ -9,6 +9,9 @@
 #import "ForgeBenchmarkViewController.h"
 #import "Transit.h"
 #import "Transit+Private.h"
+#import "TransitFunctionCallScope.h"
+#import "TransitFunction.h"
+#import "TransitNativeFunction.h"
 
 @interface ForgeBenchmarkViewController ()
 
@@ -33,27 +36,27 @@
     // this VC embed the benchmark from trigger.io
     // https://github.com/trigger-corp/Forge-vs-Cordova-Performance/blob/master/Forge/benchmark/index.html
     // read about it here
-    // http://trigger.io/cross-platform-application-development-blog/2012/02/24/why-trigger-io-doesnt-use-phonegap-5x-faster-native-bridge/         
-    
+    // http://trigger.io/cross-platform-application-development-blog/2012/02/24/why-trigger-io-doesnt-use-phonegap-5x-faster-native-bridge/
+
     [super viewDidLoad];
     NSURL *url = [NSBundle.mainBundle URLForResource:@"forge_benchmark" withExtension:@"html"];
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
-    
+
     [self setupTransit];
 }
 
 -(void)setupTransit {
     self.transit = [[TransitUIWebViewContext alloc] initWithUIWebView:self.webView];
-    
+
     TransitNativeFunction *asyncFunc = (TransitNativeFunction*) [self.transit asyncFunctionWithGenericBlock:^(TransitNativeFunctionCallScope *callScope) {
         NSString *data = callScope.arguments[0];
         TransitFunction *cb = callScope.arguments[1];
-        
+
         // you could also use [cb callAsyncWithArg:data];
         // but since you don't need the result this *async* call is faster
         [cb callAsyncWithArg:data];
     }];
-    
+
     TransitNativeFunction *blockingFunc = (TransitNativeFunction*) [self.transit functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
         NSString *data = callScope.arguments[0];
         return data;

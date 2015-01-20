@@ -7,10 +7,15 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "Transit.h"
 #import "Transit+Private.h"
 #import "OCMock.h"
 #import "CCWeakMockProxy.h"
+#import "TransitNativeFunction.h"
+#import "TransitNativeFunction+Private.h"
+#import "TransitFunctionCallScope.h"
+#import "TransitFunctionCallScope+Private.h"
+#import "TransitContext.h"
+#import "TransitFunctionBodyProtocol.h"
 
 @interface TransitNativeFunctionWithSpecificBlockTests : SenTestCase
 
@@ -175,7 +180,7 @@
     for(NSUInteger i=0; i<blocks.count; i++) {
         id block = blocks[i];
         TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
-        id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil]);
+        id actualResult = genericBlock([[TransitNativeFunctionCallScope alloc] initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil]);
         STAssertEqualObjects(actualResult, @(i+1), @"result");
     }
 }
@@ -187,7 +192,7 @@
 
     NSArray* args = @[@"foo", @"bar", @"baz", @"true", @"12.5"];
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
-    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:args expectsResult:YES function:nil]);
+    id actualResult = genericBlock([[TransitNativeFunctionCallScope alloc] initWithContext:nil parentScope:nil thisArg:nil arguments:args expectsResult:YES function:nil]);
     STAssertEqualObjects(actualResult, @"i: 0, f: 0.00, b1: 0, b2: 1, d: 12.50", @"result");
 }
 
@@ -198,7 +203,7 @@
 
     NSArray* args = @[@12.5, @"foo"];
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
-    id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:args expectsResult:YES function:nil]);
+    id actualResult = genericBlock([[TransitNativeFunctionCallScope alloc] initWithContext:nil parentScope:nil thisArg:nil arguments:args expectsResult:YES function:nil]);
     STAssertEqualObjects(actualResult, @"12.5-__NSCFNumber, foo-__NSCFConstantString", @"result");
 }
 
@@ -214,7 +219,7 @@
         return f+i;
     };
 
-    TransitContext *context = TransitContext.new;
+    TransitContext *context = [TransitContext new];
     TransitFunction *func = [context functionWithBlock:block];
 
     id thisArg = @{};

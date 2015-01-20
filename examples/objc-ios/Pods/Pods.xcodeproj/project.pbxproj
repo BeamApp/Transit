@@ -7,92 +7,92 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		02BD4B4CF714438FBC2CB84E /* Pods-SBJson-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E5D380D082704C30BCB07B2B /* Pods-SBJson-dummy.m */; settings = {}; };
+		02BD4B4CF714438FBC2CB84E /* Pods-SBJson-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E5D380D082704C30BCB07B2B /* Pods-SBJson-dummy.m */; };
 		0AA53693FA084E85B04A724C /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C520A9EABA644BAA231D970 /* SBJsonWriter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
-		1312D88675A5410D8046EF59 /* libPods-Transit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4A37888EF3432A9E6DAF4F /* libPods-Transit.a */; settings = {}; };
-		1B8D7FCD5D104521BCF63DFE /* SBJsonStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = BCC13347102049B3A818D0DC /* SBJsonStreamParser.h */; settings = {}; };
+		1312D88675A5410D8046EF59 /* libPods-Transit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4A37888EF3432A9E6DAF4F /* libPods-Transit.a */; };
+		1B8D7FCD5D104521BCF63DFE /* SBJsonStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = BCC13347102049B3A818D0DC /* SBJsonStreamParser.h */; };
 		1D3CCC45236045098BDDD8A1 /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = AD18F0DD2BAB4C688A345D82 /* SBJsonStreamWriterState.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
-		233437C299A34F54B9EC87A0 /* SBJsonStreamParserAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F208F9F2C9C430390938EC5 /* SBJsonStreamParserAccumulator.h */; settings = {}; };
+		233437C299A34F54B9EC87A0 /* SBJsonStreamParserAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F208F9F2C9C430390938EC5 /* SBJsonStreamParserAccumulator.h */; };
 		24D405D6D8814764A0454478 /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 80966CFF6ADD4EED838ED75C /* SBJsonStreamWriterAccumulator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
-		27F30ED944E94587A864D6EE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E91BE9024D4BDC819D40A3 /* Foundation.framework */; settings = {}; };
-		2E9F837F2DBA4673AC9364DF /* Pods-Transit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C53A5930DF34CEA8E329622 /* Pods-Transit-dummy.m */; settings = {}; };
-		56155BA4DE4D4453B5235B0B /* SBJsonStreamWriterAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = B743665C3E1244679F217A57 /* SBJsonStreamWriterAccumulator.h */; settings = {}; };
-		5B945D8007A34A4292153FE4 /* NSObject+SBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 55E70504E99C417C96FD4716 /* NSObject+SBJson.h */; settings = {}; };
-		606526C7461340E2951F3E94 /* Transit.h in Headers */ = {isa = PBXBuildFile; fileRef = BBDEF568DFF84D198C485D90 /* Transit.h */; settings = {}; };
+		27F30ED944E94587A864D6EE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E91BE9024D4BDC819D40A3 /* Foundation.framework */; };
+		2E9F837F2DBA4673AC9364DF /* Pods-Transit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C53A5930DF34CEA8E329622 /* Pods-Transit-dummy.m */; };
+		56155BA4DE4D4453B5235B0B /* SBJsonStreamWriterAccumulator.h in Headers */ = {isa = PBXBuildFile; fileRef = B743665C3E1244679F217A57 /* SBJsonStreamWriterAccumulator.h */; };
+		5B945D8007A34A4292153FE4 /* NSObject+SBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 55E70504E99C417C96FD4716 /* NSObject+SBJson.h */; };
+		606526C7461340E2951F3E94 /* Transit.h in Headers */ = {isa = PBXBuildFile; fileRef = BBDEF568DFF84D198C485D90 /* Transit.h */; };
 		67883087871D4B648D056668 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D59FDFDE20A4F88A2A31525 /* NSObject+SBJson.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		6AAF7CE18C3C4D5085DDC0E3 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 98ADFC55E6034B589D6E281F /* SBJsonUTF8Stream.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		71F2A4E787894187856C1BA8 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D6580C49E14838884C6204 /* SBJsonStreamParser.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
-		72A729AA1D1D417DACF7E204 /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 59EDBDCAB1164C21A9B0BBC6 /* SBJsonWriter.h */; settings = {}; };
+		72A729AA1D1D417DACF7E204 /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 59EDBDCAB1164C21A9B0BBC6 /* SBJsonWriter.h */; };
 		78816DDAA8284D9B9BA4478E /* SBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = A9E1D78B3BD74291A67663D4 /* SBJsonStreamWriter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
-		8A92AFD109A54848A6238718 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E91BE9024D4BDC819D40A3 /* Foundation.framework */; settings = {}; };
+		8A92AFD109A54848A6238718 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E91BE9024D4BDC819D40A3 /* Foundation.framework */; };
 		9073061DDCE74D5E9FF399BC /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DE07F41EEF647A1AE0F29D7 /* SBJsonStreamParserState.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		A13A2F48AC454E51948DF4A9 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A78F3D75FD45CC930BBE94 /* SBJsonTokeniser.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		A5A46E82C06C4863B38E3926 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 461018AF6A434148A88E9907 /* SBJsonParser.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
-		AB022A99F1A047A9857DE573 /* SBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4971E755605241DC80E61A04 /* SBJsonParser.h */; settings = {}; };
+		AB022A99F1A047A9857DE573 /* SBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 4971E755605241DC80E61A04 /* SBJsonParser.h */; };
 		B12F0D52A7E54BB4967D11B2 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A7FC1018363482193FA3E6D /* SBJsonStreamParserAccumulator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		B90684B6CB3D456B9ECC4B84 /* Transit.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DEB0A891284C68BDC089EF /* Transit.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		B9D8A01B7A3D442EBA903B40 /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DC6ADA11ED48D4BBCD541E /* SBJsonStreamParserAdapter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
-		C3946005E0924227BBED2D31 /* Transit+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A2F6F94E6D94B51A053C216 /* Transit+Private.h */; settings = {}; };
-		CC1205EECCC24924BA7A476B /* Pods-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DE90A0FCA2F478DBE58CB19 /* Pods-dummy.m */; settings = {}; };
-		CE05ECCE1FEA4283A308551A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E91BE9024D4BDC819D40A3 /* Foundation.framework */; settings = {}; };
-		D64363F6B9114E9C8813D3D1 /* SBJsonStreamWriterState.h in Headers */ = {isa = PBXBuildFile; fileRef = ED69982AD07E46118BD79CD0 /* SBJsonStreamWriterState.h */; settings = {}; };
-		D646208387BD4499B527E7F2 /* SBJsonStreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AFCB339AF93494EBB1F49AD /* SBJsonStreamWriter.h */; settings = {}; };
-		D92A370F63324A249F0338A3 /* SBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 0FF702FB0A9742CBA7CA0C61 /* SBJson.h */; settings = {}; };
-		DDB708FD083E4863BB147A9F /* libPods-SBJson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E01BB9E3F6F54995B49B1BEE /* libPods-SBJson.a */; settings = {}; };
-		DEC36CB0E61642F585A7A418 /* SBJsonStreamParserAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6611AF68FF704FF0BB9679A1 /* SBJsonStreamParserAdapter.h */; settings = {}; };
-		E2C272B73C444DCE8AA6B8F1 /* SBJsonUTF8Stream.h in Headers */ = {isa = PBXBuildFile; fileRef = BEE3F468C56846DEB3937C66 /* SBJsonUTF8Stream.h */; settings = {}; };
-		E4B418BBFDAF409A818E6953 /* SBJsonTokeniser.h in Headers */ = {isa = PBXBuildFile; fileRef = B91B5345B68343C98D2ABC96 /* SBJsonTokeniser.h */; settings = {}; };
-		EF454F719C3C41E4B67BBD71 /* SBJsonStreamParserState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CFF6AFFE8CE4F6BA4AEF24F /* SBJsonStreamParserState.h */; settings = {}; };
+		C3946005E0924227BBED2D31 /* Transit+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A2F6F94E6D94B51A053C216 /* Transit+Private.h */; };
+		CC1205EECCC24924BA7A476B /* Pods-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DE90A0FCA2F478DBE58CB19 /* Pods-dummy.m */; };
+		CE05ECCE1FEA4283A308551A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E91BE9024D4BDC819D40A3 /* Foundation.framework */; };
+		D64363F6B9114E9C8813D3D1 /* SBJsonStreamWriterState.h in Headers */ = {isa = PBXBuildFile; fileRef = ED69982AD07E46118BD79CD0 /* SBJsonStreamWriterState.h */; };
+		D646208387BD4499B527E7F2 /* SBJsonStreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AFCB339AF93494EBB1F49AD /* SBJsonStreamWriter.h */; };
+		D92A370F63324A249F0338A3 /* SBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 0FF702FB0A9742CBA7CA0C61 /* SBJson.h */; };
+		DDB708FD083E4863BB147A9F /* libPods-SBJson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E01BB9E3F6F54995B49B1BEE /* libPods-SBJson.a */; };
+		DEC36CB0E61642F585A7A418 /* SBJsonStreamParserAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6611AF68FF704FF0BB9679A1 /* SBJsonStreamParserAdapter.h */; };
+		E2C272B73C444DCE8AA6B8F1 /* SBJsonUTF8Stream.h in Headers */ = {isa = PBXBuildFile; fileRef = BEE3F468C56846DEB3937C66 /* SBJsonUTF8Stream.h */; };
+		E4B418BBFDAF409A818E6953 /* SBJsonTokeniser.h in Headers */ = {isa = PBXBuildFile; fileRef = B91B5345B68343C98D2ABC96 /* SBJsonTokeniser.h */; };
+		EF454F719C3C41E4B67BBD71 /* SBJsonStreamParserState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CFF6AFFE8CE4F6BA4AEF24F /* SBJsonStreamParserState.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		04E91BE9024D4BDC819D40A3 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		0A120277DF2148E98117E7FF /* Pods-Transit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Transit.xcconfig"; path = "Pods-Transit.xcconfig"; sourceTree = SOURCE_ROOT; };
+		0A120277DF2148E98117E7FF /* Pods-Transit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Transit.xcconfig"; sourceTree = SOURCE_ROOT; };
 		0DE07F41EEF647A1AE0F29D7 /* SBJsonStreamParserState.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonStreamParserState.m; path = SBJson/Classes/SBJsonStreamParserState.m; sourceTree = SOURCE_ROOT; };
 		0FF702FB0A9742CBA7CA0C61 /* SBJson.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJson.h; path = SBJson/Classes/SBJson.h; sourceTree = SOURCE_ROOT; };
 		18DEB0A891284C68BDC089EF /* Transit.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = Transit.m; path = ../../../source/objc/Transit.m; sourceTree = SOURCE_ROOT; };
 		1A2F6F94E6D94B51A053C216 /* Transit+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Transit+Private.h"; path = "../../../source/objc/Transit+Private.h"; sourceTree = SOURCE_ROOT; };
-		22C1AD455A564F84A891E0A7 /* Pods-SBJson-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SBJson-Private.xcconfig"; path = "Pods-SBJson-Private.xcconfig"; sourceTree = SOURCE_ROOT; };
+		22C1AD455A564F84A891E0A7 /* Pods-SBJson-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SBJson-Private.xcconfig"; sourceTree = SOURCE_ROOT; };
 		23DC6ADA11ED48D4BBCD541E /* SBJsonStreamParserAdapter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonStreamParserAdapter.m; path = SBJson/Classes/SBJsonStreamParserAdapter.m; sourceTree = SOURCE_ROOT; };
 		2A7FC1018363482193FA3E6D /* SBJsonStreamParserAccumulator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonStreamParserAccumulator.m; path = SBJson/Classes/SBJsonStreamParserAccumulator.m; sourceTree = SOURCE_ROOT; };
 		2C520A9EABA644BAA231D970 /* SBJsonWriter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonWriter.m; path = SBJson/Classes/SBJsonWriter.m; sourceTree = SOURCE_ROOT; };
-		417ADED5E9754A5D9763291C /* Pods-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; name = "Pods-resources.sh"; path = "Pods-resources.sh"; sourceTree = SOURCE_ROOT; };
-		45F4AC78B5184F86BB3336B3 /* Pods-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; name = "Pods-acknowledgements.markdown"; path = "Pods-acknowledgements.markdown"; sourceTree = SOURCE_ROOT; };
+		417ADED5E9754A5D9763291C /* Pods-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-resources.sh"; sourceTree = SOURCE_ROOT; };
+		45F4AC78B5184F86BB3336B3 /* Pods-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = "Pods-acknowledgements.markdown"; sourceTree = SOURCE_ROOT; };
 		461018AF6A434148A88E9907 /* SBJsonParser.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonParser.m; path = SBJson/Classes/SBJsonParser.m; sourceTree = SOURCE_ROOT; };
 		4971E755605241DC80E61A04 /* SBJsonParser.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonParser.h; path = SBJson/Classes/SBJsonParser.h; sourceTree = SOURCE_ROOT; };
 		55E70504E99C417C96FD4716 /* NSObject+SBJson.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSObject+SBJson.h"; path = "SBJson/Classes/NSObject+SBJson.h"; sourceTree = SOURCE_ROOT; };
 		59EDBDCAB1164C21A9B0BBC6 /* SBJsonWriter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonWriter.h; path = SBJson/Classes/SBJsonWriter.h; sourceTree = SOURCE_ROOT; };
 		5D59FDFDE20A4F88A2A31525 /* NSObject+SBJson.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SBJson.m"; path = "SBJson/Classes/NSObject+SBJson.m"; sourceTree = SOURCE_ROOT; };
-		5F4A37888EF3432A9E6DAF4F /* libPods-Transit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-Transit.a"; path = "libPods-Transit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		643E85E6AC6E438B875C2805 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libPods.a; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		649BF15D09B84A60B98D44B6 /* Pods-Transit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; name = "Pods-Transit-prefix.pch"; path = "Pods-Transit-prefix.pch"; sourceTree = SOURCE_ROOT; };
+		5F4A37888EF3432A9E6DAF4F /* libPods-Transit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Transit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		643E85E6AC6E438B875C2805 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		649BF15D09B84A60B98D44B6 /* Pods-Transit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Transit-prefix.pch"; sourceTree = SOURCE_ROOT; };
 		6611AF68FF704FF0BB9679A1 /* SBJsonStreamParserAdapter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonStreamParserAdapter.h; path = SBJson/Classes/SBJsonStreamParserAdapter.h; sourceTree = SOURCE_ROOT; };
-		66907C16E97945F69289AAE7 /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; name = "Pods-acknowledgements.plist"; path = "Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
-		7C53A5930DF34CEA8E329622 /* Pods-Transit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Pods-Transit-dummy.m"; path = "Pods-Transit-dummy.m"; sourceTree = SOURCE_ROOT; };
+		66907C16E97945F69289AAE7 /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		7C53A5930DF34CEA8E329622 /* Pods-Transit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Transit-dummy.m"; sourceTree = SOURCE_ROOT; };
 		7CFF6AFFE8CE4F6BA4AEF24F /* SBJsonStreamParserState.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonStreamParserState.h; path = SBJson/Classes/SBJsonStreamParserState.h; sourceTree = SOURCE_ROOT; };
-		7DE90A0FCA2F478DBE58CB19 /* Pods-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Pods-dummy.m"; path = "Pods-dummy.m"; sourceTree = SOURCE_ROOT; };
+		7DE90A0FCA2F478DBE58CB19 /* Pods-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-dummy.m"; sourceTree = SOURCE_ROOT; };
 		7F208F9F2C9C430390938EC5 /* SBJsonStreamParserAccumulator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonStreamParserAccumulator.h; path = SBJson/Classes/SBJsonStreamParserAccumulator.h; sourceTree = SOURCE_ROOT; };
 		80966CFF6ADD4EED838ED75C /* SBJsonStreamWriterAccumulator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonStreamWriterAccumulator.m; path = SBJson/Classes/SBJsonStreamWriterAccumulator.m; sourceTree = SOURCE_ROOT; };
 		8AFCB339AF93494EBB1F49AD /* SBJsonStreamWriter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonStreamWriter.h; path = SBJson/Classes/SBJsonStreamWriter.h; sourceTree = SOURCE_ROOT; };
-		8D616B5B1FA044508DB4F859 /* Pods-Transit-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Transit-Private.xcconfig"; path = "Pods-Transit-Private.xcconfig"; sourceTree = SOURCE_ROOT; };
-		9260EC0AD0884774A700C391 /* Pods-environment.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Pods-environment.h"; path = "Pods-environment.h"; sourceTree = SOURCE_ROOT; };
+		8D616B5B1FA044508DB4F859 /* Pods-Transit-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Transit-Private.xcconfig"; sourceTree = SOURCE_ROOT; };
+		9260EC0AD0884774A700C391 /* Pods-environment.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-environment.h"; sourceTree = SOURCE_ROOT; };
 		98ADFC55E6034B589D6E281F /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonUTF8Stream.m; path = SBJson/Classes/SBJsonUTF8Stream.m; sourceTree = SOURCE_ROOT; };
 		A1D6580C49E14838884C6204 /* SBJsonStreamParser.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonStreamParser.m; path = SBJson/Classes/SBJsonStreamParser.m; sourceTree = SOURCE_ROOT; };
 		A6A78F3D75FD45CC930BBE94 /* SBJsonTokeniser.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonTokeniser.m; path = SBJson/Classes/SBJsonTokeniser.m; sourceTree = SOURCE_ROOT; };
 		A9E1D78B3BD74291A67663D4 /* SBJsonStreamWriter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonStreamWriter.m; path = SBJson/Classes/SBJsonStreamWriter.m; sourceTree = SOURCE_ROOT; };
 		AD18F0DD2BAB4C688A345D82 /* SBJsonStreamWriterState.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SBJsonStreamWriterState.m; path = SBJson/Classes/SBJsonStreamWriterState.m; sourceTree = SOURCE_ROOT; };
-		AE938FE8AC1C4DE588912F82 /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		AE938FE8AC1C4DE588912F82 /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B743665C3E1244679F217A57 /* SBJsonStreamWriterAccumulator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonStreamWriterAccumulator.h; path = SBJson/Classes/SBJsonStreamWriterAccumulator.h; sourceTree = SOURCE_ROOT; };
 		B91B5345B68343C98D2ABC96 /* SBJsonTokeniser.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonTokeniser.h; path = SBJson/Classes/SBJsonTokeniser.h; sourceTree = SOURCE_ROOT; };
 		BBDEF568DFF84D198C485D90 /* Transit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Transit.h; path = ../../../source/objc/Transit.h; sourceTree = SOURCE_ROOT; };
 		BCC13347102049B3A818D0DC /* SBJsonStreamParser.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonStreamParser.h; path = SBJson/Classes/SBJsonStreamParser.h; sourceTree = SOURCE_ROOT; };
 		BEE3F468C56846DEB3937C66 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonUTF8Stream.h; path = SBJson/Classes/SBJsonUTF8Stream.h; sourceTree = SOURCE_ROOT; };
-		DF7C8664131E4298A939AA4A /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods.xcconfig; sourceTree = SOURCE_ROOT; };
-		E01BB9E3F6F54995B49B1BEE /* libPods-SBJson.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-SBJson.a"; path = "libPods-SBJson.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E5D380D082704C30BCB07B2B /* Pods-SBJson-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "Pods-SBJson-dummy.m"; path = "Pods-SBJson-dummy.m"; sourceTree = SOURCE_ROOT; };
-		ED53226F561949E8819F573F /* Pods-SBJson.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SBJson.xcconfig"; path = "Pods-SBJson.xcconfig"; sourceTree = SOURCE_ROOT; };
+		DF7C8664131E4298A939AA4A /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		E01BB9E3F6F54995B49B1BEE /* libPods-SBJson.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SBJson.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5D380D082704C30BCB07B2B /* Pods-SBJson-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-SBJson-dummy.m"; sourceTree = SOURCE_ROOT; };
+		ED53226F561949E8819F573F /* Pods-SBJson.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SBJson.xcconfig"; sourceTree = SOURCE_ROOT; };
 		ED69982AD07E46118BD79CD0 /* SBJsonStreamWriterState.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SBJsonStreamWriterState.h; path = SBJson/Classes/SBJsonStreamWriterState.h; sourceTree = SOURCE_ROOT; };
-		F773BC149A7941BE9F416BCD /* Pods-SBJson-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; name = "Pods-SBJson-prefix.pch"; path = "Pods-SBJson-prefix.pch"; sourceTree = SOURCE_ROOT; };
+		F773BC149A7941BE9F416BCD /* Pods-SBJson-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SBJson-prefix.pch"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -360,8 +360,8 @@
 			);
 			mainGroup = A6418D0DF0A8490BB6C4AEA2;
 			productRefGroup = 8966FF258701497BA8E1BCED /* Products */;
-			projectReferences = (
-			);
+			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				1A408863BC5B4FB790ED4698 /* Pods-SBJson */,
 				E7B29B33394E4256BDD57D46 /* Pods-Transit */,
@@ -423,7 +423,6 @@
 			baseConfigurationReference = DF7C8664131E4298A939AA4A /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -453,7 +452,6 @@
 			baseConfigurationReference = 8D616B5B1FA044508DB4F859 /* Pods-Transit-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -482,7 +480,6 @@
 			baseConfigurationReference = 8D616B5B1FA044508DB4F859 /* Pods-Transit-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -520,7 +517,6 @@
 			baseConfigurationReference = 22C1AD455A564F84A891E0A7 /* Pods-SBJson-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -549,7 +545,6 @@
 			baseConfigurationReference = DF7C8664131E4298A939AA4A /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -577,7 +572,6 @@
 			baseConfigurationReference = 22C1AD455A564F84A891E0A7 /* Pods-SBJson-Private.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/xcodeproj.dst;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

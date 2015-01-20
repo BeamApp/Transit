@@ -10,10 +10,13 @@
 
 #import "Transit.h"
 #import "Transit+Private.h"
+
 #import "OCMockObject+Reset.h"
 #import "OCMock.h"
 #import "CCWeakMockProxy.h"
 
+#import <objc/message.h>
+#define WEBVIEW(context) (objc_msgSend(context, @selector(webView)))
 
 @implementation TransitAbstractWebViewContextTests {
     NSString* _storedJSRuntimeCode;
@@ -35,6 +38,12 @@
 -(void)tearDown {
     _TRANSIT_JS_RUNTIME_CODE = _storedJSRuntimeCode;
     [super tearDown];
+}
+
+- (id *)webViewOfContext:(TransitAbstractWebViewContext *)context {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
+                                 userInfo:nil];
 }
 
 - (TransitAbstractWebViewContext *)contextWithEmptyPage {
@@ -99,7 +108,7 @@
     context.proxifyEval = NO;
 
     STAssertEqualObjects(@YES, [context eval:@"window.findme"], @"code has been injected");
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
     STAssertEqualObjects(@"Empty Page", [context eval:@"document.title"], @"can access title");
 
 }
@@ -112,12 +121,12 @@
     STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
 
     // wait for page to be fully loaded, otherwise JS code won't get replaced on reload below
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
 
     STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
 
-    [self.class loadHTMLString:@"<head><title>Changed</title></head><body></body>" inWebView:context.webView];
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class loadHTMLString:@"<head><title>Changed</title></head><body></body>" inWebView:WEBVIEW(context)];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
 
     STAssertEqualObjects(@"Changed", [context eval:@"document.title"], @"code has been injected");
     STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
@@ -132,7 +141,7 @@
     STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
 
     // wait for page to be fully loaded, otherwise JS code won't get replaced on reload below
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
 
     STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
 
@@ -142,9 +151,9 @@
 
     NSURL *url = [[NSBundle bundleForClass:self.class] URLForResource:@"testPage" withExtension:@"html"];
     STAssertNotNil(url, @"url from test asset could be loaded");
-    [self.class loadRequest:[NSURLRequest requestWithURL:url] inWebView:context.webView];
+    [self.class loadRequest:[NSURLRequest requestWithURL:url] inWebView:WEBVIEW(context)];
 
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
 
     STAssertEqualObjects(@"TestPage from File", [context eval:@"document.title"], @"code has been injected");
     STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
@@ -472,7 +481,7 @@
 
 -(void)testCanUseObjectProxy {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
     // hack to add some extra waiting since this test fails sometimes in ci environment
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
     TransitProxy* proxy = [context eval:@"window.document"];
