@@ -153,13 +153,18 @@
             [self getReturnValue:&value];
             return @(value);
         }
+        case 'B': {
+            BOOL value;
+            [self getReturnValue:&value];
+            return @(value);
+        }
         case '@': {
             __unsafe_unretained id value;
             [self getReturnValue:&value];
             return value;
         }
         default:
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for returm type", argType[0]] userInfo:nil];
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"unsupported type %c for return type", argType[0]] userInfo:nil];
     }
 }
 

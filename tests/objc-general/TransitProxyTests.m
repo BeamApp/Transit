@@ -92,12 +92,15 @@
     STAssertEqualObjects(@[], proxiesOnScope.array, @"no proxies on scope");
 }
 
+static BOOL boolYes = YES;
+static BOOL boolNo = NO;
+
 - (void)testJSExpressionFromObjectWithJsRepresentation {
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     TransitProxy* proxy = [OCMockObject mockForClass:TransitProxy.class];
     [[[(id)proxy stub] andReturn:@"myRepresentation"] _jsRepresentationCollectingProxiesOnScope:proxiesOnScope];
-    [[[(id)proxy stub] andReturnValue:@NO] isKindOfClass:NSString.class];
-    [[[(id)proxy stub] andReturnValue:@YES] isKindOfClass:TransitProxy.class];
+    [[[(id)proxy stub] andReturnValue:OCMOCK_VALUE(boolNo)] isKindOfClass:NSString.class];
+    [[[(id)proxy stub] andReturnValue:OCMOCK_VALUE(boolYes)] isKindOfClass:TransitProxy.class];
     STAssertEqualObjects([proxy _jsRepresentationCollectingProxiesOnScope:proxiesOnScope], @"myRepresentation", @"works");
     
     STAssertEqualObjects([TransitProxy jsRepresentationFromCode:@"return @" arguments:@[proxy] collectingProxiesOnScope:proxiesOnScope], @"return myRepresentation", @"static method uses instance jsRepresentation");
