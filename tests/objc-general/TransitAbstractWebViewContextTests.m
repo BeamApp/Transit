@@ -198,41 +198,53 @@
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     TransitFunction *func = [self functionToCallContextBareToTheMetal:context];
 
+    // iOS8 = 270-275
     // iOS7 = 856
     // iOS6 = 63
     // iOS5 = 92
     // OSX 10.8 = 255
     // OSX 10.9 = 974
     int expectedMaxDepth = 92;
+
+#if TARGET_OS_IPHONE
     if(transit_iOS_6_OrLater()) expectedMaxDepth = 63;
     if(transit_iOS_7_OrLater()) expectedMaxDepth = 856;
-
-#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+    if(transit_iOS_8_OrLater()) expectedMaxDepth = 270;
+#elif TARGET_OS_MAC
     if(transit_OSX_10_8_OrLater()) expectedMaxDepth = 255;
     if(transit_OSX_10_9_OrLater()) expectedMaxDepth = 974;
 #endif
 
-    __block int callCounter = 1;
+    __block int callCount = 0;
+    
     context.handleRequestBlock = ^(TransitAbstractWebViewContext *ctx, NSURLRequest* req) {
-        int arg = req ? req.URL.resourceSpecifier.intValue : callCounter++;
+        int arg = req.URL.resourceSpecifier.intValue;
+        callCount++;
+        
+        STAssertEqualObjects(@(arg), @(callCount), @"URL didn't contain current callCount");
 
         if(arg <= expectedMaxDepth){
             NSNumber *succ = @(arg+1);
             [func callWithArg:succ];
 
-            if(succ.intValue <= expectedMaxDepth) {
-                STAssertEqualObjects(succ, [ctx eval:@"window.globalTestVar"], @"correct reentrant values");
+            if (succ.intValue <= expectedMaxDepth) {
+                id current = [ctx eval:@"window.globalTestVar"];
+                NSString* expected = [NSString stringWithFormat:@"afterCall %@", succ];
+                STAssertEqualObjects(expected, current, @"correct reentrant values");
             } else {
-                NSString* expected = [NSString stringWithFormat:@"beforeCall %d", expectedMaxDepth+1];
-                STAssertEqualObjects(expected, [ctx eval:@"window.globalTestVar"], @"max depth reached, frame will not block if max depth is exceed");
+                id current = [ctx eval:@"window.globalTestVar"];
+                NSString* expected = [NSString stringWithFormat:@"beforeCall %@", @(expectedMaxDepth + 1)];
+                STAssertEqualObjects(expected, current, @"max depth reached, frame will not block if max depth is exceed");
             }
         }
-        [ctx eval:@"window.globalTestVar = @" val:@(arg)];
+        
+        NSString* newValue = [NSString stringWithFormat:@"afterCall %d", arg];
+        [ctx eval:@"window.globalTestVar = @" val:newValue];
     };
 
     [func callWithArg:@1];
 
-    STAssertEqualObjects(@1, [context eval:@"window.globalTestVar"], @"var changed in native code");
+    STAssertEqualObjects(@"afterCall 1", [context eval:@"window.globalTestVar"], @"var changed in native code");
 }
 
 -(void)testRealInjectionCodeCreatesGlobalTransitObject {

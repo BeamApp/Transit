@@ -21,6 +21,10 @@ BOOL transit_iOS_min_version(NSString *minVersion) {
 #endif
 }
 
+BOOL transit_iOS_8_OrLater() {
+    return transit_iOS_min_version(@"8");
+}
+
 BOOL transit_iOS_7_OrLater() {
     return transit_iOS_min_version(@"7");
 }
