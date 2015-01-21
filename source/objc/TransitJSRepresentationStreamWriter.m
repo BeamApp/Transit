@@ -12,12 +12,14 @@
 
 -(BOOL)writeValue:(id)value {
     // nil -> undefined
-    if(value == nil)
+    if(value == nil) {
         return [self writeJSExpression:@"undefined"];
+    }
 
     // NSString marked as jsExpression -> jsEpxression
-    if([value isKindOfClass:NSString.class] && transit_isJSExpression(value))
+    if([value isKindOfClass:NSString.class] && transit_isJSExpression(value)) {
         return [self writeJSExpression:value];
+    }
 
     // TransitProxy -> must provide own representation
     if([value isKindOfClass:TransitProxy.class]) {

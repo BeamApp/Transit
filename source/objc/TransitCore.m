@@ -13,20 +13,20 @@ NSUInteger _TRANSIT_MARKER_PREFIX_MIN_LEN = 12;
 
 NSString* _TRANSIT_SCHEME = @"transit";
 
-BOOL transit_iOS_7_OrLater() {
+BOOL transit_iOS_min_version(NSString *minVersion) {
 #if TRANSIT_OS_IOS
-    return ([UIDevice.currentDevice.systemVersion compare:@"7" options:NSNumericSearch]) > NSOrderedAscending;
+    return ([UIDevice.currentDevice.systemVersion compare:minVersion options:NSNumericSearch]) > NSOrderedAscending;
 #else
     return NO;
 #endif
 }
 
+BOOL transit_iOS_7_OrLater() {
+    return transit_iOS_min_version(@"7");
+}
+
 BOOL transit_iOS_6_OrLater() {
-#if TRANSIT_OS_IOS
-    return ([UIDevice.currentDevice.systemVersion compare:@"6" options:NSNumericSearch]) > NSOrderedAscending;
-#else
-    return NO;
-#endif
+    return transit_iOS_min_version(@"6");
 }
 
 BOOL transit_OSX_min_version(NSString *minVersion){

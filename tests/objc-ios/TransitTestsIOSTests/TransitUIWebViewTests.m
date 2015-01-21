@@ -18,12 +18,6 @@
 
 @implementation TransitUIWebViewTests
 
-- (id)webViewOfContext:(TransitAbstractWebViewContext *)context {
-    return [(TransitUIWebViewContext *) context webView];
-
-    return nil;
-}
-
 -(UIWebView*)webViewWithEmptyPage {
     UIWebView* result = [UIWebView new];
 

@@ -40,12 +40,6 @@
     [super tearDown];
 }
 
-- (id *)webViewOfContext:(TransitAbstractWebViewContext *)context {
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
-                                 userInfo:nil];
-}
-
 - (TransitAbstractWebViewContext *)contextWithEmptyPage {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
                                    reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)]
