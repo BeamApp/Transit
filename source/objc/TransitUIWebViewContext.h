@@ -4,6 +4,7 @@
 //
 
 #import "TransitAbstractWebViewContext.h"
+#import <UIKit/UIKit.h>
 
 /// Context to expose JavaScript environment of existing webview on iOS.
 @interface TransitUIWebViewContext : TransitAbstractWebViewContext<UIWebViewDelegate>

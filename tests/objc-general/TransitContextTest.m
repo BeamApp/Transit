@@ -6,14 +6,6 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "Transit.h"
-#import "Transit+Private.h"
-#import "OCMockObject+Reset.h"
-#import "OCMock.h"
-#import "CCWeakMockProxy.h"
-
-
 @interface FakeNativeProxyForTest : TransitProxy
 
 @end
@@ -28,7 +20,7 @@
 }
 @end
 
-@interface TransitContextTests : SenTestCase
+@interface TransitContextTests : XCTestCase
 
 @end
 
@@ -42,26 +34,26 @@
 }
 
 -(void)tearDown {
-    STAssertEquals(_transitContextLivingInstanceCountBefore, _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT, @"no garbage context created");
+    XCTAssertEqual(_transitContextLivingInstanceCountBefore, _TRANSIT_CONTEXT_LIVING_INSTANCE_COUNT, @"no garbage context created");
     [super tearDown];
 }
 
 -(void)testContextReturnsSelfAsContext {
     TransitContext *context = [TransitContext new];
-    STAssertEqualObjects(context.context, context, @"equal");
-    STAssertTrue(context.context == context, @"identity");
+    XCTAssertEqualObjects(context.context, context, @"equal");
+    XCTAssertTrue(context.context == context, @"identity");
 }
 
 -(void)testJsRepresentationForProxy {
     TransitContext *context = [TransitContext new];
     NSString* actual = [context jsRepresentationForProxyWithId:@"someId"];
-    STAssertEqualObjects(@"someId", actual, @"proxy representation is just the id, corresponding var will be put on scope");
+    XCTAssertEqualObjects(@"someId", actual, @"proxy representation is just the id, corresponding var will be put on scope");
 }
 
 -(void)testJsRepresentationToResolveProxy {
     TransitContext *context = [TransitContext new];
     NSString* actual = [context jsRepresentationToResolveProxyWithId:@"someId"];
-    STAssertEqualObjects(@"transit.r(\"someId\")", actual, @"proxy representation as function");
+    XCTAssertEqualObjects(@"transit.r(\"someId\")", actual, @"proxy representation as function");
 }
 
 -(TransitProxy*)stubWithContext:(TransitContext*)context proxyId:(NSString*)proxyId {
@@ -76,9 +68,9 @@
         TransitContext *context = TransitContext.new;
         TransitProxy *proxy = [self stubWithContext:context proxyId:@"someId"];
         
-        STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
+        XCTAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
         [context retainNativeFunction:proxy];
-        STAssertEqualObjects(context.retainedNativeProxies, (@{@"someId":proxy}), @"correctly retained");
+        XCTAssertEqualObjects(context.retainedNativeProxies, (@{@"someId":proxy}), @"correctly retained");
         
         // manually reset retained objects to get rid of mocks.
         // See tests with FakeNativeProxyForTest to see that this isn't needed for real TransitProxies
@@ -93,7 +85,7 @@
         TransitProxy *p2 = [self stubWithContext:context proxyId:@"id2"];
         [context retainNativeFunction:p1];
         [context retainNativeFunction:p2];
-        STAssertEqualObjects(context.retainedNativeProxies, (@{@"id1":p1, @"id2":p2}), @"retains both");
+        XCTAssertEqualObjects(context.retainedNativeProxies, (@{@"id1":p1, @"id2":p2}), @"retains both");
         
         // manually reset retained objects to get rid of mocks.
         // See tests with FakeNativeProxyForTest to see that this isn't needed for real TransitProxies
@@ -107,9 +99,9 @@
         TransitProxy *proxy = [self stubWithContext:context proxyId:@"someId"];
 
         [context retainNativeFunction:proxy];
-        STAssertEquals((NSUInteger)1, context.retainedNativeProxies.count, @"retains one object");
+        XCTAssertEqual((NSUInteger)1, context.retainedNativeProxies.count, @"retains one object");
         [context retainNativeFunction:proxy];
-        STAssertEquals((NSUInteger)1, context.retainedNativeProxies.count, @"still retains object");
+        XCTAssertEqual((NSUInteger)1, context.retainedNativeProxies.count, @"still retains object");
         
         // manually reset retained objects to get rid of mocks.
         // See tests with FakeNativeProxyForTest to see that this isn't needed for real TransitProxies
@@ -122,11 +114,11 @@
         TransitContext *context = TransitContext.new;
         TransitProxy *proxy = [self stubWithContext:context proxyId:@"someId"];
         
-        STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
+        XCTAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
         [context retainNativeFunction:proxy];
-        STAssertEqualObjects(context.retainedNativeProxies, (@{@"someId":proxy}), @"correctly retained");
+        XCTAssertEqualObjects(context.retainedNativeProxies, (@{@"someId":proxy}), @"correctly retained");
         [context releaseNativeFunction:proxy];
-        STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained anymore");
+        XCTAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained anymore");
     }
 }
 
@@ -135,9 +127,9 @@
         TransitContext *context = TransitContext.new;
         TransitProxy *proxy =  [self stubWithContext:context proxyId:@"someId"];
         
-        STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
+        XCTAssertEqualObjects(context.retainedNativeProxies, (@{}), @"nothing retained");
         [context releaseNativeFunction:proxy];
-        STAssertEqualObjects(context.retainedNativeProxies, (@{}), @"still, nothing retained");
+        XCTAssertEqualObjects(context.retainedNativeProxies, (@{}), @"still, nothing retained");
     }
 }
 
@@ -165,17 +157,17 @@
 
     @autoreleasepool {
         TransitContext* context = TransitContext.new;
-        STAssertEquals(1L, CFGetRetainCount((__bridge CFTypeRef)context), @"single ref");
+        XCTAssertEqual(1L, CFGetRetainCount((__bridge CFTypeRef)context), @"single ref");
         proxy = [[FakeNativeProxyForTest alloc] initWithContext:context proxyId:@"someId"];
 
 //  retain behavior differs on iOS 6 (retainCount==1) and iOS5 (retainCount==4)
-//        STAssertEquals(1L, CFGetRetainCount((__bridge CFTypeRef)context), @"still, single ref to context");
+//        XCTAssertEqual(1L, CFGetRetainCount((__bridge CFTypeRef)context), @"still, single ref to context");
 
-        STAssertEquals(1L, CFGetRetainCount((__bridge CFTypeRef)proxy), @"var keeps ref to proxy");
+        XCTAssertEqual(1L, CFGetRetainCount((__bridge CFTypeRef)proxy), @"var keeps ref to proxy");
 
         [context retainNativeFunction:proxy];
     }
-    STAssertEquals(1L, CFGetRetainCount((__bridge CFTypeRef)proxy), @"var keeps ref to proxy");
+    XCTAssertEqual(1L, CFGetRetainCount((__bridge CFTypeRef)proxy), @"var keeps ref to proxy");
     
     return proxy;
 }
@@ -185,16 +177,16 @@
     @autoreleasepool {
         proxy = [self createAndReleaseContextButReturnNativeProxy];
         
-        STAssertTrue(proxy.disposed, @"proxy has been disposed");
-        STAssertNil(proxy.context, @"hence, does not keep reference to context anymore");
+        XCTAssertTrue(proxy.disposed, @"proxy has been disposed");
+        XCTAssertNil(proxy.context, @"hence, does not keep reference to context anymore");
     }
-    STAssertNil(proxy, @"proxy is free");
+    XCTAssertNil(proxy, @"proxy is free");
 }
 
 -(void)testDoNotReplaceSimpleObjectsWithMarkers {
     TransitContext* context = TransitContext.new;
-    STAssertEqualObjects(@42, [context recursivelyReplaceMarkersWithProxies:@42], @"do nothing on numbers");
-    STAssertEqualObjects(@"foobar", [context recursivelyReplaceMarkersWithProxies:@"foobar"], @"do nothing on simple string");
+    XCTAssertEqualObjects(@42, [context recursivelyReplaceMarkersWithProxies:@42], @"do nothing on numbers");
+    XCTAssertEqualObjects(@"foobar", [context recursivelyReplaceMarkersWithProxies:@"foobar"], @"do nothing on simple string");
 }
 
 -(void)testReplaceMarkerStrings {
@@ -203,15 +195,15 @@
 
         NSString* marker = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, @"someId"];
         id proxy = [context recursivelyReplaceMarkersWithProxies:marker];
-        STAssertTrue([proxy isKindOfClass:TransitProxy.class], @"object proxy");
-        STAssertFalse([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
-        STAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
+        XCTAssertTrue([proxy isKindOfClass:TransitProxy.class], @"object proxy");
+        XCTAssertFalse([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
+        XCTAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
 
         marker = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, @"someId"];
         proxy = [context recursivelyReplaceMarkersWithProxies:marker];
-        STAssertTrue([proxy isKindOfClass:TransitProxy.class], @"object proxy");
-        STAssertTrue([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
-        STAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
+        XCTAssertTrue([proxy isKindOfClass:TransitProxy.class], @"object proxy");
+        XCTAssertTrue([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
+        XCTAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
     }
 }
 
@@ -223,34 +215,34 @@
 
         // recursivelyReplaceMarkersWithProxies expects mutable array/dictionary
         id detected = [context recursivelyReplaceMarkersWithProxies:[NSMutableArray arrayWithArray:@[@1, @"two", [NSMutableDictionary dictionaryWithDictionary:@{@"three":@3, @4: marker}]]]];
-        STAssertEqualObjects(@1, detected[0], @"one");
-        STAssertEqualObjects(@"two", detected[1], @"two");
-        STAssertEqualObjects(@3, detected[2][@"three"], @"three");
+        XCTAssertEqualObjects(@1, detected[0], @"one");
+        XCTAssertEqualObjects(@"two", detected[1], @"two");
+        XCTAssertEqualObjects(@3, detected[2][@"three"], @"three");
         id proxy = detected[2][@4];
-        STAssertTrue([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
-        STAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
+        XCTAssertTrue([proxy isKindOfClass:TransitJSFunction.class], @"function proxy");
+        XCTAssertEqualObjects(marker, [proxy proxyId], @"extracts proxy id");
     }
 }
 
 -(void)testRetainedNativeFunctionWithId {
     @autoreleasepool {
         TransitContext* context = TransitContext.new;
-        STAssertThrows([context retainedNativeFunctionWithId:@"someId"], @"no such function");
+        XCTAssertThrows([context retainedNativeFunctionWithId:@"someId"], @"no such function");
         
         TransitFunction* func = [context functionWithDelegate:nil];
-        STAssertTrue(func == [context retainedNativeFunctionWithId:func.proxyId], @"yes, function exists");
+        XCTAssertTrue(func == [context retainedNativeFunctionWithId:func.proxyId], @"yes, function exists");
         
         [func dispose];
-        STAssertThrows([context retainedNativeFunctionWithId:func.proxyId], @"and disposed, again");
+        XCTAssertThrows([context retainedNativeFunctionWithId:func.proxyId], @"and disposed, again");
     }
 }
 
 -(void)testInvokeNativeWithMissingFunction {
     TransitContext* context = TransitContext.new;
     id result = [context invokeNativeWithDescription:@{@"nativeId" : @"missing"}];
-    STAssertTrue([result isKindOfClass:NSError.class], @"missing native functions results in error");
+    XCTAssertTrue([result isKindOfClass:NSError.class], @"missing native functions results in error");
     NSDictionary* userInfo = [result userInfo];
-    STAssertEqualObjects(@"No native function with id: missing. Could have been disposed.",userInfo[NSLocalizedDescriptionKey], @"meaningful error message");
+    XCTAssertEqualObjects(@"No native function with id: missing. Could have been disposed.",userInfo[NSLocalizedDescriptionKey], @"meaningful error message");
 }
 
 -(void)testInvokeNativeWithThisArgVariations {
@@ -262,23 +254,23 @@
         
         // js: this == undefined
         id result = [func callWithThisArg:nil];
-        STAssertTrue(result == context, @"undefined");
+        XCTAssertTrue(result == context, @"undefined");
         
         // js: this == null
         result = [func callWithThisArg:NSNull.null];
-        STAssertTrue(result == context, @"null");
+        XCTAssertTrue(result == context, @"null");
         
         // js: this == "3", e.g. transit.nativeFunc("someId").apply("3");
         result = [func callWithThisArg:@"3"];
-        STAssertFalse([result isKindOfClass:TransitProxy.class], @"is not a proxy!");
-        STAssertEqualObjects(@"3", result, @"does not wrap '3'");
+        XCTAssertFalse([result isKindOfClass:TransitProxy.class], @"is not a proxy!");
+        XCTAssertEqualObjects(@"3", result, @"does not wrap '3'");
     }
 }
 
 -(void)testNativeFunctionIdsMatchMagicMarker {
     TransitContext* context = TransitContext.alloc.init;
-    STAssertEqualObjects(@"1", [context nextNativeFunctionId], @"first native function");
-    STAssertEqualObjects(@"2", [context nextNativeFunctionId], @"second native function");
+    XCTAssertEqualObjects(@"1", [context nextNativeFunctionId], @"first native function");
+    XCTAssertEqualObjects(@"2", [context nextNativeFunctionId], @"second native function");
 }
 
 -(void)testAsyncCallToJSFunctionFillsQueue {
@@ -290,7 +282,7 @@
         [[context expect] queueAsyncCallToJSFunction:jsFunc thisArg:nil arguments:@[@1, @2]];
         [jsFunc callAsyncWithArg:@1 arg:@2];
 
-        STAssertNoThrow([context verify], @"verify mock");
+        XCTAssertNoThrow([context verify], @"verify mock");
         [jsFunc clearContextAndProxyId];
     }
 }
@@ -298,7 +290,7 @@
 -(void)testEmptyCallScope {
     TransitContext *context = TransitContext.new;
     TransitCallScope *actual = context.currentCallScope;
-    STAssertNil(actual, @"nil if not inside a function");
+    XCTAssertNil(actual, @"nil if not inside a function");
 }
 
 -(void)testCallScopeCallNativeFuncDirectly {
@@ -310,34 +302,34 @@
         BOOL expectsResult = YES;
 
         __block TransitFunction *function = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
-            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            XCTAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
-            STAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
-            STAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
-            STAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
-            STAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
+            XCTAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
+            XCTAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
+            XCTAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
+            XCTAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
 
             BOOL callScopeIsBoundToCurrentFunction = callScope.function == function;
-            STAssertTrue(callScopeIsBoundToCurrentFunction, @"current function");
-            STAssertNil(callScope.parentScope, @"parent scope");
+            XCTAssertTrue(callScopeIsBoundToCurrentFunction, @"current function");
+            XCTAssertNil(callScope.parentScope, @"parent scope");
             return @{@"function" : callScope.function, @"thisArg" : callScope.thisArg, @"arguments" : callScope.arguments, @"expectsResult" : @(callScope.expectsResult)};
         }];
 
-        STAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
-        STAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
-        STAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
-        STAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
+        XCTAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
+        XCTAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
+        XCTAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
+        XCTAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
 
         NSDictionary* scope = [function callWithThisArg:thisArg arguments:arguments returnResult:expectsResult];
 
-        STAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
-        STAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
-        STAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
-        STAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
+        XCTAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
+        XCTAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
+        XCTAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
+        XCTAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
 
 
         NSDictionary *expected = @{@"function": function, @"thisArg":thisArg, @"arguments":arguments, @"expectsResult": @(expectsResult)};
-        STAssertEqualObjects(scope, expected, @"scope");
+        XCTAssertEqualObjects(scope, expected, @"scope");
 
         [function dispose];
         function = nil;
@@ -362,12 +354,12 @@
         __block TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope1 = callScope;
 
-            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            XCTAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
-            STAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
-            STAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
-            STAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
-            STAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
+            XCTAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
+            XCTAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
+            XCTAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
+            XCTAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
 
             return nil;
         }];
@@ -375,41 +367,41 @@
         __block TransitFunction *function2 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope2 = callScope;
 
-            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            XCTAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
             [function1 callWithThisArg:thisArg1 arguments:arguments1 returnResult:expectsResult1];
-            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope after call");
+            XCTAssertTrue(context.currentCallScope == callScope, @"currentCallScope after call");
 
-            STAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
-            STAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
-            STAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
-            STAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
+            XCTAssertTrue(TransitCurrentCall.context == callScope.context, @"TransitCurrentCall.context");
+            XCTAssertTrue(TransitCurrentCall.callScope == callScope, @"TransitCurrentCall.callScope");
+            XCTAssertEqualObjects(TransitCurrentCall.thisArg, callScope.thisArg, @"TransitCurrentCall.thisArg");
+            XCTAssertEqualObjects(TransitCurrentCall.arguments, callScope.arguments, @"TransitCurrentCall.arguments");
 
             return nil;
         }];
 
-        STAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
-        STAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
-        STAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
-        STAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
+        XCTAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
+        XCTAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
+        XCTAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
+        XCTAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
 
         [function2 callWithThisArg:thisArg2 arguments:arguments2 returnResult:expectsResult2];
 
-        STAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
-        STAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
-        STAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
-        STAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
+        XCTAssertNil(TransitCurrentCall.context, @"TransitCurrentCall.context");
+        XCTAssertNil(TransitCurrentCall.callScope, @"TransitCurrentCall.callScope");
+        XCTAssertNil(TransitCurrentCall.thisArg, @"TransitCurrentCall.thisArg");
+        XCTAssertNil(TransitCurrentCall.arguments, @"TransitCurrentCall.arguments");
 
-        STAssertTrue(function1 == scope1.function, @"function");
-        STAssertEqualObjects(thisArg1, scope1.thisArg, @"thisArg");
-        STAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
-        STAssertEquals(expectsResult1, scope1.expectsResult, @"expectsResult");
-        STAssertTrue(scope2 == scope1.parentScope, @"parentScope");
+        XCTAssertTrue(function1 == scope1.function, @"function");
+        XCTAssertEqualObjects(thisArg1, scope1.thisArg, @"thisArg");
+        XCTAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
+        XCTAssertEqual(expectsResult1, scope1.expectsResult, @"expectsResult");
+        XCTAssertTrue(scope2 == scope1.parentScope, @"parentScope");
 
-        STAssertTrue(function2 == scope2.function, @"function");
-        STAssertEqualObjects(thisArg2, scope2.thisArg, @"thisArg");
-        STAssertEqualObjects(arguments2, scope2.arguments, @"arguments");
-        STAssertEquals(expectsResult2, scope2.expectsResult, @"expectsResult");
-        STAssertNil(scope2.parentScope, @"parentScope");
+        XCTAssertTrue(function2 == scope2.function, @"function");
+        XCTAssertEqualObjects(thisArg2, scope2.thisArg, @"thisArg");
+        XCTAssertEqualObjects(arguments2, scope2.arguments, @"arguments");
+        XCTAssertEqual(expectsResult2, scope2.expectsResult, @"expectsResult");
+        XCTAssertNil(scope2.parentScope, @"parentScope");
 
         // set to nil explicitly to release object ref
         scope1 = nil;
@@ -434,20 +426,20 @@
         Class cls = TransitNativeFunction.class;
 
         id func = [context recursivelyReplaceBlocksWithNativeFunctions:^{}];
-        STAssertTrue([func isKindOfClass:cls], @"single block)");
+        XCTAssertTrue([func isKindOfClass:cls], @"single block)");
 
         NSArray *array = [context recursivelyReplaceBlocksWithNativeFunctions:@[@"foo", ^{}]];
-        STAssertTrue([array[1] isKindOfClass:cls], @"array)");
-        STAssertEqualObjects(array[0], @"foo", @"keep non-funcs untouched");
+        XCTAssertTrue([array[1] isKindOfClass:cls], @"array)");
+        XCTAssertEqualObjects(array[0], @"foo", @"keep non-funcs untouched");
 
         NSDictionary *dict = [context recursivelyReplaceBlocksWithNativeFunctions:@{@"foo": ^{}, @"bar": @"baz"}];
-        STAssertTrue([dict[@"foo"] isKindOfClass:cls], @"array)");
-        STAssertEqualObjects(dict[@"bar"], @"baz", @"keep non-funcs untouched");
+        XCTAssertTrue([dict[@"foo"] isKindOfClass:cls], @"array)");
+        XCTAssertEqualObjects(dict[@"bar"], @"baz", @"keep non-funcs untouched");
 
         array = [context recursivelyReplaceBlocksWithNativeFunctions:@[@{@"foo": ^{}, @"bar": @"baz"}]];
         dict = array[0];
-        STAssertTrue([dict[@"foo"] isKindOfClass:cls], @"array)");
-        STAssertEqualObjects(dict[@"bar"], @"baz", @"keep non-funcs untouched");
+        XCTAssertTrue([dict[@"foo"] isKindOfClass:cls], @"array)");
+        XCTAssertEqualObjects(dict[@"bar"], @"baz", @"keep non-funcs untouched");
 
         func = nil;
         array = nil;

@@ -6,6 +6,8 @@
 #define TRANSIT_OS_MAC (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
 #define TRANSIT_OS_IOS (TARGET_OS_IPHONE)
 
+#import <CoreGraphics/CoreGraphics.h>
+
 @class TransitFunction;
 @class TransitNativeFunctionCallScope;
 

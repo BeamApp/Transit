@@ -6,18 +6,7 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "Transit+Private.h"
-#import "OCMock.h"
-#import "CCWeakMockProxy.h"
-#import "TransitNativeFunction.h"
-#import "TransitNativeFunction+Private.h"
-#import "TransitFunctionCallScope.h"
-#import "TransitFunctionCallScope+Private.h"
-#import "TransitContext.h"
-#import "TransitFunctionBodyProtocol.h"
-
-@interface TransitNativeFunctionWithSpecificBlockTests : SenTestCase
+@interface TransitNativeFunctionWithSpecificBlockTests : XCTestCase
 
 @end
 
@@ -39,35 +28,35 @@
 
 -(void)testGenericFunctionBlockWithBlockThrowsIfUnsupported {
     if(transit_specificBlocksSupported()){
-        STAssertNoThrow(([TransitNativeFunction genericFunctionBlockWithBlock:^{}]), @"specfic block supported");
+        XCTAssertNoThrow(([TransitNativeFunction genericFunctionBlockWithBlock:^{}]), @"specfic block supported");
     } else {
-        STAssertThrows(([TransitNativeFunction genericFunctionBlockWithBlock:^{}]), @"specfic block not supported");
+        XCTAssertThrows(([TransitNativeFunction genericFunctionBlockWithBlock:^{}]), @"specfic block not supported");
     }
 }
 
--(void)testAssertFailsOnNonBlocks {
-    STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:nil], @"nil");
-    STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:NSNull.null], @"NSNull");
-    STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:NSObject.new], @"NSObject");
-    STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:@123], @"NSNumber");
-    STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:@"foobar"], @"NSString");
+-(void)teXCTAssertFailsOnNonBlocks {
+    XCTAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:nil], @"nil");
+    XCTAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:NSNull.null], @"NSNull");
+    XCTAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:NSObject.new], @"NSObject");
+    XCTAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:@123], @"NSNumber");
+    XCTAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:@"foobar"], @"NSString");
 }
 
--(void)testAssertPassesOnSimpleVoidBlock {
-    STAssertNoThrow([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:^{}], @"void()");
+-(void)teXCTAssertPassesOnSimpleVoidBlock {
+    XCTAssertNoThrow([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:^{}], @"void()");
 }
 
--(void)testAssertPassesOnIntAndString {
+-(void)teXCTAssertPassesOnIntAndString {
     id block = ^(NSString* s){return s.length;};
-    STAssertNoThrow([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:block], @"int(NSString*)");
+    XCTAssertNoThrow([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:block], @"int(NSString*)");
 }
 
--(void)testAssertFailsOnCharString {
-    STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:^(char* a){}], @"void(char*)");
+-(void)teXCTAssertFailsOnCharString {
+    XCTAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:^(char* a){}], @"void(char*)");
 }
 
--(void)testAssertFailsOnVoidPointer {
-    STAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:^(void* p){}], @"void(void*)");
+-(void)teXCTAssertFailsOnVoidPointer {
+    XCTAssertThrows([TransitNativeFunction assertSpecificBlockCanBeUsedAsTransitFunction:^(void* p){}], @"void(void*)");
 }
 
 #if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
@@ -80,47 +69,47 @@
     };
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
     id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
-    STAssertNil(actualResult, @"result is nil");
-    STAssertTrue(called, @"called");
+    XCTAssertNil(actualResult, @"result is nil");
+    XCTAssertTrue(called, @"called");
 }
 
 -(void)testObjectCall {
     NSArray* expectedArgs = @[@"foo", @123];
     id block = ^(NSString* s, NSNumber *n){
-        STAssertEqualObjects(s, @"foo", @"arg 1");
-        STAssertEqualObjects(n, @123, @"arg 2");
+        XCTAssertEqualObjects(s, @"foo", @"arg 1");
+        XCTAssertEqualObjects(n, @123, @"arg 2");
         return [NSString stringWithFormat:@"%@ %@", s, n];
     };
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
     id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
 
-    STAssertEqualObjects(@"foo 123", actualResult, @"args");
+    XCTAssertEqualObjects(@"foo 123", actualResult, @"args");
 }
 
 -(void)testTooFewArgs {
     NSArray* expectedArgs = @[@"foo"];
     id block = ^(NSString* s, NSNumber *n){
-        STAssertEqualObjects(s, @"foo", @"arg 1");
-        STAssertNil(n, @"arg 2");
+        XCTAssertEqualObjects(s, @"foo", @"arg 1");
+        XCTAssertNil(n, @"arg 2");
         return [NSString stringWithFormat:@"%@ %@", s, n];
     };
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
     id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
 
-    STAssertEqualObjects(@"foo (null)", actualResult, @"args");
+    XCTAssertEqualObjects(@"foo (null)", actualResult, @"args");
 }
 
 -(void)testTooManyArgs {
     NSArray* expectedArgs = @[@"foo", @123, @YES];
     id block = ^(NSString* s, NSNumber *n){
-        STAssertEqualObjects(s, @"foo", @"arg 1");
-        STAssertEqualObjects(n, @123, @"arg 2");
+        XCTAssertEqualObjects(s, @"foo", @"arg 1");
+        XCTAssertEqualObjects(n, @123, @"arg 2");
         return [NSString stringWithFormat:@"%@ %@", s, n];
     };
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
     id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
 
-    STAssertEqualObjects(@"foo 123", actualResult, @"args");
+    XCTAssertEqualObjects(@"foo 123", actualResult, @"args");
 }
 
 -(void)testNativeArgumentTypes {
@@ -130,19 +119,19 @@
             char c, int i, short s, long l, long long q,
             unsigned char C, unsigned int I, unsigned short S, unsigned long L, unsigned long long Q,
             float f, double d, bool B){
-        STAssertEquals(c, (char)'c', @"char");
-        STAssertEquals(i, (int)2, @"int");
-        STAssertEquals(s, (short)3, @"short");
-        STAssertEquals(l, (long)4, @"long");
-        STAssertEquals(q, (long long)5, @"long long");
-        STAssertEquals(C, (unsigned char)'C', @"unsigned char");
-        STAssertEquals(I, (unsigned int)7, @"unsigned int");
-        STAssertEquals(S, (unsigned short)8, @"unsigned short");
-        STAssertEquals(L, (unsigned long)9, @"unsigned long");
-        STAssertEquals(Q, (unsigned long long)10, @"unsigned long long");
-        STAssertEquals(f, (float)11.5, @"float");
-        STAssertEquals(d, (double)12.5, @"double");
-        STAssertEquals(B, (bool)YES, @"bool");
+        XCTAssertEqual(c, (char)'c', @"char");
+        XCTAssertEqual(i, (int)2, @"int");
+        XCTAssertEqual(s, (short)3, @"short");
+        XCTAssertEqual(l, (long)4, @"long");
+        XCTAssertEqual(q, (long long)5, @"long long");
+        XCTAssertEqual(C, (unsigned char)'C', @"unsigned char");
+        XCTAssertEqual(I, (unsigned int)7, @"unsigned int");
+        XCTAssertEqual(S, (unsigned short)8, @"unsigned short");
+        XCTAssertEqual(L, (unsigned long)9, @"unsigned long");
+        XCTAssertEqual(Q, (unsigned long long)10, @"unsigned long long");
+        XCTAssertEqual(f, (float)11.5, @"float");
+        XCTAssertEqual(d, (double)12.5, @"double");
+        XCTAssertEqual(B, (bool)YES, @"bool");
 
         return f+d;
     };
@@ -150,14 +139,14 @@
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
     id actualResult = genericBlock([TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:expectedArgs expectsResult:YES function:nil]);
 
-    STAssertEqualObjects(actualResult, @24, @"result");
+    XCTAssertEqualObjects(actualResult, @24, @"result");
 }
 
 -(void)testBoolReturnType {
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:^{return YES;}];
     TransitNativeFunctionCallScope *scope = [TransitNativeFunctionCallScope.alloc initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil];
     id actualResult = genericBlock(scope);
-    STAssertEqualObjects(actualResult, @YES, @"result");
+    XCTAssertEqualObjects(actualResult, @YES, @"result");
 }
 
 -(void)testNativeReturnTypes {
@@ -181,7 +170,7 @@
         id block = blocks[i];
         TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
         id actualResult = genericBlock([[TransitNativeFunctionCallScope alloc] initWithContext:nil parentScope:nil thisArg:nil arguments:nil expectsResult:YES function:nil]);
-        STAssertEqualObjects(actualResult, @(i+1), @"result");
+        XCTAssertEqualObjects(actualResult, @(i+1), @"result");
     }
 }
 
@@ -193,7 +182,7 @@
     NSArray* args = @[@"foo", @"bar", @"baz", @"true", @"12.5"];
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
     id actualResult = genericBlock([[TransitNativeFunctionCallScope alloc] initWithContext:nil parentScope:nil thisArg:nil arguments:args expectsResult:YES function:nil]);
-    STAssertEqualObjects(actualResult, @"i: 0, f: 0.00, b1: 0, b2: 1, d: 12.50", @"result");
+    XCTAssertEqualObjects(actualResult, @"i: 0, f: 0.00, b1: 0, b2: 1, d: 12.50", @"result");
 }
 
 -(void)testCannotDetectClassesFromSignature {
@@ -204,17 +193,17 @@
     NSArray* args = @[@12.5, @"foo"];
     TransitGenericFunctionBlock genericBlock = [TransitNativeFunction genericFunctionBlockWithBlock:block];
     id actualResult = genericBlock([[TransitNativeFunctionCallScope alloc] initWithContext:nil parentScope:nil thisArg:nil arguments:args expectsResult:YES function:nil]);
-    STAssertEqualObjects(actualResult, @"12.5-__NSCFNumber, foo-__NSCFConstantString", @"result");
+    XCTAssertEqualObjects(actualResult, @"12.5-__NSCFNumber, foo-__NSCFConstantString", @"result");
 }
 
 
 -(void)testCallFromContext {
     id mock = [CCWeakMockProxy mockForProtocol:@protocol(TransitFunctionBodyProtocol)];
     id block = ^(int i, float f, BOOL b, NSString* s){
-        STAssertEquals(i, (int)1, @"int");
-        STAssertEquals(f, (float)2.5, @"float");
-        STAssertEquals(b, YES, @"bool");
-        STAssertEqualObjects(s, @"foo", @"string");
+        XCTAssertEqual(i, (int)1, @"int");
+        XCTAssertEqual(f, (float)2.5, @"float");
+        XCTAssertEqual(b, YES, @"bool");
+        XCTAssertEqualObjects(s, @"foo", @"string");
 
         return f+i;
     };
@@ -228,7 +217,7 @@
 
     [[[mock stub] andReturn:returnValue] callWithFunction:func thisArg:thisArg arguments:args expectsResult:YES];
     id actualResult = [func callWithThisArg:thisArg arguments:args];
-    STAssertEquals([actualResult floatValue], [returnValue floatValue], @"result");
+    XCTAssertEqual([actualResult floatValue], [returnValue floatValue], @"result");
     [mock verify];
 }
 

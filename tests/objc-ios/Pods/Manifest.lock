@@ -7,7 +7,7 @@ DEPENDENCIES:
   - SBJson (~> 3.2)
 
 SPEC CHECKSUMS:
-  OCMock: 77a9c4c57af6bf258a537d34cf09abf422affede
-  SBJson: e60b4dc22448c2ae1e754b523a4ab53408e85c8d
+  OCMock: 60bfc5e6bc0ed592a6b7fb805b6c4d7108d37eb6
+  SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
 
-COCOAPODS: 0.20.2
+COCOAPODS: 0.36.0.beta.1

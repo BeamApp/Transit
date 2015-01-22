@@ -6,14 +6,7 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "Transit.h"
-#import "Transit+Private.h"
-#import "OCMock.h"
-#import "OCMockObject+Reset.h"
-#import "CCWeakMockProxy.h"
-
-@interface TransitJSFunctionTests : SenTestCase
+@interface TransitJSFunctionTests : XCTestCase
 
 @end
 
@@ -29,7 +22,7 @@
     [[context stub] currentCallScope];
 
     id actual = [func call];
-    STAssertEqualObjects(@"someResult", actual, @"result passed along");
+    XCTAssertEqualObjects(@"someResult", actual, @"result passed along");
 
     [[context expect] releaseJSProxyWithId:func.proxyId];
     [func dispose];
@@ -122,7 +115,7 @@
     [[[context stub] andReturn:@"someResult"] _eval:@"@.apply(@,@)" thisArg:nil values:@[func, thisArg, arguments] returnJSResult:YES useAndRestoreCallScope:OCMOCK_ANY];
     
     id actual = [func callWithThisArg:thisArg arguments:arguments];
-    STAssertEqualObjects(@"someResult", actual, @"result passed along");
+    XCTAssertEqualObjects(@"someResult", actual, @"result passed along");
     
     [context verify];
 }
@@ -139,9 +132,9 @@
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     NSString* js = [queuedCall jsRepresentationOfCallCollectingProxiesOnScope:proxiesOnScope];
     
-    STAssertEqualObjects(@"__JSFUNC_proxyId(1,2);", js, @"js");
-    STAssertEqualObjects(@[func], proxiesOnScope.array, @"proxies");
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertEqualObjects(@"__JSFUNC_proxyId(1,2);", js, @"js");
+    XCTAssertEqualObjects(@[func], proxiesOnScope.array, @"proxies");
+    XCTAssertNoThrow([context verify], @"verify mock");
 
     [func clearContextAndProxyId];
 }
@@ -158,9 +151,9 @@
     NSMutableOrderedSet *proxiesOnScope = NSMutableOrderedSet.orderedSet;
     NSString* js = [queuedCall jsRepresentationOfCallCollectingProxiesOnScope:proxiesOnScope];
     
-    STAssertEqualObjects(@"__JSFUNC_proxyId.apply(someObj,[1]);", js, @"js");
-    STAssertEqualObjects(@[func], proxiesOnScope.array, @"proxies");
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertEqualObjects(@"__JSFUNC_proxyId.apply(someObj,[1]);", js, @"js");
+    XCTAssertEqualObjects(@[func], proxiesOnScope.array, @"proxies");
+    XCTAssertNoThrow([context verify], @"verify mock");
 
     [func clearContextAndProxyId];
 }

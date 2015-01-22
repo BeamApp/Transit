@@ -6,10 +6,7 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-
-
-@interface TransitAbstractWebViewContextTests : SenTestCase
+@interface TransitAbstractWebViewContextTests : XCTestCase
 
 - (void)testResultTypes;
 
