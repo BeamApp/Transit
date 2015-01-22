@@ -7,7 +7,6 @@
             buildForRunning = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CBA19B5F177333A800FEFCE2"
                BuildableName = "transit"
                BlueprintName = "transit"
                ReferencedContainer = "container:TransitTestsIOS.xcodeproj">

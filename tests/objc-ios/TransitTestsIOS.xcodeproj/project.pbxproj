@@ -21,6 +21,7 @@
 		1F18BB661A70E9AB00EDD3A4 /* TransitAbstractWebViewContextTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B07477794407FEEDD95FE /* TransitAbstractWebViewContextTests.m */; };
 		1F18BB671A70E9AB00EDD3A4 /* TransitGeneralTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B092555C0D3ACEE43FF03 /* TransitGeneralTests.m */; };
 		1F18BB6B1A71018A00EDD3A4 /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
+		1F18BB6E1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F18BB6D1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m */; };
 		4C9AC81874F4481C80F5C1D0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F9A734C099141A682749BE3 /* libPods.a */; };
 		6DB0FBA436695878D99C47F3 /* libPods-UnitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 389A7AD9414A7FEE806EE309 /* libPods-UnitTests.a */; };
 		BF8C71E9241212195AE5B41D /* TransitCallScope.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7F247278912FF323FA9B /* TransitCallScope.m */; };
@@ -77,6 +78,8 @@
 		1F18BB441A70E73000EDD3A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F18BB591A70E89A00EDD3A4 /* TransitUIWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitUIWebViewTests.m; sourceTree = "<group>"; };
 		1F18BB6A1A70FF6D00EDD3A4 /* UnitTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UnitTests-Prefix.pch"; path = "UnitTests/UnitTests-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		1F18BB6C1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitJSRepresentationAccumulator.h; sourceTree = "<group>"; };
+		1F18BB6D1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitJSRepresentationAccumulator.m; sourceTree = "<group>"; };
 		389A7AD9414A7FEE806EE309 /* libPods-UnitTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UnitTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F9A734C099141A682749BE3 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5315105052B8DAF6A04956ED /* Pods-UnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -370,6 +373,8 @@
 				BF8C76EC9A9C52176F1BBA02 /* TransitFunctionBodyProtocol.h */,
 				BF8C70C7A1834B56323DD064 /* TransitFunctionBodyProtocol.m */,
 				BF8C736C5574AF5275DE47E0 /* Transit+Private.h */,
+				1F18BB6C1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.h */,
+				1F18BB6D1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m */,
 			);
 			name = Transit;
 			path = ../../source/objc;
@@ -579,6 +584,7 @@
 				BF8C75BFCEED6D7F9A0F6BDA /* TransitQueuedCallToJSFunction.m in Sources */,
 				BF8C77B1D6A90BD43EFAB9C3 /* TransitFunction.m in Sources */,
 				BF8C7E7561EA84F472B40DC1 /* TransitNativeFunction.m in Sources */,
+				1F18BB6E1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m in Sources */,
 				BF8C77DF3DE5BB2EE33BE72C /* TransitJSFunction.m in Sources */,
 				BF8C71E9241212195AE5B41D /* TransitCallScope.m in Sources */,
 				BF8C7E8031B3D2E1A765D1F4 /* TransitEvalCallScope.m in Sources */,

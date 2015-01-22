@@ -1,0 +1,5 @@
+#include "Pods-SBJson4.xcconfig"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/SBJson4" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/OCMock" "${PODS_ROOT}/Headers/Public/SBJson4"
+OTHER_LDFLAGS = -ObjC
+PODS_ROOT = ${SRCROOT}

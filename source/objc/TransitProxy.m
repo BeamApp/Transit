@@ -3,12 +3,15 @@
 // Copyright (c) 2015 BeamApp. All rights reserved.
 //
 
+#import <SBJson4/SBJson4.h>
+#import <SBJson4/SBJson4StreamWriter.h>
+
 #import "TransitProxy.h"
 #import "TransitCore.h"
 #import "TransitContext+Private.h"
-#import "SBJsonStreamWriterAccumulator.h"
 #import "TransitObject+Private.h"
 #import "TransitJSRepresentationStreamWriter.h"
+#import "TransitJSRepresentationAccumulator.h"
 #import "NSString+TransRegExp.h"
 
 @implementation TransitProxy {
@@ -88,9 +91,9 @@
 }
 
 +(NSString*)jsRepresentation:(id)object collectingProxiesOnScope:(NSMutableOrderedSet*)proxiesOnScope {
-    SBJsonStreamWriterAccumulator *accumulator = [[SBJsonStreamWriterAccumulator alloc] init];
+    TransitJSRepresentationAccumulator *accumulator = [TransitJSRepresentationAccumulator new];
 
-	TransitJSRepresentationStreamWriter *streamWriter = [[TransitJSRepresentationStreamWriter alloc] init];
+	TransitJSRepresentationStreamWriter *streamWriter = [TransitJSRepresentationStreamWriter new];
     streamWriter.delegate = accumulator;
     streamWriter.proxiesOnScope = proxiesOnScope;
 

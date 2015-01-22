@@ -3,7 +3,8 @@
 // Copyright (c) 2015 BeamApp. All rights reserved.
 //
 
-#import <SBJson/SBJsonStreamWriterState.h>
+#import <SBJson4/SBJson4.h>
+
 #import "TransitJSRepresentationStreamWriter.h"
 #import "TransitProxy+Private.h"
 #import "TransitCore.h"
@@ -44,15 +45,27 @@
 }
 
 -(BOOL)writeJSExpression:(NSString*)jsExpression {
-    if ([self.state isInvalidState:self]) return NO;
-    if ([self.state expectingKey:self]) return NO;
-    [self.state appendSeparator:self];
-    if (self.humanReadable) [self.state appendWhitespace:self];
+    id state = self.state;
+    
+    if ([state performSelector:@selector(isInvalidState:) withObject:self]) {
+        return NO;
+    }
+    
+    if ([state performSelector:@selector(expectingKey:) withObject:self]) {
+        return NO;
+    }
+    
+    [state performSelector:@selector(appendSeparator:) withObject:self];
+    
+    if (self.humanReadable) {
+        [state performSelector:@selector(appendWhitespace:) withObject:self];
+    }
 
     NSData *data = [jsExpression dataUsingEncoding:NSUTF8StringEncoding];
     [self.delegate writer:self appendBytes:data.bytes length:data.length];
-
-    [self.state transitionState:self];
+    
+    [state performSelector:@selector(transitionState:) withObject:self];
+    
     return YES;
 }
 

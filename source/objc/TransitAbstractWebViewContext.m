@@ -3,8 +3,8 @@
 // Copyright (c) 2015 BeamApp. All rights reserved.
 //
 
+#import <SBJson4/SBJson4.h>
 #import "TransitAbstractWebViewContext.h"
-#import "SBJsonParser.h"
 #import "TransitCallScope.h"
 #import "TransitEvalCallScope.h"
 #import "TransitAbstractWebViewContext+Private.h"
@@ -19,18 +19,18 @@ TransitWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER =
 };
 
 @implementation TransitAbstractWebViewContext {
-    SBJsonParser *_parser;
     BOOL _codeInjected;
     BOOL _proxifyEval;
     TransitWebViewContextRequestHandler _handleRequestBlock;
     NSString* _lastEvaluatedJSCode;
+    NSError *_lastReadError;
+    id _lastReadItem;
 }
 
 - (id)init {
     self = [super init];
     if(self) {
         _proxifyEval = YES;
-        _parser = SBJsonParser.new;
         _handleRequestBlock = _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER;
     }
     return self;
@@ -86,7 +86,32 @@ TransitWebViewContextRequestHandler _TRANSIT_DEFAULT_UIWEBVIEW_REQUEST_HANDLER =
 
 
 -(id)parseJSON:(NSString*)json {
-    return [_parser objectWithString:json];
+    __block NSError *readError = nil;
+    __block id readItem = nil;
+    
+    SBJson4Parser *parser = [SBJson4Parser parserWithBlock:^(id item, BOOL *stop) {
+        readItem = item;
+    }
+                                            allowMultiRoot:NO
+                                           unwrapRootArray:NO
+                                              errorHandler:^(NSError *error) {
+        readError = error;
+    }];
+    
+    NSData* data = [json dataUsingEncoding:NSUTF8StringEncoding];
+    SBJson4ParserStatus status = [parser parse:data];
+    
+    if (status != SBJson4ParserComplete) {
+        NSLog(@"Parser didn't complete: %@", @(status));
+        return nil;
+    }
+
+    if (readError) {
+        NSLog(@"Error parsing JSON: %@", readError);
+        return nil;
+    }
+    
+    return readItem;
 }
 
 -(void)doInvokeNative {

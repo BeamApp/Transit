@@ -3,11 +3,10 @@
 // Copyright (c) 2015 BeamApp. All rights reserved.
 //
 
-#import <SBJson/SBJsonStreamWriter.h>
+#import <SBJson4/SBJson4StreamWriter.h>
 
-@interface TransitJSRepresentationStreamWriter : SBJsonStreamWriter
+@interface TransitJSRepresentationStreamWriter : SBJson4StreamWriter
 
-@property (nonatomic, unsafe_unretained) SBJsonStreamWriterState *state; // Internal
 @property(nonatomic, strong) NSMutableOrderedSet* proxiesOnScope;
 
 @end

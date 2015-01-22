@@ -1,13 +1,13 @@
 PODS:
   - OCMock (2.0.1)
-  - SBJson (3.2)
+  - SBJson4 (4.0.1)
 
 DEPENDENCIES:
   - OCMock
-  - SBJson (~> 3.2)
+  - SBJson4
 
 SPEC CHECKSUMS:
   OCMock: 60bfc5e6bc0ed592a6b7fb805b6c4d7108d37eb6
-  SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
+  SBJson4: 321a266881e0e1830c5d2cae0beedf14d97da08b
 
 COCOAPODS: 0.36.0.beta.1
