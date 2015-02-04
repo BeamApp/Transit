@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
   s.source_files = 'source/objc/*.{h,m}'
   s.public_header_files = 'source/objc/Transit.h'
   s.requires_arc = true
-  s.dependency 'SBJson', '~> 3.2'
+  s.dependency 'SBJson4'
 end
