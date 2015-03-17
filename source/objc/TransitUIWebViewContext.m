@@ -45,37 +45,39 @@
 #pragma UIWebViewDelegate
 
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if([request.URL.scheme isEqual:_TRANSIT_SCHEME]){
+    if ([request.URL.scheme isEqual:_TRANSIT_SCHEME]){
         if (self.handleRequestBlock) {
             self.handleRequestBlock(self, request);
         }
 
         return NO;
+    } else if ([self.originalDelegate respondsToSelector:_cmd]) {
+        return [self.originalDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
+    } else {
+        return YES;
     }
-
-    if([_originalDelegate respondsToSelector:_cmd])
-        return [_originalDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
-
-    return YES;
 }
 
 -(void)webViewDidStartLoad:(UIWebView *)webView {
-    if([_originalDelegate respondsToSelector:_cmd])
-        return [_originalDelegate webViewDidStartLoad:webView];
+    if ([self.originalDelegate respondsToSelector:_cmd]) {
+        return [self.originalDelegate webViewDidStartLoad:webView];
+    }
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
     [self injectCodeToWebView];
 
-    if([_originalDelegate respondsToSelector:_cmd])
-        return [_originalDelegate webViewDidFinishLoad:webView];
-    if(self.readyHandler)
+    if ([self.originalDelegate respondsToSelector:_cmd]) {
+        return [self.originalDelegate webViewDidFinishLoad:webView];
+    } else if (self.readyHandler) {
         self.readyHandler(self);
+    }
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    if([_originalDelegate respondsToSelector:_cmd])
-        return [_originalDelegate webView:webView didFailLoadWithError:error];
+    if ([self.originalDelegate respondsToSelector:_cmd]) {
+        return [self.originalDelegate webView:webView didFailLoadWithError:error];
+    }
 }
 
 @end
