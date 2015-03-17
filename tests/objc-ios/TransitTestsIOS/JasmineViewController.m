@@ -27,11 +27,11 @@
 
 -(void)viewDidLoad{
     self.transit = [[TransitUIWebViewContext alloc] initWithUIWebView:self.webView];
-    
+
     NSURL *url = [NSBundle.mainBundle URLForResource:@"SpecRunner" withExtension:@"html" subdirectory:@"jasmine"];
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
-    
-    
+
+
     [super viewDidLoad];
 }
 

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "Transit"
-  s.version      = "0.1.0"
+  s.version      = "0.2.0-beta1"
   s.summary      = "Library to Bridge between JavaScript and Objective-C on iOS, OSX."
   s.homepage     = "http://github.com/BeamApp/Transit"
   s.license      = 'new BSD'
@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
   s.source_files = 'source/objc/*.{h,m}'
   s.public_header_files = 'source/objc/Transit.h'
   s.requires_arc = true
-  s.dependency 'SBJson', '~> 3.2'
+  s.dependency 'SBJson4'
 end

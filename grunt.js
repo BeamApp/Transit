@@ -18,7 +18,7 @@ module.exports = function(grunt) {
         },
         replace: {
             embedTransitIntoObjC: {
-                src: "source/objc/Transit.m",
+                src: "source/objc/TransitCore.m",
                 overwrite: true,
                 replacements:[{
                     from: /\/\/ _TRANSIT_JS_RUNTIME_CODE_START[\s\S]*\/\/ _TRANSIT_JS_RUNTIME_CODE_END/,

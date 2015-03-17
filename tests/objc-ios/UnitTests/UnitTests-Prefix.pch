@@ -1,0 +1,21 @@
+//
+//  TransitTestsIOS-Tests-Prefix.pch
+//  TransitTestsIOS
+//
+//  Created by Marcel Jackwerth on 22/01/15.
+//  Copyright (c) 2015 BeamApp. All rights reserved.
+//
+
+#ifndef TransitTestsIOS_TransitTestsIOS_Tests_Prefix_pch
+#define TransitTestsIOS_TransitTestsIOS_Tests_Prefix_pch
+
+#import <XCTest/XCTest.h>
+#import "OCMock.h"
+
+#import "CCWeakMockProxy.h"
+#import "OCMockObject+Reset.h"
+
+#import "Transit.h"
+#import "Transit+Private.h"
+
+#endif

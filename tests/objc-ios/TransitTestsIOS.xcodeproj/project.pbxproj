@@ -7,8 +7,44 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F18BB5A1A70E89A00EDD3A4 /* TransitUIWebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F18BB591A70E89A00EDD3A4 /* TransitUIWebViewTests.m */; };
+		1F18BB5C1A70E99D00EDD3A4 /* TransitCallScopeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */; };
+		1F18BB5D1A70E9AB00EDD3A4 /* TransitContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */; };
+		1F18BB5E1A70E9AB00EDD3A4 /* TransitJSFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */; };
+		1F18BB5F1A70E9AB00EDD3A4 /* TransitNativeFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */; };
+		1F18BB601A70E9AB00EDD3A4 /* TransitProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */; };
+		1F18BB611A70E9AB00EDD3A4 /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */; };
+		1F18BB621A70E9AB00EDD3A4 /* TransitObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B042BA5A1E209398767C6 /* TransitObjectTests.m */; };
+		1F18BB631A70E9AB00EDD3A4 /* TransitEvaluableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */; };
+		1F18BB641A70E9AB00EDD3A4 /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */; };
+		1F18BB651A70E9AB00EDD3A4 /* CCWeakMockProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */; };
+		1F18BB661A70E9AB00EDD3A4 /* TransitAbstractWebViewContextTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B07477794407FEEDD95FE /* TransitAbstractWebViewContextTests.m */; };
+		1F18BB671A70E9AB00EDD3A4 /* TransitGeneralTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B092555C0D3ACEE43FF03 /* TransitGeneralTests.m */; };
+		1F18BB6B1A71018A00EDD3A4 /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
+		1F18BB6E1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F18BB6D1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m */; };
 		4C9AC81874F4481C80F5C1D0 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F9A734C099141A682749BE3 /* libPods.a */; };
-		9275CFBEC36B45DEA60B61CA /* libPods-TransitTestsIOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */; };
+		6DB0FBA436695878D99C47F3 /* libPods-UnitTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 389A7AD9414A7FEE806EE309 /* libPods-UnitTests.a */; };
+		BF8C71E9241212195AE5B41D /* TransitCallScope.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7F247278912FF323FA9B /* TransitCallScope.m */; };
+		BF8C7513F730C916F9BA03FE /* TransitUIWebViewContext.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7D5A77C9136B8E32AFC6 /* TransitUIWebViewContext.m */; };
+		BF8C757D9F8C7749E8FBAC81 /* TransitAbstractWebViewContext.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C728116F49E033A9204B7 /* TransitAbstractWebViewContext.m */; };
+		BF8C75BFCEED6D7F9A0F6BDA /* TransitQueuedCallToJSFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7342AC6F3EE8DE539930 /* TransitQueuedCallToJSFunction.m */; };
+		BF8C75D0F69FB8CF18850711 /* TransitCore.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7B5E04EC940F9184D622 /* TransitCore.m */; };
+		BF8C75E6AD2EED32E4D71931 /* NSInvocation+TransitAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C73521E5A942050AEAD10 /* NSInvocation+TransitAdditions.m */; };
+		BF8C75F005706B336DD27D0A /* TransitCTBlockDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7B1B5C09A5070702C2E9 /* TransitCTBlockDescription.m */; };
+		BF8C75F0AF1F8A798916FEE7 /* NSString+TransRegExp.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C730202BD2F91CE260DD2 /* NSString+TransRegExp.m */; };
+		BF8C7632BACD4BC230DDE529 /* TransitJSRepresentationStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C79E606B60BA2FAEFD54A /* TransitJSRepresentationStreamWriter.m */; };
+		BF8C779C1F12A2A414E05A5C /* TransitCurrentCall.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7C24576D83A7E8FFA81B /* TransitCurrentCall.m */; };
+		BF8C77B1D6A90BD43EFAB9C3 /* TransitFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7379688FF0D800C606E3 /* TransitFunction.m */; };
+		BF8C77DF3DE5BB2EE33BE72C /* TransitJSFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C715FCE12BDAB5D8B663A /* TransitJSFunction.m */; };
+		BF8C7986C98A00B9E69843D2 /* TransitFunctionCallScope.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7578A32CFBE4E63A9148 /* TransitFunctionCallScope.m */; };
+		BF8C79F15D9201D5EBB10D81 /* TransitContext.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7BC6BADEFDA70A8E1A0A /* TransitContext.m */; };
+		BF8C7B1B7FF6F5DB04E78DFE /* TransitFunctionBodyProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C70C7A1834B56323DD064 /* TransitFunctionBodyProtocol.m */; };
+		BF8C7CAC6DBDF5CAADE77AD9 /* TransitWebViewContext.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C79DCA00B414DE76CFF8D /* TransitWebViewContext.m */; };
+		BF8C7DE45AB393619E2C92B7 /* TransitObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C76370407BB9EB77537B9 /* TransitObject.m */; };
+		BF8C7E7561EA84F472B40DC1 /* TransitNativeFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C739EDC06ADC482E31E13 /* TransitNativeFunction.m */; };
+		BF8C7E8031B3D2E1A765D1F4 /* TransitEvalCallScope.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C722E81E3C80257DDE396 /* TransitEvalCallScope.m */; };
+		BF8C7F16CCC0AAA21C09584C /* TransitProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C71762376EA55B8AC7C80 /* TransitProxy.m */; };
+		BF8C7FAD8F8B945266A12EBC /* TransitEvaluable.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8C7331F09FE209E0BBD43B /* TransitEvaluable.m */; };
 		CB18EEC816C549050051CC7C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEC716C549050051CC7C /* UIKit.framework */; };
 		CB18EECA16C549050051CC7C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEC916C549050051CC7C /* Foundation.framework */; };
 		CB18EECC16C549050051CC7C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EECB16C549050051CC7C /* CoreGraphics.framework */; };
@@ -18,36 +54,16 @@
 		CB18EEDA16C549050051CC7C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CB18EED916C549050051CC7C /* Default.png */; };
 		CB18EEDC16C549050051CC7C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB18EEDB16C549050051CC7C /* Default@2x.png */; };
 		CB18EEDE16C549050051CC7C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CB18EEDD16C549050051CC7C /* Default-568h@2x.png */; };
-		CB18EEE616C549050051CC7C /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEE516C549050051CC7C /* SenTestingKit.framework */; };
-		CB18EEE716C549050051CC7C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEC716C549050051CC7C /* UIKit.framework */; };
-		CB18EEE816C549050051CC7C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB18EEC916C549050051CC7C /* Foundation.framework */; };
-		CB18EEF016C549050051CC7C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CB18EEEE16C549050051CC7C /* InfoPlist.strings */; };
-		CB18EEF316C549050051CC7C /* TransitTestsIOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */; };
-		CB18EEFF16C549E50051CC7C /* Transit.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EEFE16C549E50051CC7C /* Transit.m */; };
-		CB18EF0216C54B830051CC7C /* TransitUIWebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */; };
-		CB18EF2E16C57BD90051CC7C /* TransitNativeFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */; };
-		CB18EF5316C58FC70051CC7C /* TransitProxyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */; };
-		CB18EF5716C595B50051CC7C /* TransitJSFunctionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */; };
-		CB18EF5916C5A04D0051CC7C /* TransitContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */; };
 		CB2751F816C7C364004E957A /* forge_benchmark.html in Resources */ = {isa = PBXBuildFile; fileRef = CB2751F716C7C364004E957A /* forge_benchmark.html */; };
 		CB27520116C7C3EA004E957A /* ForgeBenchmarkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB2751FF16C7C3EA004E957A /* ForgeBenchmarkViewController.m */; };
 		CB27520216C7C3EA004E957A /* ForgeBenchmarkViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB27520016C7C3EA004E957A /* ForgeBenchmarkViewController.xib */; };
 		CB91AE9016C7FB5100F46154 /* jasmine in Resources */ = {isa = PBXBuildFile; fileRef = CB91AE8F16C7FB5100F46154 /* jasmine */; };
 		CB91AE9516C7FB7B00F46154 /* JasmineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB91AE9316C7FB7B00F46154 /* JasmineViewController.m */; };
 		CB91AE9616C7FB7B00F46154 /* JasmineViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CB91AE9416C7FB7B00F46154 /* JasmineViewController.xib */; };
-		CBE29FD816C671F4004AED2B /* testPage.html in Resources */ = {isa = PBXBuildFile; fileRef = CBE29FD716C671F4004AED2B /* testPage.html */; };
-		CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */; };
-		F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B042BA5A1E209398767C6 /* TransitObjectTests.m */; };
-		F26B076335789851B19DE09B /* TransitAbstractWebViewContextTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B07477794407FEEDD95FE /* TransitAbstractWebViewContextTests.m */; };
-		F26B07A719E0E927520FD85F /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */; };
-		F26B0A048B7C710C59E8E499 /* TransitGeneralTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B092555C0D3ACEE43FF03 /* TransitGeneralTests.m */; };
-		F26B0B7FD7F7008323507797 /* CCWeakMockProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */; };
-		F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */; };
-		F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CB18EEE916C549050051CC7C /* PBXContainerItemProxy */ = {
+		1F18BB471A70E73000EDD3A4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CB18EEBA16C549050051CC7C /* Project object */;
 			proxyType = 1;
@@ -57,9 +73,72 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2B050F32C5EC48FAB41053D2 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		01E19BC302C729D9B5EDF1AE /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
+		1F18BB411A70E73000EDD3A4 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F18BB441A70E73000EDD3A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1F18BB591A70E89A00EDD3A4 /* TransitUIWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitUIWebViewTests.m; sourceTree = "<group>"; };
+		1F18BB6A1A70FF6D00EDD3A4 /* UnitTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UnitTests-Prefix.pch"; path = "UnitTests/UnitTests-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		1F18BB6C1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitJSRepresentationAccumulator.h; sourceTree = "<group>"; };
+		1F18BB6D1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitJSRepresentationAccumulator.m; sourceTree = "<group>"; };
+		389A7AD9414A7FEE806EE309 /* libPods-UnitTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-UnitTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F9A734C099141A682749BE3 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		81602410D054446ABF9036AE /* Pods-TransitTestsIOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TransitTestsIOSTests.xcconfig"; path = "Pods/Pods-TransitTestsIOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		5315105052B8DAF6A04956ED /* Pods-UnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.debug.xcconfig"; sourceTree = "<group>"; };
+		752169AC630D677E0F4E47EC /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		ADCC9433231D405BE16471DE /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		BF8C7022A0FDAA0F895E13CC /* TransitObject+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitObject+Private.h"; sourceTree = "<group>"; };
+		BF8C702DC8F407A50A5DDA8D /* TransitObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitObject.h; sourceTree = "<group>"; };
+		BF8C703AA0DFA3301DDFBE28 /* NSInvocation+TransitAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSInvocation+TransitAdditions.h"; sourceTree = "<group>"; };
+		BF8C70B41C537CF508BA8F27 /* TransitNativeFunction+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitNativeFunction+Private.h"; sourceTree = "<group>"; };
+		BF8C70C7A1834B56323DD064 /* TransitFunctionBodyProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitFunctionBodyProtocol.m; sourceTree = "<group>"; };
+		BF8C715067A84B11FBDA58AC /* TransitFunctionCallScope+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitFunctionCallScope+Private.h"; sourceTree = "<group>"; };
+		BF8C715FCE12BDAB5D8B663A /* TransitJSFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitJSFunction.m; sourceTree = "<group>"; };
+		BF8C71762376EA55B8AC7C80 /* TransitProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitProxy.m; sourceTree = "<group>"; };
+		BF8C71FD44BC92F9288660BF /* TransitUIWebViewContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitUIWebViewContext.h; sourceTree = "<group>"; };
+		BF8C722E81E3C80257DDE396 /* TransitEvalCallScope.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitEvalCallScope.m; sourceTree = "<group>"; };
+		BF8C728116F49E033A9204B7 /* TransitAbstractWebViewContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitAbstractWebViewContext.m; sourceTree = "<group>"; };
+		BF8C730202BD2F91CE260DD2 /* NSString+TransRegExp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TransRegExp.m"; sourceTree = "<group>"; };
+		BF8C7331F09FE209E0BBD43B /* TransitEvaluable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitEvaluable.m; sourceTree = "<group>"; };
+		BF8C7342AC6F3EE8DE539930 /* TransitQueuedCallToJSFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitQueuedCallToJSFunction.m; sourceTree = "<group>"; };
+		BF8C73521E5A942050AEAD10 /* NSInvocation+TransitAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSInvocation+TransitAdditions.m"; sourceTree = "<group>"; };
+		BF8C736C5574AF5275DE47E0 /* Transit+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Transit+Private.h"; sourceTree = "<group>"; };
+		BF8C7379688FF0D800C606E3 /* TransitFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitFunction.m; sourceTree = "<group>"; };
+		BF8C739EDC06ADC482E31E13 /* TransitNativeFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitNativeFunction.m; sourceTree = "<group>"; };
+		BF8C750211FD3BF341DA42CC /* TransitContext+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitContext+Private.h"; sourceTree = "<group>"; };
+		BF8C756451787E049005CAFD /* TransitJSFunction+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitJSFunction+Private.h"; sourceTree = "<group>"; };
+		BF8C7578A32CFBE4E63A9148 /* TransitFunctionCallScope.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitFunctionCallScope.m; sourceTree = "<group>"; };
+		BF8C7589AF6DCEB3A506C961 /* TransitNativeFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitNativeFunction.h; sourceTree = "<group>"; };
+		BF8C7618D303ADC815C0A5F0 /* TransitAbstractWebViewContext+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitAbstractWebViewContext+Private.h"; sourceTree = "<group>"; };
+		BF8C76370407BB9EB77537B9 /* TransitObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitObject.m; sourceTree = "<group>"; };
+		BF8C768165778755C624B02C /* TransitWebViewContext+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitWebViewContext+Private.h"; sourceTree = "<group>"; };
+		BF8C76AEB1076B5703CF803C /* NSString+TransRegExp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TransRegExp.h"; sourceTree = "<group>"; };
+		BF8C76EC9A9C52176F1BBA02 /* TransitFunctionBodyProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitFunctionBodyProtocol.h; sourceTree = "<group>"; };
+		BF8C7838EF58D37DDDD46394 /* TransitEvaluable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitEvaluable.h; sourceTree = "<group>"; };
+		BF8C78A74D3AA38A1AE66122 /* TransitFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitFunction.h; sourceTree = "<group>"; };
+		BF8C78F52D588194B7A29AE0 /* TransitEvalCallScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitEvalCallScope.h; sourceTree = "<group>"; };
+		BF8C7963620ECB4D7BEEC770 /* TransitProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitProxy.h; sourceTree = "<group>"; };
+		BF8C79DCA00B414DE76CFF8D /* TransitWebViewContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitWebViewContext.m; sourceTree = "<group>"; };
+		BF8C79E606B60BA2FAEFD54A /* TransitJSRepresentationStreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitJSRepresentationStreamWriter.m; sourceTree = "<group>"; };
+		BF8C7A4369F9B97060419C4C /* TransitJSRepresentationStreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitJSRepresentationStreamWriter.h; sourceTree = "<group>"; };
+		BF8C7A69EC8002429FFCDC77 /* TransitContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitContext.h; sourceTree = "<group>"; };
+		BF8C7AE7534AFDF28526F572 /* TransitFunctionCallScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitFunctionCallScope.h; sourceTree = "<group>"; };
+		BF8C7B149C08B08E387616E8 /* TransitCurrentCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitCurrentCall.h; sourceTree = "<group>"; };
+		BF8C7B1B5C09A5070702C2E9 /* TransitCTBlockDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCTBlockDescription.m; sourceTree = "<group>"; };
+		BF8C7B5E04EC940F9184D622 /* TransitCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCore.m; sourceTree = "<group>"; };
+		BF8C7B656461E20BE12440E1 /* TransitWebViewContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitWebViewContext.h; sourceTree = "<group>"; };
+		BF8C7BC6BADEFDA70A8E1A0A /* TransitContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitContext.m; sourceTree = "<group>"; };
+		BF8C7C0662BCA1A45E5F6D26 /* TransitAbstractWebViewContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitAbstractWebViewContext.h; sourceTree = "<group>"; };
+		BF8C7C24576D83A7E8FFA81B /* TransitCurrentCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCurrentCall.m; sourceTree = "<group>"; };
+		BF8C7CC4837A18E19A1EFEDA /* TransitCallScope+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitCallScope+Private.h"; sourceTree = "<group>"; };
+		BF8C7CC7B1B3ECE0775433BB /* TransitCTBlockDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitCTBlockDescription.h; sourceTree = "<group>"; };
+		BF8C7D5A77C9136B8E32AFC6 /* TransitUIWebViewContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitUIWebViewContext.m; sourceTree = "<group>"; };
+		BF8C7E3C61177A91579ED03D /* TransitQueuedCallToJSFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitQueuedCallToJSFunction.h; sourceTree = "<group>"; };
+		BF8C7E7A7954E79D228FEEE7 /* TransitEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitEvaluator.h; sourceTree = "<group>"; };
+		BF8C7E86EDEF368E0C90FDD3 /* TransitProxy+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitProxy+Private.h"; sourceTree = "<group>"; };
+		BF8C7ED2C86C04A837B21558 /* TransitCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitCore.h; sourceTree = "<group>"; };
+		BF8C7EEB3A2217F9C293D3B0 /* TransitJSFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitJSFunction.h; sourceTree = "<group>"; };
+		BF8C7F08D9AF62FA9436DAA2 /* TransitEvalCallScope+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TransitEvalCallScope+Private.h"; sourceTree = "<group>"; };
+		BF8C7F247278912FF323FA9B /* TransitCallScope.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitCallScope.m; sourceTree = "<group>"; };
+		BF8C7F396D19D2EC0B75D4C2 /* TransitCallScope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitCallScope.h; sourceTree = "<group>"; };
 		CB18EEC316C549050051CC7C /* TransitTestsIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransitTestsIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB18EEC716C549050051CC7C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CB18EEC916C549050051CC7C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -73,17 +152,9 @@
 		CB18EED916C549050051CC7C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		CB18EEDB16C549050051CC7C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		CB18EEDD16C549050051CC7C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		CB18EEE416C549050051CC7C /* TransitTestsIOSTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TransitTestsIOSTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		CB18EEE516C549050051CC7C /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		CB18EEED16C549050051CC7C /* TransitTestsIOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TransitTestsIOSTests-Info.plist"; sourceTree = "<group>"; };
-		CB18EEEF16C549050051CC7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TransitTestsIOSTests.m; sourceTree = "<group>"; };
 		CB18EEFD16C549E50051CC7C /* Transit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transit.h; sourceTree = "<group>"; };
-		CB18EEFE16C549E50051CC7C /* Transit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Transit.m; sourceTree = "<group>"; };
-		CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitUIWebViewTests.m; sourceTree = "<group>"; };
 		CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitNativeFunctionTests.m; path = "../../objc-general/TransitNativeFunctionTests.m"; sourceTree = "<group>"; };
 		CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitProxyTests.m; path = "../../objc-general/TransitProxyTests.m"; sourceTree = "<group>"; };
-		CB18EF5516C590F80051CC7C /* Transit+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Transit+Private.h"; sourceTree = "<group>"; };
 		CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitJSFunctionTests.m; path = "../../objc-general/TransitJSFunctionTests.m"; sourceTree = "<group>"; };
 		CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitContextTest.m; path = "../../objc-general/TransitContextTest.m"; sourceTree = "<group>"; };
 		CB2751F716C7C364004E957A /* forge_benchmark.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = forge_benchmark.html; sourceTree = "<group>"; };
@@ -110,6 +181,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1F18BB3E1A70E73000EDD3A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6DB0FBA436695878D99C47F3 /* libPods-UnitTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CB18EEC016C549050051CC7C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -121,20 +200,53 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CB18EEE016C549050051CC7C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CB18EEE616C549050051CC7C /* SenTestingKit.framework in Frameworks */,
-				CB18EEE716C549050051CC7C /* UIKit.framework in Frameworks */,
-				CB18EEE816C549050051CC7C /* Foundation.framework in Frameworks */,
-				9275CFBEC36B45DEA60B61CA /* libPods-TransitTestsIOSTests.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1676B658DBD042BCBF157838 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				ADCC9433231D405BE16471DE /* Pods.debug.xcconfig */,
+				752169AC630D677E0F4E47EC /* Pods.release.xcconfig */,
+				5315105052B8DAF6A04956ED /* Pods-UnitTests.debug.xcconfig */,
+				01E19BC302C729D9B5EDF1AE /* Pods-UnitTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		1F18BB421A70E73000EDD3A4 /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				1F18BB591A70E89A00EDD3A4 /* TransitUIWebViewTests.m */,
+				CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */,
+				CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */,
+				CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */,
+				CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */,
+				CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */,
+				CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */,
+				F26B042BA5A1E209398767C6 /* TransitObjectTests.m */,
+				F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */,
+				F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */,
+				F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */,
+				F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */,
+				F26B0AA681B3507C406A4011 /* CCWeakMockProxy.h */,
+				F26B07477794407FEEDD95FE /* TransitAbstractWebViewContextTests.m */,
+				F26B03C610F49551F650863F /* TransitAbstractWebViewContextTests.h */,
+				F26B092555C0D3ACEE43FF03 /* TransitGeneralTests.m */,
+				CBE29FD516C671DD004AED2B /* Resources */,
+				1F18BB431A70E73000EDD3A4 /* Supporting Files */,
+			);
+			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		1F18BB431A70E73000EDD3A4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1F18BB441A70E73000EDD3A4 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		CB18EEB816C549050051CC7C = {
 			isa = PBXGroup;
 			children = (
@@ -142,19 +254,20 @@
 				CB2751F516C7C304004E957A /* Resource */,
 				CB18EEFC16C549970051CC7C /* Transit */,
 				CB18EECD16C549050051CC7C /* TransitTestsIOS */,
-				CB18EEEB16C549050051CC7C /* TransitTestsIOSTests */,
+				1F18BB421A70E73000EDD3A4 /* UnitTests */,
 				CB18EEC616C549050051CC7C /* Frameworks */,
 				CB18EEC416C549050051CC7C /* Products */,
-				2B050F32C5EC48FAB41053D2 /* Pods.xcconfig */,
-				81602410D054446ABF9036AE /* Pods-TransitTestsIOSTests.xcconfig */,
+				1676B658DBD042BCBF157838 /* Pods */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		CB18EEC416C549050051CC7C /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				CB18EEC316C549050051CC7C /* TransitTestsIOS.app */,
-				CB18EEE416C549050051CC7C /* TransitTestsIOSTests.octest */,
+				1F18BB411A70E73000EDD3A4 /* UnitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -165,9 +278,9 @@
 				CB18EEC716C549050051CC7C /* UIKit.framework */,
 				CB18EEC916C549050051CC7C /* Foundation.framework */,
 				CB18EECB16C549050051CC7C /* CoreGraphics.framework */,
-				CB18EEE516C549050051CC7C /* SenTestingKit.framework */,
 				3F9A734C099141A682749BE3 /* libPods.a */,
 				F7D44E7111B143B6AA9681F3 /* libPods-TransitTestsIOSTests.a */,
+				389A7AD9414A7FEE806EE309 /* libPods-UnitTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -202,47 +315,66 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		CB18EEEB16C549050051CC7C /* TransitTestsIOSTests */ = {
-			isa = PBXGroup;
-			children = (
-				CBE29FD516C671DD004AED2B /* TestResources */,
-				CB18EEEC16C549050051CC7C /* Supporting Files */,
-				CB18EEF216C549050051CC7C /* TransitTestsIOSTests.m */,
-				CB18EF5816C5A04D0051CC7C /* TransitContextTest.m */,
-				CB18EF0116C54B830051CC7C /* TransitUIWebViewTests.m */,
-				CB18EF5616C595B50051CC7C /* TransitJSFunctionTests.m */,
-				CB18EF2D16C57BD90051CC7C /* TransitNativeFunctionTests.m */,
-				CB18EF5216C58FC70051CC7C /* TransitProxyTests.m */,
-				CBEDA81616CBC6530080229A /* OCMockObject+Reset.h */,
-				CBEDA81716CBC6530080229A /* OCMockObject+Reset.m */,
-				F26B042BA5A1E209398767C6 /* TransitObjectTests.m */,
-				F26B0D5AD31708E1599C1C27 /* TransitEvaluableTests.m */,
-				F26B0D2882304C7541B65C42 /* TransitCallScopeTests.m */,
-				F26B0C214B332312704935EF /* TransitNativeFunctionWithSpecificBlockTests.m */,
-				F26B0FF6DADBF26FA8268A9C /* CCWeakMockProxy.m */,
-				F26B0AA681B3507C406A4011 /* CCWeakMockProxy.h */,
-				F26B07477794407FEEDD95FE /* TransitAbstractWebViewContextTests.m */,
-				F26B03C610F49551F650863F /* TransitAbstractWebViewContextTests.h */,
-				F26B092555C0D3ACEE43FF03 /* TransitGeneralTests.m */,
-			);
-			path = TransitTestsIOSTests;
-			sourceTree = "<group>";
-		};
-		CB18EEEC16C549050051CC7C /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				CB18EEED16C549050051CC7C /* TransitTestsIOSTests-Info.plist */,
-				CB18EEEE16C549050051CC7C /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		CB18EEFC16C549970051CC7C /* Transit */ = {
 			isa = PBXGroup;
 			children = (
 				CB18EEFD16C549E50051CC7C /* Transit.h */,
-				CB18EF5516C590F80051CC7C /* Transit+Private.h */,
-				CB18EEFE16C549E50051CC7C /* Transit.m */,
+				BF8C7CC7B1B3ECE0775433BB /* TransitCTBlockDescription.h */,
+				BF8C7B1B5C09A5070702C2E9 /* TransitCTBlockDescription.m */,
+				BF8C702DC8F407A50A5DDA8D /* TransitObject.h */,
+				BF8C76370407BB9EB77537B9 /* TransitObject.m */,
+				BF8C7838EF58D37DDDD46394 /* TransitEvaluable.h */,
+				BF8C7331F09FE209E0BBD43B /* TransitEvaluable.m */,
+				BF8C7B149C08B08E387616E8 /* TransitCurrentCall.h */,
+				BF8C7C24576D83A7E8FFA81B /* TransitCurrentCall.m */,
+				BF8C7A69EC8002429FFCDC77 /* TransitContext.h */,
+				BF8C7BC6BADEFDA70A8E1A0A /* TransitContext.m */,
+				BF8C7E3C61177A91579ED03D /* TransitQueuedCallToJSFunction.h */,
+				BF8C7342AC6F3EE8DE539930 /* TransitQueuedCallToJSFunction.m */,
+				BF8C78A74D3AA38A1AE66122 /* TransitFunction.h */,
+				BF8C7379688FF0D800C606E3 /* TransitFunction.m */,
+				BF8C7589AF6DCEB3A506C961 /* TransitNativeFunction.h */,
+				BF8C739EDC06ADC482E31E13 /* TransitNativeFunction.m */,
+				BF8C7EEB3A2217F9C293D3B0 /* TransitJSFunction.h */,
+				BF8C715FCE12BDAB5D8B663A /* TransitJSFunction.m */,
+				BF8C7F396D19D2EC0B75D4C2 /* TransitCallScope.h */,
+				BF8C7F247278912FF323FA9B /* TransitCallScope.m */,
+				BF8C78F52D588194B7A29AE0 /* TransitEvalCallScope.h */,
+				BF8C722E81E3C80257DDE396 /* TransitEvalCallScope.m */,
+				BF8C7AE7534AFDF28526F572 /* TransitFunctionCallScope.h */,
+				BF8C7578A32CFBE4E63A9148 /* TransitFunctionCallScope.m */,
+				BF8C703AA0DFA3301DDFBE28 /* NSInvocation+TransitAdditions.h */,
+				BF8C73521E5A942050AEAD10 /* NSInvocation+TransitAdditions.m */,
+				BF8C7C0662BCA1A45E5F6D26 /* TransitAbstractWebViewContext.h */,
+				BF8C728116F49E033A9204B7 /* TransitAbstractWebViewContext.m */,
+				BF8C71FD44BC92F9288660BF /* TransitUIWebViewContext.h */,
+				BF8C7D5A77C9136B8E32AFC6 /* TransitUIWebViewContext.m */,
+				BF8C7B656461E20BE12440E1 /* TransitWebViewContext.h */,
+				BF8C79DCA00B414DE76CFF8D /* TransitWebViewContext.m */,
+				BF8C7A4369F9B97060419C4C /* TransitJSRepresentationStreamWriter.h */,
+				BF8C79E606B60BA2FAEFD54A /* TransitJSRepresentationStreamWriter.m */,
+				BF8C7963620ECB4D7BEEC770 /* TransitProxy.h */,
+				BF8C71762376EA55B8AC7C80 /* TransitProxy.m */,
+				BF8C7ED2C86C04A837B21558 /* TransitCore.h */,
+				BF8C7B5E04EC940F9184D622 /* TransitCore.m */,
+				BF8C7E7A7954E79D228FEEE7 /* TransitEvaluator.h */,
+				BF8C76AEB1076B5703CF803C /* NSString+TransRegExp.h */,
+				BF8C730202BD2F91CE260DD2 /* NSString+TransRegExp.m */,
+				BF8C70B41C537CF508BA8F27 /* TransitNativeFunction+Private.h */,
+				BF8C7F08D9AF62FA9436DAA2 /* TransitEvalCallScope+Private.h */,
+				BF8C756451787E049005CAFD /* TransitJSFunction+Private.h */,
+				BF8C750211FD3BF341DA42CC /* TransitContext+Private.h */,
+				BF8C7E86EDEF368E0C90FDD3 /* TransitProxy+Private.h */,
+				BF8C7022A0FDAA0F895E13CC /* TransitObject+Private.h */,
+				BF8C7CC4837A18E19A1EFEDA /* TransitCallScope+Private.h */,
+				BF8C715067A84B11FBDA58AC /* TransitFunctionCallScope+Private.h */,
+				BF8C7618D303ADC815C0A5F0 /* TransitAbstractWebViewContext+Private.h */,
+				BF8C768165778755C624B02C /* TransitWebViewContext+Private.h */,
+				BF8C76EC9A9C52176F1BBA02 /* TransitFunctionBodyProtocol.h */,
+				BF8C70C7A1834B56323DD064 /* TransitFunctionBodyProtocol.m */,
+				BF8C736C5574AF5275DE47E0 /* Transit+Private.h */,
+				1F18BB6C1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.h */,
+				1F18BB6D1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m */,
 			);
 			name = Transit;
 			path = ../../source/objc;
@@ -257,34 +389,39 @@
 			path = TransitTestsIOS/Resources;
 			sourceTree = "<group>";
 		};
-		CBE29FD516C671DD004AED2B /* TestResources */ = {
+		CBE29FD516C671DD004AED2B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1F18BB6A1A70FF6D00EDD3A4 /* UnitTests-Prefix.pch */,
 				CBE29FD716C671F4004AED2B /* testPage.html */,
 			);
-			name = TestResources;
+			name = Resources;
+			path = ../TransitTestsIOSTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
-/* Begin PBXLegacyTarget section */
-		CBA19B5F177333A800FEFCE2 /* transit */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = "${PROJECT_DIR}/../../scripts/build-appledoc.sh ${PROJECT_DIR}";
-			buildConfigurationList = CBA19B62177333A800FEFCE2 /* Build configuration list for PBXLegacyTarget "transit" */;
-			buildPhases = (
-			);
-			buildToolPath = /bin/sh;
-			buildWorkingDirectory = "";
-			dependencies = (
-			);
-			name = transit;
-			passBuildSettingsInEnvironment = 1;
-			productName = transit;
-		};
-/* End PBXLegacyTarget section */
-
 /* Begin PBXNativeTarget section */
+		1F18BB401A70E73000EDD3A4 /* UnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F18BB491A70E73000EDD3A4 /* Build configuration list for PBXNativeTarget "UnitTests" */;
+			buildPhases = (
+				0267685D7E2D6106D1344E1A /* Check Pods Manifest.lock */,
+				1F18BB3D1A70E73000EDD3A4 /* Sources */,
+				1F18BB3E1A70E73000EDD3A4 /* Frameworks */,
+				1F18BB3F1A70E73000EDD3A4 /* Resources */,
+				AC6693AEAA5DA326928365FA /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1F18BB481A70E73000EDD3A4 /* PBXTargetDependency */,
+			);
+			name = UnitTests;
+			productName = UnitTests;
+			productReference = 1F18BB411A70E73000EDD3A4 /* UnitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		CB18EEC216C549050051CC7C /* TransitTestsIOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CB18EEF616C549050051CC7C /* Build configuration list for PBXNativeTarget "TransitTestsIOS" */;
@@ -303,34 +440,21 @@
 			productReference = CB18EEC316C549050051CC7C /* TransitTestsIOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CB18EEE316C549050051CC7C /* TransitTestsIOSTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CB18EEF916C549050051CC7C /* Build configuration list for PBXNativeTarget "TransitTestsIOSTests" */;
-			buildPhases = (
-				CB18EEDF16C549050051CC7C /* Sources */,
-				CB18EEE016C549050051CC7C /* Frameworks */,
-				CB18EEE116C549050051CC7C /* Resources */,
-				E49A120A96154540AA0B2F01 /* Copy Pods Resources */,
-				CB18EEE216C549050051CC7C /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				CB18EEEA16C549050051CC7C /* PBXTargetDependency */,
-			);
-			name = TransitTestsIOSTests;
-			productName = TransitTestsIOSTests;
-			productReference = CB18EEE416C549050051CC7C /* TransitTestsIOSTests.octest */;
-			productType = "com.apple.product-type.bundle";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		CB18EEBA16C549050051CC7C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastTestingUpgradeCheck = 0610;
+				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = BeamApp;
+				TargetAttributes = {
+					1F18BB401A70E73000EDD3A4 = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = CB18EEC216C549050051CC7C;
+					};
+				};
 			};
 			buildConfigurationList = CB18EEBD16C549050051CC7C /* Build configuration list for PBXProject "TransitTestsIOS" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -345,13 +469,20 @@
 			projectRoot = "";
 			targets = (
 				CB18EEC216C549050051CC7C /* TransitTestsIOS */,
-				CB18EEE316C549050051CC7C /* TransitTestsIOSTests */,
-				CBA19B5F177333A800FEFCE2 /* transit */,
+				1F18BB401A70E73000EDD3A4 /* UnitTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1F18BB3F1A70E73000EDD3A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F18BB6B1A71018A00EDD3A4 /* testPage.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CB18EEC116C549050051CC7C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -367,18 +498,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CB18EEE116C549050051CC7C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CB18EEF016C549050051CC7C /* InfoPlist.strings in Resources */,
-				CBE29FD816C671F4004AED2B /* testPage.html in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0267685D7E2D6106D1344E1A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		2C71114E57A34E51A9385968 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -391,23 +528,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 		};
-		CB18EEE216C549050051CC7C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ \"$RUN_UNIT_TEST_WITH_IOS_SIM\" = \"YES\" ]; then\ntest_bundle_path=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION\"\nios-sim launch \"$(dirname \"$TEST_HOST\")\" --setenv DYLD_INSERT_LIBRARIES=/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection --setenv XCInjectBundle=\"$test_bundle_path\" --setenv XCInjectBundleInto=\"$TEST_HOST\" --args -SenTest All \"$test_bundle_path\"\necho \"Finished running tests with ios-sim\"\nelse\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\nfi";
-			showEnvVarsInLog = 0;
-		};
-		E49A120A96154540AA0B2F01 /* Copy Pods Resources */ = {
+		AC6693AEAA5DA326928365FA /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -419,51 +542,72 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-TransitTestsIOSTests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1F18BB3D1A70E73000EDD3A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F18BB641A70E9AB00EDD3A4 /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */,
+				1F18BB651A70E9AB00EDD3A4 /* CCWeakMockProxy.m in Sources */,
+				1F18BB631A70E9AB00EDD3A4 /* TransitEvaluableTests.m in Sources */,
+				1F18BB5D1A70E9AB00EDD3A4 /* TransitContextTest.m in Sources */,
+				1F18BB5F1A70E9AB00EDD3A4 /* TransitNativeFunctionTests.m in Sources */,
+				1F18BB661A70E9AB00EDD3A4 /* TransitAbstractWebViewContextTests.m in Sources */,
+				1F18BB671A70E9AB00EDD3A4 /* TransitGeneralTests.m in Sources */,
+				1F18BB611A70E9AB00EDD3A4 /* OCMockObject+Reset.m in Sources */,
+				1F18BB601A70E9AB00EDD3A4 /* TransitProxyTests.m in Sources */,
+				1F18BB5C1A70E99D00EDD3A4 /* TransitCallScopeTests.m in Sources */,
+				1F18BB5E1A70E9AB00EDD3A4 /* TransitJSFunctionTests.m in Sources */,
+				1F18BB621A70E9AB00EDD3A4 /* TransitObjectTests.m in Sources */,
+				1F18BB5A1A70E89A00EDD3A4 /* TransitUIWebViewTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CB18EEBF16C549050051CC7C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CB18EED416C549050051CC7C /* main.m in Sources */,
 				CB18EED816C549050051CC7C /* AppDelegate.m in Sources */,
-				CB18EEFF16C549E50051CC7C /* Transit.m in Sources */,
 				CB27520116C7C3EA004E957A /* ForgeBenchmarkViewController.m in Sources */,
 				CB91AE9516C7FB7B00F46154 /* JasmineViewController.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CB18EEDF16C549050051CC7C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CB18EEF316C549050051CC7C /* TransitTestsIOSTests.m in Sources */,
-				CB18EF0216C54B830051CC7C /* TransitUIWebViewTests.m in Sources */,
-				CB18EF2E16C57BD90051CC7C /* TransitNativeFunctionTests.m in Sources */,
-				CB18EF5316C58FC70051CC7C /* TransitProxyTests.m in Sources */,
-				CB18EF5716C595B50051CC7C /* TransitJSFunctionTests.m in Sources */,
-				CB18EF5916C5A04D0051CC7C /* TransitContextTest.m in Sources */,
-				CBEDA81816CBC6530080229A /* OCMockObject+Reset.m in Sources */,
-				F26B01BB3081F08011D7A298 /* TransitObjectTests.m in Sources */,
-				F26B0C12FBA3C2CF9E78D902 /* TransitEvaluableTests.m in Sources */,
-				F26B0F84A0D2719079C26B37 /* TransitCallScopeTests.m in Sources */,
-				F26B07A719E0E927520FD85F /* TransitNativeFunctionWithSpecificBlockTests.m in Sources */,
-				F26B0B7FD7F7008323507797 /* CCWeakMockProxy.m in Sources */,
-				F26B076335789851B19DE09B /* TransitAbstractWebViewContextTests.m in Sources */,
-				F26B0A048B7C710C59E8E499 /* TransitGeneralTests.m in Sources */,
+				BF8C75F005706B336DD27D0A /* TransitCTBlockDescription.m in Sources */,
+				BF8C7DE45AB393619E2C92B7 /* TransitObject.m in Sources */,
+				BF8C7FAD8F8B945266A12EBC /* TransitEvaluable.m in Sources */,
+				BF8C779C1F12A2A414E05A5C /* TransitCurrentCall.m in Sources */,
+				BF8C79F15D9201D5EBB10D81 /* TransitContext.m in Sources */,
+				BF8C75BFCEED6D7F9A0F6BDA /* TransitQueuedCallToJSFunction.m in Sources */,
+				BF8C77B1D6A90BD43EFAB9C3 /* TransitFunction.m in Sources */,
+				BF8C7E7561EA84F472B40DC1 /* TransitNativeFunction.m in Sources */,
+				1F18BB6E1A710A4400EDD3A4 /* TransitJSRepresentationAccumulator.m in Sources */,
+				BF8C77DF3DE5BB2EE33BE72C /* TransitJSFunction.m in Sources */,
+				BF8C71E9241212195AE5B41D /* TransitCallScope.m in Sources */,
+				BF8C7E8031B3D2E1A765D1F4 /* TransitEvalCallScope.m in Sources */,
+				BF8C7986C98A00B9E69843D2 /* TransitFunctionCallScope.m in Sources */,
+				BF8C75E6AD2EED32E4D71931 /* NSInvocation+TransitAdditions.m in Sources */,
+				BF8C757D9F8C7749E8FBAC81 /* TransitAbstractWebViewContext.m in Sources */,
+				BF8C7513F730C916F9BA03FE /* TransitUIWebViewContext.m in Sources */,
+				BF8C7CAC6DBDF5CAADE77AD9 /* TransitWebViewContext.m in Sources */,
+				BF8C7632BACD4BC230DDE529 /* TransitJSRepresentationStreamWriter.m in Sources */,
+				BF8C7F16CCC0AAA21C09584C /* TransitProxy.m in Sources */,
+				BF8C75F0AF1F8A798916FEE7 /* NSString+TransRegExp.m in Sources */,
+				BF8C75D0F69FB8CF18850711 /* TransitCore.m in Sources */,
+				BF8C7B1B7FF6F5DB04E78DFE /* TransitFunctionBodyProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CB18EEEA16C549050051CC7C /* PBXTargetDependency */ = {
+		1F18BB481A70E73000EDD3A4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CB18EEC216C549050051CC7C /* TransitTestsIOS */;
-			targetProxy = CB18EEE916C549050051CC7C /* PBXContainerItemProxy */;
+			targetProxy = 1F18BB471A70E73000EDD3A4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -476,17 +620,80 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		CB18EEEE16C549050051CC7C /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CB18EEEF16C549050051CC7C /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1F18BB4A1A70E73000EDD3A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5315105052B8DAF6A04956ED /* Pods-UnitTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREFIX_HEADER = "UnitTests/UnitTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = UnitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TransitTestsIOS.app/TransitTestsIOS";
+			};
+			name = Debug;
+		};
+		1F18BB4B1A70E73000EDD3A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01E19BC302C729D9B5EDF1AE /* Pods-UnitTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREFIX_HEADER = "UnitTests/UnitTests-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = UnitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TransitTestsIOS.app/TransitTestsIOS";
+			};
+			name = Release;
+		};
 		CB18EEF416C549050051CC7C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -509,7 +716,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -531,7 +738,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -541,9 +748,8 @@
 		};
 		CB18EEF716C549050051CC7C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B050F32C5EC48FAB41053D2 /* Pods.xcconfig */;
+			baseConfigurationReference = ADCC9433231D405BE16471DE /* Pods.debug.xcconfig */;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -559,9 +765,8 @@
 		};
 		CB18EEF816C549050051CC7C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B050F32C5EC48FAB41053D2 /* Pods.xcconfig */;
+			baseConfigurationReference = 752169AC630D677E0F4E47EC /* Pods.release.xcconfig */;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
 				INFOPLIST_FILE = "TransitTestsIOS/TransitTestsIOS-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -569,91 +774,18 @@
 			};
 			name = Release;
 		};
-		CB18EEFA16C549050051CC7C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 81602410D054446ABF9036AE /* Pods-TransitTestsIOSTests.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TransitTestsIOS.app/TransitTestsIOS";
-				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"COCOAPODS=1",
-					"TRANSIT_SPECIFIC_BLOCKS_SUPPORTED=1",
-				);
-				INFOPLIST_FILE = "TransitTestsIOSTests/TransitTestsIOSTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Debug;
-		};
-		CB18EEFB16C549050051CC7C /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 81602410D054446ABF9036AE /* Pods-TransitTestsIOSTests.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TransitTestsIOS.app/TransitTestsIOS";
-				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TransitTestsIOS/TransitTestsIOS-Prefix.pch";
-				INFOPLIST_FILE = "TransitTestsIOSTests/TransitTestsIOSTests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Release;
-		};
-		CBA19B60177333A800FEFCE2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
-		CBA19B61177333A800FEFCE2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1F18BB491A70E73000EDD3A4 /* Build configuration list for PBXNativeTarget "UnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1F18BB4A1A70E73000EDD3A4 /* Debug */,
+				1F18BB4B1A70E73000EDD3A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CB18EEBD16C549050051CC7C /* Build configuration list for PBXProject "TransitTestsIOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -668,24 +800,6 @@
 			buildConfigurations = (
 				CB18EEF716C549050051CC7C /* Debug */,
 				CB18EEF816C549050051CC7C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CB18EEF916C549050051CC7C /* Build configuration list for PBXNativeTarget "TransitTestsIOSTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CB18EEFA16C549050051CC7C /* Debug */,
-				CB18EEFB16C549050051CC7C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CBA19B62177333A800FEFCE2 /* Build configuration list for PBXLegacyTarget "transit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CBA19B60177333A800FEFCE2 /* Debug */,
-				CBA19B61177333A800FEFCE2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

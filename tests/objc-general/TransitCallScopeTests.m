@@ -6,13 +6,7 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "Transit.h"
-#import "Transit+Private.h"
-#import "OCMock.h"
-#import "CCWeakMockProxy.h"
-
-@interface TransitCallScopeTests : SenTestCase
+@interface TransitCallScopeTests : XCTestCase
 
 @end
 
@@ -26,11 +20,11 @@
     TransitCallScope *parentScope = [TransitCallScope.alloc initWithContext:context];
     TransitFunctionCallScope *scope = [TransitFunctionCallScope.alloc initWithContext:context parentScope:parentScope thisArg:thisArg arguments:arguments expectsResult:NO function:function];
 
-    STAssertEquals(context, scope.context, @"context prop");
-    STAssertEquals(parentScope, scope.parentScope, @"parentScope");
-    STAssertEquals(function, scope.function, @"function");
-    STAssertEquals(thisArg, scope.thisArg, @"thisArg");
-    STAssertEquals(arguments, scope.arguments, @"arguments");
+    XCTAssertEqual(context, scope.context, @"context prop");
+    XCTAssertEqual(parentScope, scope.parentScope, @"parentScope");
+    XCTAssertEqual(function, scope.function, @"function");
+    XCTAssertEqual(thisArg, scope.thisArg, @"thisArg");
+    XCTAssertEqual(arguments, scope.arguments, @"arguments");
 }
 
 -(void)testForwardToFunction {
@@ -44,7 +38,7 @@
 
     [[[function2 stub] andReturn:@"someResult"] callWithThisArg:thisArg arguments:arguments returnResult:expectsResult];
     id actual = [scope forwardToFunction:function2];
-    STAssertEqualObjects(@"someResult", actual, @"result from forwarded delegate");
+    XCTAssertEqualObjects(@"someResult", actual, @"result from forwarded delegate");
 }
 
 -(void)testForwardToDelegate {
@@ -58,7 +52,7 @@
 
     [[[delegate stub] andReturn:@"someResult"] callWithFunction:function thisArg:thisArg arguments:arguments expectsResult:expectsResult];
     id actual = [scope forwardToDelegate:delegate];
-    STAssertEqualObjects(@"someResult", actual, @"result from forwarded function");
+    XCTAssertEqualObjects(@"someResult", actual, @"result from forwarded function");
 }
 
 @end

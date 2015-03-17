@@ -6,11 +6,7 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "Transit.h"
-#import "OCMock.h"
-
-@interface TransitGeneralTests : SenTestCase
+@interface TransitGeneralTests : XCTestCase
 @end
 
 @implementation TransitGeneralTests
@@ -19,18 +15,18 @@
     id value = @"undefined";
     id actual = TransitNilSafe(value);
     
-    STAssertEqualObjects(value, actual, @"equal");
-    STAssertTrue(value == actual, @"same");
-    STAssertFalse(transit_isJSExpression(actual), @"plain string");
+    XCTAssertEqualObjects(value, actual, @"equal");
+    XCTAssertTrue(value == actual, @"same");
+    XCTAssertFalse(transit_isJSExpression(actual), @"plain string");
 }
 
 -(void)testTransitNilSafeOnNil {
     id value = nil;
     id actual = TransitNilSafe(value);
     
-    STAssertFalse(value == actual, @"same");
-    STAssertEqualObjects(@"undefined", actual, @"string containined 'undefined'");
-    STAssertTrue(transit_isJSExpression(actual), @"marked as jsExpression");
+    XCTAssertFalse(value == actual, @"same");
+    XCTAssertEqualObjects(@"undefined", actual, @"string containined 'undefined'");
+    XCTAssertTrue(transit_isJSExpression(actual), @"marked as jsExpression");
 }
 
 

@@ -6,13 +6,7 @@
 //  Copyright (c) 2013 BeamApp. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "Transit.h"
-#import "Transit+Private.h"
-#import "OCMock.h"
-#import "CCWeakMockProxy.h"
-
-@interface TransitObjectTests : SenTestCase
+@interface TransitObjectTests : XCTestCase
 
 @end
 
@@ -22,23 +16,23 @@
     id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitObject *object = [TransitObject.alloc initWithContext:context];
 
-    STAssertThrows([object objectForKey:@"someKey"], @"not supported by base class");
+    XCTAssertThrows([object objectForKey:@"someKey"], @"not supported by base class");
 }
 
 -(void)testCallMemberNotSupported {
     id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitObject *object = [TransitObject.alloc initWithContext:context];
 
-    STAssertThrows(([object callMember:@"someMember" arguments:@[@1, @2, @3]]), @"not supported by base class");
+    XCTAssertThrows(([object callMember:@"someMember" arguments:@[@1, @2, @3]]), @"not supported by base class");
 }
 
 -(void)testContextCanBeCleared {
     id context = [CCWeakMockProxy mockForClass:TransitContext.class];
     TransitObject *object = [TransitObject.alloc initWithContext:context];
 
-    STAssertTrue(object.context == context, @"context correctly assigned");
+    XCTAssertTrue(object.context == context, @"context correctly assigned");
     [object clearContext];
-    STAssertNil(object.context, @"context removed");
+    XCTAssertNil(object.context, @"context removed");
 }
 
 -(void)testObjectForKey {
@@ -48,12 +42,12 @@
     [[[context stub] andReturn:@"value"] eval:@"@[@]" val:object val:@"key"];
     id value = [object objectForKey:@"key"];
 
-    STAssertEqualObjects(@"value", value, @"returned correct value");
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertEqualObjects(@"value", value, @"returned correct value");
+    XCTAssertNoThrow([context verify], @"verify mock");
 
     [[context expect] eval:@"@[@]=@" val:object val:@"key" val:@"value2"];
     [object setObject:@"value2" forKey:@"key"];
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertNoThrow([context verify], @"verify mock");
 }
 
 -(void)testIndexedSubscript {
@@ -63,12 +57,12 @@
     [[[context stub] andReturn:@"value"] eval:@"@[@]" val:object val:@1];
     id value = object[1];
 
-    STAssertEqualObjects(@"value", value, @"returned correct value");
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertEqualObjects(@"value", value, @"returned correct value");
+    XCTAssertNoThrow([context verify], @"verify mock");
 
     [[context expect] eval:@"@[@]=@" val:object val:@2 val:@"another value"];
     object[2] = @"another value";
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertNoThrow([context verify], @"verify mock");
 }
 
 -(void)testKeyedSubscript {
@@ -78,12 +72,12 @@
     [[[context stub] andReturn:@"value"] eval:@"@[@]" val:object val:@"key"];
     id value = object[@"key"];
 
-    STAssertEqualObjects(@"value", value, @"returned correct value");
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertEqualObjects(@"value", value, @"returned correct value");
+    XCTAssertNoThrow([context verify], @"verify mock");
 
     [[context expect] eval:@"@[@]=@" val:object val:@"key" val:@"another value"];
     object[@"key"] = @"another value";
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertNoThrow([context verify], @"verify mock");
 }
 
 -(void)testCallMember {
@@ -95,8 +89,8 @@
     [[[context stub] andReturn:@"value"] eval:@"@[@].apply(@,@)" values:@[object, @"someMethod", object, arguments]];
     id value = [object callMember:@"someMethod" arguments:arguments];
 
-    STAssertEqualObjects(@"value", value, @"returned correct value");
-    STAssertNoThrow([context verify], @"verify mock");
+    XCTAssertEqualObjects(@"value", value, @"returned correct value");
+    XCTAssertNoThrow([context verify], @"verify mock");
 
 
 }

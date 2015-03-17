@@ -8,12 +8,8 @@
 
 #import "TransitAbstractWebViewContextTests.h"
 
-#import "Transit.h"
-#import "Transit+Private.h"
-#import "OCMockObject+Reset.h"
-#import "OCMock.h"
-#import "CCWeakMockProxy.h"
-
+#import <objc/message.h>
+#define WEBVIEW(context) (((id (*)(id, SEL))objc_msgSend)(context, @selector(webView)))
 
 @implementation TransitAbstractWebViewContextTests {
     NSString* _storedJSRuntimeCode;
@@ -74,23 +70,23 @@
 -(void)testResultTypes {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
 
-    STAssertEqualObjects([context eval:@"2+2"], @4, @"number");
-    STAssertEqualObjects([context eval:@"3>2"], @YES, @"boolean");
-    STAssertEqualObjects([context eval:@"'foo'+'bar'"], @"foobar", @"string");
+    XCTAssertEqualObjects([context eval:@"2+2"], @4, @"number");
+    XCTAssertEqualObjects([context eval:@"3>2"], @YES, @"boolean");
+    XCTAssertEqualObjects([context eval:@"'foo'+'bar'"], @"foobar", @"string");
 
     id object = [context eval:@"{a:1,b:'two'}"];
     // isKindOf: test crucial since recursiveMarkerReplacement tests this way, too
-    STAssertTrue([object isKindOfClass:NSDictionary.class], @"NSDictionary");
-    STAssertEqualObjects(object,(@{@"a":@1,@"b":@"two"}), @"object");
+    XCTAssertTrue([object isKindOfClass:NSDictionary.class], @"NSDictionary");
+    XCTAssertEqualObjects(object,(@{@"a":@1,@"b":@"two"}), @"object");
 
     id array = [context eval:@"[1,2,3]"];
     // isKindOf: test crucial since recursiveMarkerReplacement tests this way, too
-    STAssertTrue([array isKindOfClass:NSArray.class], @"NSArray");
-    STAssertEqualObjects(array,(@[@1,@2,@3]), @"array");
+    XCTAssertTrue([array isKindOfClass:NSArray.class], @"NSArray");
+    XCTAssertEqualObjects(array,(@[@1,@2,@3]), @"array");
 
 
-    STAssertEqualObjects([context eval:@"null"], NSNull.null, @"null");
-    STAssertEqualObjects([context eval:@"undefined"], nil, @"undefined");
+    XCTAssertEqualObjects([context eval:@"null"], NSNull.null, @"null");
+    XCTAssertEqualObjects([context eval:@"undefined"], nil, @"undefined");
 }
 
 -(void)testInjectsCode {
@@ -98,9 +94,9 @@
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     context.proxifyEval = NO;
 
-    STAssertEqualObjects(@YES, [context eval:@"window.findme"], @"code has been injected");
-    [self.class waitForWebViewToBeLoaded:context.webView];
-    STAssertEqualObjects(@"Empty Page", [context eval:@"document.title"], @"can access title");
+    XCTAssertEqualObjects(@YES, [context eval:@"window.findme"], @"code has been injected");
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
+    XCTAssertEqualObjects(@"Empty Page", [context eval:@"document.title"], @"can access title");
 
 }
 
@@ -109,18 +105,18 @@
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     context.proxifyEval = NO;
 
-    STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
+    XCTAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
 
     // wait for page to be fully loaded, otherwise JS code won't get replaced on reload below
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
 
-    STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
+    XCTAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
 
-    [self.class loadHTMLString:@"<head><title>Changed</title></head><body></body>" inWebView:context.webView];
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class loadHTMLString:@"<head><title>Changed</title></head><body></body>" inWebView:WEBVIEW(context)];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
 
-    STAssertEqualObjects(@"Changed", [context eval:@"document.title"], @"code has been injected");
-    STAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
+    XCTAssertEqualObjects(@"Changed", [context eval:@"document.title"], @"code has been injected");
+    XCTAssertEqualObjects(@"boolean", [context eval:@"typeof window.findme"], @"code has been injected");
 }
 
 -(void)testInjectsCodeOnReloadOfURLLoad {
@@ -129,54 +125,54 @@
     context.proxifyEval = NO;
 
 
-    STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
+    XCTAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
 
     // wait for page to be fully loaded, otherwise JS code won't get replaced on reload below
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
 
-    STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
+    XCTAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
 
-    STAssertEqualObjects(@1, [context eval:@"window.findme.v"], @"code has been injected");
+    XCTAssertEqualObjects(@1, [context eval:@"window.findme.v"], @"code has been injected");
     [context eval:@"window.findme.add()"];
-    STAssertEqualObjects(@2, [context eval:@"window.findme.v"], @"code has been injected");
+    XCTAssertEqualObjects(@2, [context eval:@"window.findme.v"], @"code has been injected");
 
     NSURL *url = [[NSBundle bundleForClass:self.class] URLForResource:@"testPage" withExtension:@"html"];
-    STAssertNotNil(url, @"url from test asset could be loaded");
-    [self.class loadRequest:[NSURLRequest requestWithURL:url] inWebView:context.webView];
+    XCTAssertNotNil(url, @"url from test asset could be loaded");
+    [self.class loadRequest:[NSURLRequest requestWithURL:url] inWebView:WEBVIEW(context)];
 
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
 
-    STAssertEqualObjects(@"TestPage from File", [context eval:@"document.title"], @"code has been injected");
-    STAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
-    STAssertEqualObjects(@1, [context eval:@"window.findme.v"], @"code has been reset");
+    XCTAssertEqualObjects(@"TestPage from File", [context eval:@"document.title"], @"code has been injected");
+    XCTAssertEqualObjects(@"object", [context eval:@"typeof window.findme"], @"code has been injected");
+    XCTAssertEqualObjects(@1, [context eval:@"window.findme.v"], @"code has been reset");
 }
 
 -(void)testProxifyOfGlobalObject {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     id actual = [context eval:@"window"];
-    STAssertEqualObjects(context, actual, @"just to get better output on failure");
-    STAssertTrue(context == actual, @"window is same proxy again");
+    XCTAssertEqualObjects(context, actual, @"just to get better output on failure");
+    XCTAssertTrue(context == actual, @"window is same proxy again");
 
     actual = [context eval:@"this"];
-    STAssertEqualObjects(context, actual, @"just to get better output on failure");
-    STAssertTrue(context == actual, @"this = window is same proxy again");
+    XCTAssertEqualObjects(context, actual, @"just to get better output on failure");
+    XCTAssertTrue(context == actual, @"this = window is same proxy again");
 }
 
 -(void)testArguments {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
-    STAssertEqualObjects([context eval:@"@ + @" val:@"2+2" val:@4], @"2+24", @"'2+2' + 4 == '2+24'");
+    XCTAssertEqualObjects([context eval:@"@ + @" val:@"2+2" val:@4], @"2+24", @"'2+2' + 4 == '2+24'");
 }
 
 -(void)testThisArg {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
-    STAssertEqualObjects([context eval:@"this.a + @" thisArg:@{@"a" : @"foo"} val:@"bar"], @"foobar", @"this has been set");
+    XCTAssertEqualObjects([context eval:@"this.a + @" thisArg:@{@"a" : @"foo"} val:@"bar"], @"foobar", @"this has been set");
 }
 
 -(void)testAssignmentOfGlobalObject {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     context[@"foo"] = @"bar";
     id actual = context[@"foo"];
-    STAssertEqualObjects(actual, @"bar", @"result");
+    XCTAssertEqualObjects(actual, @"bar", @"result");
 }
 
 -(void)testSimpleCallFromWebView{
@@ -187,58 +183,70 @@
     TransitFunction *func = [self functionToCallContextBareToTheMetal:context];
 
     id functionResult = [func call];
-    STAssertEqualObjects(@"changedFromContext", functionResult, @"function result");
-    STAssertEqualObjects(@"changedFromContext", [context eval:@"window.globalTestVar"], @"var changed in native code");
+    XCTAssertEqualObjects(@"changedFromContext", functionResult, @"function result");
+    XCTAssertEqualObjects(@"changedFromContext", [context eval:@"window.globalTestVar"], @"var changed in native code");
 }
 
 -(void)testRecursiveCallBetweenWebViewAndNative {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     TransitFunction *func = [self functionToCallContextBareToTheMetal:context];
 
+    // iOS8 = 270-275
     // iOS7 = 856
     // iOS6 = 63
     // iOS5 = 92
     // OSX 10.8 = 255
     // OSX 10.9 = 974
     int expectedMaxDepth = 92;
+
+#if TARGET_OS_IPHONE
     if(transit_iOS_6_OrLater()) expectedMaxDepth = 63;
     if(transit_iOS_7_OrLater()) expectedMaxDepth = 856;
-
-#if (TARGET_OS_MAC && !(TARGET_OS_IPHONE))
+    if(transit_iOS_8_OrLater()) expectedMaxDepth = 270;
+#elif TARGET_OS_MAC
     if(transit_OSX_10_8_OrLater()) expectedMaxDepth = 255;
     if(transit_OSX_10_9_OrLater()) expectedMaxDepth = 974;
 #endif
 
-    __block int callCounter = 1;
+    __block int callCount = 0;
+    
     context.handleRequestBlock = ^(TransitAbstractWebViewContext *ctx, NSURLRequest* req) {
-        int arg = req ? req.URL.resourceSpecifier.intValue : callCounter++;
+        int arg = req.URL.resourceSpecifier.intValue;
+        callCount++;
+        
+        XCTAssertEqualObjects(@(arg), @(callCount), @"URL didn't contain current callCount");
 
         if(arg <= expectedMaxDepth){
             NSNumber *succ = @(arg+1);
             [func callWithArg:succ];
 
-            if(succ.intValue <= expectedMaxDepth) {
-                STAssertEqualObjects(succ, [ctx eval:@"window.globalTestVar"], @"correct reentrant values");
+            if (succ.intValue <= expectedMaxDepth) {
+                id current = [ctx eval:@"window.globalTestVar"];
+                NSString* expected = [NSString stringWithFormat:@"afterCall %@", succ];
+                XCTAssertEqualObjects(expected, current, @"correct reentrant values");
             } else {
-                NSString* expected = [NSString stringWithFormat:@"beforeCall %d", expectedMaxDepth+1];
-                STAssertEqualObjects(expected, [ctx eval:@"window.globalTestVar"], @"max depth reached, frame will not block if max depth is exceed");
+                id current = [ctx eval:@"window.globalTestVar"];
+                NSString* expected = [NSString stringWithFormat:@"beforeCall %@", @(expectedMaxDepth + 1)];
+                XCTAssertEqualObjects(expected, current, @"max depth reached, frame will not block if max depth is exceed");
             }
         }
-        [ctx eval:@"window.globalTestVar = @" val:@(arg)];
+        
+        NSString* newValue = [NSString stringWithFormat:@"afterCall %d", arg];
+        [ctx eval:@"window.globalTestVar = @" val:newValue];
     };
 
     [func callWithArg:@1];
 
-    STAssertEqualObjects(@1, [context eval:@"window.globalTestVar"], @"var changed in native code");
+    XCTAssertEqualObjects(@"afterCall 1", [context eval:@"window.globalTestVar"], @"var changed in native code");
 }
 
 -(void)testRealInjectionCodeCreatesGlobalTransitObject {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
-    STAssertTrue(context.proxifyEval, @"proxification enabled");
+    XCTAssertTrue(context.proxifyEval, @"proxification enabled");
     context.proxifyEval = NO;
     id actual = [context eval:@"window.transit"];
 
-    STAssertEqualObjects((@{@"lastRetainId":@0, @"retained":@{}, @"invocationQueue":@[], @"invocationQueueMaxLen": @1000, @"handleInvocationQueueIsScheduled":@NO}), actual, @"transit exists");
+    XCTAssertEqualObjects((@{@"lastRetainId":@0, @"retained":@{}, @"invocationQueue":@[], @"invocationQueueMaxLen": @1000, @"handleInvocationQueueIsScheduled":@NO}), actual, @"transit exists");
 }
 
 -(void)testTransitProxifiesFunction {
@@ -246,10 +254,10 @@
     id proxified = [context eval:@"function(){}"];
     id lastRetainId = [context eval:@"transit.lastRetainId"];
 
-    STAssertEqualObjects(@1, lastRetainId, @"has been retained");
-    STAssertTrue([proxified isKindOfClass:TransitProxy.class], @"is proxy");
-    STAssertTrue([proxified isKindOfClass:TransitJSFunction.class], @"is function");
-    STAssertEqualObjects(([NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, lastRetainId]), [proxified proxyId], @"detected proxy id");
+    XCTAssertEqualObjects(@1, lastRetainId, @"has been retained");
+    XCTAssertTrue([proxified isKindOfClass:TransitProxy.class], @"is proxy");
+    XCTAssertTrue([proxified isKindOfClass:TransitJSFunction.class], @"is function");
+    XCTAssertEqualObjects(([NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_JS_FUNCTION_, lastRetainId]), [proxified proxyId], @"detected proxy id");
 }
 
 -(void)testIdentityOfNativeFunction {
@@ -259,7 +267,7 @@
     }];
     [context eval:@"globalFunc = @" val:func];
 
-    STAssertTrue(func == context[@"globalFunc"], @"keeps identity");
+    XCTAssertTrue(func == context[@"globalFunc"], @"keeps identity");
 }
 
 -(void)testConvenientSettingOfGlobalFunc {
@@ -268,13 +276,13 @@
         return @([callScope.arguments[0] intValue] + [callScope.arguments[1] floatValue]);
     }];
     NSString* t = [context eval:@"typeof globalFunc"];
-    STAssertEqualObjects(t, @"function", @"function registerd");
+    XCTAssertEqualObjects(t, @"function", @"function registerd");
     TransitNativeFunction *f = context[@"globalFunc"];
-    STAssertNotNil(f, @"function");
+    XCTAssertNotNil(f, @"function");
     [f callWithArg:@1 arg: @2];
 
     NSNumber* result = [context eval:@"globalFunc(1,2)"];
-    STAssertEquals(3, result.intValue, @"calls function");
+    XCTAssertEqual(3, result.intValue, @"calls function");
 }
 
 -(void)testTransitProxifiesDocument {
@@ -282,10 +290,10 @@
     id proxified = [context eval:@"document"];
     id lastRetainId = [context eval:@"transit.lastRetainId"];
 
-    STAssertEqualObjects(@1, lastRetainId, @"has been retained");
-    STAssertTrue([proxified isKindOfClass:TransitProxy.class], @"is proxy");
-    STAssertFalse([proxified isKindOfClass:TransitJSFunction.class], @"is not a function");
-    STAssertEqualObjects(([NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, lastRetainId]), [proxified proxyId], @"has been proxified");
+    XCTAssertEqualObjects(@1, lastRetainId, @"has been retained");
+    XCTAssertTrue([proxified isKindOfClass:TransitProxy.class], @"is proxy");
+    XCTAssertFalse([proxified isKindOfClass:TransitJSFunction.class], @"is not a function");
+    XCTAssertEqualObjects(([NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, lastRetainId]), [proxified proxyId], @"has been proxified");
 }
 
 -(void)testCallThroughJavaScript {
@@ -299,8 +307,8 @@
     id result = [context eval:@"@(2,3)" val:func];
     [func dispose];
 
-    STAssertEqualObjects(@5, [context eval:@"transit.nativeInvokeTransferObject"], @"has been evaluated");
-    STAssertEqualObjects(@5, result, @"correctly passes values");
+    XCTAssertEqualObjects(@5, [context eval:@"transit.nativeInvokeTransferObject"], @"has been evaluated");
+    XCTAssertEqualObjects(@5, result, @"correctly passes values");
 }
 
 -(void)testSubscriptInCallScope {
@@ -310,7 +318,7 @@
     }];
 
     id result = [context eval:@"@.apply({field:'foo'},[])" val:func];
-    STAssertEqualObjects(result, @"foo", @"access to this on callscope subscript");
+    XCTAssertEqualObjects(result, @"foo", @"access to this on callscope subscript");
 }
 
 -(id)captureErrorMessageFromContext:(TransitContext*)context whenCallingFunction:(TransitFunction*)function {
@@ -337,7 +345,7 @@
     }];
 
     id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
-    STAssertEqualObjects(@"internal error with transit: invocation transfer object not filled.", result, @"exception should be passed along");
+    XCTAssertEqualObjects(@"internal error with transit: invocation transfer object not filled.", result, @"exception should be passed along");
 }
 
 -(void)testInvokeNativeThatThrowsExceptionWithoutLocalizedReason {
@@ -348,7 +356,7 @@
     [context retainNativeFunction:func];
     id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
     [func dispose];
-    STAssertEqualObjects(@"ExceptionName: some reason", result, @"exception should be passed along");
+    XCTAssertEqualObjects(@"ExceptionName: some reason", result, @"exception should be passed along");
 }
 
 -(void)testInvokeNativeThatThrowsExceptionWithLocalizedReason {
@@ -359,7 +367,7 @@
     [context retainNativeFunction:func];
     id result = [self captureErrorMessageFromContext:context whenCallingFunction:func];
     [func dispose];
-    STAssertEqualObjects(@"my localized description", result, @"exception should be passed along");
+    XCTAssertEqualObjects(@"my localized description", result, @"exception should be passed along");
 }
 
 -(void)testInvokeNativeThatReturnsIncompatibleResultCausesJSException {
@@ -369,7 +377,7 @@
         return self;
     }];
 
-    STAssertThrows([context eval:@"@()" val:func], @"exception");
+    XCTAssertThrows([context eval:@"@()" val:func], @"exception");
 }
 
 -(void)testInvokeNativeWithNativeFunctionDisposedBeforeCall {
@@ -384,7 +392,7 @@
 
     [func dispose];
     [calledFunc dispose];
-    STAssertEqualObjects(@"No native function with id: 1. Could have been disposed.", result, @"exception should be passed along");
+    XCTAssertEqualObjects(@"No native function with id: 1. Could have been disposed.", result, @"exception should be passed along");
 }
 
 -(void)testNativeFunctionCanReturnVoid {
@@ -394,7 +402,7 @@
     }];
     [context retainNativeFunction:func];
     id result = [context eval:@"@()" val:func];
-    STAssertNil(result, @"objc:nil == js:void");
+    XCTAssertNil(result, @"objc:nil == js:void");
 }
 
 -(void)testNativeFunctionCanReturnNull {
@@ -404,14 +412,14 @@
     }];
     [context retainNativeFunction:func];
     id result = [context eval:@"@()" val:func];
-    STAssertEqualObjects(NSNull.null, result, @"objc:NSNull == js:null");
+    XCTAssertEqualObjects(NSNull.null, result, @"objc:NSNull == js:null");
 }
 
 -(void)testInvokeNativeWithJSProxies {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     TransitFunction *func = [[TransitNativeFunction alloc] initWithContext:context nativeId:@"myId" genericBlock:^id(TransitNativeFunctionCallScope *scope) {
-        STAssertTrue([scope.thisArg isKindOfClass:TransitJSFunction.class], @"this became js function proxy");
-        STAssertTrue([scope.arguments[0] isKindOfClass:TransitProxy.class], @"proxy");
+        XCTAssertTrue([scope.thisArg isKindOfClass:TransitJSFunction.class], @"this became js function proxy");
+        XCTAssertTrue([scope.arguments[0] isKindOfClass:TransitProxy.class], @"proxy");
 
         return [(TransitProxy *) scope.arguments[0] proxyId];
     }];
@@ -423,18 +431,18 @@
     id lastProxyId = [context eval:@"transit.lastRetainId"];
     NSString* expectedProxyId = [NSString stringWithFormat:@"%@%@", _TRANSIT_MARKER_PREFIX_OBJECT_PROXY_, lastProxyId];
 
-    STAssertEqualObjects(expectedProxyId, [result proxyId], @"proxy ids match");
+    XCTAssertEqualObjects(expectedProxyId, [result proxyId], @"proxy ids match");
 }
 
 -(void)exceptionWillBePropagatedOnContext:(TransitContext*)context {
     @try {
         [context eval:@"(function(){throw new Error('some error')})()"];
-        STFail(@"should throw exception");
+        XCTFail(@"should throw exception");
     }
     @catch (NSException *exception) {
-        STAssertEqualObjects(@"TransitException", exception.name, @"exception.name");
-        STAssertEqualObjects(@"some error", exception.reason, @"exception.reason");
-        STAssertEqualObjects(@"Error while executing JavaScript: some error", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
+        XCTAssertEqualObjects(@"TransitException", exception.name, @"exception.name");
+        XCTAssertEqualObjects(@"some error", exception.reason, @"exception.reason");
+        XCTAssertEqualObjects(@"Error while executing JavaScript: some error", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
     }
 }
 
@@ -453,13 +461,13 @@
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     @try {
         id result = [context eval:@"4*#"];
-        STFail(@"should throw exception");
-        STAssertEqualObjects(@"?", result, @"should never reach this line");
+        XCTFail(@"should throw exception");
+        XCTAssertEqualObjects(@"?", result, @"should never reach this line");
     }
     @catch (NSException *exception) {
-        STAssertEqualObjects(@"TransitException", exception.name, @"exception.name");
-        STAssertEqualObjects(@"Invalid JavaScript: 4*#", exception.reason, @"exception.reason");
-        STAssertEqualObjects(@"Error while evaluating JavaScript. Seems to be invalid: 4*#", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
+        XCTAssertEqualObjects(@"TransitException", exception.name, @"exception.name");
+        XCTAssertEqualObjects(@"Invalid JavaScript: 4*#", exception.reason, @"exception.reason");
+        XCTAssertEqualObjects(@"Error while evaluating JavaScript. Seems to be invalid: 4*#", exception.userInfo[NSLocalizedDescriptionKey], @"localized error description");
     }
 }
 
@@ -467,19 +475,19 @@
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
     TransitFunction* func = [context eval:@"function(a,b){return a+b}"];
     NSNumber* result = [func callWithArg:@1 arg:@2];
-    STAssertEqualObjects(@3, result, @"sum");
+    XCTAssertEqualObjects(@3, result, @"sum");
 }
 
 -(void)testCanUseObjectProxy {
     TransitAbstractWebViewContext *context = [self contextWithEmptyPage];
-    [self.class waitForWebViewToBeLoaded:context.webView];
+    [self.class waitForWebViewToBeLoaded:WEBVIEW(context)];
     // hack to add some extra waiting since this test fails sometimes in ci environment
     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
     TransitProxy* proxy = [context eval:@"window.document"];
     NSString* result = [context eval:@"@.title" val:proxy];
-    STAssertEqualObjects(@"Empty Page", result, @"document.title");
+    XCTAssertEqualObjects(@"Empty Page", result, @"document.title");
     result = proxy[@"title"];
-    STAssertEqualObjects(@"Empty Page", result, @"document.title");
+    XCTAssertEqualObjects(@"Empty Page", result, @"document.title");
 }
 
 -(void)testPerformance {
@@ -498,7 +506,7 @@
     NSDate *start = [NSDate date];
     for(int i=0;i<num;i++) {
         NSString* result = [jsFunc callWithArg:longString arg:@(i)];
-        STAssertEqualObjects(([longString stringByAppendingFormat:@"%d", i]), result, @"correct concat");
+        XCTAssertEqualObjects(([longString stringByAppendingFormat:@"%d", i]), result, @"correct concat");
     }
     NSDate *methodFinish = [NSDate date];
     [nativeFunc dispose];
@@ -539,18 +547,18 @@
             "}"
             "return keys;})()";
     id retained = [context eval:jsListRetained];
-    STAssertEqualObjects((@[@"##__TRANSIT_JS_FUNCTION_1", @"##__TRANSIT_JS_FUNCTION_2"]), retained, @"two functions retained");
+    XCTAssertEqualObjects((@[@"##__TRANSIT_JS_FUNCTION_1", @"##__TRANSIT_JS_FUNCTION_2"]), retained, @"two functions retained");
 
     [jsFunc1 dispose];
     [context drainJSProxies];
 
     retained = [context eval:jsListRetained];
-    STAssertEqualObjects((@[@"##__TRANSIT_JS_FUNCTION_2"]), retained, @"only one functions retained");
+    XCTAssertEqualObjects((@[@"##__TRANSIT_JS_FUNCTION_2"]), retained, @"only one functions retained");
 
     [[funcMock expect] callWithFunction:nFunc thisArg:OCMOCK_ANY arguments:@[@"from1: from2: No Crash"] expectsResult:YES];
     [jsFunc2 callWithArg:@"No Crash"];
 
-    STAssertNoThrow([funcMock verify], @"mock is fine");
+    XCTAssertNoThrow([funcMock verify], @"mock is fine");
 }
 
 -(void)testPassesBackNativeFunctionAsNativeFunction {
@@ -565,8 +573,8 @@
     [[funcMock1 expect] callWithFunction:nFunc1 thisArg:OCMOCK_ANY arguments:@[nFunc2] expectsResult:YES];
     [context eval:@"@(@)" val:nFunc1 val:nFunc2];
 
-    STAssertNoThrow([funcMock1 verify], @"verify mock");
-    STAssertNoThrow([funcMock2 verify], @"verify mock");
+    XCTAssertNoThrow([funcMock1 verify], @"verify mock");
+    XCTAssertNoThrow([funcMock2 verify], @"verify mock");
 }
 
 -(void)testCallScopeCallNativeFuncFromEval {
@@ -581,7 +589,7 @@
 
         TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope1 = callScope;
-            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            XCTAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
             return nil;
         }];
@@ -589,18 +597,18 @@
         NSArray *values2 = @[function1, thisArg1, arguments1];
         [context eval:@"@.apply(@, @)" values:values2];
 
-        STAssertTrue(function1 == scope1.function, @"function");
-        STAssertEqualObjects(thisArg1, scope1.thisArg, @"thisArg");
-        STAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
-        STAssertEquals(expectsResult1, scope1.expectsResult, @"expectsResult");
-        STAssertNotNil(scope1.parentScope, @"parentScope");
-        STAssertTrue(([scope1.parentScope isKindOfClass:TransitEvalCallScope.class]), @"eval call scope");
+        XCTAssertTrue(function1 == scope1.function, @"function");
+        XCTAssertEqualObjects(thisArg1, scope1.thisArg, @"thisArg");
+        XCTAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
+        XCTAssertEqual(expectsResult1, scope1.expectsResult, @"expectsResult");
+        XCTAssertNotNil(scope1.parentScope, @"parentScope");
+        XCTAssertTrue(([scope1.parentScope isKindOfClass:TransitEvalCallScope.class]), @"eval call scope");
 
-        STAssertTrue(context == scope1.parentScope.thisArg, @"thisArg is global object");
+        XCTAssertTrue(context == scope1.parentScope.thisArg, @"thisArg is global object");
 
         NSArray* actualValues = [((TransitEvalCallScope *)scope1.parentScope) values];
-        STAssertEqualObjects(values2, actualValues, @"values");
-        STAssertEquals(expectsResult1, scope1.parentScope.expectsResult, @"expectsResult");
+        XCTAssertEqualObjects(values2, actualValues, @"values");
+        XCTAssertEqual(expectsResult1, scope1.parentScope.expectsResult, @"expectsResult");
 
         [function1 dispose];
     }
@@ -618,7 +626,7 @@
 
         TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope1 = callScope;
-            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            XCTAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
             return nil;
         }];
@@ -627,20 +635,20 @@
 
         [function2 callWithArg:function1];
 
-        STAssertTrue(function1 == scope1.function, @"function");
-        STAssertEqualObjects(context, scope1.thisArg, @"thisArg");
-        STAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
-        STAssertEquals(expectsResult1, scope1.expectsResult, @"expectsResult");
-        STAssertNotNil(scope1.parentScope, @"parentScope");
-        STAssertTrue(([scope1.parentScope isKindOfClass:TransitJSFunctionCallScope.class]), @"JSFuncCall scope");
+        XCTAssertTrue(function1 == scope1.function, @"function");
+        XCTAssertEqualObjects(context, scope1.thisArg, @"thisArg");
+        XCTAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
+        XCTAssertEqual(expectsResult1, scope1.expectsResult, @"expectsResult");
+        XCTAssertNotNil(scope1.parentScope, @"parentScope");
+        XCTAssertTrue(([scope1.parentScope isKindOfClass:TransitJSFunctionCallScope.class]), @"JSFuncCall scope");
 
         TransitJSFunctionCallScope *parentScope = (TransitJSFunctionCallScope *) scope1.parentScope;
 
-        STAssertTrue(context == parentScope.thisArg, @"thisArg is global object");
+        XCTAssertTrue(context == parentScope.thisArg, @"thisArg is global object");
         id expectedArgs = @[function1];
-        STAssertEqualObjects(expectedArgs, parentScope.arguments, @"arguments");
-        STAssertEqualObjects(function2, parentScope.function, @"function");
-        STAssertTrue(parentScope.expectsResult, @"expects result");
+        XCTAssertEqualObjects(expectedArgs, parentScope.arguments, @"arguments");
+        XCTAssertEqualObjects(function2, parentScope.function, @"function");
+        XCTAssertTrue(parentScope.expectsResult, @"expects result");
 
         [function1 dispose];
     }
@@ -657,7 +665,7 @@
 
         TransitFunction *function1 = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             scope1 = callScope;
-            STAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
+            XCTAssertTrue(context.currentCallScope == callScope, @"currentCallScope");
 
             return nil;
         }];
@@ -666,22 +674,22 @@
 
         [function2 callWithThisArg:@42 arg:function1];
 
-        STAssertTrue(function1 == scope1.function, @"function");
-        STAssertEqualObjects(context, scope1.thisArg, @"thisArg");
-        STAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
-        STAssertEquals(expectsResult1, scope1.expectsResult, @"expectsResult");
-        STAssertNotNil(scope1.parentScope, @"parentScope");
-        STAssertEquals((NSUInteger)2,scope1.level, @"level");
-        STAssertTrue(([scope1.parentScope isKindOfClass:TransitJSFunctionCallScope.class]), @"JSFuncCall scope");
+        XCTAssertTrue(function1 == scope1.function, @"function");
+        XCTAssertEqualObjects(context, scope1.thisArg, @"thisArg");
+        XCTAssertEqualObjects(arguments1, scope1.arguments, @"arguments");
+        XCTAssertEqual(expectsResult1, scope1.expectsResult, @"expectsResult");
+        XCTAssertNotNil(scope1.parentScope, @"parentScope");
+        XCTAssertEqual((NSUInteger)2,scope1.level, @"level");
+        XCTAssertTrue(([scope1.parentScope isKindOfClass:TransitJSFunctionCallScope.class]), @"JSFuncCall scope");
 
         TransitJSFunctionCallScope *parentScope = (TransitJSFunctionCallScope *) scope1.parentScope;
 
-        STAssertEqualObjects(@42, parentScope.thisArg, @"thisArg");
+        XCTAssertEqualObjects(@42, parentScope.thisArg, @"thisArg");
         id expectedArgs = @[function1];
-        STAssertEqualObjects(expectedArgs, parentScope.arguments, @"arguments");
-        STAssertEqualObjects(function2, parentScope.function, @"function");
-        STAssertTrue(parentScope.expectsResult, @"expects result");
-        STAssertEquals((NSUInteger)1,parentScope.level, @"level");
+        XCTAssertEqualObjects(expectedArgs, parentScope.arguments, @"arguments");
+        XCTAssertEqualObjects(function2, parentScope.function, @"function");
+        XCTAssertTrue(parentScope.expectsResult, @"expects result");
+        XCTAssertEqual((NSUInteger)1,parentScope.level, @"level");
 
         [function1 dispose];
     }
@@ -692,7 +700,7 @@
         TransitContext *context = [self contextWithEmptyPage];
         __block __weak TransitFunction *function = [context functionWithGenericBlock:^id(TransitNativeFunctionCallScope *callScope) {
             NSUInteger expectedCallLevel = [callScope.arguments[0] intValue];
-            STAssertEquals(TransitCurrentCall.callScope.level, expectedCallLevel, @"different callscope");
+            XCTAssertEqual(TransitCurrentCall.callScope.level, expectedCallLevel, @"different callscope");
             if(expectedCallLevel < 4)
                 [function callWithArg:@(expectedCallLevel+1)];
             return nil;
@@ -726,7 +734,7 @@
 
         NSString* expectedStack = [NSString stringWithFormat:expectedStackFmt, context.description, nativeFunc.description, jsFunc.description];
         NSString* actualStack = deepestScope.callStackDescription;
-        STAssertEqualObjects(expectedStack, actualStack, @"stacks");
+        XCTAssertEqualObjects(expectedStack, actualStack, @"stacks");
     }
 }
 
@@ -736,7 +744,7 @@
     [context evalOnGlobalScope:@"var TEST=123"];
 
     id result = [context eval:@"window.TEST"];
-    STAssertEqualObjects(@123, result, @"variable put on global object");
+    XCTAssertEqualObjects(@123, result, @"variable put on global object");
 }
 
 -(void)testLargeTranferObject {
@@ -751,7 +759,7 @@
     NSString* longString = [@"" stringByPaddingToLength:len withString:@"c" startingAtIndex:0];
     NSString* result = [context eval:@"@(@)" val:loopback val:longString];
 
-    STAssertEqualObjects(result, longString, @"correctly returned");
+    XCTAssertEqualObjects(result, longString, @"correctly returned");
 }
 
 -(void)testReplaceGlobalFunctionGeneric {
@@ -766,15 +774,15 @@
 
     [context replaceFunctionAt:@"globalFunc" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
         blockOriginal = original;
-        STAssertEquals(original, TransitCurrentCall.replacedFunction, @"original");
-        STAssertEquals(callScope, TransitCurrentCall.callScope, @"current callscope");
-        STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
+        XCTAssertEqual(original, TransitCurrentCall.replacedFunction, @"original");
+        XCTAssertEqual(callScope, TransitCurrentCall.callScope, @"current callscope");
+        XCTAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
         return nil;
     }];
     [context eval:@"globalFunc('foo')"];
-    STAssertNil(TransitCurrentCall.replacedFunction, @"original");
+    XCTAssertNil(TransitCurrentCall.replacedFunction, @"original");
 
-    STAssertEquals(blockOriginal, f, @"same function");
+    XCTAssertEqual(blockOriginal, f, @"same function");
 }
 
 -(void)testReplaceGlobalFunction {
@@ -789,16 +797,16 @@
 
     [context replaceFunctionAt:@"globalFunc" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
         blockOriginal = original;
-        STAssertEquals(original, TransitCurrentCall.replacedFunction, @"original");
-        STAssertEquals(callScope, TransitCurrentCall.callScope, @"callscope");;
-        STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
+        XCTAssertEqual(original, TransitCurrentCall.replacedFunction, @"original");
+        XCTAssertEqual(callScope, TransitCurrentCall.callScope, @"callscope");;
+        XCTAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
         return nil;
     }];
 
     [context eval:@"globalFunc('foo')"];
-    STAssertNil(TransitCurrentCall.replacedFunction, @"original");
+    XCTAssertNil(TransitCurrentCall.replacedFunction, @"original");
 
-    STAssertEquals(blockOriginal, f, @"same function");
+    XCTAssertEqual(blockOriginal, f, @"same function");
 }
 
 -(void)testReplaceGlobalFunctionTwice {
@@ -810,22 +818,22 @@
 
     __weak TransitFunction *f0 = context[@"globalFunc"];
     __weak TransitFunction *f1 = [context replaceFunctionAt:@"globalFunc" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
-        STAssertEquals(f0, TransitCurrentCall.replacedFunction, @"original");
-        STAssertEquals(original, TransitCurrentCall.replacedFunction, @"original");
-        STAssertEquals(callScope, TransitCurrentCall.callScope, @"callscope");;
-        STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope.parentScope) jsCode], @"correct scope");
+        XCTAssertEqual(f0, TransitCurrentCall.replacedFunction, @"original");
+        XCTAssertEqual(original, TransitCurrentCall.replacedFunction, @"original");
+        XCTAssertEqual(callScope, TransitCurrentCall.callScope, @"callscope");;
+        XCTAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope.parentScope) jsCode], @"correct scope");
         return [callScope forwardToFunction:TransitCurrentCall.replacedFunction];
     }];
     [context replaceFunctionAt:@"globalFunc" withGenericBlock:^id(TransitFunction *original, TransitNativeFunctionCallScope *callScope) {
-        STAssertEquals(f1, TransitCurrentCall.replacedFunction, @"original");
-        STAssertEquals(original, TransitCurrentCall.replacedFunction, @"original");
-        STAssertEquals(callScope, TransitCurrentCall.callScope, @"callscope");;
-        STAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
+        XCTAssertEqual(f1, TransitCurrentCall.replacedFunction, @"original");
+        XCTAssertEqual(original, TransitCurrentCall.replacedFunction, @"original");
+        XCTAssertEqual(callScope, TransitCurrentCall.callScope, @"callscope");;
+        XCTAssertEqualObjects(@"globalFunc('foo')", [(TransitEvalCallScope*)(callScope.parentScope) jsCode], @"correct scope");
         return [callScope forwardToFunction:TransitCurrentCall.replacedFunction];
     }];
 
     NSNumber* result = [context eval:@"globalFunc('foo')"];
-    STAssertEquals((int)42, result.intValue, @"actual result");
+    XCTAssertEqual((int)42, result.intValue, @"actual result");
 }
 
 -(void)testAsyncInvocationQueue {
@@ -844,12 +852,12 @@
     [[funcMock2 expect] callWithFunction:nFunc2 thisArg:OCMOCK_ANY arguments:@[@2] expectsResult:YES];
 
     id string = [context eval:@"'a:'+@(1)+' b:'+@(2)" val:nFunc1 val:nFunc2];
-    STAssertEqualObjects(@"a:undefined b:undefined", string, @"functions return void");
+    XCTAssertEqualObjects(@"a:undefined b:undefined", string, @"functions return void");
 
     [context eval:@"transit.handleInvocationQueue()"];
 
-    STAssertNoThrow([funcMock1 verify], @"verify mock");
-    STAssertNoThrow([funcMock2 verify], @"verify mock");
+    XCTAssertNoThrow([funcMock1 verify], @"verify mock");
+    XCTAssertNoThrow([funcMock2 verify], @"verify mock");
 }
 
 #if TRANSIT_SPECIFIC_BLOCKS_SUPPORTED
