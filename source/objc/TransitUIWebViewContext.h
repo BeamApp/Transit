@@ -13,6 +13,7 @@
 
 -(id)initWithUIWebView:(UIWebView*)webView;
 
-@property (nonatomic, readonly, strong) UIWebView *webView;
+@property (nonatomic, readonly, weak) UIWebView *webView;
+
 
 @end

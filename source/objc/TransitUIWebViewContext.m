@@ -8,12 +8,11 @@
 #import "TransitCore.h"
 
 @interface TransitUIWebViewContext ()
-@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, weak) UIWebView *webView;
+@property (nonatomic, weak) id<UIWebViewDelegate> originalDelegate;
 @end
 
-@implementation TransitUIWebViewContext {
-    id<UIWebViewDelegate> _originalDelegate;
-}
+@implementation TransitUIWebViewContext
 
 +(id)contextWithUIWebView:(UIWebView*)webView {
     return [[self alloc] initWithUIWebView: webView];
@@ -33,7 +32,7 @@
 }
 
 -(void)bindToWebView {
-    _originalDelegate = _webView.delegate;
+    self.originalDelegate = _webView.delegate;
     _webView.delegate = self;
     [_webView addObserver:self forKeyPath:@"delegate" options:NSKeyValueObservingOptionNew context:nil];
     [self injectCodeToWebView];
