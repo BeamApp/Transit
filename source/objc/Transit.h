@@ -7,4 +7,7 @@
 //
 
 #import "TransitCore.h"
+#import "TransitContext.h"
 #import "TransitUIWebViewContext.h"
+#import "TransitNativeFunction.h"
+#import "TransitJSFunction.h"
