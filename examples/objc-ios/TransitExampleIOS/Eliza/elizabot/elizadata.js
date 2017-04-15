@@ -365,6 +365,11 @@ var elizaKeywords = [
      "Do you wish to be able to (2) ?",
      "Does that trouble you ?"
   ]],
+ ["* i * feel *old", [
+    "You don't look a day older than yesterday, do you?",
+    "Wouldn't you agree that there are still more adventures to look forward to?",
+    "Happy Birthday, Heiko! ;)"
+  ]],
  ["* i feel *", [
      "Tell me more about such feelings.",
      "Do you often feel (2) ?",
